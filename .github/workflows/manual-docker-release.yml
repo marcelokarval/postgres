@@ -1,4 +1,4 @@
-name: Manual Docker Artifacts Release 
+name: Manual Docker Artifacts Release
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
       postgresVersion:
         description: 'Optional. Postgres version to publish against, i.e. 15.1.1.78'
         required: false
- 
+
 permissions:
   id-token: write
   contents: read
@@ -16,6 +16,8 @@ jobs:
     runs-on: blacksmith-8vcpu-ubuntu-2404
     outputs:
       matrix_config: ${{ steps.set-matrix.outputs.matrix_config }}
+      base_matrix: ${{ steps.set-matrix.outputs.base_matrix }}
+      layered_matrix: ${{ steps.set-matrix.outputs.layered_matrix }}
     steps:
       - uses: ./.github/actions/nix-install-ephemeral
       - name: Checkout Repo
@@ -23,45 +25,20 @@ jobs:
       - name: Generate build matrix
         id: set-matrix
         run: |
-          nix run nixpkgs#nushell -- -c 'let versions = (open ansible/vars.yml | get postgres_major)
-          let base_matrix = ($versions | each { |ver|
-            let version = ($ver | str trim)
-            let dockerfile = $"Dockerfile-($version)"
-            if ($dockerfile | path exists) {
-              {
-                version: $version,
-                dockerfile: $dockerfile,
-                target: "production"
-              }
-            } else {
-              null
-            }
-          } | compact)
-
-          # Discover multigres variants by checking for matching targets in Dockerfile-multigres
-          let multigres_matrix = ($versions | each { |ver|
-            let version = ($ver | str trim)
-            let mg_version = $"multigres-($version)"
-            let mg_dockerfile = "Dockerfile-multigres"
-            let mg_target = $"variant-($version)"
-            if ($mg_dockerfile | path exists) and (open --raw $mg_dockerfile | str contains $"AS ($mg_target)") {
-              {
-                version: $mg_version,
-                dockerfile: $mg_dockerfile,
-                target: $mg_target
-              }
-            } else {
-              null
-            }
-          } | compact)
-
-          let matrix = ($base_matrix | append $multigres_matrix)
-
-          let matrix_config = {
-            include: $matrix
-          }
-
-          $"matrix_config=($matrix_config | to json -r)" | save --append $env.GITHUB_OUTPUT'
+          nix run nixpkgs#nushell -- -c '
+          let releases = (open ansible/vars.yml | get postgres_release)
+          let base = (open ansible/vars.yml | get release_matrix_base
+            | each { |e| $e | insert tag ($releases | get $e.release_key) })
+          let layered = (open ansible/vars.yml | get release_matrix_layered
+            | each { |e|
+                let ver = ($releases | get $e.release_key)
+                $e | insert tag $"($ver)($e.tag_suffix)" | insert base_tag $ver
+              })
+          let combined = ($base | append $layered)
+          $"base_matrix=({include: $base} | to json -r)" | save --append $env.GITHUB_OUTPUT
+          $"layered_matrix=({include: $layered} | to json -r)" | save --append $env.GITHUB_OUTPUT
+          $"matrix_config=({include: $combined} | to json -r)" | save --append $env.GITHUB_OUTPUT
+          '
   build:
     needs: prepare
     strategy:
@@ -73,24 +50,21 @@ jobs:
       - name: Checkout Repo
         uses: supabase/postgres/.github/actions/shared-checkout@HEAD
       - uses: ./.github/actions/nix-install-ephemeral
-      - name: Set PostgreSQL version environment variable
-        run: echo "POSTGRES_MAJOR_VERSION=${{ matrix.version }}" >> $GITHUB_ENV
-      
       - id: args
         run: |
           nix run nixpkgs#nushell -- -c '
-            open ansible/vars.yml 
-            | items { |key value| {name: $key, item: $value} } 
-            | where { |it| ($it.item | describe) == "string" } 
-            | each { |it| $"($it.name)=($it.item)" } 
-            | str join "\n" 
+            open ansible/vars.yml
+            | items { |key value| {name: $key, item: $value} }
+            | where { |it| ($it.item | describe) == "string" }
+            | each { |it| $"($it.name)=($it.item)" }
+            | str join "\n"
             | save --append $env.GITHUB_OUTPUT
-          '    
-  build_release_image:
+          '
+  build_base_images:
     needs: [prepare, build]
     strategy:
       matrix:
-        postgres: ${{ fromJson(needs.prepare.outputs.matrix_config).include }}
+        postgres: ${{ fromJson(needs.prepare.outputs.base_matrix).include }}
         arch: [amd64, arm64]
     runs-on: ${{ matrix.arch == 'amd64' && 'blacksmith-8vcpu-ubuntu-2404' || 'large-linux-arm' }}
     timeout-minutes: 180
@@ -106,62 +80,57 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Get image tag
-        id: image
-        run: |
-          if [[ "${{ matrix.arch }}" == "arm64" ]]; then
-            pg_version=$(nix run nixpkgs#nushell -- -c '
-              let version = "${{ matrix.postgres.version }}"
-              let is_multigres = ($version | str starts-with "multigres-")
-              let base_version = if $is_multigres { $version | str replace "multigres-" "" } else { $version }
-              let release_key = if ($base_version | str contains "orioledb") {
-                $"postgresorioledb-17"
-              } else {
-                $"postgres($base_version)"
-              }
-              let base_tag = (open ansible/vars.yml | get postgres_release | get $release_key | str trim)
-              let final_version = if "${{ inputs.postgresVersion }}" != "" {
-                "${{ inputs.postgresVersion }}"
-              } else {
-                $base_tag
-              }
-              if $is_multigres { $"($final_version)-multigres" | str trim } else { $final_version | str trim }
-            ')
-            echo "pg_version=supabase/postgres:$pg_version" >> $GITHUB_OUTPUT
-          else
-            pg_version=$(nix run nixpkgs#nushell -- -c '
-              let version = "${{ matrix.postgres.version }}"
-              let is_multigres = ($version | str starts-with "multigres-")
-              let base_version = if $is_multigres { $version | str replace "multigres-" "" } else { $version }
-              let release_key = if ($base_version | str contains "orioledb") {
-                $"postgresorioledb-17"
-              } else {
-                $"postgres($base_version)"
-              }
-              let base_tag = (open ansible/vars.yml | get postgres_release | get $release_key | str trim)
-              let final_version = if "${{ inputs.postgresVersion }}" != "" {
-                "${{ inputs.postgresVersion }}"
-              } else {
-                $base_tag
-              }
-              if $is_multigres { $"($final_version)-multigres" | str trim } else { $final_version | str trim }
-            ')
-            echo "pg_version=supabase/postgres:$pg_version" >> $GITHUB_OUTPUT
-          fi
       - id: build
         uses: docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25 # v5.4.0
         with:
           push: true
           build-args: |
             ${{ needs.build.outputs.build_args }}
+            PG_VERSION=${{ matrix.postgres.pg_version }}
           target: ${{ matrix.postgres.target }}
-          tags: ${{ steps.image.outputs.pg_version }}_${{ matrix.arch }}
+          tags: supabase/postgres:${{ inputs.postgresVersion || matrix.postgres.tag }}_${{ matrix.arch }}
           platforms: linux/${{ matrix.arch }}
           cache-from: type=gha,scope=${{ github.ref_name }}-latest-${{ matrix.arch }}
           cache-to: type=gha,mode=max,scope=${{ github.ref_name }}-latest-${{ matrix.arch }}
           file: ${{ matrix.postgres.dockerfile }}
+
+  build_layered_images:
+    needs: [prepare, build, build_base_images]
+    strategy:
+      matrix:
+        postgres: ${{ fromJson(needs.prepare.outputs.layered_matrix).include }}
+        arch: [amd64, arm64]
+    runs-on: ${{ matrix.arch == 'amd64' && 'blacksmith-8vcpu-ubuntu-2404' || 'large-linux-arm' }}
+    timeout-minutes: 180
+    steps:
+      - name: Checkout Repo
+        uses: supabase/postgres/.github/actions/shared-checkout@HEAD
+      - uses: ./.github/actions/nix-install-ephemeral
+      - run: docker context create builders
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
+        with:
+          endpoint: builders
+      - uses: docker/login-action@465a07811f14bebb1938fbed4728c6a1ff8901fc # v2.2.0
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - id: build
+        uses: docker/build-push-action@ca052bb54ab0790a636c9b5f226502c73d547a25 # v5.4.0
+        with:
+          push: true
+          build-args: |
+            ${{ needs.build.outputs.build_args }}
+            PG_VERSION=${{ matrix.postgres.pg_version }}
+            SUPABASE_IMAGE=supabase/postgres:${{ inputs.postgresVersion || matrix.postgres.base_tag }}_${{ matrix.arch }}
+          target: ${{ matrix.postgres.target }}
+          tags: supabase/postgres:${{ inputs.postgresVersion != '' && format('{0}-multigres', inputs.postgresVersion) || matrix.postgres.tag }}_${{ matrix.arch }}
+          platforms: linux/${{ matrix.arch }}
+          cache-from: type=gha,scope=${{ github.ref_name }}-latest-${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=${{ github.ref_name }}-latest-${{ matrix.arch }}
+          file: ${{ matrix.postgres.dockerfile }}
+
   merge_manifest:
-    needs: [prepare, build, build_release_image]
+    needs: [prepare, build, build_base_images, build_layered_images]
     strategy:
       matrix:
         include: ${{ fromJson(needs.prepare.outputs.matrix_config).include }}
@@ -177,20 +146,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Get image tag
         id: get_version
-        run: |
-          nix run nixpkgs#nushell -- -c '
-            let version = "${{ matrix.version }}"
-            let is_multigres = ($version | str starts-with "multigres-")
-            let base_version = if $is_multigres { $version | str replace "multigres-" "" } else { $version }
-            let release_key = if ($base_version | str contains "orioledb") {
-              $"postgresorioledb-17"
-            } else {
-              $"postgres($base_version)"
-            }
-            let base_tag = (open ansible/vars.yml | get postgres_release | get $release_key | str trim)
-            let pg_version = if $is_multigres { $"($base_tag)-multigres" } else { $base_tag }
-            $"pg_version=supabase/postgres:($pg_version)" | save --append $env.GITHUB_OUTPUT
-          '
+        run: echo "pg_version=supabase/postgres:${{ inputs.postgresVersion != '' && (contains(matrix.tag, '-multigres') && format('{0}-multigres', inputs.postgresVersion) || inputs.postgresVersion) || matrix.tag }}" >> $GITHUB_OUTPUT
       - name: Output version
         id: output_version
         run: |
@@ -202,7 +158,7 @@ jobs:
       - name: Upload Results Artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: merge_results-${{ matrix.version }}
+          name: merge_results-${{ matrix.tag }}
           path: results.txt
           if-no-files-found: warn
       - name: Merge multi-arch manifests
@@ -228,12 +184,12 @@ jobs:
           nix run nixpkgs#nushell -- -c '
             # Parse the matrix configuration directly
             let matrix_config = (${{ toJson(needs.prepare.outputs.matrix_config) }} | from json)
-      
+
             # Get versions directly from include array
-            let versions = ($matrix_config.include | get version)
-      
+            let versions = ($matrix_config.include | get tag)
+
             echo "Versions: $versions"
-      
+
             # Convert the versions to a comma-separated string
             let versions_str = ($versions | str join ",")
             $"versions=$versions_str" | save --append $env.GITHUB_ENV
@@ -249,7 +205,7 @@ jobs:
             # Get all results files and process them in one go
             let files = (ls **/results.txt | get name)
             echo $"Found files: ($files)"
-            
+
             let matrix = {
               include: (
                 $files
@@ -257,17 +213,17 @@ jobs:
                 | each { |content| $content | lines }  # Split into lines
                 | flatten                             # Flatten the nested lists
                 | where { |line| $line != "" }        # Filter empty lines
-                | each { |line| 
+                | each { |line|
                     # Extract just the version part after the last colon
                     let version = ($line | parse "supabase/postgres:{version}" | get version.0)
                     {version: $version}
                 }
               )
             }
-            
+
             let json_output = ($matrix | to json -r)  # -r for raw output
             echo $"Debug output: ($json_output)"
-            
+
             $"matrix=($json_output)" | save --append $env.GITHUB_OUTPUT
           '
       - name: Debug Combined Results
@@ -285,5 +241,5 @@ jobs:
         matrix: ${{ fromJson(needs.combine_results.outputs.matrix) }}
       uses: ./.github/workflows/mirror.yml
       with:
-        version: ${{ inputs.postgresVersion != '' && (contains(matrix.version, '-multigres') && format('{0}-multigres', inputs.postgresVersion) || inputs.postgresVersion) || matrix.version }}
+        version: ${{ matrix.version }}
       secrets: inherit
