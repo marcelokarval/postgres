@@ -1,0 +1,7 @@
+*
+!.git/
+!ansible/files
+!docker/pgctld
+!flake.*
+!migrations/
+!nix/
