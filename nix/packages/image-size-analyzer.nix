@@ -29,11 +29,13 @@ runCommand "image-size-analyzer"
     set -euo pipefail
 
     # Default values
-    OUTPUT_JSON=false
+    MULTIGRES=false
     NO_BUILD=false
-    declare -a IMAGES=()
-    ALL_DOCKERFILES=("Dockerfile-15" "Dockerfile-17" "Dockerfile-orioledb-17")
+    ORIOLEDB=false
+    OUTPUT_JSON=false
     TIMESTAMP=$(date +%s)
+    VERSION=false
+
     TEMP_DIR="/tmp/image-size-analyzer-$TIMESTAMP"
 
     show_help() {
@@ -44,17 +46,21 @@ runCommand "image-size-analyzer"
 
     Options:
       --json              Output results as JSON instead of TUI
-      --image DOCKERFILE  Analyze specific Dockerfile (can be used multiple times)
-                          Valid values: Dockerfile-15, Dockerfile-17, Dockerfile-orioledb-17
+      --multigres         Enable Multigres
       --no-build          Skip building images, analyze existing ones
+      --orioledb          Enable OrioleDB
+      --version 15|17     Select Postgres base version
       --help              Show this help message
 
     Examples:
-      image-size-analyzer                                    # Analyze all images
-      image-size-analyzer --json                             # Output as JSON
-      image-size-analyzer --image Dockerfile-17              # Analyze only Dockerfile-17
-      image-size-analyzer --image Dockerfile-15 --image Dockerfile-17
-      image-size-analyzer --no-build                         # Skip build step
+      image-size-analyzer                                     # Analyze all images
+      image-size-analyzer --json                              # Output as JSON
+      image-size-analyzer --version 15                        # Analyze only PG15
+      image-size-analyzer --version 17                        # Analyze only PG17
+      image-size-analyzer --version 17 --multigres            # Analyze only PG17 Multigres
+      image-size-analyzer --version 17 --orioledb             # Analyze only PG17 OrioleDB
+      image-size-analyzer --version 17 --multigres --orioledb # Analyze only PG17 OrioleDB Multigres
+      image-size-analyzer --no-build                          # Skip build step
     EOF
     }
 
@@ -66,54 +72,35 @@ runCommand "image-size-analyzer"
     # Parse arguments
     while [[ $# -gt 0 ]]; do
       case $1 in
-        --json)
-          OUTPUT_JSON=true
+        --json) OUTPUT_JSON=true;;
+        --multigres) MULTIGRES=true;;
+        --no-build) NO_BUILD=true;;
+        --orioledb) ORIOLEDB=true;;
+        --version)
+          VERSION=$2
+          case $VERSION in
+            15|17) ;;
+            "")
+              echo "Error: --version requires a value"
+              show_help
+              exit 1
+              ;;
+            *)
+              echo "Uknown version:$VERSION"
+              show_help
+              exit 1
+              ;;
+            esac
           shift
           ;;
-        --no-build)
-          NO_BUILD=true
-          shift
-          ;;
-        --image)
-          if [[ -z "$2" ]]; then
-            echo "Error: --image requires a value"
-            exit 1
-          fi
-          IMAGES+=("$2")
-          shift 2
-          ;;
-        --help)
-          show_help
-          exit 0
-          ;;
+        --help) show_help && exit 0;;
         *)
           echo "Error: Unknown option: $1"
           show_help
           exit 1
           ;;
       esac
-    done
-
-    # If no images specified, use all
-    num_images=''${#IMAGES[@]}
-    if [[ $num_images -eq 0 ]]; then
-      IMAGES=("''${ALL_DOCKERFILES[@]}")
-    fi
-
-    # Validate image names
-    for img in "''${IMAGES[@]}"; do
-      valid=false
-      for valid_img in "''${ALL_DOCKERFILES[@]}"; do
-        if [[ "$img" == "$valid_img" ]]; then
-          valid=true
-          break
-        fi
-      done
-      if [[ "$valid" == "false" ]]; then
-        echo "Error: Invalid Dockerfile: $img"
-        echo "Valid options: ''${ALL_DOCKERFILES[*]}"
-        exit 1
-      fi
+      shift
     done
 
     # Check Docker is running
@@ -138,22 +125,14 @@ runCommand "image-size-analyzer"
       fi
     }
 
-    # Get tag name from Dockerfile name
-    get_tag() {
-      local dockerfile=$1
-      local suffix=''${dockerfile#Dockerfile-}
-      echo "supabase-postgres:$suffix-analyze"
-    }
-
     # Build a single image
     build_image() {
-      local dockerfile=$1
-      local tag
-      tag=$(get_tag "$dockerfile")
+      local tag=$1
+      shift
 
-      echo "Building $dockerfile as $tag..."
-      if ! docker build -f "$dockerfile" -t "$tag" . ; then
-        echo "Error: Failed to build $dockerfile"
+      echo "Building $tag..."
+      if ! docker build -t "$tag" "$@" . ; then
+        echo "Error: Failed to build $tag"
         return 1
       fi
     }
@@ -265,9 +244,7 @@ runCommand "image-size-analyzer"
 
     # Analyze a single image
     analyze_image() {
-      local dockerfile=$1
-      local tag
-      tag=$(get_tag "$dockerfile")
+      local tag=$1
 
       local total_size
       total_size=$(get_total_size "$tag")
@@ -291,19 +268,19 @@ runCommand "image-size-analyzer"
 
       # Build JSON result for this image
       jq -n \
-        --arg dockerfile "$dockerfile" \
-        --argjson total_size "$total_size" \
-        --argjson layers "$layers" \
+        --arg tag "$tag" \
         --argjson directories "$directories" \
+        --argjson layers "$layers" \
         --argjson nix_packages "$nix_packages" \
         --argjson system_packages "$system_packages" \
+        --argjson total_size_bytes "$total_size" \
         '{
-          dockerfile: $dockerfile,
-          total_size_bytes: $total_size,
-          layers: $layers,
-          directories: $directories,
-          nix_packages: $nix_packages,
-          system_packages: $system_packages
+          $directories,
+          $layers,
+          $nix_packages,
+          $system_packages,
+          $tag,
+          $total_size_bytes,
         }'
     }
 
@@ -311,15 +288,15 @@ runCommand "image-size-analyzer"
     print_tui() {
       local json=$1
 
-      local dockerfile
-      dockerfile=$(echo "$json" | jq -r '.dockerfile')
+      local tag
+      tag=$(echo "$json" | jq -r .tag)
 
       local total_size
       total_size=$(echo "$json" | jq -r '.total_size_bytes')
 
       echo ""
       echo "================================================================================"
-      echo "IMAGE: $dockerfile"
+      echo "IMAGE: $tag"
       echo "================================================================================"
       echo "Total Size: $(format_bytes "$total_size")"
       echo ""
@@ -360,18 +337,46 @@ runCommand "image-size-analyzer"
 
     # Main execution
     main() {
+      if [[ $MULTIGRES$ORIOLEDB$VERSION == falsefalsefalse ]]; then
+        # all images
+        recipes=(
+          'supabase-postgres:15 --target=postgres --build-arg=PG_VERSION=15'
+          'supabase-postgres:17 --target=postgres --build-arg=PG_VERSION=17'
+          'supabase-postgres:orioledb-17 --target=postgres --build-arg=PG_VERSION=17 --build-arg=VARIANT=orioledb'
+          'supabase-postgres:orioledb-multigres-17 --target=multigres --build-arg=PG_VERSION=17 --build-arg=VARIANT=orioledb'
+          'supabase-postgres:multigres-17 --target=multigres --build-arg=PG_VERSION=17'
+        )
+      else
+        tag=supabase-postgres:
+        args=()
+        if $ORIOLEDB; then
+          tag+=(orioledb-)
+          args+=(--build-arg=VARIANT=orioledb)
+        fi
+        if $MULTIGRES; then
+          tag+=(multigres-)
+          args+=(--target=multigres)
+        else
+          args+=(--target=postgres)
+        fi
+        if [[ $VERSION == false ]]; then
+          VERSION=17
+        fi
+        tag+=$VERSION
+        recipes=("$tag ''${args[*]}")
+      fi
+
       # Build images if needed
       if [[ "$NO_BUILD" == "false" ]]; then
-        for dockerfile in "''${IMAGES[@]}"; do
-          build_image "$dockerfile" || exit 1
+        for recipe in "''${recipes[@]}"; do
+          build_image $recipe || exit 1
         done
       fi
 
       # Analyze each image
       declare -a results=()
-      for dockerfile in "''${IMAGES[@]}"; do
-        local tag
-        tag=$(get_tag "$dockerfile")
+      for recipe in "''${recipes[@]}"; do
+        local tag=''${recipe%% *}
 
         # Check image exists
         if ! docker image inspect "$tag" &>/dev/null; then
@@ -379,9 +384,9 @@ runCommand "image-size-analyzer"
           exit 1
         fi
 
-        echo "Analyzing $dockerfile..." >&2
+        echo "Analyzing $tag..." >&2
         local result
-        result=$(analyze_image "$dockerfile")
+        result=$(analyze_image "$tag")
         results+=("$result")
       done
 

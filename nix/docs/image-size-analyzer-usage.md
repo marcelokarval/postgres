@@ -12,15 +12,12 @@ A tool to analyze Docker image sizes for Supabase Postgres images, providing bre
 ### Basic Commands
 
 ```bash
-# Analyze all images (Dockerfile-15, Dockerfile-17, Dockerfile-orioledb-17)
+# Analyze all images
 # This will build all images first, then analyze them
 nix run .#image-size-analyzer
 
 # Analyze a specific image
-nix run .#image-size-analyzer -- --image Dockerfile-17
-
-# Analyze multiple specific images
-nix run .#image-size-analyzer -- --image Dockerfile-15 --image Dockerfile-17
+nix run .#image-size-analyzer -- --multigres --orioledb --version 17
 
 # Skip building (analyze existing images)
 # Images must already exist with the -analyze tag suffix
@@ -30,7 +27,7 @@ nix run .#image-size-analyzer -- --no-build
 nix run .#image-size-analyzer -- --json
 
 # Combine flags
-nix run .#image-size-analyzer -- --image Dockerfile-17 --json --no-build
+nix run .#image-size-analyzer -- --json --no-build
 ```
 
 ### Understanding the Output
@@ -49,13 +46,15 @@ The TUI output shows four sections per image:
 # 1. Make changes to reduce image size (e.g., remove an extension)
 
 # 2. Build and analyze the specific image you changed
-nix run .#image-size-analyzer -- --image Dockerfile-17
+nix run .#image-size-analyzer -- --multigres --orioledb --version 17
 
 # 3. Compare with JSON output for precise numbers
-nix run .#image-size-analyzer -- --image Dockerfile-17 --json > before.json
+nix run .#image-size-analyzer -- --multigres --orioledb --version 17 >before.json
 
-# 4. Make more changes, then compare
-nix run .#image-size-analyzer -- --image Dockerfile-17 --json > after.json
+# 4. Make some changes
+nix run .#image-size-analyzer -- --multigres --orioledb --version 17 >after.json
+
+# 5. Now compare
 diff before.json after.json
 ```
 
@@ -152,7 +151,7 @@ Add a job that fails if images exceed a size threshold:
           THRESHOLD=2684354560
 
           # Check each image
-          for dockerfile in Dockerfile-15 Dockerfile-17 Dockerfile-orioledb-17; do
+          for tag in $(jq dockerfile in Dockerfile-15 Dockerfile-17 Dockerfile-orioledb-17; do
             size=$(jq -r ".images[] | select(.dockerfile == \"$dockerfile\") | .total_size_bytes" sizes.json)
             if [ "$size" -gt "$THRESHOLD" ]; then
               echo "ERROR: $dockerfile exceeds size threshold"

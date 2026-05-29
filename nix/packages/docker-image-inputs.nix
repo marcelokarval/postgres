@@ -21,11 +21,7 @@ let
     src = lib.fileset.toSource {
       inherit root;
       fileset = lib.fileset.unions [
-        # Dockerfiles
-        (root + "/Dockerfile-15")
-        (root + "/Dockerfile-17")
-        (root + "/Dockerfile-orioledb-17")
-        (root + "/Dockerfile-multigres")
+        (root + "/Dockerfile")
 
         # PostgreSQL configuration files (copied into images)
         (root + "/ansible/files/postgresql_config")

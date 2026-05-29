@@ -69,8 +69,7 @@ Here's a comprehensive overview of the project's directory structure:
 | migrations/tests/extensions/ | Extension migration tests |
 | **docker/** | Container definitions and Docker-related files |
 | docker/nix/ | Nix-based Docker build configurations |
-| Dockerfile-15 | Docker image definition for PostgreSQL 15 |
-| Dockerfile-17 | Docker image definition for PostgreSQL 17 |
+| Dockerfile | Docker image definitions for PostgreSQL 15, 17, OrioleDB + Multigres |
 | **tests/** | Integration and system tests |
 | testinfra/ | Infrastructure tests using pytest framework |
 | tests/ | General integration test suites |
@@ -155,10 +154,10 @@ nix build .#checks.aarch64-darwin.psql_17 -L
 
 ```bash
 # Build Docker image for PostgreSQL 15
-docker build -f Dockerfile-15 -t supabase-postgres:15 .
+docker build --build-arg=PG_VERSION=15 -t supabase-postgres:15 .
 
 # Build Docker image for PostgreSQL 17
-docker build -f Dockerfile-17 -t supabase-postgres:17 .
+docker build -t supabase-postgres:17 .
 ```
 
 ## Next Steps
