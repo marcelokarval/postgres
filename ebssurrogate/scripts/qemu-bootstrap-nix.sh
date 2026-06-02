@@ -4,12 +4,6 @@ set -o errexit
 set -o pipefail
 set -o xtrace
 
-if [ $(dpkg --print-architecture) = "amd64" ]; then
-	ARCH="amd64"
-else
-	ARCH="arm64"
-fi
-
 function waitfor_boot_finished {
 	export DEBIAN_FRONTEND=noninteractive
 
@@ -121,8 +115,8 @@ function clean_legacy_things {
 
 function clean_system {
 	# Copy cleanup scripts
-	chmod +x /tmp/ansible-playbook/scripts/90-cleanup-qemu.sh
-	/tmp/ansible-playbook/scripts/90-cleanup-qemu.sh
+	chmod +x /tmp/90-cleanup-qemu.sh
+	/tmp/90-cleanup-qemu.sh
 
 	# # Cleanup logs
 	rm -rf /var/log/*

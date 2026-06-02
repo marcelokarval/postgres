@@ -10,11 +10,7 @@ set -o errexit
 set -o pipefail
 set -o xtrace
 
-if [ $(dpkg --print-architecture) = "amd64" ]; then
-	ARCH="amd64"
-else
-	ARCH="arm64"
-fi
+ARCH=$(dpkg --print-architecture)
 
 # Mirror fallback function for resilient apt-get update
 function apt_update_with_fallback {
@@ -338,7 +334,7 @@ EOF
 	# Run Ansible playbook
 	#export ANSIBLE_LOG_PATH=/tmp/ansible.log && export ANSIBLE_DEBUG=True && export ANSIBLE_REMOTE_TEMP=/mnt/tmp
 	export ANSIBLE_LOG_PATH=/tmp/ansible.log && export ANSIBLE_REMOTE_TEMP=/mnt/tmp
-	ansible-playbook -c chroot -i '/mnt,' /tmp/ansible-playbook/ansible/playbook.yml \
+	ansible-playbook -c chroot -i '/mnt,' /tmp/ansible/playbook.yml \
 		--extra-vars '{"nixpkg_mode": true, "debpkg_mode": false, "stage2_nix": false} ' \
 		--extra-vars "psql_version=psql_${POSTGRES_MAJOR_VERSION}" \
 		$ARGS
@@ -361,7 +357,7 @@ function update_systemd_services {
 
 function clean_system {
 	# Copy cleanup scripts
-	cp -v /tmp/ansible-playbook/scripts/90-cleanup.sh /mnt/tmp
+	cp -v /tmp/90-cleanup.sh /mnt/tmp
 	chmod +x /mnt/tmp/90-cleanup.sh
 	chroot /mnt /tmp/90-cleanup.sh
 

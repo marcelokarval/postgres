@@ -22,11 +22,7 @@ exit 101
 EOF
 chmod +x /usr/sbin/policy-rc.d
 
-if [ $(dpkg --print-architecture) = "amd64" ]; then
-	ARCH="amd64"
-else
-	ARCH="arm64"
-fi
+ARCH=$(dpkg --print-architecture)
 
 # Get current mirror from sources.list
 function get_current_mirror {

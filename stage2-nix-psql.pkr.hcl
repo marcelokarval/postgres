@@ -100,29 +100,24 @@ build {
     "source.amazon-ebs.ubuntu"
   ]
 
-  # Copy ansible playbook
-  provisioner "shell" {
-    inline = ["mkdir /tmp/ansible-playbook"]
-  }
-
   provisioner "file" {
     source = "ansible"
-    destination = "/tmp/ansible-playbook"
+    destination = "/tmp/"
   }
 
   provisioner "file" {
     source = "migrations"
-    destination = "/tmp"
+    destination = "/tmp/"
   }
 
   provisioner "file" {
-    source = "scripts"
-    destination = "/tmp/ansible-playbook"
+    source = "ebssurrogate/scripts/nix-provision.sh"
+    destination = "/tmp/"
   }
 
   provisioner "file" {
     source = "audit-specs"
-    destination = "/tmp/ansible-playbook"
+    destination = "/tmp/"
   }
 
   provisioner "shell" {
@@ -130,7 +125,7 @@ build {
       "GIT_SHA=${var.git_sha}",
       "POSTGRES_MAJOR_VERSION=${var.postgres_major_version}"
     ]
-     script = "scripts/nix-provision.sh"
+     script = "ebssurrogate/scripts/nix-provision.sh"
   }
 
 }

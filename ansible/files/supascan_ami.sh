@@ -8,7 +8,7 @@
 
 set -euo pipefail
 
-BASELINES_DIR="${1:-/tmp/ansible-playbook/audit-specs/baselines/ami-build}"
+BASELINES_DIR="${1:-/tmp/audit-specs/baselines/ami-build}"
 
 echo "============================================================"
 echo "Baseline Validation"

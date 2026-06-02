@@ -105,24 +105,19 @@ build {
   name    = "cloudimg.image"
   sources = ["source.qemu.cloudimg"]
 
-  # Copy ansible playbook
-  provisioner "shell" {
-    inline = ["mkdir /tmp/ansible-playbook"]
-  }
-
   provisioner "file" {
     source = "ansible"
-    destination = "/tmp/ansible-playbook"
+    destination = "/tmp/"
   }
 
   provisioner "file" {
-    source = "scripts"
-    destination = "/tmp/ansible-playbook"
+    source = "ebssurrogate/scripts/90-cleanup-qemu.sh"
+    destination = "/tmp/"
   }
 
   provisioner "file" {
     source = "migrations"
-    destination = "/tmp"
+    destination = "/tmp/"
   }
 
   provisioner "shell" {
@@ -133,7 +128,7 @@ build {
     ]
     use_env_var_file = true
     script = "ebssurrogate/scripts/qemu-bootstrap-nix.sh"
-    execute_command = "sudo -S sh -c '. {{.EnvVarFile}} && cd /tmp/ansible-playbook && {{.Path}}'"
+    execute_command = "sudo -S sh -c '. {{.EnvVarFile}} && {{.Path}}'"
     start_retry_timeout = "5m"
     skip_clean = true
   }

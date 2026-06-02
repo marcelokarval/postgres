@@ -194,57 +194,47 @@ build {
 
   provisioner "file" {
     source = "ebssurrogate/files/ebsnvme-id"
-    destination = "/tmp/ebsnvme-id"
+    destination = "/tmp/"
   }
 
   provisioner "file" {
     source = "ebssurrogate/files/70-ec2-nvme-devices.rules"
-    destination = "/tmp/70-ec2-nvme-devices.rules"
+    destination = "/tmp/"
   }
 
   provisioner "file" {
     source = "ebssurrogate/scripts/chroot-bootstrap-nix.sh"
-    destination = "/tmp/chroot-bootstrap-nix.sh"
+    destination = "/tmp/"
   }
 
   provisioner "file" {
     source = "ebssurrogate/files/cloud.cfg"
-    destination = "/tmp/cloud.cfg"
+    destination = "/tmp/"
   }
 
   provisioner "file" {
     source = "ebssurrogate/files/vector.timer"
-    destination = "/tmp/vector.timer"
+    destination = "/tmp/"
   }
 
   provisioner "file" {
     source = "ebssurrogate/files/apparmor_profiles"
-    destination = "/tmp"
+    destination = "/tmp/"
   }
 
   provisioner "file" {
     source = "migrations"
-    destination = "/tmp"
-  }
-
-  # Copy ansible playbook
-  provisioner "shell" {
-    inline = ["mkdir /tmp/ansible-playbook"]
+    destination = "/tmp/"
   }
 
   provisioner "file" {
     source = "ansible"
-    destination = "/tmp/ansible-playbook"
+    destination = "/tmp/"
   }
 
   provisioner "file" {
-    source = "scripts"
-    destination = "/tmp/ansible-playbook"
-  }
-
-  provisioner "file" {
-    source = "ansible/vars.yml"
-    destination = "/tmp/ansible-playbook/vars.yml"
+    source = "ebssurrogate/scripts/90-cleanup.sh"
+    destination = "/tmp/"
   }
 
   provisioner "shell" {
@@ -258,7 +248,7 @@ build {
     ]
     use_env_var_file = true
     script = "ebssurrogate/scripts/surrogate-bootstrap-nix.sh"
-    execute_command = "sudo -S sh -c '. {{.EnvVarFile}} && cd /tmp/ansible-playbook && {{.Path}}'"
+    execute_command = "sudo -S sh -c 'ls -alh /tmp && . {{.EnvVarFile}} && {{.Path}}'"
     start_retry_timeout = "5m"
     skip_clean = true
   }
