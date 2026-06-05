@@ -18,10 +18,14 @@ jobs:
       matrix_config: ${{ steps.set-matrix.outputs.matrix_config }}
       base_matrix: ${{ steps.set-matrix.outputs.base_matrix }}
       layered_matrix: ${{ steps.set-matrix.outputs.layered_matrix }}
+      short_sha: ${{ steps.short_sha.outputs.short_sha }}
     steps:
       - uses: ./.github/actions/nix-install-ephemeral
       - name: Checkout Repo
         uses: supabase/postgres/.github/actions/shared-checkout@HEAD
+      - name: Get short SHA
+        id: short_sha
+        run: echo "short_sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
       - name: Generate build matrix
         id: set-matrix
         run: |
@@ -88,7 +92,7 @@ jobs:
             ${{ needs.build.outputs.build_args }}
             PG_VERSION=${{ matrix.postgres.pg_version }}
           target: ${{ matrix.postgres.target }}
-          tags: supabase/postgres:${{ inputs.postgresVersion || matrix.postgres.tag }}_${{ matrix.arch }}
+          tags: supabase/postgres:${{ inputs.postgresVersion || matrix.postgres.tag }}-${{ needs.prepare.outputs.short_sha }}_${{ matrix.arch }}
           platforms: linux/${{ matrix.arch }}
           cache-from: type=gha,scope=${{ github.ref_name }}-latest-${{ matrix.arch }}
           cache-to: type=gha,mode=max,scope=${{ github.ref_name }}-latest-${{ matrix.arch }}
@@ -123,7 +127,7 @@ jobs:
             PG_VERSION=${{ matrix.postgres.pg_version }}
             SUPABASE_IMAGE=supabase/postgres:${{ inputs.postgresVersion || matrix.postgres.base_tag }}_${{ matrix.arch }}
           target: ${{ matrix.postgres.target }}
-          tags: supabase/postgres:${{ inputs.postgresVersion != '' && format('{0}-multigres', inputs.postgresVersion) || matrix.postgres.tag }}_${{ matrix.arch }}
+          tags: supabase/postgres:${{ inputs.postgresVersion != '' && format('{0}-multigres', inputs.postgresVersion) || matrix.postgres.tag }}-${{ needs.prepare.outputs.short_sha }}_${{ matrix.arch }}
           platforms: linux/${{ matrix.arch }}
           cache-from: type=gha,scope=${{ github.ref_name }}-latest-${{ matrix.arch }}
           cache-to: type=gha,mode=max,scope=${{ github.ref_name }}-latest-${{ matrix.arch }}
@@ -146,7 +150,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Get image tag
         id: get_version
-        run: echo "pg_version=supabase/postgres:${{ inputs.postgresVersion != '' && (contains(matrix.tag, '-multigres') && format('{0}-multigres', inputs.postgresVersion) || inputs.postgresVersion) || matrix.tag }}" >> $GITHUB_OUTPUT
+        run: echo "pg_version=supabase/postgres:${{ inputs.postgresVersion != '' && (contains(matrix.tag, '-multigres') && format('{0}-multigres', inputs.postgresVersion) || inputs.postgresVersion) || matrix.tag }}-${{ needs.prepare.outputs.short_sha }}" >> $GITHUB_OUTPUT
       - name: Output version
         id: output_version
         run: |
