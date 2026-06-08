@@ -39,13 +39,22 @@ jobs:
       fail-fast: false
       matrix:
         postgres_version: ${{ fromJson(needs.prepare.outputs.postgres_versions) }}
-        include:
-          - runner: blacksmith-2vcpu-ubuntu-2404-arm
-            arch: arm64
-            ubuntu_release: noble
-            ubuntu_version: 24.04
-            mcpu: neoverse-n1
-    runs-on: ${{ matrix.runner }}
+        arch:
+          - name: arm64
+            ami_arch_filter: arm64
+            instance_type: c6g.4xlarge
+            nix_system: aarch64-linux
+            packer_template: amazon-arm64-nix.pkr.hcl
+            runner: blacksmith-2vcpu-ubuntu-2404-arm
+            vars_file: development-arm.vars.pkr.hcl
+          - name: amd64
+            ami_arch_filter: x86_64
+            instance_type: c6i.4xlarge
+            nix_system: x86_64-linux
+            packer_template: amazon-amd64-nix.pkr.hcl
+            runner: blacksmith-2vcpu-ubuntu-2404
+            vars_file: development-x86.vars.pkr.hcl
+    runs-on: ${{ matrix.arch.runner }}
     timeout-minutes: 150
 
     steps:
