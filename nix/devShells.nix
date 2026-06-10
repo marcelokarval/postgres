@@ -154,6 +154,10 @@
           pgrxVersion = "0_12_6";
           rustVersion = "1.80.0";
         };
+        cargo-pgrx_0_16_1 = mkCargoPgrxDevShell {
+          pgrxVersion = "0_16_1";
+          rustVersion = "1.88.0";
+        };
       };
     };
 }

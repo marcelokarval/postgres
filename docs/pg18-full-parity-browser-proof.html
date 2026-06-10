@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PG18 Full-Parity Acceptance</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, sans-serif; margin: 32px; color: #172033; background: #f8fafc; }
+    main { max-width: 1180px; margin: auto; background: white; border: 1px solid #d9e2ec; border-radius: 16px; padding: 28px; box-shadow: 0 16px 50px rgba(15,23,42,.08); }
+    h1 { margin-top: 0; }
+    .badge { display:inline-block; padding: 4px 10px; border-radius: 999px; background:#dcfce7; color:#166534; font-weight:700; }
+    .warn { background:#fef9c3; color:#854d0e; }
+    code { background:#eef2ff; padding: 2px 5px; border-radius: 6px; }
+    table { border-collapse: collapse; width: 100%; margin: 18px 0; font-size: 14px; }
+    th, td { border: 1px solid #d9e2ec; padding: 8px; text-align: left; vertical-align: top; }
+    th { background:#f1f5f9; }
+    .grid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; }
+    .card { border:1px solid #d9e2ec; border-radius: 12px; padding:16px; background:#fbfdff; }
+  </style>
+</head>
+<body>
+<main>
+  <p><span class="badge">ACCEPTED</span> <span class="badge warn">PG18 database image, not full Supabase platform</span></p>
+  <h1>PostgreSQL 18 Full-Parity Acceptance</h1>
+  <p>Imagem aprovada: <code>sha256:576f2d7cb01fdd0dacd37679eb37100e3da37102c536ecb3ed39173cdd39e9e3</code></p>
+  <p>Serviço vivo: <code>postgres18_postgres</code> usando <code>local/supabase-postgres:18-karval</code>.</p>
+  <div class="grid">
+    <section class="card"><h2>Preload validado</h2><p><code>pg_stat_statements, pgaudit, pg_cron, pg_net, pg_tle, safeupdate</code></p></section>
+    <section class="card"><h2>Probes</h2><ul><li>pg_jsonschema PASS</li><li>postgis PASS</li><li>vector PASS</li><li>safeupdate PASS</li></ul></section>
+  </div>
+  <h2>Extensões SQL principais</h2>
+  <table>
+    <thead><tr><th>Classe</th><th>Extensões</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Core Supabase/Postgres parity</td><td>http, hypopg, index_advisor, pg_cron, pg_graphql, pg_hashids, pg_jsonschema, pg_net, pg_repack, pg_stat_monitor, pg_tle, pgaudit, pgjwt, pgmq, pgroonga, pgroonga_database, pgrouting, pgsodium, pgtap, plpgsql_check, postgis, rum, supabase_vault, vector, wal2json, wrappers, pg_partman</td><td>PASS</td></tr>
+      <tr><td>Library/preload</td><td>safeupdate, supautils, plan_filter</td><td>PASS com WARN para testes comportamentais futuros de supautils/plan_filter</td></tr>
+    </tbody>
+  </table>
+  <h2>Próximos passos</h2>
+  <ol>
+    <li>Commitar o slice PG18 acceptance.</li>
+    <li>Aprofundar testes comportamentais de <code>supautils</code> e <code>plan_filter</code>.</li>
+    <li>Rodar docker-image-test completo em runner Nix limpo e decidir se cria fixtures <code>z_18_*</code>.</li>
+    <li>Desenhar o PRD database-centric em cima desta imagem.</li>
+  </ol>
+</main>
+</body>
+</html>

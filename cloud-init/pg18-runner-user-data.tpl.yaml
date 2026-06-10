@@ -1,0 +1,56 @@
+#cloud-config
+package_update: true
+package_upgrade: false
+packages:
+  - ca-certificates
+  - curl
+  - git
+  - jq
+  - qemu-guest-agent
+  - xz-utils
+
+users:
+  - default
+  - name: ubuntu
+    lock_passwd: false
+    passwd: "$6$canonical.$0zWaW71A9ke9ASsaOcFTdQ2tx1gSmLxMPrsH0rF0Yb.2AEKNPV1lrF94n6YuPJmnUy2K2/JSDtxuiBDey6Lpa/"
+    sudo: "ALL=(ALL) NOPASSWD:ALL"
+    shell: /bin/bash
+    groups: [adm, cdrom, dip, lxd, plugdev, sudo]
+    ssh_authorized_keys:
+      - __SSH_AUTH_KEY__
+
+write_files:
+  - path: /usr/local/bin/pg18-cloud-init-bootstrap.sh
+    permissions: '0755'
+    owner: root:root
+    content: |
+      #!/usr/bin/env bash
+      set -euo pipefail
+      export DEBIAN_FRONTEND=noninteractive
+      REPO_URL='__REPO_URL__'
+      REPO_REF='__REPO_REF__'
+      REPO_DIR='/opt/pg18-repo'
+      VALIDATION_ARGS='__VALIDATION_ARGS__'
+      AUTO_BOOTSTRAP='__AUTO_BOOTSTRAP__'
+
+      mkdir -p /opt
+      if [[ ! -d "$REPO_DIR/.git" ]]; then
+        git clone "$REPO_URL" "$REPO_DIR"
+      fi
+      cd "$REPO_DIR"
+      git fetch --all --tags --prune
+      git checkout "$REPO_REF"
+
+      if [[ "$AUTO_BOOTSTRAP" == "true" ]]; then
+        # shellcheck disable=SC2086
+        "$REPO_DIR/scripts/bootstrap-pg18-runner.sh" --repo-dir "$REPO_DIR" -- $VALIDATION_ARGS
+      else
+        echo "PG18 VM is ready. Next step:" | tee /var/log/pg18-ready.txt
+        echo "cd $REPO_DIR && scripts/bootstrap-pg18-runner.sh --repo-dir $REPO_DIR $VALIDATION_ARGS" | tee -a /var/log/pg18-ready.txt
+      fi
+
+runcmd:
+  - [ bash, -lc, '/usr/local/bin/pg18-cloud-init-bootstrap.sh | tee /var/log/pg18-cloud-init-bootstrap.log' ]
+
+final_message: "PG18 runner cloud-init finished. See /var/log/pg18-cloud-init-bootstrap.log"

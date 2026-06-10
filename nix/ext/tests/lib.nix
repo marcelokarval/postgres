@@ -6,6 +6,7 @@ let
   expectedVersions = {
     "15" = "15.14";
     "17" = "17.6";
+    "18" = "18.0";
   };
 
   defaultPort = 5432;
@@ -100,7 +101,7 @@ let
 
       # Version-specific adjustments (mirroring run-server.sh.in:250-295)
       ${
-        if majorVersion == "17" || majorVersion == "orioledb-17" then
+        if majorVersion == "17" || majorVersion == "18" || majorVersion == "orioledb-17" then
           ''
             # PG 17+: remove timescaledb from shared_preload_libraries
             sed -i 's/ timescaledb,//g' $out/postgresql.conf

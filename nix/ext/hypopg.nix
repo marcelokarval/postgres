@@ -38,6 +38,15 @@ let
         inherit hash;
       };
 
+      postPatch = lib.optionalString (lib.versionAtLeast postgresql.version "18") ''
+        # PostgreSQL 18 changed get_ordering_op_properties() to return a
+        # generic CompareType instead of a btree strategy number.
+        sed -i '/#include "utils\/lsyscache.h"/a #include "access/cmptype.h"' hypopg_index.c
+        sed -i 's/int16[[:space:]]*btstrategy;/CompareType cmptype;/' hypopg_index.c
+        sed -i 's/&btstrategy)/\&cmptype)/' hypopg_index.c
+        sed -i 's/btstrategy == BTLessStrategyNumber/cmptype == COMPARE_LT/' hypopg_index.c
+      '';
+
       installPhase = ''
         mkdir -p $out/{lib,share/postgresql/extension}
 

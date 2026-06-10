@@ -69,6 +69,9 @@ let
           } > $out/share/postgresql/extension/${pname}.control
           ln -sfn ${pname}-${latestVersion}${postgresql.dlSuffix} $out/lib/${pname}${postgresql.dlSuffix}
           cp *.sql $out/share/postgresql/extension
+          if [[ -f ${pname}.sql && ! -f $out/share/postgresql/extension/${pname}--${version}.sql ]]; then
+            cp ${pname}.sql $out/share/postgresql/extension/${pname}--${version}.sql
+          fi
         fi
       '';
 

@@ -5,6 +5,7 @@
   python3,
   psql_15,
   psql_17,
+  psql_18,
   psql_orioledb-17,
   pg_regress,
 }:
@@ -20,6 +21,7 @@ writeShellApplication {
     #
     # Usage:
     #   nix run .#docker-image-test -- Dockerfile-17
+    #   nix run .#docker-image-test -- Dockerfile-18
     #   nix run .#docker-image-test -- --no-build Dockerfile-15
     #   nix run .#docker-image-test -- --target variant-17 Dockerfile-multigres
     #   nix run .#docker-image-test -- --no-build --target variant-orioledb-17 Dockerfile-multigres
@@ -59,7 +61,7 @@ writeShellApplication {
     Test a PostgreSQL Docker image against the pg_regress test suite.
 
     Arguments:
-      DOCKERFILE    The Dockerfile to build and test (e.g., Dockerfile-17)
+      DOCKERFILE    The Dockerfile to build and test (e.g., Dockerfile-18)
 
     Options:
       -h, --help         Show this help message
@@ -70,6 +72,7 @@ writeShellApplication {
 
     Examples:
       nix run .#docker-image-test -- Dockerfile-17
+      nix run .#docker-image-test -- Dockerfile-18
       nix run .#docker-image-test -- Dockerfile-15
       nix run .#docker-image-test -- Dockerfile-orioledb-17
       nix run .#docker-image-test -- --no-build Dockerfile-17
@@ -84,6 +87,7 @@ writeShellApplication {
         case "$dockerfile" in
             Dockerfile-15) echo "15 5436" ;;
             Dockerfile-17) echo "17 5435" ;;
+            Dockerfile-18) echo "18 5434" ;;
             Dockerfile-orioledb-17) echo "orioledb-17 5437" ;;
             Dockerfile-multigres)
                 case "''${TARGET}" in
@@ -97,7 +101,7 @@ writeShellApplication {
                 ;;
             *)
                 log_error "Unknown Dockerfile: $dockerfile"
-                log_error "Supported: Dockerfile-15, Dockerfile-17, Dockerfile-orioledb-17, Dockerfile-multigres"
+                log_error "Supported: Dockerfile-15, Dockerfile-17, Dockerfile-18, Dockerfile-orioledb-17, Dockerfile-multigres"
                 exit 1
                 ;;
         esac
@@ -197,7 +201,7 @@ writeShellApplication {
             if [[ "$_basename" == z_* ]]; then
                 case "$version" in
                     15)                    [[ "$_basename" == z_15_* ]]                    && tests+=("$_basename") ;;
-                    17)                    [[ "$_basename" == z_17_* ]]                    && tests+=("$_basename") ;;
+                    17|18)                 [[ "$_basename" == z_17_* ]]                    && tests+=("$_basename") ;;
                     orioledb-17)           [[ "$_basename" == z_orioledb-17_* ]]           && tests+=("$_basename") ;;
                     multigres-17)          [[ "$_basename" == z_multigres-17_* ]]          && tests+=("$_basename") ;;
                     multigres-orioledb-17) [[ "$_basename" == z_multigres-orioledb-17_* ]] && tests+=("$_basename") ;;
@@ -474,6 +478,10 @@ writeShellApplication {
             17|multigres-17)
                 PSQL_PATH="${psql_17}/bin/psql"
                 PG_ISREADY_PATH="${psql_17}/bin/pg_isready"
+                ;;
+            18)
+                PSQL_PATH="${psql_18}/bin/psql"
+                PG_ISREADY_PATH="${psql_18}/bin/pg_isready"
                 ;;
             orioledb-17|multigres-orioledb-17)
                 PSQL_PATH="${psql_orioledb-17}/bin/psql"

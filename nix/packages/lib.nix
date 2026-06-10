@@ -1,4 +1,5 @@
 {
+  psql_18,
   psql_17,
   psql_15,
   psql_orioledb-17,
@@ -87,6 +88,7 @@
         PGSQL_SUPERUSER = "${defaults.superuser}";
         PSQL15_BINDIR = "${psql_15}";
         PSQL17_BINDIR = "${psql_17}";
+        PSQL18_BINDIR = "${psql_18}";
         PSQL_CONF_FILE = "${paths.pgconfigFile}";
         POSTGRESQL_CONFIG_DIR = "${postgresqlConfigBaseDir}";
         PSQLORIOLEDB17_BINDIR = "${psql_orioledb-17}";

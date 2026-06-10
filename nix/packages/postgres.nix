@@ -61,6 +61,10 @@
 
       orioledbExtensions = orioleFilteredExtensions ++ [ ../ext/orioledb.nix ];
       dbExtensions17 = orioleFilteredExtensions;
+      # PG18 target: same Supabase extension surface as PG17 filtered image.
+      # This intentionally excludes timescaledb and plv8 via orioleFilteredExtensions,
+      # and does NOT include OrioleDB (only orioledbExtensions does that).
+      dbExtensions18 = orioleFilteredExtensions;
 
       # CLI extensions - minimal set for Supabase CLI with migration support
       cliExtensions = [
@@ -127,6 +131,8 @@
               cliExtensions
             else if (builtins.elem version [ "orioledb-17" ]) then
               orioledbExtensions
+            else if (builtins.elem version [ "18" ]) then
+              dbExtensions18
             else if (builtins.elem version [ "17" ]) then
               dbExtensions17
             else
@@ -230,11 +236,13 @@
       basePackages = {
         psql_15 = makePostgres "15" { };
         psql_17 = makePostgres "17" { };
+        psql_18 = makePostgres "18" { };
         psql_orioledb-17 = makePostgres "orioledb-17" { };
       };
       slimPackages = {
         psql_15_slim = makePostgres "15" { latestOnly = true; };
         psql_17_slim = makePostgres "17" { latestOnly = true; };
+        psql_18_slim = makePostgres "18" { latestOnly = true; };
         psql_orioledb-17_slim = makePostgres "orioledb-17" { latestOnly = true; };
       };
 

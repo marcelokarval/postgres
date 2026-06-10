@@ -52,6 +52,10 @@ let
 
         if [[ "${version}" == "${latestVersion}" ]]; then
           cp ${pname}.sql $out/share/postgresql/extension/${pname}--1.0.0.sql
+          # Upstream pg_cron 1.6.x still ships pg_cron.sql/default_version=1.6,
+          # while this fork exposes exact package versions in control files.
+          # PostgreSQL needs a direct install script matching default_version.
+          cp ${pname}.sql $out/share/postgresql/extension/${pname}--${version}.sql
           # Install upgrade scripts
           find . -name 'pg_cron--*--*.sql' -exec install -Dm644 {} $out/share/postgresql/extension/ \;
           mv $out/share/postgresql/extension/pg_cron--1.0--1.1.sql $out/share/postgresql/extension/pg_cron--1.0.0--1.1.0.sql

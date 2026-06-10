@@ -11,6 +11,9 @@
   buildEnv,
   supabase-groonga,
   mecab-naist-jdic,
+  meson,
+  ninja,
+  ruby,
   switch-ext-version,
   latestOnly ? false,
 }:
@@ -56,6 +59,11 @@ let
       nativeBuildInputs = [
         pkg-config
         makeWrapper
+      ]
+      ++ lib.optionals (lib.versionAtLeast version "4.0.0") [
+        meson
+        ninja
+        ruby
       ];
 
       buildInputs = [
@@ -63,8 +71,8 @@ let
         msgpack-c
         supabase-groonga
         mecab
-      ]
-      ++ lib.optionals stdenv.isDarwin [ xxHash ];
+        xxHash
+      ];
 
       propagatedBuildInputs = [
         supabase-groonga
@@ -97,6 +105,8 @@ let
       preConfigure = ''
         export GROONGA_LIBS="-L${supabase-groonga}/lib -lgroonga"
         export GROONGA_CFLAGS="-I${supabase-groonga}/include"
+        export PKG_CONFIG_PATH="${supabase-groonga}/lib/pkgconfig:${msgpack-c}/lib/pkgconfig:$PKG_CONFIG_PATH"
+        export CFLAGS="-I${xxHash}/include $CFLAGS"
         export MECAB_CONFIG="${mecab}/bin/mecab-config"
         export MECAB_DICDIR="${mecab-naist-jdic}/lib/mecab/dic/naist-jdic"
         ${lib.optionalString stdenv.isDarwin ''
@@ -106,10 +116,55 @@ let
         ''}
       '';
 
+      configurePhase = lib.optionalString (lib.versionAtLeast version "4.0.0") ''
+        runHook preConfigure
+        meson setup build . \
+          --buildtype=release \
+          --prefix=$out \
+          --libdir=lib \
+          --datadir=share/postgresql \
+          -Dpg_config=${postgresql}/bin/pg_config \
+          -Dinstall_to_postgresql=false \
+          -Dmessage_pack=enabled \
+          -Dtest=false \
+          -Dxxhash=enabled
+        runHook postConfigure
+      '';
+
+      buildPhase = lib.optionalString (lib.versionAtLeast version "4.0.0") ''
+        runHook preBuild
+        ninja -v -j1 -C build
+        runHook postBuild
+      '';
+
       installPhase = ''
         runHook preInstall
 
         mkdir -p $out/{lib,share/postgresql/extension}
+
+        ${lib.optionalString (lib.versionAtLeast version "4.0.0") ''
+          cp build/pgroonga${postgresql.dlSuffix} $out/lib/pgroonga-${version}${postgresql.dlSuffix}
+          cp build/pgroonga_database${postgresql.dlSuffix} $out/lib/pgroonga_database-${version}${postgresql.dlSuffix}
+          cp data/pgroonga.sql $out/share/postgresql/extension/pgroonga--${version}.sql
+          cp data/pgroonga_database.sql $out/share/postgresql/extension/pgroonga_database--${version}.sql
+          cp data/pgroonga--*--*.sql $out/share/postgresql/extension/ || true
+
+          for ext in ${lib.concatStringsSep " " cExtensions}; do
+            sed -e "/^default_version =/d" \
+                -e "s|^module_pathname = .*|module_pathname = '\$libdir/$ext'|" \
+              $ext.control > $out/share/postgresql/extension/$ext--${version}.control
+
+            if [[ "${version}" == "${latestVersion}" ]]; then
+              {
+                echo "default_version = '${version}'"
+                cat $out/share/postgresql/extension/$ext--${version}.control
+              } > $out/share/postgresql/extension/$ext.control
+              ln -sfn $ext-${version}${postgresql.dlSuffix} $out/lib/$ext${postgresql.dlSuffix}
+            fi
+          done
+          runHook postInstall
+          exit 0
+        ''}
 
         for ext in ${lib.concatStringsSep " " cExtensions}; do
           # Install shared library with version suffix

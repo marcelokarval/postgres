@@ -1,0 +1,28 @@
+services:
+  pg18-gha-runner:
+    build:
+      context: ../..
+      dockerfile: docker/pg18-self-hosted-runner/Dockerfile
+    image: local/pg18-self-hosted-runner:latest
+    container_name: pg18-gha-runner
+    restart: unless-stopped
+    environment:
+      REPO_URL: ${REPO_URL:?set REPO_URL}
+      RUNNER_NAME: ${RUNNER_NAME:-pg18-self-hosted-01}
+      RUNNER_TOKEN: ${RUNNER_TOKEN:?set RUNNER_TOKEN}
+      LABELS: ${LABELS:-self-hosted,blacksmith-4vcpu-ubuntu-2404}
+      RUNNER_WORKDIR: /tmp/runner/work
+      DISABLE_AUTO_UPDATE: 'true'
+      START_DOCKER_SERVICE: 'false'
+      EPHEMERAL: 'false'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - pg18_runner_home:/home/runner
+      - pg18_runner_tmp:/tmp/runner
+      - pg18_runner_nix:/nix
+    privileged: true
+
+volumes:
+  pg18_runner_home:
+  pg18_runner_tmp:
+  pg18_runner_nix:

@@ -1,0 +1,92 @@
+name: PG18 Validation
+
+on:
+  workflow_dispatch:
+    inputs:
+      docker_test:
+        description: Run Dockerfile-18 runtime validation
+        required: false
+        default: true
+        type: boolean
+  pull_request:
+    paths:
+      - 'Dockerfile-18'
+      - 'nix/**'
+      - 'scripts/validate-pg18.sh'
+      - 'scripts/triage-pg18-failure.sh'
+      - 'scripts/promote-pg18-safe-outs.sh'
+      - '.github/workflows/pg18-validation.yml'
+  push:
+    branches:
+      - develop
+      - 'karval/**'
+    paths:
+      - 'Dockerfile-18'
+      - 'nix/**'
+      - 'scripts/validate-pg18.sh'
+      - 'scripts/triage-pg18-failure.sh'
+      - 'scripts/promote-pg18-safe-outs.sh'
+      - '.github/workflows/pg18-validation.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  pg18-build-and-checks:
+    name: PG18 build + checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Install Nix
+        uses: ./.github/actions/nix-install-ephemeral
+        with:
+          push-to-cache: 'false'
+
+      - name: Run PG18 build/check validation
+        run: scripts/validate-pg18.sh --skip-docker-build --skip-docker-test
+
+      - name: Upload PG18 build/check logs
+        if: always()
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.0
+        with:
+          name: pg18-build-and-checks-logs
+          path: |
+            tmp/pg18-validation/
+          if-no-files-found: warn
+
+  pg18-docker-runtime:
+    name: PG18 docker runtime
+    needs: pg18-build-and-checks
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.docker_test }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+
+      - name: Install Nix
+        uses: ./.github/actions/nix-install-ephemeral
+        with:
+          push-to-cache: 'false'
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
+
+      - name: Run PG18 Dockerfile-18 validation
+        run: scripts/validate-pg18.sh --skip-nix-builds
+
+      - name: Upload PG18 docker runtime logs
+        if: always()
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.0
+        with:
+          name: pg18-docker-runtime-logs
+          path: |
+            tmp/pg18-validation/
+          if-no-files-found: warn

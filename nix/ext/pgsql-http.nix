@@ -52,6 +52,12 @@ let
         inherit hash;
       };
 
+      postPatch = lib.optionalString (lib.versionAtLeast postgresql.version "18") ''
+        # PostgreSQL 18 changed pqsignal() to return void. pgsql-http 1.6.1
+        # still stores the return value, which fails to compile with PG18.
+        sed -i 's/pgsql_interrupt_handler = pqsignal(SIGINT, http_interrupt_handler);/pqsignal(SIGINT, http_interrupt_handler);/' http.c
+      '';
+
       installPhase = ''
         runHook preInstall
 

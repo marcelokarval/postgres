@@ -30,7 +30,7 @@ Supabase Postgres follows these core principles:
 
 1. **Unmodified PostgreSQL** - We don't fork or modify PostgreSQL itself. You get standard PostgreSQL with extensions.
 2. **Curated Extensions** - We include well-maintained, production-tested extensions that solve real problems.
-3. **Multi-version Support** - Currently supporting PostgreSQL 15, 17, and OrioleDB-17.
+3. **Multi-version Support** - Currently supporting PostgreSQL 15, 17, and OrioleDB-17, with PostgreSQL 18 bootstrap work in progress in this fork.
 4. **Ready for Production** - Configured with sensible defaults for replication, security, and performance.
 5. **Open Source** - Everything is open source and can be self-hosted.
 
@@ -137,8 +137,11 @@ nix build .#psql_15/bin
 # Build PostgreSQL 17
 nix build .#psql_17/bin
 
-# Build a specific extension
-nix build .#psql_17/exts/pg_graphql
+# Build PostgreSQL 18
+nix build .#psql_18/bin
+
+# Build a specific PG18 extension
+nix build .#psql_18/exts/pg_jsonschema
 ```
 
 ### Running Tests
@@ -149,6 +152,10 @@ nix flake check -L
 
 # Run specific test suite (for macos apple silicon for example)
 nix build .#checks.aarch64-darwin.psql_17 -L
+
+# PG18-focused local checks
+nix build .#checks.x86_64-linux.psql_18 -L
+nix build .#checks.x86_64-linux.psql_18_slim -L
 ```
 
 ### Creating Docker Images
@@ -159,6 +166,33 @@ docker build -f Dockerfile-15 -t supabase-postgres:15 .
 
 # Build Docker image for PostgreSQL 17
 docker build -f Dockerfile-17 -t supabase-postgres:17 .
+
+# Build Docker image for PostgreSQL 18
+docker build -f Dockerfile-18 -t supabase-postgres:18 .
+
+# Run the full PG18 validation sequence
+scripts/validate-pg18.sh
+
+# Bootstrap a disposable Linux runner/VM and run validation there
+scripts/bootstrap-pg18-runner.sh
+
+# Create a disposable local Ubuntu 24.04 cloud-image VM for acceptance
+scripts/create-pg18-cloudimg-vm.sh --print-only
+scripts/create-pg18-cloudimg-vm.sh
+
+# GitHub Actions workflow for the same PG18 acceptance lane
+.github/workflows/pg18-validation.yml
+.github/workflows/pg18-validation-self-hosted.yml
+
+# Local self-hosted runner lane backed by Docker socket + persistent /nix
+docker/pg18-self-hosted-runner/compose.pg18-self-hosted-runner.yml
+
+# If docker-image-test fails and preserves /tmp/tmp.<id>
+scripts/triage-pg18-failure.sh --output-dir /tmp/tmp.<id>
+
+# Preview or promote only reviewed-safe .out files
+scripts/promote-pg18-safe-outs.sh --bundle /tmp/pg18-triage-out/<stamp> --dry-run
+scripts/promote-pg18-safe-outs.sh --bundle /tmp/pg18-triage-out/<stamp>
 ```
 
 ## Next Steps
