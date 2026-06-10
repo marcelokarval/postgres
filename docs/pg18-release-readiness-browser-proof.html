@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PG18 Release-Readiness</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;margin:32px;background:#f8fafc;color:#0f172a}main{max-width:1160px;margin:auto;background:white;border:1px solid #dbe3ef;border-radius:16px;padding:28px;box-shadow:0 16px 50px rgba(15,23,42,.08)}.badge{display:inline-block;border-radius:999px;padding:4px 10px;font-weight:800;background:#dcfce7;color:#166534}.warn{background:#fef9c3;color:#854d0e}code{background:#eef2ff;border-radius:6px;padding:2px 5px}table{border-collapse:collapse;width:100%;margin-top:16px}td,th{border:1px solid #dbe3ef;padding:8px;text-align:left;vertical-align:top}th{background:#f1f5f9}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.card{border:1px solid #dbe3ef;border-radius:12px;padding:14px;background:#fbfdff}
+  </style>
+</head>
+<body><main>
+<p><span class="badge">LOCAL RELEASE-READINESS</span> <span class="badge warn">PG18 database image; not production/registry release</span></p>
+<h1>PG18 Release-Readiness Slice</h1>
+<p>Imagem aceita: <code>sha256:576f2d7cb01fdd0dacd37679eb37100e3da37102c536ecb3ed39173cdd39e9e3</code></p>
+<div class="grid">
+<section class="card"><h2>Runtime</h2><p><code>postgres18_postgres</code> saudável, PostgreSQL 18.0, preload validado.</p></section>
+<section class="card"><h2>Decisões</h2><ul><li>supautils/plan_filter = paridade</li><li>gateway futuro = PostgREST</li><li>client futuro = web simples</li><li>Django fora desta rodada</li></ul></section>
+</div>
+<h2>Entregas</h2>
+<table><thead><tr><th>Item</th><th>Status</th></tr></thead><tbody>
+<tr><td>README realinhado para PG18 local release-readiness</td><td>PASS</td></tr>
+<tr><td>PRD + tasks persistidos</td><td>PASS</td></tr>
+<tr><td>Parity contracts safeupdate/supautils/plan_filter</td><td>PASS</td></tr>
+<tr><td>PRD database-centric PostgREST/web</td><td>PASS</td></tr>
+<tr><td>Runtime/smoke/promote gates</td><td>PASS/WARN conforme relatório final</td></tr>
+</tbody></table>
+<h2>Próximos passos</h2>
+<ol><li>Clean runner/docker-image-test completo.</li><li>Registry/digest strategy.</li><li>Iniciar implementação PostgREST + web.</li></ol>
+</main></body></html>

@@ -34,10 +34,20 @@ EOF
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --log-dir)
+      if [[ $# -lt 2 || -z "${2:-}" ]]; then
+        echo "Missing value for --log-dir" >&2
+        usage >&2
+        exit 2
+      fi
       LOG_DIR="$2"
       shift 2
       ;;
     --image-tag)
+      if [[ $# -lt 2 || -z "${2:-}" ]]; then
+        echo "Missing value for --image-tag" >&2
+        usage >&2
+        exit 2
+      fi
       IMAGE_TAG="$2"
       shift 2
       ;;
@@ -85,10 +95,17 @@ run_step() {
   shift
   local logfile="$LOG_DIR/${name}.log"
   log "START $name"
+  set +e
   (
     cd "$ROOT_DIR"
     "$@"
   ) > >(tee "$logfile") 2>&1
+  local status=$?
+  set -e
+  if [[ $status -ne 0 ]]; then
+    log "FAIL  $name exit_code=$status logfile=$logfile"
+    exit "$status"
+  fi
   log "DONE  $name"
 }
 
