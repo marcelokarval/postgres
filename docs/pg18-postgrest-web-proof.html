@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PG18 PostgREST Web Proof</title>
+  <style>
+    body{font-family:Inter,system-ui,sans-serif;background:#0b1020;color:#eaf0ff;margin:0;padding:32px}.card{max-width:920px;margin:auto;background:#111a33;border:1px solid #2f4277;border-radius:18px;padding:28px;box-shadow:0 20px 60px #0008}.badge{display:inline-block;background:#1e7f4f;color:#d8ffe8;padding:6px 10px;border-radius:999px;font-weight:700}.grid{display:grid;grid-template-columns:180px 1fr;gap:10px;margin-top:20px}.k{color:#8fb3ff}.v{font-family:ui-monospace,monospace;background:#0a1228;border-radius:8px;padding:8px;white-space:pre-wrap}button{background:#5b8cff;color:white;border:0;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer}pre{background:#071022;border:1px solid #22335f;border-radius:12px;padding:16px;overflow:auto}</style>
+</head>
+<body>
+  <main class="card">
+    <span class="badge">POSTGREST WEB PROOF</span>
+    <h1>PG18 database-centric gateway proof</h1>
+    <p>Cliente web simples consumindo RPC <code>api.hello()</code> via PostgREST.</p>
+    <button id="reload">Chamar /rpc/hello</button>
+    <div class="grid">
+      <div class="k">API</div><div class="v" id="api">/api/hello</div>
+      <div class="k">Status</div><div class="v" id="status">loading</div>
+      <div class="k">Message</div><div class="v" id="message">...</div>
+      <div class="k">Postgres</div><div class="v" id="pg">...</div>
+      <div class="k">Preload</div><div class="v" id="preload">...</div>
+    </div>
+    <h2>Payload</h2>
+    <pre id="payload">{}</pre>
+  </main>
+<script>
+async function callApi(){
+  const status = document.getElementById('status');
+  status.textContent = 'fetching';
+  const res = await fetch('/api/hello', {method:'POST', headers:{'Content-Type':'application/json'}, body:'{}'});
+  const data = await res.json();
+  status.textContent = res.status + ' ' + (res.ok ? 'OK' : 'ERROR');
+  document.getElementById('message').textContent = data.message || '';
+  document.getElementById('pg').textContent = data.postgres_version || '';
+  document.getElementById('preload').textContent = data.preload || '';
+  document.getElementById('payload').textContent = JSON.stringify(data, null, 2);
+}
+document.getElementById('reload').onclick = callApi;
+callApi();
+</script>
+</body>
+</html>
