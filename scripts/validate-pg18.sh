@@ -128,13 +128,13 @@ if [[ "$RUN_NIX_BUILDS" == true ]]; then
   run_step 01-psql_18_bin nix build .#psql_18/bin -L
   run_step 02-psql_18_slim_bin nix build .#psql_18_slim/bin -L
 
-  run_step 03-ext-pg_jsonschema nix build .#psql_18/exts/pg_jsonschema -L
-  run_step 04-ext-pgaudit nix build .#psql_18/exts/pgaudit -L
-  run_step 05-ext-pgmq nix build .#psql_18/exts/pgmq -L
-  run_step 06-ext-postgis nix build .#psql_18/exts/postgis -L
-  run_step 07-ext-vector nix build .#psql_18/exts/vector -L
-  run_step 08-ext-pg_cron nix build .#psql_18/exts/pg_cron -L
-  run_step 09-ext-pg_net nix build .#psql_18/exts/pg_net -L
+  run_step 03-ext-pg_jsonschema nix build .#checks.x86_64-linux.ext-pg_jsonschema -L
+  run_step 04-ext-pgaudit nix build .#checks.x86_64-linux.ext-pgaudit -L
+  run_step 05-ext-pgmq nix build .#checks.x86_64-linux.ext-pgmq -L
+  run_step 06-ext-postgis nix build .#checks.x86_64-linux.ext-postgis -L
+  run_step 07-ext-vector nix build .#checks.x86_64-linux.ext-vector -L
+  run_step 08-ext-pg_cron nix build .#checks.x86_64-linux.ext-pg_cron -L
+  run_step 09-ext-pg_net nix build .#checks.x86_64-linux.ext-pg_net -L
 
   run_step 10-check-psql_18 nix build .#checks.x86_64-linux.psql_18 -L
   run_step 11-check-psql_18_slim nix build .#checks.x86_64-linux.psql_18_slim -L

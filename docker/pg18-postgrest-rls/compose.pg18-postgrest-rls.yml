@@ -1,0 +1,47 @@
+services:
+  pg18:
+    image: ${PG18_IMAGE:-registry.arthuragrelli.com/supabase-postgres@sha256:edf25ff4c3f74c315874145b3fb5eff1b3b98560cf9d8c21e815831bf370326e}
+    container_name: pg18-rls-db
+    environment:
+      POSTGRES_USER: supabase_admin
+      POSTGRES_PASSWORD: ${PG18_DEV_POSTGRES_PASSWORD:-local_pg18_rls_postgres_only}
+      POSTGRES_DB: postgres
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d:ro
+    networks: [pg18-rls]
+    ports:
+      - "127.0.0.1:${PG18_DEV_PG_PORT:-15432}:5432"
+
+  postgrest:
+    image: ${PGRST_IMAGE:-postgrest/postgrest@sha256:488093de819567422bc1d37cb79da6e84bca3726bac321daeed618f0ed957888}
+    container_name: pg18-rls-postgrest
+    depends_on: [pg18]
+    environment:
+      PGRST_DB_URI: postgres://${PG18_DEV_DB_USERINFO:-authenticator:local_pg18_rls_authenticator_only}@pg18:5432/postgres
+      PGRST_DB_SCHEMAS: api
+      PGRST_DB_ANON_ROLE: web_anon
+      PGRST_JWT_SECRET: ${PG18_DEV_JWT_SECRET:-local_pg18_rls_jwt_secret_32_chars_minimum_only}
+      PGRST_SERVER_PORT: 3000
+    networks: [pg18-rls]
+    ports:
+      - "127.0.0.1:${PG18_DEV_PGRST_PORT:-13001}:3000"
+
+  web:
+    image: ${PG18_WEB_IMAGE:-python@sha256:090ba77e2958f6af52a5341f788b50b032dd4ca28377d2893dcf1ecbdfdfe203}
+    container_name: pg18-rls-web
+    depends_on: [postgrest]
+    working_dir: /app
+    volumes:
+      - ./web:/app:ro
+    environment:
+      PGRST_URL: http://postgrest:3000
+      PG18_DEV_JWT_SECRET: ${PG18_DEV_JWT_SECRET:-local_pg18_rls_jwt_secret_32_chars_minimum_only}
+      PG18_DEV_APP_USER_ID: ${PG18_DEV_APP_USER_ID:-user_karval_demo}
+    command: python3 serve.py
+    networks: [pg18-rls]
+    ports:
+      - "127.0.0.1:${PG18_DEV_WEB_PORT:-18083}:8080"
+
+networks:
+  pg18-rls:
+    name: pg18-postgrest-rls-net
