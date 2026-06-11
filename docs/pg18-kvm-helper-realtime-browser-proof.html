@@ -1,0 +1,11 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>PG18 KVM Helper + Realtime QA</title>
+<style>body{font-family:system-ui,sans-serif;background:#0b1020;color:#e8eefc;margin:32px}.card{background:#151b2e;border:1px solid #33415f;border-radius:14px;padding:18px;margin:16px 0}.pass{color:#6ee7b7}.warn{color:#fbbf24}.block{color:#fb7185}code{background:#020617;padding:2px 5px;border-radius:5px}pre{background:#020617;padding:12px;border-radius:8px;overflow:auto}table{border-collapse:collapse;width:100%}td,th{border:1px solid #33415f;padding:7px;text-align:left}th{background:#1f2943}</style></head><body>
+<h1>PG18 KVM Helper + Realtime QA</h1>
+<div class="card"><h2>KVM helper</h2><p class="pass">Helper criado e validado: <code>scripts/enable-kvm-preflight.sh</code>.</p><pre>/home/marcelo-karval/Backup/Projetos/supabase-postgres-18-fork/postgres/scripts/enable-kvm-preflight.sh --apply</pre></div>
+<div class="card"><h2>Validate monitor</h2><pre>PG18_REQUIRE_KVM=true scripts/run-pg18-persistent-nix-validate.sh
+tail -f tmp/pg18-publish/nix-full-validate-persistent.log
+tail -f tmp/pg18-publish/full-validate-persistent-nix/summary.txt</pre></div>
+<div class="card"><h2>Current gate</h2><p class="block">No-skip validate continua bloqueado até <code>/dev/kvm</code> existir via sudo interativo.</p></div>
+<div class="card"><h2>Realtime decision</h2><table><tr><th>Item</th><th>Decisão</th></tr><tr><td>MVP</td><td>Node/TypeScript bridge com <code>ws</code> + <code>pg</code></td></tr><tr><td>Fonte</td><td>Postgres <code>app.event_outbox</code></td></tr><tr><td>Sinal</td><td><code>LISTEN/NOTIFY</code> wake-up</td></tr><tr><td>Auth</td><td>JWT compatível com PostgREST/RLS desde o início</td></tr><tr><td>Supabase Realtime</td><td>Spike/target futuro, não bloqueante do MVP</td></tr><tr><td>Redis/NATS</td><td>Downstream futuro opcional, não core</td></tr></table></div>
+<div class="card"><h2>Not claimed</h2><ul><li>Não rodei sudo interativo.</li><li>Não declarei RC2.</li><li>Não implementei a bridge ainda.</li><li>Não declarei no-skip PASS.</li></ul></div>
+</body></html>
