@@ -147,7 +147,7 @@ if [[ "$RUN_DOCKER_BUILD" == true ]]; then
 fi
 
 if [[ "$RUN_DOCKER_TEST" == true ]]; then
-  run_step 15-docker-image-test nix run .#docker-image-test -- --no-build Dockerfile-18
+  run_step 15-docker-image-test nix run .#docker-image-test -- --no-build --image-tag "$IMAGE_TAG" Dockerfile-18
 fi
 
 log "PG18 validation sequence finished successfully"

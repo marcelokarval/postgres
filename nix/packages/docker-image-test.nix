@@ -23,6 +23,7 @@ writeShellApplication {
     #   nix run .#docker-image-test -- Dockerfile-17
     #   nix run .#docker-image-test -- Dockerfile-18
     #   nix run .#docker-image-test -- --no-build Dockerfile-15
+    #   nix run .#docker-image-test -- --no-build --image-tag local/supabase-postgres:18-karval-full-validate Dockerfile-18
     #   nix run .#docker-image-test -- --target variant-17 Dockerfile-multigres
     #   nix run .#docker-image-test -- --no-build --target variant-orioledb-17 Dockerfile-multigres
 
@@ -66,6 +67,7 @@ writeShellApplication {
     Options:
       -h, --help         Show this help message
       --no-build         Skip building the image (use existing)
+      --image-tag TAG    Override image tag to build/test (default: pg-docker-test:<version>)
       --keep             Keep the container running after tests (for debugging)
       --target TARGET    Build target (required for Dockerfile-multigres)
                          Values: variant-17, variant-orioledb-17
@@ -140,6 +142,24 @@ writeShellApplication {
             fi
         done
 
+        # Build list of PG18-specific test basenames. z_18_common_<base>
+        # overrides common tests without colliding with z_18_<version-test> names.
+        local pg18_variants=()
+        local pg18_common_variants=()
+        for f in "$TESTS_SQL_DIR"/z_18_*.sql; do
+            if [[ -f "$f" ]]; then
+                local variant_name
+                variant_name=$(basename "$f" .sql)
+                local base_name="''${variant_name#z_18_}"
+                if [[ "$variant_name" == z_18_common_* ]]; then
+                    base_name="''${variant_name#z_18_common_}"
+                    pg18_common_variants+=("$base_name")
+                else
+                    pg18_variants+=("$base_name")
+                fi
+            fi
+        done
+
         # Build list of multigres-17-specific test basenames
         local multigres_17_variants=()
         for f in "$TESTS_SQL_DIR"/z_multigres-17_*.sql; do
@@ -201,14 +221,42 @@ writeShellApplication {
             if [[ "$_basename" == z_* ]]; then
                 case "$version" in
                     15)                    [[ "$_basename" == z_15_* ]]                    && tests+=("$_basename") ;;
-                    17|18)                 [[ "$_basename" == z_17_* ]]                    && tests+=("$_basename") ;;
+                    17)                    [[ "$_basename" == z_17_* ]]                    && tests+=("$_basename") ;;
+                    18)
+                        if [[ "$_basename" == z_18_* ]]; then
+                            tests+=("$_basename")
+                        elif [[ "$_basename" == z_17_* ]]; then
+                            local z17_base="''${_basename#z_17_}"
+                            local has_pg18_variant=false
+                            for variant in "''${pg18_variants[@]}" "''${pg18_common_variants[@]}"; do
+                                if [[ "$z17_base" == "$variant" ]]; then
+                                    has_pg18_variant=true
+                                    break
+                                fi
+                            done
+                            if [[ "$has_pg18_variant" == "false" ]]; then
+                                tests+=("$_basename")
+                            fi
+                        fi
+                        ;;
                     orioledb-17)           [[ "$_basename" == z_orioledb-17_* ]]           && tests+=("$_basename") ;;
                     multigres-17)          [[ "$_basename" == z_multigres-17_* ]]          && tests+=("$_basename") ;;
                     multigres-orioledb-17) [[ "$_basename" == z_multigres-orioledb-17_* ]] && tests+=("$_basename") ;;
                 esac
             else
                 # For variant versions, use z_ overrides where they exist instead of the base test
-                if [[ "$version" == "orioledb-17" ]]; then
+                if [[ "$version" == "18" ]]; then
+                    local has_variant=false
+                    for variant in "''${pg18_variants[@]}" "''${pg18_common_variants[@]}"; do
+                        if [[ "$_basename" == "$variant" ]]; then
+                            has_variant=true
+                            break
+                        fi
+                    done
+                    if [[ "$has_variant" == "false" ]]; then
+                        tests+=("$_basename")
+                    fi
+                elif [[ "$version" == "orioledb-17" ]]; then
                     local has_variant=false
                     for variant in "''${orioledb_variants[@]}"; do
                         if [[ "$_basename" == "$variant" ]]; then
@@ -281,7 +329,7 @@ writeShellApplication {
         local max_attempts=60
         local attempt=1
 
-        log_info "Waiting for PostgreSQL to be ready..."
+        log_info "Waiting for PostgreSQL to be ready at $host:$port..."
 
         while [[ $attempt -le $max_attempts ]]; do
             if "$PG_ISREADY_PATH" -h "$host" -p "$port" -U "$POSTGRES_USER" -q 2>/dev/null; then
@@ -293,6 +341,26 @@ writeShellApplication {
         done
 
         log_error "PostgreSQL failed to start after ''${max_attempts}s"
+        return 1
+    }
+
+    wait_for_container_log_marker() {
+        local container="$1"
+        local marker="$2"
+        local max_attempts=180
+        local attempt=1
+
+        log_info "Waiting for container log marker: $marker"
+        while [[ $attempt -le $max_attempts ]]; do
+            if docker logs "$container" 2>&1 | grep -Fq "$marker"; then
+                log_info "Container log marker observed"
+                return 0
+            fi
+            sleep 1
+            ((attempt++))
+        done
+
+        log_error "Container log marker not observed after ''${max_attempts}s: $marker"
         return 1
     }
 
@@ -426,6 +494,7 @@ writeShellApplication {
                 --no-build) skip_build=true; shift ;;
                 --keep) KEEP_CONTAINER=true; shift ;;
                 --target) TARGET="$2"; shift; shift ;;
+                --image-tag) IMAGE_TAG="$2"; shift; shift ;;
                 -*) log_error "Unknown option: $1"; print_help; exit 1 ;;
                 *) dockerfile="$1"; shift ;;
             esac
@@ -444,7 +513,9 @@ writeShellApplication {
 
         read -r VERSION PORT <<< "$(get_version_info "$dockerfile")"
 
-        IMAGE_TAG="pg-docker-test:''${VERSION}"
+        if [[ -z "$IMAGE_TAG" ]]; then
+            IMAGE_TAG="pg-docker-test:''${VERSION}"
+        fi
         CONTAINER_NAME="pg-test-''${VERSION}-$$"
         OUTPUT_DIR=$(mktemp -d)
 
@@ -501,14 +572,28 @@ writeShellApplication {
             -p "$PORT:5432" \
             "$IMAGE_TAG"
 
+        DB_HOST="localhost"
+        DB_PORT="$PORT"
+        if [[ -f /.dockerenv ]]; then
+            DB_HOST=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "$CONTAINER_NAME")
+            DB_PORT="5432"
+            log_info "Runner is containerized; connecting to test container at $DB_HOST:$DB_PORT"
+        fi
+
         # Multigres images use "tail -f /dev/null" as their entrypoint — postgres must be
         # started manually before we can run tests against them.
         if [[ "$VERSION" == multigres-* ]]; then
             verify_pgctld_integration "$CONTAINER_NAME" "$VERSION"
             start_multigres_postgres "$CONTAINER_NAME"
+        else
+            if ! wait_for_container_log_marker "$CONTAINER_NAME" "PostgreSQL init process complete; ready for start up."; then
+                log_error "Container logs:"
+                docker logs "$CONTAINER_NAME"
+                exit 1
+            fi
         fi
 
-        if ! wait_for_postgres "localhost" "$PORT"; then
+        if ! wait_for_postgres "$DB_HOST" "$DB_PORT"; then
             log_error "Container logs:"
             docker logs "$CONTAINER_NAME"
             exit 1
@@ -528,7 +613,9 @@ writeShellApplication {
         log_info "HTTP mock server started on host port $HTTP_MOCK_PORT (PID: $HTTP_MOCK_PID)"
 
         HTTP_MOCK_HOST="host.docker.internal"
-        if [[ "$(uname)" == "Linux" ]]; then
+        if [[ -f /.dockerenv ]]; then
+            HTTP_MOCK_HOST=$(hostname -i | awk '{print $1}')
+        elif [[ "$(uname)" == "Linux" ]]; then
             HTTP_MOCK_HOST=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.Gateway}}{{end}}' "$CONTAINER_NAME")
         fi
         log_info "Container will access mock server at $HTTP_MOCK_HOST:$HTTP_MOCK_PORT"
@@ -547,8 +634,8 @@ writeShellApplication {
 
         log_info "Running prime.sql to enable extensions..."
         if ! PGPASSWORD="$POSTGRES_PASSWORD" "$PSQL_PATH" \
-            -h localhost \
-            -p "$PORT" \
+            -h "$DB_HOST" \
+            -p "$DB_PORT" \
             -U "$POSTGRES_USER" \
             -d "$POSTGRES_DB" \
             -v ON_ERROR_STOP=1 \
@@ -561,8 +648,8 @@ writeShellApplication {
         if [[ -n "$prime_superuser_sql" ]]; then
             log_info "Running prime-superuser.sql for supautils-gated extensions..."
             if ! PGPASSWORD="$POSTGRES_PASSWORD" "$PSQL_PATH" \
-                -h localhost \
-                -p "$PORT" \
+                -h "$DB_HOST" \
+                -p "$DB_PORT" \
                 -U "$POSTGRES_USER" \
                 -d "$POSTGRES_DB" \
                 -v ON_ERROR_STOP=1 \
@@ -575,8 +662,8 @@ writeShellApplication {
 
         log_info "Creating test_config table..."
         PGPASSWORD="$POSTGRES_PASSWORD" "$PSQL_PATH" \
-            -h localhost \
-            -p "$PORT" \
+            -h "$DB_HOST" \
+            -p "$DB_PORT" \
             -U "$POSTGRES_USER" \
             -d "$POSTGRES_DB" \
             -c "CREATE TABLE IF NOT EXISTS test_config (key TEXT PRIMARY KEY, value TEXT);
@@ -597,6 +684,12 @@ writeShellApplication {
         log_info "Preparing test files..."
         PATCHED_TESTS_DIR="$OUTPUT_DIR/tests"
         cp -r "$TESTS_DIR" "$PATCHED_TESTS_DIR"
+
+        DOCKER_EXPECTED_DIR="$TESTS_DIR/docker-expected/$VERSION"
+        if [[ -d "$DOCKER_EXPECTED_DIR" ]]; then
+            log_info "Applying Docker expected overlay: $DOCKER_EXPECTED_DIR"
+            cp "$DOCKER_EXPECTED_DIR"/*.out "$PATCHED_TESTS_DIR/expected/"
+        fi
 
         for f in pgmq.out vault.out; do
             if [[ -f "$PATCHED_TESTS_DIR/expected/$f" ]]; then
@@ -640,8 +733,8 @@ writeShellApplication {
             --dbname="$POSTGRES_DB" \
             --inputdir="$PATCHED_TESTS_DIR" \
             --outputdir="$OUTPUT_DIR/regression_output" \
-            --host=localhost \
-            --port="$PORT" \
+            --host="$DB_HOST" \
+            --port="$DB_PORT" \
             --user="$POSTGRES_USER" \
             "''${TEST_LIST[@]}" 2>&1; then
             regress_exit=1
