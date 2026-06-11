@@ -16,6 +16,7 @@ ACCEPT_FLAKE_CONFIG="${PG18_ACCEPT_FLAKE_CONFIG:-true}"
 REQUIRE_KVM="${PG18_REQUIRE_KVM:-true}"
 KVM_DEVICE_ARGS=()
 KVM_NIX_FEATURE=""
+KVM_HOST_GID=""
 REBUILD_RUNNER=false
 RESET_NIX_VOLUME=false
 
@@ -121,6 +122,7 @@ docker volume create "$NIX_VOLUME" >/dev/null
 if [[ -e /dev/kvm ]]; then
   KVM_DEVICE_ARGS=(--device /dev/kvm)
   KVM_NIX_FEATURE="kvm"
+  KVM_HOST_GID="$(stat -c '%g' /dev/kvm)"
 elif [[ "$REQUIRE_KVM" == true ]]; then
   cat >&2 <<'EOF'
 ERROR: /dev/kvm is not available on the host, but this full no-skip PG18 gate
@@ -159,11 +161,13 @@ fi
   echo "accept_flake_config=$ACCEPT_FLAKE_CONFIG"
   echo "require_kvm=$REQUIRE_KVM"
   echo "kvm_nix_feature=${KVM_NIX_FEATURE:-none}"
+  echo "kvm_host_gid=${KVM_HOST_GID:-none}"
   docker run --rm \
     -e "PG18_NIX_MAX_JOBS=$NIX_MAX_JOBS" \
     -e "PG18_NIX_CORES=$NIX_CORES" \
     -e "PG18_ACCEPT_FLAKE_CONFIG=$ACCEPT_FLAKE_CONFIG" \
     -e "PG18_NIX_EXTRA_FEATURE=$KVM_NIX_FEATURE" \
+    -e "PG18_KVM_GID=$KVM_HOST_GID" \
     "${KVM_DEVICE_ARGS[@]}" \
     -v "$NIX_VOLUME":/nix \
     -v "$ROOT_DIR":/work \
@@ -173,8 +177,25 @@ fi
     "$RUNNER_IMAGE" \
     -lc 'set -euo pipefail
       if ! getent group nixbld >/dev/null; then groupadd -r nixbld; fi
+      KVM_GROUP_NAME=""
+      if [[ -n "${PG18_KVM_GID:-}" && -e /dev/kvm ]]; then
+        KVM_GROUP_NAME="$(getent group "$PG18_KVM_GID" | cut -d: -f1 || true)"
+        if [[ -z "$KVM_GROUP_NAME" ]]; then
+          KVM_GROUP_NAME="kvmhost"
+          groupadd -g "$PG18_KVM_GID" "$KVM_GROUP_NAME"
+        fi
+        printf "container_kvm_gid=%s group=%s perms=%s\n" "$PG18_KVM_GID" "$KVM_GROUP_NAME" "$(stat -c "%A %U:%G" /dev/kvm)"
+      fi
       for i in $(seq 1 16); do
-        id nixbld$i >/dev/null 2>&1 || useradd -r -g nixbld -G nixbld -d /var/empty -s /usr/sbin/nologin nixbld$i
+        if id nixbld$i >/dev/null 2>&1; then
+          if [[ -n "$KVM_GROUP_NAME" ]]; then usermod -aG "$KVM_GROUP_NAME" nixbld$i; fi
+        else
+          if [[ -n "$KVM_GROUP_NAME" ]]; then
+            useradd -r -g nixbld -G "nixbld,$KVM_GROUP_NAME" -d /var/empty -s /usr/sbin/nologin nixbld$i
+          else
+            useradd -r -g nixbld -G nixbld -d /var/empty -s /usr/sbin/nologin nixbld$i
+          fi
+        fi
       done
       git config --global --add safe.directory /work
       export NIX_CONFIG="max-jobs = ${PG18_NIX_MAX_JOBS:-1}
