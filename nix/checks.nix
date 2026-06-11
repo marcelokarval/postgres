@@ -207,11 +207,31 @@
                     (map (n: builtins.substring 14 (pkgs.lib.stringLength n - 18) n)) # Remove "z_orioledb-17_" prefix (14 chars) and ".sql" suffix (4 chars)
                   ];
                   hasOrioledbVariant = basename: builtins.elem basename orioledbVariants;
+                  pg18Variants = pkgs.lib.pipe files [
+                    builtins.attrNames
+                    (builtins.filter (n: builtins.match "z_18_.*\\.sql" n != null))
+                    (map (n: builtins.substring 5 (pkgs.lib.stringLength n - 9) n)) # Remove "z_18_" prefix (5 chars) and ".sql" suffix (4 chars)
+                  ];
+                  pg18CommonVariants = pkgs.lib.pipe files [
+                    builtins.attrNames
+                    (builtins.filter (n: builtins.match "z_18_common_.*\\.sql" n != null))
+                    (map (n: builtins.substring 12 (pkgs.lib.stringLength n - 16) n)) # Remove "z_18_common_" prefix (12 chars) and ".sql" suffix (4 chars)
+                  ];
+                  hasPg18Variant = basename: (builtins.elem basename pg18Variants) || (builtins.elem basename pg18CommonVariants);
+                  versionSpecificBase =
+                    name:
+                    if builtins.match "z_18_.*\\.sql" name != null then
+                      builtins.substring 5 (pkgs.lib.stringLength name - 9) name
+                    else if builtins.match "z_17_.*\\.sql" name != null then
+                      builtins.substring 5 (pkgs.lib.stringLength name - 9) name
+                    else
+                      builtins.substring 0 (pkgs.lib.stringLength name - 4) name;
                   isValidFile =
                     name:
                     let
                       isVersionSpecific = builtins.match "z_.*" name != null;
                       basename = builtins.substring 0 (pkgs.lib.stringLength name - 4) name; # Remove .sql
+                      variantBase = versionSpecificBase name;
                       # Skip tests that don't work with OrioleDB
                       isSkippedForOrioledb = version == "orioledb-17" && builtins.elem basename orioledbSkipTests;
                       matchesVersion =
@@ -220,13 +240,18 @@
                         else if isVersionSpecific then
                           if version == "orioledb-17" then
                             builtins.match "z_orioledb-17_.*" name != null
-                          else if version == "17" || version == "18" then
+                          else if version == "18" then
+                            (builtins.match "z_18_.*" name != null)
+                            || ((builtins.match "z_17_.*" name != null) && !(hasPg18Variant variantBase))
+                          else if version == "17" then
                             builtins.match "z_17_.*" name != null
                           else
                             builtins.match "z_15_.*" name != null
                         else
-                        # For common tests: exclude if OrioleDB variant exists and we're running OrioleDB
+                        # For common tests: exclude if a version-specific variant exists for this version.
                         if version == "orioledb-17" && hasOrioledbVariant basename then
+                          false
+                        else if version == "18" && hasPg18Variant basename then
                           false
                         else
                           true;
