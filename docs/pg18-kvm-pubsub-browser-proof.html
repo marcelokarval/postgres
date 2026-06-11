@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><title>PG18 KVM + Pub/Sub QA</title>
+<style>body{font-family:system-ui,sans-serif;background:#0b1020;color:#e8eefc;margin:32px}.card{background:#151b2e;border:1px solid #33415f;border-radius:14px;padding:18px;margin:16px 0}.pass{color:#6ee7b7}.warn{color:#fbbf24}.block{color:#fb7185}code{background:#020617;padding:2px 5px;border-radius:5px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #33415f;padding:7px;text-align:left}th{background:#1f2943}</style></head>
+<body>
+<h1>PG18 KVM + Pub/Sub QA</h1>
+<div class="card"><h2>Status KVM</h2><p class="block"><strong>BLOCKED_SUDO_INTERACTIVE</strong>: hardware tem VT-x, mas <code>/dev/kvm</code> está ausente e <code>sudo -n modprobe</code> exige senha.</p></div>
+<div class="card"><h2>RC decision</h2><p class="warn">Sem novo no-skip PASS, sem nova imagem e sem novo digest: anexar evidência à <strong>RC1</strong>; não criar RC2 ainda.</p></div>
+<div class="card"><h2>28 extensions</h2><p class="pass">Mantidas. <code>plv8</code> e <code>timescaledb</code> continuam fora do PG18.</p></div>
+<div class="card"><h2>Pub/Sub recommendation</h2><table><tr><th>Camada</th><th>Decisão</th></tr><tr><td>Fonte de verdade</td><td>Postgres <code>app.event_outbox</code></td></tr><tr><td>Sinal realtime</td><td><code>LISTEN/NOTIFY</code> apenas como wake-up</td></tr><tr><td>Transporte</td><td>WebSocket bridge fina, externa, autorizando por JWT/RLS-aware policy</td></tr><tr><td>Jobs/retry</td><td><code>pgmq</code></td></tr><tr><td>CDC futuro</td><td><code>wal2json</code> / logical decoding</td></tr><tr><td>Redis/NATS</td><td>Opcional futuro para fanout, downstream do Postgres; não core inicial</td></tr></table></div>
+<div class="card"><h2>Runbook KVM</h2><pre>sudo modprobe kvm
+sudo modprobe kvm_intel
+ls -l /dev/kvm
+PG18_REQUIRE_KVM=true scripts/run-pg18-persistent-nix-validate.sh</pre></div>
+<div class="card"><h2>Not claimed</h2><ul><li>Não é no-skip PASS.</li><li>Não é RC2.</li><li>Não é implementação WebSocket ainda.</li><li>Não usa Redis como fonte de verdade.</li></ul></div>
+</body></html>
