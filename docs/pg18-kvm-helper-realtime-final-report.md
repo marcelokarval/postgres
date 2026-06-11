@@ -207,3 +207,27 @@ tail -f tmp/pg18-publish/full-validate-persistent-nix/summary.txt
 `DELIVERED_VALIDATE_AWAITS_MANUAL_KVM`.
 
 Tudo que era seguro executar sem senha sudo foi entregue, validado, revisado, browser-proved e persistido. O próximo gate real depende de Karval executar o helper com sudo interativo para criar `/dev/kvm`.
+
+## Karval answers incorporated — realtime placement
+
+Karval confirmed:
+
+1. KVM helper was executed successfully.
+2. The realtime MVP placement must be checked against architecture/flexibility before implementation.
+3. Supabase Realtime spike/comparison should be documented in the same report as the Node/TypeScript MVP, not a separate report.
+
+Decision:
+
+- The MVP realtime should extend `docker/pg18-postgrest-rls/` because that stack already contains the durable proof boundary for PG18 image + PostgREST + JWT + RLS + browser proof.
+- This is correct for the current architecture if implemented as a separate, optional service/profile rather than entangling realtime logic into PostgREST or into the database image.
+- The database remains the source of truth; realtime is a transport adapter over `app.event_outbox` + `LISTEN/NOTIFY`.
+- Supabase Realtime remains a same-report comparison/spike target against the MVP, with explicit criteria: JWT/RLS compatibility, replication/publication requirements, operational complexity, and fit with the custom `supabase/postgres:18` image fork.
+
+Implementation constraint for the next slice:
+
+- Add `realtime` as a sibling service under `docker/pg18-postgrest-rls/`, preferably behind a compose profile or override file.
+- Do not bake realtime into the PG18 image.
+- Do not make Redis/NATS mandatory.
+- Do not bypass Postgres RLS/JWT authorization.
+- Browser proof must include authorized and unauthorized client behavior.
+
