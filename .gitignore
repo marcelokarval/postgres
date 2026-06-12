@@ -36,3 +36,4 @@ nixos.qcow2
 
 # Local validation logs/evidence bundles (summarized in docs; not committed)
 tmp/
+.tmp/

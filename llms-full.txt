@@ -1,0 +1,177 @@
+# Supabase Postgres PG18 Fork — full LLM context
+
+This file is a fuller repository context packet for agents and LLMs. The concise discovery file is `llms.txt`.
+
+## Repository identity
+
+- Repository: PG18 fork of `supabase/postgres`
+- Local workspace used by this task: `/home/marcelo-karval/Backup/Projetos/supabase-postgres-18-fork/postgres`
+- Branch context: `karval/pg18-bootstrap`
+- Purpose: carry the Supabase/Postgres image recipe to PostgreSQL 18, validate the local image/runtime surface, and document a database-centric PostgREST/JWT/RLS/realtime proof.
+
+## Current accepted PG18 image
+
+```text
+registry tag: registry.arthuragrelli.com/supabase-postgres:18-karval-rc1
+registry digest: sha256:c477d5146ea51f235b811c093363c3ed5d8a342dbed8efac7635a1b9779e2f9f
+digest-pinned reference: registry.arthuragrelli.com/supabase-postgres@sha256:c477d5146ea51f235b811c093363c3ed5d8a342dbed8efac7635a1b9779e2f9f
+```
+
+Do not replace this digest in docs unless a newer accepted report says to do so.
+
+## What this repo currently claims
+
+Current claims:
+
+- local PG18 database-image readiness under documented acceptance gates;
+- registry-published PG18 RC1 digest;
+- durable local PG18 + PostgREST + JWT/RLS + web proof stack;
+- optional local WebSocket realtime bridge proof based on `event_outbox` plus `LISTEN/NOTIFY`.
+
+Current non-claims:
+
+- not the full Supabase hosted platform stack;
+- not production/VPS deployment readiness;
+- not managed multi-tenant realtime infrastructure;
+- not a requirement for Redis, NATS or Kafka;
+- not a claim that the realtime bridge is part of the database image.
+
+## High-level architecture
+
+The fork is database-centric:
+
+1. PostgreSQL 18 is the source of truth for state, durable events and policy.
+2. PostgREST exposes schema `api` RPCs/commands over HTTP.
+3. JWT claims, especially `app_user_id`, drive RLS and function behavior inside Postgres.
+4. A small web proof calls same-origin endpoints and displays local validation state.
+5. A sibling Node WebSocket bridge provides realtime transport.
+6. `private.event_outbox` stores durable events.
+7. `pg_notify('app_events', ...)` is a transient wake-up signal, not durable storage.
+8. The WebSocket bridge validates JWT and forwards events only to authorized connected clients.
+
+Important architecture doc: `docs/pg18-realtime-websocket-architecture.md`.
+
+## Realtime v1 contract currently documented
+
+Current proof baseline:
+
+- SQL path: `docker/pg18-postgrest-rls/init/001-api-rls.sql`
+- WebSocket bridge: `docker/pg18-postgrest-rls/realtime/server.js`
+- Web proof: `docker/pg18-postgrest-rls/web/serve.py`
+- Compose stack: `docker/pg18-postgrest-rls/compose.pg18-postgrest-rls.yml`
+
+Flow:
+
+1. Client uses local JWT with `role=authenticated` and `app_user_id`.
+2. Client invokes PostgREST RPC `api.publish_realtime_proof`.
+3. RPC inserts into `private.event_outbox` under JWT/RLS-aware rules.
+4. Trigger emits `pg_notify` on channel `app_events`.
+5. Bridge receives notification through `LISTEN app_events`.
+6. Bridge sends matching events over WebSocket to clients with the same `app_user_id`.
+
+## Realtime v2 direction
+
+The v2 direction keeps the database as source of truth and adds protocol durability:
+
+- Replay/cursor: reconnect with `{"type":"subscribe","last_event_id":123}` and receive missed durable events.
+- Scopes/topics: events carry `scope_type`, `scope_id` and `topic`; initial default can remain `scope_type='user'`, `scope_id=<app_user_id>`.
+- Subscription authorization: bridge asks Postgres, for example `api.can_subscribe(p_scope_type text, p_scope_id text, p_topic text default null)`.
+- ACK/retry: client can send `{"type":"ack","event_id":123}`; Postgres stores durable ACK state scoped to the JWT user.
+- Fanout future: outbox is shaped so future workers can publish to Redis/NATS/Kafka, but those systems are not mandatory now.
+
+## File map
+
+| Path | Agent relevance |
+|---|---|
+| `README.md` | Human entrypoint and current status. |
+| `llms.txt` | Concise LLM discovery file. |
+| `llms-full.txt` | Full LLM/agent context file. |
+| `docs/pg18-realtime-websocket-architecture.md` | Living realtime architecture. |
+| `docs/pg18-realtime-v2-llms-prd.md` | Current PRD for realtime v2 + LLM docs. |
+| `docs/pg18-realtime-v2-llms-tasks.md` | Current task ledger. |
+| `docs/pg18-full-parity-final-report.md` | Current PG18 full-parity final source. |
+| `docs/pg18-full-parity-acceptance.md` | Current PG18 acceptance matrix. |
+| `docs/pg18-rc-publish-postgrest-rls-final-report.md` | PostgREST/RLS/realtime proof report. |
+| `Dockerfile-18` | PG18 image build path. |
+| `nix/` | Nix packages, extensions and image inputs. |
+| `scripts/validate-pg18.sh` | PG18 validation sequence. |
+| `scripts/smoke-pg18-full-parity.sh` | Disposable image smoke. |
+| `scripts/promote-pg18-stack.sh` | Safe-by-default promotion/validation; `--apply` has side effects. |
+| `docker/pg18-postgrest-rls/` | Durable local PG18/PostgREST/RLS/realtime proof stack. |
+
+## Run commands
+
+Local PG18/PostgREST/RLS/realtime proof:
+
+```bash
+cd docker/pg18-postgrest-rls
+docker compose -f compose.pg18-postgrest-rls.yml up -d --build
+```
+
+Smoke endpoints:
+
+```bash
+curl -fsS -X POST http://127.0.0.1:18083/api/current-profile
+curl -fsS -X POST http://127.0.0.1:18083/api/publish-realtime
+```
+
+Browser proof:
+
+```text
+http://127.0.0.1:18083/
+```
+
+Expected browser proof signals:
+
+- page loads with PG18/PostgREST/JWT/RLS/realtime proof language;
+- current profile succeeds;
+- publish returns 200 OK;
+- WebSocket reaches ready/connected state;
+- a realtime event such as `proof.realtime` is received;
+- v2 work should add replay/ACK proof surfaces when implemented.
+
+Static gates:
+
+```bash
+python3 -m py_compile docker/pg18-postgrest-rls/web/serve.py
+node --check docker/pg18-postgrest-rls/realtime/server.js
+node --check docker/pg18-postgrest-rls/realtime/test-client.js
+docker compose -f docker/pg18-postgrest-rls/compose.pg18-postgrest-rls.yml config
+```
+
+PG18 image validation examples from README:
+
+```bash
+nix build .#psql_18/bin -L
+nix build .#psql_18_slim/bin -L
+docker build -f Dockerfile-18 -t local/supabase-postgres:18-karval-full .
+scripts/validate-pg18.sh --skip-docker-test --image-tag local/supabase-postgres:18-karval-validation
+scripts/smoke-pg18-full-parity.sh --image local/supabase-postgres:18-karval-full
+scripts/promote-pg18-stack.sh
+```
+
+`promote-pg18-stack.sh` is validate-only by default. Passing `--apply` can retag/restart local Swarm service and should be treated as a side-effecting action.
+
+## Agent safety and workflow guidance
+
+- Prefer reading `README.md`, this file, `llms.txt`, and current PRD/task docs before editing.
+- For Hermes/agent runs, obey the exact local workspace path provided by the task. Do not assume `/workspace`.
+- Use targeted file reads/searches before writing; do not infer current repo state from memory.
+- Documentation-only tasks must not edit runtime code under `docker/`, `scripts/`, `nix/`, migrations or source files unless explicitly authorized.
+- Do not commit unless the task explicitly asks for a commit.
+- Do not touch secrets. Do not print raw long-lived tokens. Local visible compose defaults are development placeholders only.
+- Do not replace digest pins or acceptance claims unless a newer accepted report exists.
+- Keep claims precise: local proof is not production readiness.
+- Redis/NATS/Kafka should be described as future fanout options, not required dependencies.
+- If docs conflict, prefer final reports/current PRDs/task ledgers over older bootstrap notes.
+
+## Documentation maintenance rule
+
+When changing realtime behavior, update all relevant living docs together:
+
+- `docs/pg18-realtime-websocket-architecture.md`
+- `llms.txt` if top-level links/commands/status changed
+- `llms-full.txt` if agent context, paths, commands, protocol or safety guidance changed
+- `README.md` for small discoverability links only
+
+Keep the realtime explanation explicit for both human maintainers and LLM agents.

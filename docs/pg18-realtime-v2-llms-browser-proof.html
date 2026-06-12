@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>PG18 Realtime v2 + LLM Docs Browser Proof</title>
+<style>
+body{font-family:system-ui;background:#09111f;color:#eef4ff;padding:32px}.card{max-width:980px;margin:auto;background:#111d35;border:1px solid #315083;border-radius:18px;padding:24px}.pass{color:#7CFC98;font-weight:800}.warn{color:#ffd166}code,pre{background:#071124;border:1px solid #263d66;border-radius:8px;padding:4px 8px;white-space:pre-wrap}li{margin:8px 0}
+</style>
+</head>
+<body>
+<main class="card">
+<h1>PG18 Realtime v2 + LLM Docs Browser Proof</h1>
+<p class="pass">PASS</p>
+<h2>Target</h2>
+<ul>
+<li>URL: <code>http://127.0.0.1:18083/</code></li>
+<li>Title: <code>PG18 RLS + Realtime v2 Web Proof</code></li>
+<li>Runtime: clean compose stack over PG18 RC1 digest.</li>
+</ul>
+<h2>DOM proof</h2>
+<ul>
+<li>HTTP Status: <code>publish 200 OK</code></li>
+<li>Last event id: <code>2</code></li>
+<li>Last ACK: <code>event 2 @ 2026-06-12T20:40:26.302476+00:00</code></li>
+<li>User: <code>user_karval_demo</code></li>
+<li>Plan: <code>rc1</code></li>
+<li>Role: <code>authenticated</code></li>
+<li>Postgres: <code>18.0</code></li>
+<li>Replay present: <code>true</code></li>
+<li>ACK present: <code>true</code></li>
+<li>Denied subscription present: <code>true</code></li>
+<li>Invalid token present: <code>true</code></li>
+</ul>
+<h2>Browser console</h2>
+<pre>console_messages: 0
+js_errors: 0</pre>
+<h2>Vision QA</h2>
+<p class="pass">PASS visual.</p>
+<p>A captura mostra a página renderizada, botões <code>Chamar current_profile</code>, <code>Subscribe/replay</code>, <code>Publicar evento realtime</code>, <code>ACK último evento</code>, <code>Provar subscription denied</code> e <code>Provar token inválido</code>; status <code>publish 200 OK</code>; evento/ACK; replay e mensagens negativas no payload realtime.</p>
+<p class="warn">Observação: após clicar o botão de token inválido, o campo Realtime Status mostra <code>error invalid jwt signature</code>. Isso é esperado e faz parte da prova negativa; o payload também contém o caminho positivo de replay/event/ack.</p>
+</main>
+</body>
+</html>

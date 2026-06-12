@@ -1,0 +1,56 @@
+# Supabase Postgres PG18 Fork
+
+> Concise LLM entrypoint for the PostgreSQL 18 database-centric fork of `supabase/postgres`.
+
+## Scope
+
+This repository carries the Supabase/Postgres image recipe forward to PostgreSQL 18 and preserves the curated extension/runtime surface where compatible. It also contains a local database-centric proof using PG18 RC1, PostgREST, JWT/RLS, a web proof and an optional WebSocket realtime bridge.
+
+This is an image/build recipe and local proof repository. It is not the full Supabase hosted stack and does not claim production deployment readiness.
+
+## Current release-candidate state
+
+- Branch context: `karval/pg18-bootstrap`
+- Accepted PG18 RC digest: `sha256:c477d5146ea51f235b811c093363c3ed5d8a342dbed8efac7635a1b9779e2f9f`
+- Digest-pinned image: `registry.arthuragrelli.com/supabase-postgres@sha256:c477d5146ea51f235b811c093363c3ed5d8a342dbed8efac7635a1b9779e2f9f`
+- Durable local stack: `docker/pg18-postgrest-rls/`
+
+## Canonical docs and entrypoints
+
+- README: `README.md`
+- Realtime architecture: `docs/pg18-realtime-websocket-architecture.md`
+- Current PRD: `docs/pg18-realtime-v2-llms-prd.md`
+- Current task ledger: `docs/pg18-realtime-v2-llms-tasks.md`
+- PG18 acceptance: `docs/pg18-full-parity-acceptance.md`
+- PG18 final report: `docs/pg18-full-parity-final-report.md`
+- PostgREST/RLS final report: `docs/pg18-rc-publish-postgrest-rls-final-report.md`
+
+## Runtime commands
+
+```bash
+cd docker/pg18-postgrest-rls
+docker compose -f compose.pg18-postgrest-rls.yml up -d --build
+curl -fsS -X POST http://127.0.0.1:18083/api/current-profile
+curl -fsS -X POST http://127.0.0.1:18083/api/publish-realtime
+```
+
+Static gates:
+
+```bash
+python3 -m py_compile docker/pg18-postgrest-rls/web/serve.py
+node --check docker/pg18-postgrest-rls/realtime/server.js
+node --check docker/pg18-postgrest-rls/realtime/test-client.js
+docker compose -f docker/pg18-postgrest-rls/compose.pg18-postgrest-rls.yml config
+```
+
+## Safety
+
+- Do not print, commit or invent secrets.
+- Local compose defaults are development-only placeholders.
+- Do not edit runtime code unless the task explicitly authorizes it.
+- Do not claim production/VPS readiness without a documented production gate.
+- Redis/NATS/Kafka are not mandatory for the current realtime proof.
+
+## See also
+
+For fuller agent context, read `llms-full.txt`.

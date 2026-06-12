@@ -184,7 +184,15 @@ See:
 
 ```text
 docs/pg18-database-centric-postgrest-web-prd.md
+docs/pg18-realtime-websocket-architecture.md
 docs/pg18-rc-publish-postgrest-rls-final-report.md
+```
+
+LLM/agent context entrypoints:
+
+```text
+llms.txt
+llms-full.txt
 ```
 
 ## Repository layout
