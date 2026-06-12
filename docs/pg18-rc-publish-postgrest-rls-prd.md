@@ -1,6 +1,6 @@
 # PG18 RC1 Publish + Durable PostgREST/RLS Stack — PRD
 
-Status: IN_PROGRESS
+Status: DELIVERED_PASS
 
 ## Objetivo
 

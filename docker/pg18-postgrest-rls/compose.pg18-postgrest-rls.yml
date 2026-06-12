@@ -1,6 +1,6 @@
 services:
   pg18:
-    image: ${PG18_IMAGE:-registry.arthuragrelli.com/supabase-postgres@sha256:edf25ff4c3f74c315874145b3fb5eff1b3b98560cf9d8c21e815831bf370326e}
+    image: ${PG18_IMAGE:-registry.arthuragrelli.com/supabase-postgres@sha256:c477d5146ea51f235b811c093363c3ed5d8a342dbed8efac7635a1b9779e2f9f}
     container_name: pg18-rls-db
     environment:
       POSTGRES_USER: supabase_admin
@@ -17,7 +17,7 @@ services:
     container_name: pg18-rls-postgrest
     depends_on: [pg18]
     environment:
-      PGRST_DB_URI: postgres://${PG18_DEV_DB_USERINFO:-authenticator:local_pg18_rls_authenticator_only}@pg18:5432/postgres
+      PGRST_DB_URI: postgres://authenticator:local_pg18_rls_authenticator_only@pg18:5432/postgres
       PGRST_DB_SCHEMAS: api
       PGRST_DB_ANON_ROLE: web_anon
       PGRST_JWT_SECRET: ${PG18_DEV_JWT_SECRET:-local_pg18_rls_jwt_secret_32_chars_minimum_only}
@@ -37,10 +37,26 @@ services:
       PGRST_URL: http://postgrest:3000
       PG18_DEV_JWT_SECRET: ${PG18_DEV_JWT_SECRET:-local_pg18_rls_jwt_secret_32_chars_minimum_only}
       PG18_DEV_APP_USER_ID: ${PG18_DEV_APP_USER_ID:-user_karval_demo}
+      REALTIME_PUBLIC_URL: ws://127.0.0.1:${PG18_DEV_REALTIME_PORT:-18084}/ws
     command: python3 serve.py
     networks: [pg18-rls]
     ports:
       - "127.0.0.1:${PG18_DEV_WEB_PORT:-18083}:8080"
+
+  realtime:
+    build:
+      context: ./realtime
+    image: ${PG18_REALTIME_IMAGE:-local/pg18-realtime-bridge:dev}
+    container_name: pg18-rls-realtime
+    depends_on: [pg18]
+    environment:
+      DATABASE_URL: postgres://realtime_bridge:local_pg18_realtime_bridge_only@pg18:5432/postgres
+      PG18_DEV_JWT_SECRET: ${PG18_DEV_JWT_SECRET:-local_pg18_rls_jwt_secret_32_chars_minimum_only}
+      REALTIME_CHANNEL: app_events
+      REALTIME_PORT: 4000
+    networks: [pg18-rls]
+    ports:
+      - "127.0.0.1:${PG18_DEV_REALTIME_PORT:-18084}:4000"
 
 networks:
   pg18-rls:

@@ -11,6 +11,7 @@ import urllib.request
 PGRST_URL = os.environ.get('PGRST_URL', 'http://127.0.0.1:13001').rstrip('/')
 SECRET = os.environ.get('PG18_DEV_JWT_SECRET', 'local_pg18_rls_jwt_secret_32_chars_minimum_only').encode()
 APP_USER_ID = os.environ.get('PG18_DEV_APP_USER_ID', 'user_karval_demo')
+REALTIME_PUBLIC_URL = os.environ.get('REALTIME_PUBLIC_URL', 'ws://127.0.0.1:18084/ws')
 
 
 def b64url(data: bytes) -> str:
@@ -26,42 +27,79 @@ def make_jwt() -> str:
     return unsigned + '.' + b64url(sig)
 
 
-HTML = '''<!doctype html>
+def call_postgrest_rpc(name: str, payload: bytes = b'{}') -> bytes:
+    req = urllib.request.Request(
+        PGRST_URL + '/rpc/' + name,
+        data=payload,
+        method='POST',
+        headers={'Content-Type': 'application/json', 'Authorization': 'Bearer ' + make_jwt()},
+    )
+    with urllib.request.urlopen(req, timeout=10) as res:
+        return res.read()
+
+
+HTML = f'''<!doctype html>
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>PG18 RLS Web Proof</title>
+  <title>PG18 RLS + Realtime Web Proof</title>
   <style>
-    body{font-family:Inter,system-ui,sans-serif;background:#09111f;color:#eef4ff;margin:0;padding:32px}
-    .card{max-width:980px;margin:auto;background:#111d35;border:1px solid #315083;border-radius:18px;padding:28px}
-    .badge{display:inline-block;background:#216e4e;color:#dcffe9;border-radius:999px;padding:6px 10px;font-weight:800}
-    .grid{display:grid;grid-template-columns:190px 1fr;gap:10px}.k{color:#95b7ff}
-    .v,pre{font-family:ui-monospace,monospace;background:#071124;border-radius:10px;padding:10px;white-space:pre-wrap}
-    button{background:#5b8cff;color:#fff;border:0;border-radius:10px;padding:10px 14px;font-weight:800}
+    body{{font-family:Inter,system-ui,sans-serif;background:#09111f;color:#eef4ff;margin:0;padding:32px}}
+    .card{{max-width:1080px;margin:auto;background:#111d35;border:1px solid #315083;border-radius:18px;padding:28px}}
+    .badge{{display:inline-block;background:#216e4e;color:#dcffe9;border-radius:999px;padding:6px 10px;font-weight:800}}
+    .grid{{display:grid;grid-template-columns:210px 1fr;gap:10px}}
+    .k{{color:#95b7ff}}
+    .v,pre{{font-family:ui-monospace,monospace;background:#071124;border-radius:10px;padding:10px;white-space:pre-wrap}}
+    button{{background:#5b8cff;color:#fff;border:0;border-radius:10px;padding:10px 14px;font-weight:800;margin-right:8px}}
   </style>
 </head>
 <body>
 <main class="card">
-  <span class="badge">PG18 POSTGREST JWT/RLS PROOF</span>
-  <h1>Database-centric RPC with JWT claims + RLS</h1>
-  <p>Web client calls same-origin <code>/api/current-profile</code>, which proxies to PostgREST <code>/rpc/current_profile</code> with a local JWT.</p>
+  <span class="badge">PG18 POSTGREST JWT/RLS + REALTIME PROOF</span>
+  <h1>Database-centric RPC with JWT claims, RLS and event_outbox realtime</h1>
+  <p>Web client calls same-origin APIs. The web proof proxies PostgREST RPCs with a local JWT and opens a WebSocket to the realtime bridge.</p>
   <button id="reload">Chamar current_profile</button>
+  <button id="publish">Publicar evento realtime</button>
   <div class="grid">
-    <div class="k">Status</div><div class="v" id="status">loading</div>
+    <div class="k">HTTP Status</div><div class="v" id="status">loading</div>
+    <div class="k">Realtime Status</div><div class="v" id="rtstatus">connecting</div>
     <div class="k">User</div><div class="v" id="user">...</div>
     <div class="k">Plan</div><div class="v" id="plan">...</div>
     <div class="k">Role</div><div class="v" id="role">...</div>
     <div class="k">Postgres</div><div class="v" id="pg">...</div>
   </div>
-  <h2>Payload</h2>
-  <pre id="payload">{}</pre>
+  <h2>Profile payload</h2>
+  <pre id="payload">{{}}</pre>
+  <h2>Realtime messages</h2>
+  <pre id="rtpayload">[]</pre>
 </main>
 <script>
-async function run(){
+const realtimeUrl = {json.dumps(REALTIME_PUBLIC_URL)};
+let realtimeMessages = [];
+let ws;
+function addRealtime(msg){{
+  realtimeMessages.push(msg);
+  document.querySelector('#rtpayload').textContent=JSON.stringify(realtimeMessages,null,2);
+  if(msg.type==='event') document.querySelector('#rtstatus').textContent='event received: '+msg.event.topic;
+}}
+async function token(){{
+  const res=await fetch('/api/realtime-token');
+  const data=await res.json();
+  return data.token;
+}}
+async function connectRealtime(){{
+  const t=await token();
+  ws=new WebSocket(realtimeUrl+'?token='+encodeURIComponent(t));
+  ws.onopen=()=>document.querySelector('#rtstatus').textContent='open';
+  ws.onmessage=(ev)=>addRealtime(JSON.parse(ev.data));
+  ws.onerror=()=>document.querySelector('#rtstatus').textContent='error';
+  ws.onclose=(ev)=>document.querySelector('#rtstatus').textContent='closed '+ev.code;
+}}
+async function run(){{
   const s=document.querySelector('#status');
   s.textContent='fetching';
-  const res=await fetch('/api/current-profile',{method:'POST'});
+  const res=await fetch('/api/current-profile',{{method:'POST'}});
   const data=await res.json();
   s.textContent=res.status+' '+(res.ok?'OK':'ERROR');
   document.querySelector('#user').textContent=data.app_user_id||'';
@@ -69,9 +107,16 @@ async function run(){
   document.querySelector('#role').textContent=data.role||'';
   document.querySelector('#pg').textContent=data.postgres_version||'';
   document.querySelector('#payload').textContent=JSON.stringify(data,null,2);
-}
+}}
+async function publish(){{
+  const res=await fetch('/api/publish-realtime',{{method:'POST'}});
+  const data=await res.json();
+  document.querySelector('#status').textContent='publish '+res.status+' '+(res.ok?'OK':'ERROR');
+  document.querySelector('#payload').textContent=JSON.stringify(data,null,2);
+}}
 document.querySelector('#reload').onclick=run;
-run();
+document.querySelector('#publish').onclick=publish;
+connectRealtime().then(run);
 </script>
 </body>
 </html>'''
@@ -91,25 +136,25 @@ class Handler(http.server.BaseHTTPRequestHandler):
             self.send_body(200, HTML, 'text/html; charset=utf-8')
         elif self.path == '/healthz':
             self.send_body(200, 'ok', 'text/plain')
+        elif self.path == '/api/realtime-token':
+            self.send_body(200, json.dumps({'token': make_jwt(), 'app_user_id': APP_USER_ID}), 'application/json; charset=utf-8')
         else:
             self.send_body(404, 'not found', 'text/plain')
 
     def do_POST(self):
-        if self.path != '/api/current-profile':
+        rpc_by_path = {
+            '/api/current-profile': 'current_profile',
+            '/api/publish-realtime': 'publish_realtime_proof',
+        }
+        rpc = rpc_by_path.get(self.path)
+        if not rpc:
             self.send_body(404, 'not found', 'text/plain')
             return
-        req = urllib.request.Request(
-            PGRST_URL + '/rpc/current_profile',
-            data=b'{}',
-            method='POST',
-            headers={'Content-Type': 'application/json', 'Authorization': 'Bearer ' + make_jwt()},
-        )
         try:
-            with urllib.request.urlopen(req, timeout=10) as res:
-                body = res.read()
-                obj = json.loads(body)
-                assert obj.get('app_user_id') == APP_USER_ID
-                self.send_body(200, body, 'application/json; charset=utf-8')
+            body = call_postgrest_rpc(rpc)
+            obj = json.loads(body)
+            assert obj.get('app_user_id') == APP_USER_ID
+            self.send_body(200, body, 'application/json; charset=utf-8')
         except Exception as exc:
             self.send_body(502, json.dumps({'error': str(exc)}), 'application/json')
 
@@ -118,5 +163,5 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
 
 if __name__ == '__main__':
-    print('Serving PG18 RLS web proof on 0.0.0.0:8080', flush=True)
+    print('Serving PG18 RLS + realtime web proof on 0.0.0.0:8080', flush=True)
     http.server.ThreadingHTTPServer(('0.0.0.0', 8080), Handler).serve_forever()

@@ -1,0 +1,1 @@
+{"scripts":{"start":"node server.js","test":"node test-client.js"},"dependencies":{"pg":"^8.16.3","ws":"^8.18.3"},"devDependencies":{}}

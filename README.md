@@ -4,14 +4,16 @@ This repository is a fork of `supabase/postgres` focused on carrying the Supabas
 
 ## Current status
 
-The PostgreSQL 18 lane in this fork is no longer only a bootstrap note. It has a locally accepted database-image slice.
+The PostgreSQL 18 lane in this fork is no longer only a bootstrap note. It has a full local no-skip Nix/Docker gate, a registry-published RC1 digest, and a durable PostgREST/JWT/RLS/realtime dev proof.
 
-Accepted local PG18 image:
+Accepted PG18 RC1 image:
 
 ```text
-local/supabase-postgres:18-karval
-local/supabase-postgres:18-karval-full
-sha256:576f2d7cb01fdd0dacd37679eb37100e3da37102c536ecb3ed39173cdd39e9e3
+local validation tag: local/supabase-postgres:18-karval-full-validate
+local image id: sha256:cb3e0e2e88054cc1ea6fc6ac34b9558b210a8e0e281269214248ad0cd829470a
+registry tag: registry.arthuragrelli.com/supabase-postgres:18-karval-rc1
+registry digest: sha256:c477d5146ea51f235b811c093363c3ed5d8a342dbed8efac7635a1b9779e2f9f
+digest-pinned reference: registry.arthuragrelli.com/supabase-postgres@sha256:c477d5146ea51f235b811c093363c3ed5d8a342dbed8efac7635a1b9779e2f9f
 ```
 
 Accepted local Swarm service used for validation:
@@ -33,6 +35,8 @@ Primary acceptance docs:
 - `docs/pg18-full-parity-prd.md`
 - `docs/pg18-release-readiness-prd.md`
 - `docs/pg18-release-readiness-final-report.md`
+- `docs/pg18-rc-publish-postgrest-rls-final-report.md`
+- `docs/pg18-rc-publish-postgrest-rls-task-reviews.md`
 
 Historical/bootstrap docs may still exist under `docs/pg18-*`; if they conflict with the full-parity/final reports, treat the final reports as the current source of truth.
 
@@ -42,11 +46,15 @@ This fork currently claims local database-image readiness for PostgreSQL 18 unde
 
 It does not yet claim:
 
-- remote registry publication;
 - production/VPS deployment;
 - full Supabase platform stack parity;
-- active `supautils` or `plan_filter` enforcement semantics;
-- a completed clean-runner release gate unless separately run and recorded.
+- active `supautils` or `plan_filter` enforcement semantics.
+
+It now does claim:
+
+- full local no-skip Nix/Docker validation in the persistent KVM-capable runner;
+- registry RC1 publication with immutable digest;
+- durable local dev stack for PG18 RC1 + PostgREST + JWT/RLS + web proof + optional realtime bridge.
 
 ## Existing version lanes
 
@@ -153,14 +161,30 @@ Current PG18 parity details:
 - Parity-only contract for `supautils` and `plan_filter`: `docs/pg18-parity-contracts.md`
 - `pg_partman` is documented as a PG18 bundled extra, not part of the supplied PG17 reference list.
 
-## Database-centric next direction
+## Database-centric gateway and realtime proof
 
-The next architecture slice is database-centric with PostgREST as the first gateway and a simple web client as the first consumer. Django is intentionally out of scope for that slice.
+The current database-centric proof uses PostgREST as the first gateway and a simple web client as the first consumer. Django remains intentionally out of scope for this slice.
+
+Durable local stack:
+
+```bash
+cd docker/pg18-postgrest-rls
+docker compose -f compose.pg18-postgrest-rls.yml up -d --build
+```
+
+Surfaces:
+
+- PG18 image pinned by RC1 digest.
+- PostgREST exposes RPCs from schema `api`.
+- JWT claim `app_user_id` drives RLS on `private.account_profiles` and `private.event_outbox`.
+- Web proof calls same-origin endpoints and displays profile/realtime state.
+- Realtime bridge is a sibling service, not baked into the database image: `event_outbox` + `LISTEN/NOTIFY` + WebSocket.
 
 See:
 
 ```text
 docs/pg18-database-centric-postgrest-web-prd.md
+docs/pg18-rc-publish-postgrest-rls-final-report.md
 ```
 
 ## Repository layout
@@ -181,12 +205,12 @@ docs/pg18-database-centric-postgrest-web-prd.md
 
 ## Release-readiness gates still separate from local acceptance
 
-Before a broader release, run and record:
+Before production or VPS promotion, still run and record:
 
-1. clean Nix-capable runner validation;
-2. docker-image-test harness and fixture triage;
-3. registry/digest publication strategy;
-4. remote deployment proof if production is in scope;
+1. remote deployment proof if production is in scope;
+2. service/stack spec updated to the digest-pinned image;
+3. newest running task/container using that digest;
+4. health endpoints and clean recent logs;
 5. explicit hardening tests if activating `supautils` or `plan_filter` enforcement.
 
 ## Upstream context
