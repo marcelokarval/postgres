@@ -17,6 +17,10 @@ This is an image/build recipe and local proof repository. It is not the full Sup
 
 ## Canonical docs and entrypoints
 
+- Database-centric DDL strategy: `docs/pg18-database-centric-ddl-strategy.md`
+- Runtime log analysis: `docs/pg18-runtime-log-analysis.md`
+- DDL package root: `database/ddl/README.md`
+
 - README: `README.md`
 - Realtime architecture: `docs/pg18-realtime-websocket-architecture.md`
 - Current PRD: `docs/pg18-realtime-v2-llms-prd.md`
@@ -41,6 +45,7 @@ python3 -m py_compile docker/pg18-postgrest-rls/web/serve.py
 node --check docker/pg18-postgrest-rls/realtime/server.js
 node --check docker/pg18-postgrest-rls/realtime/test-client.js
 docker compose -f docker/pg18-postgrest-rls/compose.pg18-postgrest-rls.yml config
+scripts/smoke-pg18-realtime-v2.sh --keep-stack
 ```
 
 ## Safety
@@ -54,3 +59,11 @@ docker compose -f docker/pg18-postgrest-rls/compose.pg18-postgrest-rls.yml confi
 ## See also
 
 For fuller agent context, read `llms-full.txt`.
+
+## Database-centric DDL packages
+
+The PG18 image/stack and project DDLs are separate concerns. The image provides the compiled database runtime and optional sibling services. Versioned `.sql` packages under `database/ddl/` install shared or project-specific schemas into a running database. Prop4You is the first intended project case, but its DDLs must live under `database/ddl/projects/prop4you/`, not inside the base image.
+
+## Hermes and non-Hermes agents
+
+Hermes agents should read this file, `llms-full.txt`, the current PRD/task docs and the runtime log analysis before mutating the repo. Non-Hermes agents can use the same files as standard Markdown context; no instruction here requires Hermes-specific runtime unless a task explicitly says so.

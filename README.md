@@ -56,6 +56,31 @@ It now does claim:
 - registry RC1 publication with immutable digest;
 - durable local dev stack for PG18 RC1 + PostgREST + JWT/RLS + web proof + optional realtime bridge.
 
+
+## Database-centric DDL packages and runtime log notes
+
+This repository now separates the compiled PG18 database/stack base from project-installed DDL packages. The base image/stack provides PostgreSQL 18, curated extensions, preload hooks and optional sibling services such as PostgREST/realtime. Project schemas are installed later as ordered `.sql` packages.
+
+Current DDL convention:
+
+```text
+database/ddl/base/                  shared base SQL package
+database/ddl/projects/prop4you/     Prop4You project SQL package
+```
+
+Read:
+
+- `docs/pg18-database-centric-ddl-strategy.md`
+- `database/ddl/README.md`
+- `docs/pg18-runtime-log-analysis.md`
+
+Deterministic realtime v2 smoke with human-accessible HTML proof:
+
+```bash
+scripts/smoke-pg18-realtime-v2.sh --keep-stack
+# then open http://127.0.0.1:18083/
+```
+
 ## Existing version lanes
 
 - PostgreSQL 15: upstream-supported lane remains present.

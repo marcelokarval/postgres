@@ -175,3 +175,38 @@ When changing realtime behavior, update all relevant living docs together:
 - `README.md` for small discoverability links only
 
 Keep the realtime explanation explicit for both human maintainers and LLM agents.
+
+## Database image/stack vs DDL packages
+
+Keep the compiled PG18 base and project DDLs separate. The image/stack layer includes PostgreSQL 18, compiled extensions, preload libraries, PostgREST/realtime proof services and digest-pinned runtime identity. DDL packages are ordered `.sql` files installed later into a running database.
+
+Canonical DDL docs:
+
+- `docs/pg18-database-centric-ddl-strategy.md`
+- `database/ddl/README.md`
+- `database/ddl/base/README.md`
+- `database/ddl/projects/prop4you/README.md`
+
+Prop4You is the first real project case, but Prop4You schemas/policies/functions must not be baked into the base image. They should be inventoried from inherited scripts and converted into ordered project SQL files under `database/ddl/projects/prop4you/`.
+
+## Runtime log interpretation
+
+Read `docs/pg18-runtime-log-analysis.md` before acting on noisy Postgres logs. Current evidence shows:
+
+- `postgres@strapi FATAL: database "strapi" does not exist` comes from the live `strapi_strapi` service configured with `dbhost=postgres`, `dbname=strapi`, `dbuser=postgres`. On the shared Swarm network, `postgres` resolves ambiguously to both PG17 and PG18 service VIPs. Do not create a `strapi` DB in PG18 unless Strapi is intentionally scoped to PG18.
+- `supabase_admin` is an expected image/bootstrap/admin role from the Supabase/Postgres recipe and smoke scripts. It is not a project app user and not a table.
+- `safeupdate_probe` is a smoke-test table for the `safeupdate` preload hook. `UPDATE requires a WHERE clause` is expected/pass behavior; missing-relation noise indicates an older/non-deterministic probe and should be addressed with deterministic smoke scripts.
+
+## Deterministic realtime v2 smoke
+
+Use:
+
+```bash
+scripts/smoke-pg18-realtime-v2.sh --keep-stack
+```
+
+This leaves `http://127.0.0.1:18083/` running for human HTML inspection and writes evidence under `tmp/pg18-realtime-v2-smoke*`. Use the default without `--keep-stack` for CI-like cleanup.
+
+## Agent portability
+
+The `llms.txt`/`llms-full.txt` files are Hermes-friendly but not Hermes-exclusive. Any agent should treat them as repo context, then verify runtime truth with local tools before making claims. Hermes-specific paths/tools are conveniences for this environment, not requirements for the architecture itself.
