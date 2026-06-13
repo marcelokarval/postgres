@@ -61,6 +61,8 @@ It now does claim:
 
 This repository now separates the compiled PG18 database/stack base from project-installed DDL packages. The base image/stack provides PostgreSQL 18, curated extensions, preload hooks and optional sibling services such as PostgREST/realtime. Project schemas are installed later as ordered `.sql` packages.
 
+Project DDL modeling follows the database-centric soft-DDD rule: schemas are domains/bounded contexts; tables are durable domain records; functions/RPCs are use cases; views are projections; policies are authorization; `api` is the public PostgREST/client facade.
+
 Current DDL convention:
 
 ```text
@@ -71,6 +73,7 @@ database/ddl/projects/prop4you/     Prop4You project SQL package
 Read:
 
 - `docs/pg18-database-centric-ddl-strategy.md`
+- `docs/database-centric-soft-ddd-rule.md`
 - `database/ddl/README.md`
 - `docs/pg18-runtime-log-analysis.md`
 

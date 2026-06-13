@@ -4,6 +4,22 @@ This directory contains versioned SQL packages that are installed into a running
 
 The DDL packages are intentionally separate from the compiled PG18 image.
 
+
+## Modeling rule
+
+All DDL packages follow the database-centric soft-DDD rule:
+
+```text
+schemas = domains / bounded contexts
+tables = durable domain records
+functions/RPCs = use cases
+views = projections
+policies = authorization rules
+api = public facade
+```
+
+Canonical rule doc: `docs/database-centric-soft-ddd-rule.md`.
+
 ## Layers
 
 ```text

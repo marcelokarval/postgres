@@ -21,6 +21,25 @@ The architecture must keep two concerns separate:
 
 The compiled PG18 image must not become polluted with one product's project schema. The base image should be ready to host project DDLs; the project DDLs are installed later as controlled artifacts.
 
+
+## 1.1 Database-centric soft-DDD rule
+
+This DDL strategy follows the project rule documented in `docs/database-centric-soft-ddd-rule.md`.
+
+Operational summary:
+
+```text
+schemas = domains / bounded contexts
+tables = entities, ledgers, snapshots, queues or operational records inside a domain
+functions/RPCs = use cases / application actions
+views/materialized views = read projections
+policies = domain authorization rules
+triggers/jobs = domain automations
+api schema = public facade for PostgREST/client access
+```
+
+The base PG18 image remains project-neutral. Soft-DDD modeling applies when DDL packages are installed into a running database.
+
 ## 2. Why this separation matters
 
 The PG18 image answers:

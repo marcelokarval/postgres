@@ -210,3 +210,21 @@ This leaves `http://127.0.0.1:18083/` running for human HTML inspection and writ
 ## Agent portability
 
 The `llms.txt`/`llms-full.txt` files are Hermes-friendly but not Hermes-exclusive. Any agent should treat them as repo context, then verify runtime truth with local tools before making claims. Hermes-specific paths/tools are conveniences for this environment, not requirements for the architecture itself.
+
+## Database-centric soft-DDD modeling rule
+
+Canonical rule: `docs/database-centric-soft-ddd-rule.md`.
+
+For DDL packages, model the database with soft-DDD:
+
+```text
+schemas = domains / bounded contexts
+tables = entities, ledgers, snapshots, queues or operational records inside a domain
+functions/RPCs = use cases / application actions
+views/materialized views = read projections
+policies = domain authorization rules
+triggers/jobs = domain automations
+api schema = public facade for PostgREST/client access
+```
+
+Prop4You initial bounded contexts: `identity`, `property`, `leadfinder`, `matrix`, `sourcehub`, `skiptrace`, `realtime`, `billing`, `audit`, `api`. Keep canonical platform truth: Lead Finder defines canonical graph; Matrix governs semantic meaning; SourceHub owns ingress/lineage/DTO publication; Skip Trace enriches and must not define owner/property truth.

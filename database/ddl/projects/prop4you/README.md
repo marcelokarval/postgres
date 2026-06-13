@@ -12,6 +12,27 @@ Canonical platform boundaries:
 - Skip Trace enriches; it does not define owner/property truth.
 - Situations are structured facts, not tags.
 
+## Soft-DDD project rule
+
+Prop4You DDL follows `docs/database-centric-soft-ddd-rule.md`.
+
+Schemas are bounded contexts/domains such as:
+
+```text
+identity
+property
+leadfinder
+matrix
+sourcehub
+skiptrace
+realtime
+billing
+audit
+api
+```
+
+The `api` schema is the client/PostgREST facade. Domain tables should not be exposed directly by default.
+
 Potential future scope examples:
 
 ```text
