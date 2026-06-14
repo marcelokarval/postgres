@@ -1,0 +1,131 @@
+# PG18 Database-Centric Platform — Canonical Docs Index
+
+Status: ACTIVE_INDEX
+Date: 2026-06-13
+Purpose: make the project knowledge map explicit for Thor/Hermes, humans and non-Hermes agents.
+
+## 1. Start here
+
+Read these first:
+
+1. `README.md` — human entrypoint and current status.
+2. `llms.txt` — concise LLM/agent discovery context.
+3. `llms-full.txt` — full LLM/agent context packet.
+4. `docs/canonical-docs-index.md` — this documentation map.
+
+## 2. Release identity
+
+Current pure PG18 release:
+
+- `docs/releases/18.0.0.001-karval-pure-rc1.md`
+- GitHub release: `18.0.0.001-karval-pure-rc1`
+- Registry digest: `sha256:c477d5146ea51f235b811c093363c3ed5d8a342dbed8efac7635a1b9779e2f9f`
+
+Meaning of pure:
+
+- PG18 image/stack base only.
+- No Prop4You/project DDL installed.
+- No Strapi database.
+- No production/VPS claim.
+
+## 3. PG18 image/build/acceptance docs
+
+Use these for image, extension, Nix, Docker, KVM and RC acceptance truth:
+
+- `docs/pg18-full-parity-final-report.md`
+- `docs/pg18-full-parity-acceptance.md`
+- `docs/pg18-full-parity-prd.md`
+- `docs/pg18-release-readiness-prd.md`
+- `docs/pg18-release-readiness-final-report.md`
+- `docs/pg18-rc-publish-postgrest-rls-final-report.md`
+- `docs/pg18-rc-publish-postgrest-rls-task-reviews.md`
+
+## 4. Realtime and PostgREST proof docs
+
+Use these for database-centric API/realtime behavior:
+
+- `docs/pg18-realtime-websocket-architecture.md`
+- `docs/pg18-realtime-v2-llms-prd.md`
+- `docs/pg18-realtime-v2-llms-tasks.md`
+- `docs/pg18-realtime-v2-llms-task-reviews.md`
+- `docs/pg18-realtime-v2-llms-final-report.md`
+- `docs/pg18-realtime-v2-llms-browser-proof.html`
+
+Runtime proof command:
+
+```bash
+scripts/smoke-pg18-realtime-v2.sh --keep-stack
+```
+
+HTML proof URL when running:
+
+```text
+http://127.0.0.1:18083/
+```
+
+## 5. Database-centric DDL and modeling docs
+
+Use these for DDL package strategy and soft-DDD rules:
+
+- `docs/pg18-database-centric-ddl-strategy.md`
+- `docs/database-centric-soft-ddd-rule.md`
+- `database/ddl/README.md`
+- `database/ddl/base/README.md`
+- `database/ddl/projects/prop4you/README.md`
+
+Core rule:
+
+```text
+schemas = domains / bounded contexts
+tables = durable domain records
+functions/RPCs = use cases
+views = projections
+policies = authorization
+triggers/jobs = automation
+api = public facade
+```
+
+## 6. Runtime log / operational diagnosis docs
+
+Use before acting on noisy local runtime logs:
+
+- `docs/pg18-runtime-log-analysis.md`
+- `docs/pg18-ddl-strategy-log-analysis-final-report.md`
+
+Known diagnosis:
+
+- `postgres@strapi` noise came from a Strapi Swarm service using ambiguous DB host `postgres` on a shared network.
+- `supabase_admin` is an expected image/bootstrap/admin role, not a project app role or table.
+- `safeupdate_probe` is a smoke table for preload hook validation; `UPDATE requires a WHERE clause` is expected pass behavior.
+
+## 7. Release notes
+
+- `docs/releases/18.0.0.001-karval-pure-rc1.md`
+
+Future release notes should go under:
+
+```text
+docs/releases/<version>.md
+```
+
+## 8. Current next work queue
+
+Recommended next slices:
+
+1. DDL installer + base install tracking.
+2. Prop4You inherited Django/script inventory.
+3. Prop4You minimal DDL package.
+4. Project-specific HTML proof after DDL package behavior exists.
+
+## 9. Agent rule
+
+Hermes/Thor and other agents must not rely on memory alone. Before mutating this repository, read:
+
+```text
+README.md
+llms.txt
+llms-full.txt
+docs/canonical-docs-index.md
+```
+
+Then read the domain-specific doc for the task.

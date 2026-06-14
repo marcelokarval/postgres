@@ -30,6 +30,7 @@ pg_stat_statements, pgaudit, pg_cron, pg_net, pg_tle, safeupdate
 
 Primary acceptance docs:
 
+- `docs/canonical-docs-index.md`
 - `docs/pg18-full-parity-final-report.md`
 - `docs/pg18-full-parity-acceptance.md`
 - `docs/pg18-full-parity-prd.md`

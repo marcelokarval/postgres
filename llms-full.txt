@@ -81,6 +81,8 @@ The v2 direction keeps the database as source of truth and adds protocol durabil
 
 ## File map
 
+Canonical documentation map: `docs/canonical-docs-index.md`. Read it before mutating docs/runtime/DDL.
+
 | Path | Agent relevance |
 |---|---|
 | `README.md` | Human entrypoint and current status. |
