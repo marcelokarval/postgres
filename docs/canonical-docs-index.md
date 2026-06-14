@@ -143,6 +143,7 @@ Then read the domain-specific doc for the task.
 
 ## DDL installer delivered slice
 
+- `docs/reports/base-ddl-deep-scan-and-pgaudit-notes.md` — follow-up rescan confirming public_id prefix registry, 16/16 base DDL scope check, full uuid7 public refs, and pgAudit comparison notes.
 - `docs/ddl-installer-prd.md` — PRD for the executable base DDL installer slice.
 - `docs/ddl-installer-tasks.md` — task ledger and execution evidence for the slice.
 - `docs/reviews/ddl-installer-task-review.md` — task-by-task requested-vs-delivered review.
