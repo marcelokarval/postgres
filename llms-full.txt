@@ -238,3 +238,7 @@ Prop4You initial bounded contexts: `identity`, `property`, `leadfinder`, `matrix
 Read `docs/pg18-application-data-kernel-context.md` for the normalized PG18 database-centric conversation. Key direction: PG18 acts as an Application Data Kernel: strong relational core, validated JSONB payloads, append-only events, FDW for external systems, local snapshots/read models, intelligence layer, pgmq/pg_cron/pg_net operational async and PG18 AIO for scans/maintenance.
 
 Read `docs/prop4you-database-centric-base-extraction.md` before creating DDL from Prop4You. `app.prop4you.com` and `prop4you-inertia` must both be analyzed; extract the best reusable rules into framework-agnostic database-centric base capabilities. Do not name the canonical target `platform/django`; Django is historical source/transport, not the business-truth layer.
+
+## Prop4You Core DB to DDL analysis
+
+Read `docs/prop4you-core-db-to-ddl-analysis.md` before implementing the DDL installer/base. It maps Prop4You BaseModel/mixins/managers/audit/repository/service patterns into framework-agnostic base DDL candidates: install tracking, public IDs, lifecycle, soft delete, actor context, versioning, JSONB safety, search normalization, audit log, realtime base and API health/context facade.

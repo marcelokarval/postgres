@@ -23,6 +23,7 @@ This is an image/build recipe and local proof repository. It is not the full Sup
 - Database-centric soft-DDD rule: `docs/database-centric-soft-ddd-rule.md`
 - Application Data Kernel context: `docs/pg18-application-data-kernel-context.md`
 - Prop4You base extraction: `docs/prop4you-database-centric-base-extraction.md`
+- Prop4You Core DB to DDL analysis: `docs/prop4you-core-db-to-ddl-analysis.md`
 - Runtime log analysis: `docs/pg18-runtime-log-analysis.md`
 - DDL package root: `database/ddl/README.md`
 

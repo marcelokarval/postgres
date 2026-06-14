@@ -78,6 +78,7 @@ Read:
 - `docs/database-centric-soft-ddd-rule.md`
 - `docs/pg18-application-data-kernel-context.md`
 - `docs/prop4you-database-centric-base-extraction.md`
+- `docs/prop4you-core-db-to-ddl-analysis.md`
 - `database/ddl/README.md`
 - `docs/pg18-runtime-log-analysis.md`
 

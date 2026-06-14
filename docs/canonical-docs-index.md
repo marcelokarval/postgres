@@ -70,6 +70,7 @@ Use these for DDL package strategy, Application Data Kernel context, Prop4You ex
 
 - `docs/pg18-application-data-kernel-context.md`
 - `docs/prop4you-database-centric-base-extraction.md`
+- `docs/prop4you-core-db-to-ddl-analysis.md`
 - `docs/pg18-database-centric-ddl-strategy.md`
 - `docs/database-centric-soft-ddd-rule.md`
 - `database/ddl/README.md`

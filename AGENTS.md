@@ -148,6 +148,7 @@ Read:
 
 ```text
 docs/prop4you-database-centric-base-extraction.md
+docs/prop4you-core-db-to-ddl-analysis.md
 ```
 
 Prop4You sources to analyze together:
