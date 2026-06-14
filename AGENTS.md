@@ -228,3 +228,4 @@ Key current rules:
 - Base DDL now includes `database/ddl/base/0002_extensions.sql`; extension enablement is target-database DDL-owned and recorded in `base.extension_install_results`.
 - `pg18_ddl_lab` is the canonical local clean database for DDL/script proof runs via `scripts/proof-ddl-base-lab.sh`.
 - Multi-product cron policy: keep `cron.database_name=postgres`; product DBs such as `p4y` or lead-capture DBs use `cron.schedule_in_database(...)` from `postgres` and record `pg_cron` as `skipped_by_cron_database_name` locally.
+- Database-centric methodology: every DDL/runtime/script/policy change must evolve the relevant documentation in the same work cycle. Update the nearest entrypoint (`AGENTS.md`, `README.md`, `llms.txt`, `llms-full.txt`), the canonical index, and task/proof docs when the change affects future operators.

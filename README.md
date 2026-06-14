@@ -59,6 +59,22 @@ It now does claim:
 - durable local dev stack for PG18 RC1 + PostgREST + JWT/RLS + web proof + optional realtime bridge.
 
 
+
+## Database-centric documentation discipline
+
+Every database-centric change must update documentation as part of the same work cycle. This applies to DDL, runtime/stack behavior, scripts, operational policies, lab/proof flows, extension decisions, and gateway/client contracts.
+
+Minimum expectation:
+
+```text
+- update the nearest operational doc or README
+- update AGENTS.md / llms.txt / llms-full.txt when future agents need the rule
+- update docs/canonical-docs-index.md when adding or promoting a canonical artifact
+- update proof/report/task docs when the change modifies tested behavior
+```
+
+Do not treat implementation and documentation as separate phases for this project. The database is the product kernel, so documentation is part of the runtime governance surface.
+
 ## Database-centric DDL packages and runtime log notes
 
 This repository now separates the compiled PG18 database/stack base from project-installed DDL packages. The base image/stack provides PostgreSQL 18, curated extensions, preload hooks and optional sibling services such as PostgREST/realtime. Project schemas are installed later as ordered `.sql` packages.
