@@ -221,4 +221,10 @@ docs/ddl-installer-prd.md
 docs/ddl-installer-tasks.md
 ```
 
-Key current rule: public references use prefix registry + uuid7 pointer semantics, not the old random 24-character suffix. Preserve the PG18 extension inventory; do not regress image extensions from DDL work.
+Key current rules:
+
+- Public references use prefix registry + uuid7 pointer semantics, not the old random 24-character suffix.
+- Preserve the PG18 extension inventory; do not regress image extensions from DDL work.
+- Base DDL now includes `database/ddl/base/0002_extensions.sql`; extension enablement is target-database DDL-owned and recorded in `base.extension_install_results`.
+- `pg18_ddl_lab` is the canonical local clean database for DDL/script proof runs via `scripts/proof-ddl-base-lab.sh`.
+- Multi-product cron policy: keep `cron.database_name=postgres`; product DBs such as `p4y` or lead-capture DBs use `cron.schedule_in_database(...)` from `postgres` and record `pg_cron` as `skipped_by_cron_database_name` locally.

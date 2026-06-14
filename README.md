@@ -258,6 +258,17 @@ Before production or VPS promotion, still run and record:
 
 This fork is based on Supabase Postgres: PostgreSQL with a curated extension set and supporting build/release infrastructure. Upstream community links and detailed generic extension tables should be treated as upstream reference material; this README prioritizes the current PG18 fork state and local release-readiness path.
 
+
+Current live lab and extension policy:
+
+```text
+scripts/proof-ddl-base-lab.sh          clean DB proof runner for pg18_ddl_lab
+docs/reports/pg18-ddl-base-lab-proof.md latest lab proof evidence
+docs/pg18-multidb-cron-policy.md      central postgres scheduler policy
+```
+
+The base DDL package now owns target-database extension enablement through `0002_extensions.sql`. `pg_cron` remains centralized in database `postgres` for multi-product/multi-db scheduling; product databases should expose stable functions and be scheduled with `cron.schedule_in_database(...)`.
+
 ## Active DDL installer slice
 
 - `docs/ddl-installer-prd.md`

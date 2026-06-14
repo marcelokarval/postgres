@@ -243,6 +243,15 @@ Read `docs/prop4you-database-centric-base-extraction.md` before creating DDL fro
 
 Read `docs/prop4you-core-db-to-ddl-analysis.md` before implementing the DDL installer/base. It maps Prop4You BaseModel/mixins/managers/audit/repository/service patterns into framework-agnostic base DDL candidates: install tracking, public IDs, lifecycle, soft delete, actor context, versioning, JSONB safety, search normalization, audit log, realtime base and API health/context facade.
 
+
+## Current DDL lab, extension enablement, and cron policy
+
+The active base DDL package includes `database/ddl/base/0002_extensions.sql`. Extension binaries/control files are provided by the PG18 image/cluster, but `CREATE EXTENSION` is per database, so ordered DDL owns target-database extension enablement and records results in `base.extension_install_results`.
+
+`pg18_ddl_lab` is the canonical clean local proof database for DDL/script development. Re-run `LAB_DB=pg18_ddl_lab scripts/proof-ddl-base-lab.sh` to drop/recreate it, apply/reapply the base package, and exercise public refs, lifecycle, JSONB guards, search normalization, audit log, realtime outbox/acks, and API facade. The latest proof is `docs/reports/pg18-ddl-base-lab-proof.md`.
+
+Default multi-product cron policy: keep `cron.database_name=postgres`. Product databases such as `p4y`, lead-capture DBs, and labs should not require direct `CREATE EXTENSION pg_cron`; they record `skipped_by_cron_database_name` locally and are scheduled from `postgres` with `cron.schedule_in_database(...)`, calling stable functions inside the target DB. See `docs/pg18-multidb-cron-policy.md`.
+
 ## Active DDL installer slice
 
 Read `docs/ddl-installer-prd.md` and `docs/ddl-installer-tasks.md`. The active public ID model is prefix registry + uuid7 pointer. Audit must distinguish extension-backed server audit from durable business/object audit. The DDL slice must preserve PG18 extension inventory and not mutate the image.
