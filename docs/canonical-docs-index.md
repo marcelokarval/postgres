@@ -8,10 +8,11 @@ Purpose: make the project knowledge map explicit for Thor/Hermes, humans and non
 
 Read these first:
 
-1. `README.md` — human entrypoint and current status.
-2. `llms.txt` — concise LLM/agent discovery context.
-3. `llms-full.txt` — full LLM/agent context packet.
-4. `docs/canonical-docs-index.md` — this documentation map.
+1. `AGENTS.md` — live agent entrypoint and operational guardrails.
+2. `README.md` — human entrypoint and current status.
+3. `llms.txt` — concise LLM/agent discovery context.
+4. `llms-full.txt` — full LLM/agent context packet.
+5. `docs/canonical-docs-index.md` — this documentation map.
 
 ## 2. Release identity
 
@@ -65,8 +66,10 @@ http://127.0.0.1:18083/
 
 ## 5. Database-centric DDL and modeling docs
 
-Use these for DDL package strategy and soft-DDD rules:
+Use these for DDL package strategy, Application Data Kernel context, Prop4You extraction and soft-DDD rules:
 
+- `docs/pg18-application-data-kernel-context.md`
+- `docs/prop4you-database-centric-base-extraction.md`
 - `docs/pg18-database-centric-ddl-strategy.md`
 - `docs/database-centric-soft-ddd-rule.md`
 - `database/ddl/README.md`
@@ -122,6 +125,7 @@ Recommended next slices:
 Hermes/Thor and other agents must not rely on memory alone. Before mutating this repository, read:
 
 ```text
+AGENTS.md
 README.md
 llms.txt
 llms-full.txt

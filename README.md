@@ -30,6 +30,7 @@ pg_stat_statements, pgaudit, pg_cron, pg_net, pg_tle, safeupdate
 
 Primary acceptance docs:
 
+- `AGENTS.md`
 - `docs/canonical-docs-index.md`
 - `docs/pg18-full-parity-final-report.md`
 - `docs/pg18-full-parity-acceptance.md`
@@ -75,6 +76,8 @@ Read:
 
 - `docs/pg18-database-centric-ddl-strategy.md`
 - `docs/database-centric-soft-ddd-rule.md`
+- `docs/pg18-application-data-kernel-context.md`
+- `docs/prop4you-database-centric-base-extraction.md`
 - `database/ddl/README.md`
 - `docs/pg18-runtime-log-analysis.md`
 

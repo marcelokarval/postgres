@@ -81,6 +81,8 @@ The v2 direction keeps the database as source of truth and adds protocol durabil
 
 ## File map
 
+Agent entrypoint: `AGENTS.md`.
+
 Canonical documentation map: `docs/canonical-docs-index.md`. Read it before mutating docs/runtime/DDL.
 
 | Path | Agent relevance |
@@ -230,3 +232,9 @@ api schema = public facade for PostgREST/client access
 ```
 
 Prop4You initial bounded contexts: `identity`, `property`, `leadfinder`, `matrix`, `sourcehub`, `skiptrace`, `realtime`, `billing`, `audit`, `api`. Keep canonical platform truth: Lead Finder defines canonical graph; Matrix governs semantic meaning; SourceHub owns ingress/lineage/DTO publication; Skip Trace enriches and must not define owner/property truth.
+
+## Application Data Kernel and Prop4You extraction
+
+Read `docs/pg18-application-data-kernel-context.md` for the normalized PG18 database-centric conversation. Key direction: PG18 acts as an Application Data Kernel: strong relational core, validated JSONB payloads, append-only events, FDW for external systems, local snapshots/read models, intelligence layer, pgmq/pg_cron/pg_net operational async and PG18 AIO for scans/maintenance.
+
+Read `docs/prop4you-database-centric-base-extraction.md` before creating DDL from Prop4You. `app.prop4you.com` and `prop4you-inertia` must both be analyzed; extract the best reusable rules into framework-agnostic database-centric base capabilities. Do not name the canonical target `platform/django`; Django is historical source/transport, not the business-truth layer.

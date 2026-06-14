@@ -51,3 +51,7 @@ Rules:
 A future base installer should track applied files with filename and checksum in a database table such as `private.ddl_migrations`.
 
 Until that installer exists, this directory is the canonical source structure for DDL sequencing.
+
+## Framework extraction rule
+
+Do not create a canonical `platform/django` package. When extracting rules from Django-era projects, convert them into framework-agnostic database-centric primitives in `base/` or future capability-named packages. Django, FastAPI, Kong and PostgREST are consumers/transports.

@@ -17,9 +17,12 @@ This is an image/build recipe and local proof repository. It is not the full Sup
 
 ## Canonical docs and entrypoints
 
+- Agent entrypoint: `AGENTS.md`
 - Canonical docs index: `docs/canonical-docs-index.md`
 - Database-centric DDL strategy: `docs/pg18-database-centric-ddl-strategy.md`
 - Database-centric soft-DDD rule: `docs/database-centric-soft-ddd-rule.md`
+- Application Data Kernel context: `docs/pg18-application-data-kernel-context.md`
+- Prop4You base extraction: `docs/prop4you-database-centric-base-extraction.md`
 - Runtime log analysis: `docs/pg18-runtime-log-analysis.md`
 - DDL package root: `database/ddl/README.md`
 
@@ -73,3 +76,7 @@ Hermes agents should read this file, `llms-full.txt`, the current PRD/task docs 
 ## Database-centric soft-DDD rule
 
 Use soft-DDD for project DDL modeling: schemas are domains/bounded contexts; tables are durable domain records; functions/RPCs are use cases; views are projections; policies are authorization; triggers/jobs are automation; `api` is the public PostgREST/client facade. Do not model everything under `public`; do not bake project DDL into the reusable PG18 image.
+
+## DDL package naming decision
+
+Do not create `database/ddl/platform/django/` as the canonical target. Extract recurring rules from Django-era projects into framework-agnostic database-centric base capabilities under `database/ddl/base/` or capability-named packages if later needed. Django/FastAPI/Kong/PostgREST are consumers/transports, not owners of business truth.
