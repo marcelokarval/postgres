@@ -159,3 +159,7 @@ Then read the domain-specific doc for the task.
 - `docs/reports/pg18-postgres-stack-parity-review.md` — side-by-side postgres vs postgres18 stack comparison and risks.
 - `docs/reports/pg18-portainer-pgadmin-final-report.md` — final runtime evidence and requested-vs-delivered report.
 - `docker/postgres18.portainer.stack.yml` — secret-free canonical Portainer stack file for local postgres18.
+## DDL base live lab proof
+
+- `scripts/proof-ddl-base-lab.sh` — re-runnable lab proof: clean DB, extensions, DDL base apply/reapply and functional tests.
+- `docs/reports/pg18-ddl-base-lab-proof.md` — latest evidence for `pg18_ddl_lab` on local postgres18 Swarm.
