@@ -23,4 +23,17 @@ Files:
 
 Extension rule:
 
-Postgres extension binaries/control files are supplied by the image/cluster, but `CREATE EXTENSION` is per database. Therefore this package enables target-database extensions as part of ordered DDL. `pg_cron` is special: PostgreSQL enforces `cron.database_name`, so a non-`postgres` lab DB records it as `skipped_by_cron_database_name` unless the runtime config is changed.
+Postgres extension binaries/control files are supplied by the image/cluster, but `CREATE EXTENSION` is per database. Therefore this package enables target-database extensions as part of ordered DDL.
+
+`pg_cron` policy for this project: keep `cron.database_name=postgres` as the local/default multi-product scheduler database. Product databases such as `p4y`, lead-capture databases, and labs should not try to install `pg_cron` directly; they record `skipped_by_cron_database_name` in `base.extension_install_results`. Cross-database schedules should be registered from `postgres` with `cron.schedule_in_database(...)`, calling stable functions inside the target database.
+
+Example:
+
+```sql
+select cron.schedule_in_database(
+  'p4y-outbox-every-minute',
+  '* * * * *',
+  'select jobs.tick();',
+  'p4y'
+);
+```

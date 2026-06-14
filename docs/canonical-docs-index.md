@@ -163,3 +163,4 @@ Then read the domain-specific doc for the task.
 
 - `scripts/proof-ddl-base-lab.sh` — re-runnable lab proof: clean DB, extensions, DDL base apply/reapply and functional tests.
 - `docs/reports/pg18-ddl-base-lab-proof.md` — latest evidence for `pg18_ddl_lab` on local postgres18 Swarm.
+- `docs/pg18-multidb-cron-policy.md` — active pg_cron policy: `postgres` as central scheduler with `cron.schedule_in_database(...)` for product DBs.
