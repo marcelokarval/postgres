@@ -1,5 +1,5 @@
 -- PG18 database-centric base DDL package
--- 0007_audit_log.sql
+-- 0008_audit_log.sql
 -- Durable business/domain audit. pgaudit remains complementary server/statement logging, not a replacement.
 
 create schema if not exists audit;

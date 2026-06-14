@@ -1,5 +1,5 @@
 -- PG18 database-centric base DDL package
--- 0004_lifecycle_columns_triggers.sql
+-- 0005_lifecycle_columns_triggers.sql
 -- Reusable trigger helpers for tables using the documented lifecycle column convention.
 
 create schema if not exists base;

@@ -1,5 +1,5 @@
 -- PG18 database-centric base DDL package
--- 0006_search_normalization.sql
+-- 0007_search_normalization.sql
 -- Framework-agnostic text/email/phone/search normalization helpers.
 
 create schema if not exists base;

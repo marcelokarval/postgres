@@ -3,48 +3,50 @@
 Status: PASS
 Database: pg18_ddl_lab
 Service: postgres18_postgres
-Date: 2026-06-14T11:14:58-04:00
+Date: 2026-06-14T11:36:47-04:00
 Secrets: redacted/omitted
 
 ## What this proof did
 
 1. Dropped and recreated a clean lab database named `pg18_ddl_lab` on the live local Swarm PG18 service.
-2. Enabled a broad set of available Supabase/Postgres extensions where possible, recording install/skipped status.
-3. Applied `database/ddl/base` with `scripts/apply-ddl-package.sh`.
+2. Applied `database/ddl/base` with `scripts/apply-ddl-package.sh`; extension enablement is owned by `0002_extensions.sql`.
+3. Captured per-database extension installation status from `base.extension_install_results`, including the `pg_cron` runtime constraint.
 4. Reapplied the same package to prove idempotence.
 5. Exercised functional behavior for public IDs, lifecycle triggers, JSONB guards, search normalization, audit log, realtime outbox/ack, and API facade.
 
 ## Extension install output
 
 ```text
-                                     ?column?
------------------------------------------------------------------------------------
- http=installed_or_present
- hypopg=installed_or_present
- index_advisor=installed_or_present
- pg_cron=skipped_or_failed [P0001: can only create extension in database postgres]
- pg_graphql=installed_or_present
- pg_jsonschema=installed_or_present
- pg_net=installed_or_present
- pg_partman=installed_or_present
- pg_repack=installed_or_present
- pg_stat_statements=installed_or_present
- pgaudit=installed_or_present
- pgcrypto=installed_or_present
- pgjwt=installed_or_present
- pgmq=installed_or_present
- pgroonga=installed_or_present
- pgrouting=installed_or_present
- pgtap=installed_or_present
- plpgsql_check=installed_or_present
- postgis=installed_or_present
- rum=installed_or_present
- supabase_vault=installed_or_present
- uuid-ossp=installed_or_present
- vector=installed_or_present
- wal2json=installed_or_present
- wrappers=installed_or_present
-(25 rows)
+http	public	f	installed_or_present	-
+hypopg	public	f	installed_or_present	-
+index_advisor	public	f	installed_or_present	-
+pg_cron	public	f	skipped_by_cron_database_name	pg_cron can only be created in cron.database_name=postgres; current_database=pg18_ddl_lab
+pg_graphql	graphql	f	installed_or_present	-
+pg_hashids	public	f	installed_or_present	-
+pg_jsonschema	public	f	installed_or_present	-
+pg_net	public	f	installed_or_present	-
+pg_partman	public	f	installed_or_present	-
+pg_repack	public	f	installed_or_present	-
+pg_stat_monitor	public	f	installed_or_present	-
+pg_stat_statements	extensions	f	installed_or_present	-
+pg_tle	pgtle	f	installed_or_present	-
+pgaudit	public	f	installed_or_present	-
+pgcrypto	extensions	t	installed_or_present	-
+pgjwt	public	f	installed_or_present	-
+pgmq	pgmq	f	installed_or_present	-
+pgroonga	public	f	installed_or_present	-
+pgroonga_database	public	f	installed_or_present	-
+pgrouting	public	f	installed_or_present	-
+pgsodium	pgsodium	f	installed_or_present	-
+pgtap	public	f	installed_or_present	-
+plpgsql_check	public	f	installed_or_present	-
+postgis	public	f	installed_or_present	-
+rum	public	f	installed_or_present	-
+supabase_vault	vault	f	installed_or_present	-
+uuid-ossp	extensions	f	installed_or_present	-
+vector	public	f	installed_or_present	-
+wal2json	public	f	installed_or_present	-
+wrappers	public	f	installed_or_present	-
 ```
 
 ## DDL apply output
@@ -55,24 +57,26 @@ package_name=base
 package_path=/home/marcelo-karval/Backup/Projetos/supabase-postgres-18-fork/postgres/database/ddl/base
 tracking_schema=base
 database_url=REDACTED_OR_ENV
-APPLY 0001_install_tracking.sql checksum=6e574a77da31f61a73223b2daddb1001fc5df466a20689cf439315dcf43680a7
-DONE 0001_install_tracking.sql execution_ms=96
-APPLY 0002_base_schemas_roles_context.sql checksum=6fcba4da61091b5d0dec2589d1076d4e8b6724a9611ddc4194b5e3a4d098cf51
-DONE 0002_base_schemas_roles_context.sql execution_ms=84
-APPLY 0003_public_id.sql checksum=b311713b4662bfe366676765481e6d8c124a51fdc10c529a8bd76f1f101eb3fe
-DONE 0003_public_id.sql execution_ms=90
-APPLY 0004_lifecycle_columns_triggers.sql checksum=6552f9d9377bc5875eb8f562b1205081799a97404a7509a5929f93288c803d55
-DONE 0004_lifecycle_columns_triggers.sql execution_ms=81
-APPLY 0005_jsonb_contract_helpers.sql checksum=ac03eb2cf3a42e548042b2aba579b9fe64879fd4c8741a50f54df9b66c8358cc
-DONE 0005_jsonb_contract_helpers.sql execution_ms=95
-APPLY 0006_search_normalization.sql checksum=c6265931a34ab66a73db0a110cd41c0eb5ae6c76e64d52b4e8fd6540a3f6af0b
-DONE 0006_search_normalization.sql execution_ms=95
-APPLY 0007_audit_log.sql checksum=62a7e0eb67c3ed5fb976eeaaf689f4f351fc6fd385405917f00f26e40448c91d
-DONE 0007_audit_log.sql execution_ms=110
-APPLY 0008_realtime_base.sql checksum=4d59b99e4aa6b8a39eeced95475c0017df0876e4851f2aeb434c737ee6b4d1a7
-DONE 0008_realtime_base.sql execution_ms=106
-APPLY 0009_api_base.sql checksum=78e75678b513f184afbef70298fc3f15c267cb5c2703f672319c2dfd735bdd4c
-DONE 0009_api_base.sql execution_ms=91
+APPLY 0001_install_tracking.sql checksum=83f7ab11950d41c1506ec4133953c518417aa4247488e0fc6640d0a367b32207
+DONE 0001_install_tracking.sql execution_ms=95
+APPLY 0002_extensions.sql checksum=46e569501453884124a3e7d170f4900c4ce3fa0493250a4d989ea0b8bd507c10
+DONE 0002_extensions.sql execution_ms=1549
+APPLY 0003_base_schemas_roles_context.sql checksum=c95d7768e1f3a5570e8142f2cc4edbf1d0d01ec689330717ab37f9ff6c255083
+DONE 0003_base_schemas_roles_context.sql execution_ms=94
+APPLY 0004_public_id.sql checksum=57733096abf815ba365afc01c019120220a5d1adebe5d3f0e549783fcdee6d42
+DONE 0004_public_id.sql execution_ms=103
+APPLY 0005_lifecycle_columns_triggers.sql checksum=2145b302e85818423f48b3e46d1d411d1e343245d0e73100971a1751a17d0efd
+DONE 0005_lifecycle_columns_triggers.sql execution_ms=94
+APPLY 0006_jsonb_contract_helpers.sql checksum=30f6a89f26edc29494f70d4e8b28a7d656db160055386202b601fac702b4a5f0
+DONE 0006_jsonb_contract_helpers.sql execution_ms=98
+APPLY 0007_search_normalization.sql checksum=525bd3d6cb7fc5f5c8928830ccb577c80ad042d2643f23453414f47ce99920a3
+DONE 0007_search_normalization.sql execution_ms=90
+APPLY 0008_audit_log.sql checksum=e8556a101b1971e39fe5fa448d9f4f8d2d2ef26a9a0a46cdad62de1b1d62203f
+DONE 0008_audit_log.sql execution_ms=101
+APPLY 0009_realtime_base.sql checksum=18d97d5b4f70f8985f4024be65d33e4e957c2c051bcb0a08ffe27f897090720d
+DONE 0009_realtime_base.sql execution_ms=92
+APPLY 0010_api_base.sql checksum=69088b12f3f3f7e1bd68c6d45c29239af9fbb66be66982110e52e92a94a44264
+DONE 0010_api_base.sql execution_ms=101
 DDL package apply complete
 ```
 
@@ -84,22 +88,22 @@ package_name=base
 package_path=/home/marcelo-karval/Backup/Projetos/supabase-postgres-18-fork/postgres/database/ddl/base
 tracking_schema=base
 database_url=REDACTED_OR_ENV
-SKIP 0001_install_tracking.sql checksum=6e574a77da31f61a73223b2daddb1001fc5df466a20689cf439315dcf43680a7
-SKIP 0002_base_schemas_roles_context.sql checksum=6fcba4da61091b5d0dec2589d1076d4e8b6724a9611ddc4194b5e3a4d098cf51
-SKIP 0003_public_id.sql checksum=b311713b4662bfe366676765481e6d8c124a51fdc10c529a8bd76f1f101eb3fe
-SKIP 0004_lifecycle_columns_triggers.sql checksum=6552f9d9377bc5875eb8f562b1205081799a97404a7509a5929f93288c803d55
-SKIP 0005_jsonb_contract_helpers.sql checksum=ac03eb2cf3a42e548042b2aba579b9fe64879fd4c8741a50f54df9b66c8358cc
-SKIP 0006_search_normalization.sql checksum=c6265931a34ab66a73db0a110cd41c0eb5ae6c76e64d52b4e8fd6540a3f6af0b
-SKIP 0007_audit_log.sql checksum=62a7e0eb67c3ed5fb976eeaaf689f4f351fc6fd385405917f00f26e40448c91d
-SKIP 0008_realtime_base.sql checksum=4d59b99e4aa6b8a39eeced95475c0017df0876e4851f2aeb434c737ee6b4d1a7
-SKIP 0009_api_base.sql checksum=78e75678b513f184afbef70298fc3f15c267cb5c2703f672319c2dfd735bdd4c
+SKIP 0001_install_tracking.sql checksum=83f7ab11950d41c1506ec4133953c518417aa4247488e0fc6640d0a367b32207
+SKIP 0002_extensions.sql checksum=46e569501453884124a3e7d170f4900c4ce3fa0493250a4d989ea0b8bd507c10
+SKIP 0003_base_schemas_roles_context.sql checksum=c95d7768e1f3a5570e8142f2cc4edbf1d0d01ec689330717ab37f9ff6c255083
+SKIP 0004_public_id.sql checksum=57733096abf815ba365afc01c019120220a5d1adebe5d3f0e549783fcdee6d42
+SKIP 0005_lifecycle_columns_triggers.sql checksum=2145b302e85818423f48b3e46d1d411d1e343245d0e73100971a1751a17d0efd
+SKIP 0006_jsonb_contract_helpers.sql checksum=30f6a89f26edc29494f70d4e8b28a7d656db160055386202b601fac702b4a5f0
+SKIP 0007_search_normalization.sql checksum=525bd3d6cb7fc5f5c8928830ccb577c80ad042d2643f23453414f47ce99920a3
+SKIP 0008_audit_log.sql checksum=e8556a101b1971e39fe5fa448d9f4f8d2d2ef26a9a0a46cdad62de1b1d62203f
+SKIP 0009_realtime_base.sql checksum=18d97d5b4f70f8985f4024be65d33e4e957c2c051bcb0a08ffe27f897090720d
+SKIP 0010_api_base.sql checksum=69088b12f3f3f7e1bd68c6d45c29239af9fbb66be66982110e52e92a94a44264
 DDL package apply complete
 ```
 
 ## Functional tests output
 
 ```text
-psql:/home/marcelo-karval/Backup/Projetos/supabase-postgres-18-fork/postgres/.tmp/ddl-base-lab/functional-tests.sql:5: NOTICE:  schema "lab" already exists, skipping
 psql:/home/marcelo-karval/Backup/Projetos/supabase-postgres-18-fork/postgres/.tmp/ddl-base-lab/functional-tests.sql:19: NOTICE:  PASS: base schema exists
 
 psql:/home/marcelo-karval/Backup/Projetos/supabase-postgres-18-fork/postgres/.tmp/ddl-base-lab/functional-tests.sql:20: NOTICE:  PASS: api schema exists
@@ -108,7 +112,7 @@ psql:/home/marcelo-karval/Backup/Projetos/supabase-postgres-18-fork/postgres/.tm
 
 psql:/home/marcelo-karval/Backup/Projetos/supabase-postgres-18-fork/postgres/.tmp/ddl-base-lab/functional-tests.sql:22: NOTICE:  PASS: realtime schema exists
 
-psql:/home/marcelo-karval/Backup/Projetos/supabase-postgres-18-fork/postgres/.tmp/ddl-base-lab/functional-tests.sql:23: NOTICE:  PASS: ddl migrations are 9 applied files
+psql:/home/marcelo-karval/Backup/Projetos/supabase-postgres-18-fork/postgres/.tmp/ddl-base-lab/functional-tests.sql:23: NOTICE:  PASS: ddl migrations are 10 applied files
 
 psql:/home/marcelo-karval/Backup/Projetos/supabase-postgres-18-fork/postgres/.tmp/ddl-base-lab/functional-tests.sql:41: NOTICE:  trigger "sample_entity_set_lifecycle_defaults" for relation "lab.sample_entity" does not exist, skipping
 psql:/home/marcelo-karval/Backup/Projetos/supabase-postgres-18-fork/postgres/.tmp/ddl-base-lab/functional-tests.sql:46: NOTICE:  trigger "sample_entity_touch_updated_at" for relation "lab.sample_entity" does not exist, skipping
@@ -153,11 +157,12 @@ psql:/home/marcelo-karval/Backup/Projetos/supabase-postgres-18-fork/postgres/.tm
 psql:/home/marcelo-karval/Backup/Projetos/supabase-postgres-18-fork/postgres/.tmp/ddl-base-lab/functional-tests.sql:111: NOTICE:  PASS: api ddl_status sees migrations
 
 SUMMARY|schemas=4
-SUMMARY|extensions_installed=25
-SUMMARY|ddl_migrations=9
-SUMMARY|public_ref=lab_019ec6b3-4615-7f07-8139-113b08e8fdd1
-SUMMARY|audit_id=019ec6b3-4622-7964-9cd5-d6d34711e628
-SUMMARY|event_id=019ec6b3-4624-780b-adea-62670e73eaaf
+SUMMARY|extensions_installed=30
+SUMMARY|ddl_migrations=10
+SUMMARY|extension_results=30
+SUMMARY|public_ref=lab_019ec6c7-40c0-7a5a-81e5-1224f2ed2c27
+SUMMARY|audit_id=019ec6c7-40d3-7d26-8fec-a3026095e622
+SUMMARY|event_id=019ec6c7-40d6-772a-8398-d21815074349
 ```
 
 ## Final schemas
@@ -165,15 +170,18 @@ SUMMARY|event_id=019ec6b3-4624-780b-adea-62670e73eaaf
 ```text
 api	supabase_admin	0	0	0	3
 audit	supabase_admin	1	0	0	1
-base	supabase_admin	2	0	0	24
+base	supabase_admin	3	0	0	25
 extensions	supabase_admin	0	2	0	50
 graphql	supabase_admin	0	0	1	6
 information_schema	supabase_admin	4	65	0	11
-lab	supabase_admin	2	0	0	2
+lab	supabase_admin	1	0	0	1
 net	supabase_admin	2	0	1	12
 pg_catalog	supabase_admin	64	80	0	3402
 pgmq	supabase_admin	3	0	0	75
-public	pg_database_owner	4	7	0	2755
+pgsodium	supabase_admin	1	4	1	137
+pgsodium_masks	supabase_admin	0	0	0	0
+pgtle	supabase_admin	1	0	0	24
+public	pg_database_owner	4	8	0	2789
 realtime	supabase_admin	2	0	0	2
 repack	supabase_admin	0	2	0	26
 vault	supabase_admin	1	1	0	5
@@ -186,17 +194,22 @@ http	1.6	public
 hypopg	1.4.1	public
 index_advisor	0.2.0	public
 pg_graphql	1.6.1	graphql
+pg_hashids	1.3.0-cd0e1b31d52b394a0df64079406a14a4f7387cd6	public
 pg_jsonschema	0.3.4	public
 pg_net	0.20.3	public
 pg_partman	5.3.1	public
 pg_repack	1.5.2	public
+pg_stat_monitor	2.0	public
 pg_stat_statements	1.12	extensions
+pg_tle	1.5.2	pgtle
 pgaudit	18.0	public
 pgcrypto	1.4	extensions
 pgjwt	0.2.0	public
 pgmq	1.11.1	pgmq
 pgroonga	4.0.6	public
+pgroonga_database	4.0.6	public
 pgrouting	3.4.1	public
+pgsodium	3.1.8	pgsodium
 pgtap	1.3.3	public
 plpgsql	1.0	pg_catalog
 plpgsql_check	2.8	public

@@ -1,5 +1,5 @@
 -- PG18 database-centric base DDL package
--- 0009_api_base.sql
+-- 0010_api_base.sql
 -- Minimal API facade proof surface.
 
 create schema if not exists api;

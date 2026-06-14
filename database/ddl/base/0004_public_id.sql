@@ -1,5 +1,5 @@
 -- PG18 database-centric base DDL package
--- 0003_public_id.sql
+-- 0004_public_id.sql
 -- Canonical public reference: <prefix>_<uuid7>, where uuid7 is the object's real primary key.
 
 create schema if not exists base;

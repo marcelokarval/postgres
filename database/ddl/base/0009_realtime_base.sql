@@ -1,5 +1,5 @@
 -- PG18 database-centric base DDL package
--- 0008_realtime_base.sql
+-- 0009_realtime_base.sql
 -- Durable outbox and lightweight LISTEN/NOTIFY bridge primitives.
 
 create schema if not exists realtime;

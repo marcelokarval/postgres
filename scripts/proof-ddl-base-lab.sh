@@ -40,90 +40,22 @@ drop database if exists "$LAB_DB";
 create database "$LAB_DB" owner "$PGUSER_VALUE";
 SQL
 
-cat > "$SQL_EXT" <<'SQL'
-\set ON_ERROR_STOP on
-create schema if not exists lab;
-create table if not exists lab.extension_install_results (
-  extension_name text primary key,
-  target_schema text,
-  status text not null,
-  message text,
-  installed_at timestamptz not null default now()
-);
-create or replace procedure lab.try_create_extension(p_extension text, p_schema text default null)
-language plpgsql
-as $$
-declare
-  sql text;
-begin
-  if p_schema is not null then
-    execute format('create schema if not exists %I', p_schema);
-    sql := format('create extension if not exists %I with schema %I', p_extension, p_schema);
-  else
-    sql := format('create extension if not exists %I', p_extension);
-  end if;
-
-  begin
-    execute sql;
-    insert into lab.extension_install_results(extension_name, target_schema, status, message)
-    values (p_extension, p_schema, 'installed_or_present', null)
-    on conflict (extension_name) do update
-      set target_schema = excluded.target_schema,
-          status = excluded.status,
-          message = excluded.message,
-          installed_at = now();
-  exception when others then
-    insert into lab.extension_install_results(extension_name, target_schema, status, message)
-    values (p_extension, p_schema, 'skipped_or_failed', sqlstate || ': ' || sqlerrm)
-    on conflict (extension_name) do update
-      set target_schema = excluded.target_schema,
-          status = excluded.status,
-          message = excluded.message,
-          installed_at = now();
-  end;
-end;
-$$;
-
-call lab.try_create_extension('pgcrypto', 'extensions');
-call lab.try_create_extension('uuid-ossp', 'extensions');
-call lab.try_create_extension('pg_stat_statements', 'extensions');
-call lab.try_create_extension('pgaudit', 'public');
-call lab.try_create_extension('pg_jsonschema', 'public');
-call lab.try_create_extension('pgjwt', 'public');
-call lab.try_create_extension('pgmq', 'pgmq');
-call lab.try_create_extension('vector', 'public');
-call lab.try_create_extension('pg_graphql', 'graphql');
-call lab.try_create_extension('pg_net', 'public');
-call lab.try_create_extension('pg_cron', 'public');
-call lab.try_create_extension('supabase_vault', 'vault');
-call lab.try_create_extension('http', 'public');
-call lab.try_create_extension('hypopg', 'public');
-call lab.try_create_extension('index_advisor', 'public');
-call lab.try_create_extension('pg_partman', 'public');
-call lab.try_create_extension('pg_repack', 'public');
-call lab.try_create_extension('pgroonga', 'public');
-call lab.try_create_extension('postgis', 'public');
-call lab.try_create_extension('pgrouting', 'public');
-call lab.try_create_extension('pgtap', 'public');
-call lab.try_create_extension('plpgsql_check', 'public');
-call lab.try_create_extension('rum', 'public');
-call lab.try_create_extension('wal2json', 'public');
-call lab.try_create_extension('wrappers', 'public');
-
-select extension_name || '=' || status || coalesce(' [' || message || ']', '')
-  from lab.extension_install_results
- order by extension_name;
-SQL
+# Extension enablement is now part of database/ddl/base/0002_extensions.sql.
+# The lab captures base.extension_install_results after applying the DDL package.
 
 export PGDATABASE="$LAB_DB"
-echo "== Enable extensions in $LAB_DB =="
-"${psql_base[@]}" -f "$SQL_EXT" | tee "$TMP_DIR/extensions.out"
-
 echo "== Apply DDL base package =="
 "$ROOT_DIR/scripts/apply-ddl-package.sh" --package "$ROOT_DIR/database/ddl/base" --apply | tee "$TMP_DIR/apply.out"
 
 echo "== Reapply DDL base package (idempotence) =="
 "$ROOT_DIR/scripts/apply-ddl-package.sh" --package "$ROOT_DIR/database/ddl/base" --apply | tee "$TMP_DIR/reapply.out"
+
+echo "== Capture extension install results =="
+"${psql_base[@]}" -At -F $'\t' > "$TMP_DIR/extensions.out" <<'SQL'
+select extension_name, target_schema, required, status, coalesce(message, '-')
+  from base.extension_install_results
+ order by extension_name;
+SQL
 
 cat > "$SQL_TEST" <<'SQL'
 \set ON_ERROR_STOP on
@@ -148,7 +80,7 @@ select lab.assert_true('base schema exists', exists(select 1 from pg_namespace w
 select lab.assert_true('api schema exists', exists(select 1 from pg_namespace where nspname='api'));
 select lab.assert_true('audit schema exists', exists(select 1 from pg_namespace where nspname='audit'));
 select lab.assert_true('realtime schema exists', exists(select 1 from pg_namespace where nspname='realtime'));
-select lab.assert_true('ddl migrations are 9 applied files', (select count(*) from base.ddl_migrations where package_name='base' and status='applied') = 9);
+select lab.assert_true('ddl migrations are 10 applied files', (select count(*) from base.ddl_migrations where package_name='base' and status='applied') = 10);
 
 create table if not exists lab.sample_entity (
   id uuid primary key default uuidv7(),
@@ -236,11 +168,12 @@ select lab.assert_true('realtime ack recorded', exists(select 1 from realtime.ev
 
 select lab.assert_true('api health returns ok', (api.health()->>'ok')::boolean is true);
 select lab.assert_true('api current_context actor', api.current_context()->>'actor_id' = 'actor-lab-1');
-select lab.assert_true('api ddl_status sees migrations', (select count(*) from api.ddl_status('base')) = 9);
+select lab.assert_true('api ddl_status sees migrations', (select count(*) from api.ddl_status('base')) = 10);
 
 select 'SUMMARY|schemas=' || (select count(*) from pg_namespace where nspname in ('base','api','audit','realtime'));
 select 'SUMMARY|extensions_installed=' || (select count(*) from pg_extension);
 select 'SUMMARY|ddl_migrations=' || (select count(*) from base.ddl_migrations where package_name='base');
+select 'SUMMARY|extension_results=' || (select count(*) from base.extension_install_results);
 select 'SUMMARY|public_ref=' || :'public_ref';
 select 'SUMMARY|audit_id=' || :'audit_id';
 select 'SUMMARY|event_id=' || :'event_id';
@@ -296,8 +229,8 @@ Secrets: redacted/omitted
 ## What this proof did
 
 1. Dropped and recreated a clean lab database named \`$LAB_DB\` on the live local Swarm PG18 service.
-2. Enabled a broad set of available Supabase/Postgres extensions where possible, recording install/skipped status.
-3. Applied \`database/ddl/base\` with \`scripts/apply-ddl-package.sh\`.
+2. Applied \`database/ddl/base\` with \`scripts/apply-ddl-package.sh\`; extension enablement is owned by \`0002_extensions.sql\`.
+3. Captured per-database extension installation status from \`base.extension_install_results\`, including the \`pg_cron\` runtime constraint.
 4. Reapplied the same package to prove idempotence.
 5. Exercised functional behavior for public IDs, lifecycle triggers, JSONB guards, search normalization, audit log, realtime outbox/ack, and API facade.
 

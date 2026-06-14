@@ -1,5 +1,5 @@
 -- PG18 database-centric base DDL package
--- 0002_base_schemas_roles_context.sql
+-- 0003_base_schemas_roles_context.sql
 -- Creates framework-agnostic schemas and request context helpers.
 
 create schema if not exists base;

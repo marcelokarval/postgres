@@ -1,5 +1,5 @@
 -- PG18 database-centric base DDL package
--- 0005_jsonb_contract_helpers.sql
+-- 0006_jsonb_contract_helpers.sql
 -- Coarse JSONB safety helpers for payload/data/metadata conventions.
 
 create schema if not exists base;

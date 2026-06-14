@@ -59,7 +59,7 @@ scripts/apply-ddl-package.sh --package database/ddl/base --dry-run
 scripts/apply-ddl-package.sh --package database/ddl/base --status
 ```
 
-## T03 — Implement base DDL files 0001-0009
+## T03 — Implement base DDL files 0001-0010
 
 Status: DONE
 Owner: subagent implementer
@@ -68,14 +68,15 @@ Deliver:
 
 ```text
 database/ddl/base/0001_install_tracking.sql
-database/ddl/base/0002_base_schemas_roles_context.sql
-database/ddl/base/0003_public_id.sql
-database/ddl/base/0004_lifecycle_columns_triggers.sql
-database/ddl/base/0005_jsonb_contract_helpers.sql
-database/ddl/base/0006_search_normalization.sql
-database/ddl/base/0007_audit_log.sql
-database/ddl/base/0008_realtime_base.sql
-database/ddl/base/0009_api_base.sql
+database/ddl/base/0002_extensions.sql
+database/ddl/base/0003_base_schemas_roles_context.sql
+database/ddl/base/0004_public_id.sql
+database/ddl/base/0005_lifecycle_columns_triggers.sql
+database/ddl/base/0006_jsonb_contract_helpers.sql
+database/ddl/base/0007_search_normalization.sql
+database/ddl/base/0008_audit_log.sql
+database/ddl/base/0009_realtime_base.sql
+database/ddl/base/0010_api_base.sql
 ```
 
 Acceptance:
@@ -83,6 +84,8 @@ Acceptance:
 ```text
 All SQL applies to PG18 proof DB.
 Reapply is idempotent.
+Extension enablement is target-database DDL-owned via 0002_extensions.sql.
+pg_cron is created only in cron.database_name and otherwise recorded in base.extension_install_results.
 Public ID uses prefix + uuid7; no random 24-char suffix canonical behavior.
 Audit table exists and extension decision is documented.
 ```

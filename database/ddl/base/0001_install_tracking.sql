@@ -4,10 +4,6 @@
 
 create schema if not exists base;
 
--- pgcrypto is used only as an optional helper surface for this DDL package.
--- The canonical ID default for package-owned rows is PostgreSQL 18 uuidv7().
-create extension if not exists pgcrypto;
-
 create table if not exists base.ddl_migrations (
   id uuid primary key default uuidv7(),
   package_name text not null,
