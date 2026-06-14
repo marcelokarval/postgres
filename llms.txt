@@ -81,3 +81,9 @@ Use soft-DDD for project DDL modeling: schemas are domains/bounded contexts; tab
 ## DDL package naming decision
 
 Do not create `database/ddl/platform/django/` as the canonical target. Extract recurring rules from Django-era projects into framework-agnostic database-centric base capabilities under `database/ddl/base/` or capability-named packages if later needed. Django/FastAPI/Kong/PostgREST are consumers/transports, not owners of business truth.
+
+Active DDL installer slice:
+- PRD: `docs/ddl-installer-prd.md`
+- Tasks: `docs/ddl-installer-tasks.md`
+- Public ID rule: prefix registry + uuid7 pointer; do not use the old random 24-char suffix as canonical.
+- Preserve extension inventory; DDL work must not mutate/remove image extensions.

@@ -211,3 +211,14 @@ database/ddl/base/0001_install_tracking.sql
 framework-agnostic base capabilities extracted from Prop4You/Django history
 Prop4You project DDL inventory
 ```
+
+## Active DDL installer slice
+
+Before working on the DDL installer/base substrate, read:
+
+```text
+docs/ddl-installer-prd.md
+docs/ddl-installer-tasks.md
+```
+
+Key current rule: public references use prefix registry + uuid7 pointer semantics, not the old random 24-character suffix. Preserve the PG18 extension inventory; do not regress image extensions from DDL work.

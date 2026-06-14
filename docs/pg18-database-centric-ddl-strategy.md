@@ -181,17 +181,16 @@ Recommended lifecycle:
 6. Run browser proof or API proof for project-specific flows.
 7. Record installed DDL version state.
 
-The install state should eventually be tracked in a table such as:
+The active install state is tracked by the base DDL installer in:
 
-```sql
-create table if not exists private.ddl_migrations (
-  package_name text not null,
-  version text not null,
-  filename text not null,
-  checksum text not null,
-  applied_at timestamptz not null default now(),
-  primary key (package_name, filename)
-);
+```text
+base.ddl_migrations
+```
+
+Created by:
+
+```text
+database/ddl/base/0001_install_tracking.sql
 ```
 
 That table belongs to the DDL installer/base DDL layer, not the image build layer.

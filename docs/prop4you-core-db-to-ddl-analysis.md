@@ -63,6 +63,8 @@ Evidence:
 - `PublicIDPureMixin`
 - `generate_public_id(prefix, length=24)`
 
+Historical note: this is the Django-era implementation that used random opaque suffixes. It is retained here as source evidence only. The active PG18 database-centric rule supersedes it: public references use prefix registry + the object's uuid7 primary key pointer.
+
 Behavior found:
 
 ```text
@@ -70,8 +72,8 @@ public_id_prefix per model/class
 public_id char/varchar max_length=100
 unique public_id
 db_index=True
-random 24-char alphanumeric suffix
-format: <prefix>_<random>
+legacy random 24-char alphanumeric suffix
+legacy format: <prefix>_<random>
 fallback prefix: first 3 chars of class name
 ```
 
@@ -702,12 +704,14 @@ Implements:
 
 ```text
 base.public_id_prefix_registry
-base.generate_public_id(prefix text, random_length int default 24)
-base.ensure_public_id trigger function
+base.make_public_ref(prefix text, object_id uuid)
+base.parse_public_ref(public_ref text)
+base.resolve_public_ref(public_ref text)
+base.register_public_id_prefix(...)
 format/prefix constraints
 ```
 
-Postgres implementation note: use `pgcrypto`/secure random bytes and encode to URL-safe/base62-like alphabet. Do not use predictable sequences for public IDs.
+Active PG18 implementation note: do not use the old random 24-character suffix as the canonical public ID. The public reference is `<prefix>_<uuid7>`, where the uuid7 suffix is the object's actual primary key. The prefix registry maps prefix to `schema_name -> table_name -> id_column`, and lookup preserves the uuid7 rather than hashing, compressing or destroying it.
 
 ### 0004_lifecycle_columns_triggers.sql
 

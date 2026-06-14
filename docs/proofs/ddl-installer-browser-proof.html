@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PG18 DDL Installer Browser Proof</title>
+  <style>
+    :root { color-scheme: dark; --ok:#35d07f; --warn:#ffd166; --bg:#0d1117; --card:#161b22; --text:#e6edf3; --muted:#8b949e; }
+    body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif; background:var(--bg); color:var(--text); }
+    main { max-width:1100px; margin:0 auto; padding:32px; }
+    h1 { margin-top:0; }
+    .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:16px; }
+    .card { background:var(--card); border:1px solid #30363d; border-radius:12px; padding:18px; }
+    .pass { color:var(--ok); font-weight:700; }
+    .warn { color:var(--warn); font-weight:700; }
+    code, pre { background:#010409; border:1px solid #30363d; border-radius:8px; padding:2px 6px; }
+    pre { padding:14px; overflow:auto; }
+    table { width:100%; border-collapse:collapse; margin-top:10px; }
+    th, td { border-bottom:1px solid #30363d; text-align:left; padding:8px; }
+    .muted { color:var(--muted); }
+  </style>
+</head>
+<body>
+<main data-proof="ddl-installer" data-verdict="PASS">
+  <h1>PG18 DDL Installer / Base DDL Proof</h1>
+  <p class="pass">VERDICT: PASS — DELIVERED_LOCAL_DDL_BASE_PROOF</p>
+  <p class="muted">Generated for local browser-proof QA. No secrets are embedded.</p>
+
+  <section class="grid">
+    <div class="card"><h2>Fresh apply</h2><p class="pass">PASS</p><p>9 ordered SQL files applied in a temporary PG18 database.</p></div>
+    <div class="card"><h2>Reapply/idempotency</h2><p class="pass">PASS</p><p>Second apply skipped all 9 unchanged files.</p></div>
+    <div class="card"><h2>Public ID</h2><p class="pass">PASS</p><p><code>&lt;prefix&gt;_&lt;uuid7&gt;</code>; uuid7 remains object pointer.</p></div>
+    <div class="card"><h2>Audit</h2><p class="pass">PASS</p><p>Durable <code>audit.log</code>; pgaudit remains complementary server audit.</p></div>
+    <div class="card"><h2>Extensions</h2><p class="pass">PASS</p><p>No image mutation; fresh proof saw 79 available extensions.</p></div>
+    <div class="card"><h2>Framework</h2><p class="pass">PASS</p><p>Framework-agnostic base; no platform/django package.</p></div>
+  </section>
+
+  <h2>SQL proof highlights</h2>
+  <pre id="proof-output">database=ddl_base_proof
+version=18.0
+schemas=4
+migrations=9
+uuidv7_version=7
+registered_prefix=usr
+public_ref=usr_019ec642-1a4a-7a8e-9877-9c31b7c427dc
+parse_prefix=usr,uuid_version=7
+resolve_schema=base,table=ddl_migrations
+audit_id=019ec642-1a4e-78ed-b585-ab2f76ba4b7f
+event_id=019ec642-1a59-744c-a4f8-412763308856
+api_health_ok=true
+ddl_status=9
+available_extensions=79
+installed_extensions=2</pre>
+
+  <h2>Delivered files</h2>
+  <table>
+    <thead><tr><th>Surface</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>scripts/apply-ddl-package.sh</td><td class="pass">PASS</td></tr>
+      <tr><td>database/ddl/base/0001_install_tracking.sql</td><td class="pass">PASS</td></tr>
+      <tr><td>database/ddl/base/0002_base_schemas_roles_context.sql</td><td class="pass">PASS</td></tr>
+      <tr><td>database/ddl/base/0003_public_id.sql</td><td class="pass">PASS</td></tr>
+      <tr><td>database/ddl/base/0004_lifecycle_columns_triggers.sql</td><td class="pass">PASS</td></tr>
+      <tr><td>database/ddl/base/0005_jsonb_contract_helpers.sql</td><td class="pass">PASS</td></tr>
+      <tr><td>database/ddl/base/0006_search_normalization.sql</td><td class="pass">PASS</td></tr>
+      <tr><td>database/ddl/base/0007_audit_log.sql</td><td class="pass">PASS</td></tr>
+      <tr><td>database/ddl/base/0008_realtime_base.sql</td><td class="pass">PASS</td></tr>
+      <tr><td>database/ddl/base/0009_api_base.sql</td><td class="pass">PASS</td></tr>
+    </tbody>
+  </table>
+</main>
+<script>
+  console.log('DDL installer browser proof loaded', document.querySelector('[data-proof]').dataset.verdict);
+</script>
+</body>
+</html>

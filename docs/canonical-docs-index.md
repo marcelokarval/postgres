@@ -134,3 +134,20 @@ docs/canonical-docs-index.md
 ```
 
 Then read the domain-specific doc for the task.
+
+## DDL installer active slice
+
+- `docs/ddl-installer-prd.md` — active PRD for the DDL installer/base substrate slice.
+- `docs/ddl-installer-tasks.md` — active task ledger for the DDL installer/base substrate slice.
+
+
+## DDL installer delivered slice
+
+- `docs/ddl-installer-prd.md` — PRD for the executable base DDL installer slice.
+- `docs/ddl-installer-tasks.md` — task ledger and execution evidence for the slice.
+- `docs/reviews/ddl-installer-task-review.md` — task-by-task requested-vs-delivered review.
+- `docs/reviews/ddl-installer-final-review.md` — final acceptance review.
+- `docs/reviews/ddl-installer-architecture-rereview.md` — architecture PASS after implementation/fixes.
+- `docs/proofs/ddl-installer-browser-proof.html` — local static browser-proof artifact.
+- `docs/proofs/ddl-installer-browser-proof.md` — browser/console/vision QA notes.
+- `docs/reports/ddl-installer-final-report.md` — final persisted closeout report.

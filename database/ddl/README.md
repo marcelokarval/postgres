@@ -48,9 +48,9 @@ Rules:
 
 ## Install state
 
-A future base installer should track applied files with filename and checksum in a database table such as `private.ddl_migrations`.
+The active base installer tracks applied files with filename and checksum in `base.ddl_migrations`, created by `database/ddl/base/0001_install_tracking.sql`.
 
-Until that installer exists, this directory is the canonical source structure for DDL sequencing.
+This directory remains the canonical source structure for DDL sequencing.
 
 ## Framework extraction rule
 
