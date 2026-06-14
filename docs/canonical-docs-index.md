@@ -152,3 +152,10 @@ Then read the domain-specific doc for the task.
 - `docs/proofs/ddl-installer-browser-proof.html` — local static browser-proof artifact.
 - `docs/proofs/ddl-installer-browser-proof.md` — browser/console/vision QA notes.
 - `docs/reports/ddl-installer-final-report.md` — final persisted closeout report.
+## Portainer/pgAdmin parity for PG18
+
+- `docs/pg18-portainer-pgadmin-prd.md` — PRD for local Portainer-managed postgres18 parity and pgAdmin access.
+- `docs/pg18-portainer-pgadmin-tasks.md` — task ledger for the Portainer/pgAdmin parity slice.
+- `docs/reports/pg18-postgres-stack-parity-review.md` — side-by-side postgres vs postgres18 stack comparison and risks.
+- `docs/reports/pg18-portainer-pgadmin-final-report.md` — final runtime evidence and requested-vs-delivered report.
+- `docker/postgres18.portainer.stack.yml` — secret-free canonical Portainer stack file for local postgres18.
