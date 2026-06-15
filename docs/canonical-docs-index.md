@@ -166,3 +166,4 @@ Then read the domain-specific doc for the task.
 - `docs/pg18-multidb-cron-policy.md` — active pg_cron policy: `postgres` as central scheduler with `cron.schedule_in_database(...)` for product DBs.
 - `README.md`, `AGENTS.md`, `llms.txt`, `llms-full.txt` — database-centric documentation discipline: implementation changes must update relevant docs in the same cycle.
 - `docs/database-centric-app-model.md` — canonical methodology for database-centric apps/modules, Django BaseModel-to-DDL contract translation, Prop4You examples, and app completion checklist.
+- `docs/reports/prop4you-inertia-app-inventory-and-extraction-order.md` — static inventory of Prop4You Inertia backend apps/models/dependencies and recommended database-centric business-rule extraction order.
