@@ -1,0 +1,41 @@
+# Prop4You SourceHub + Matrix DDL Lab Proof
+
+Status: PASS
+LAB_DB: pg18_prop4you_ddl_lab
+PGHOST: 127.0.0.1
+PGPORT: 54318
+
+## Scope
+
+Applied base DDL and experimental Prop4You provider/sourcehub/matrix DDL into a clean lab DB.
+
+No provider calls were made.
+No raw/fake/redacted fixtures were created.
+
+## Apply order
+
+- `database/ddl/base/0001_install_tracking.sql`
+- `database/ddl/base/0002_extensions.sql`
+- `database/ddl/base/0003_base_schemas_roles_context.sql`
+- `database/ddl/base/0004_public_id.sql`
+- `database/ddl/base/0005_lifecycle_columns_triggers.sql`
+- `database/ddl/base/0006_jsonb_contract_helpers.sql`
+- `database/ddl/base/0007_search_normalization.sql`
+- `database/ddl/base/0008_audit_log.sql`
+- `database/ddl/base/0009_realtime_base.sql`
+- `database/ddl/base/0010_api_base.sql`
+- `database/ddl/projects/prop4you/0001_schemas.sql`
+- `database/ddl/projects/prop4you/providers/0001_provider_registry.sql`
+- `database/ddl/projects/prop4you/sourcehub/0001_sourcehub_corpus.sql`
+- `database/ddl/projects/prop4you/matrix/0001_semantic_dictionary.sql`
+
+## Validation JSON
+
+```json
+{"counts": {"provider_count": 4, "payload_class_count": 5, "mapping_version_count": 4, "canonical_family_count": 7}, "missing_tables": [], "missing_schemas": [], "uncommented_tables": [], "jsonb_path_type_smoke": "number", "jsonb_leaf_paths_smoke_count": 2}
+```
+
+## Boundary
+
+This proves DDL apply/comment/object smoke for experimental SourceHub + Matrix corpus gate only.
+It does not prove final Prop4You property/owner tables, provider runtime calls, production deployment, or LeadFinder materialization.

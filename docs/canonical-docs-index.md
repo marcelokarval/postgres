@@ -169,3 +169,5 @@ Then read the domain-specific doc for the task.
 - `docs/reports/prop4you-inertia-app-inventory-and-extraction-order.md` — static inventory of Prop4You Inertia backend apps/models/dependencies and recommended database-centric business-rule extraction order.
 - `docs/issues/00-prop4you-database-centric-extraction-plan/` — PRD/task/review/browser-proof stack for Prop4You database-centric extraction, JSONB provider payload strategy, Matrix/SourceHub/LeadFinder dictionary plan, and DDL comment standards.
 - `docs/issues/01-prop4you-provider-payload-corpus/` — provider payload corpus PRD/tasks/review stack for REIQ, DirectSkip, Realtor.com and internal payload side-by-side comparison before Prop4You DDL freeze.
+- `docs/issues/02-prop4you-sourcehub-matrix-ddl/` — PRD/tasks/review stack for first experimental Prop4You provider registry, SourceHub corpus/enrichment queue, Matrix semantic dictionary DDL and lab proof.
+- `docs/reports/prop4you-sourcehub-matrix-ddl-lab-proof.md` — lab proof applying base + Prop4You provider/sourcehub/matrix experimental DDL in a clean PG18 lab DB.

@@ -15,11 +15,12 @@ Commit only privacy-safe artifacts:
 ```text
 1. path inventories
 2. schema/path summaries
-3. redacted/minimized JSON fixtures
-4. synthetic fixtures generated from observed shapes
-5. hash/count/type summaries
-6. Matrix dictionary examples without real PII
+3. hash/count/type summaries
+4. Matrix dictionary examples without raw payload values
+5. scripts and DDL that can consume a private corpus later
 ```
+
+Current clarification from Karval: do not commit fake/redacted fixtures. The real corpus belongs outside git in the private corpus path.
 
 ## Not allowed in repo by default
 

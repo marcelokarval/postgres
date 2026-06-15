@@ -621,3 +621,7 @@ For Prop4You and provider-heavy apps, do not freeze tables directly from Django 
 ## Prop4You provider corpus gate
 
 For Prop4You, final project DDL must be gated by the provider payload corpus comparison stack in `docs/issues/01-prop4you-provider-payload-corpus/`. REIQ is the current/base data source, DirectSkip is the owner/contact enrichment source, Realtor.com is the broad property enrichment source, and internal/product-originated payloads provide supporting evidence. Use package + subpackages under `database/ddl/projects/prop4you/`; do not freeze final tables before Matrix dictionary review of representative JSON paths.
+
+## Prop4You SourceHub + Matrix DDL v0
+
+The first experimental Prop4You DDL implementation is documented in `docs/issues/02-prop4you-sourcehub-matrix-ddl/` and proved by `docs/reports/prop4you-sourcehub-matrix-ddl-lab-proof.md`. It creates provider registry, SourceHub raw/corpus/enrichment request tables, and Matrix semantic dictionary/path mapping gates. It intentionally commits no fake/redacted payload fixtures; real provider corpus files belong outside git under `~/.hermes/private/prop4you-provider-corpus/`.

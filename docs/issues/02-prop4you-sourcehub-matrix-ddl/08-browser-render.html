@@ -1,0 +1,454 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Prop4You SourceHub Matrix DDL — Browser Proof</title><style>
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;margin:32px;background:#f8fafc;color:#111827;line-height:1.45}
+header{background:#111827;color:#fff;padding:24px;border-radius:16px;margin-bottom:22px}
+.verdict{background:#dcfce7;color:#14532d;border:1px solid #86efac;border-radius:10px;padding:10px 14px;font-weight:700}
+.badges span{display:inline-block;background:#dbeafe;color:#1e3a8a;border:1px solid #93c5fd;border-radius:999px;padding:4px 10px;margin:4px;font-weight:700}
+section{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:18px;margin:18px 0;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+pre{white-space:pre-wrap;background:#0b1020;color:#e5e7eb;padding:14px;border-radius:10px;font:13px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;max-height:720px;overflow:auto}
+</style></head><body>
+<header><h1>Prop4You SourceHub + Matrix DDL v0</h1><p class="verdict">Browser-proof artifact: repo-local experimental DDL + lab proof closure</p><div class="badges"><span>Provider registry</span><span>SourceHub raw records</span><span>Enrichment requests</span><span>Matrix dictionary</span><span>No fixtures</span><span>No provider calls</span><span>PG18 lab PASS</span></div></header>
+<section><h2>01-prd.md</h2><pre># PRD — Prop4You SourceHub + Matrix experimental DDL v0
+
+Status: draft
+Date: 2026-06-15T18:50:42
+Owner: Thor/default
+
+## Problem
+
+Prop4You needs a database-centric foundation for provider/internal JSON payload comparison before final property/owner/lead tables are frozen. The old Django backend triggered extra provider lookups and then mapped responses into application models. The database-centric replacement must model that workflow explicitly using SourceHub ingress, Matrix semantic dictionary/mapping gates and later LeadFinder materialization.
+
+## Goals
+
+- Create first experimental DDL for provider registry, SourceHub raw/corpus records and Matrix canonical dictionary/path mappings.
+- Keep all SQL objects commented clearly and objectively.
+- Support private real corpus path outside git.
+- Avoid committed fake/redacted payload fixtures.
+- Extend the lab script from skeleton to apply base DDL + Prop4You experimental DDL into a clean lab DB.
+- Prove schema/comment/function basics in PG18 lab.
+- Persist task review, browser proof and final report.
+
+## Non-goals
+
+- No final canonical property/owner schema freeze.
+- No provider calls.
+- No production/runtime mutation.
+- No committed raw/fake/redacted fixtures.
+- No claims of full LeadFinder materialization.
+
+## Acceptance criteria
+
+- Private corpus path exists with provider subdirs.
+- Experimental DDL files exist for providers, SourceHub and Matrix.
+- Every schema/table/column/function added has objective comments where practical.
+- Lab script can create/drop a clean lab DB and apply base + Prop4You package in dry-run or apply mode.
+- Lab proof report is generated.
+- Browser-proof renders PRD/review/final summary.
+- All tasks marked delivered after parent review.
+</pre></section><section><h2>05-task-review.md</h2><pre># Task Review — Prop4You SourceHub + Matrix experimental DDL v0
+
+Status: reviewed before browser proof
+Updated: 2026-06-15T19:18:10
+Reviewer: Thor/default
+
+| Task | Requested | Delivered | Evidence | Verdict |
+| --- | --- | --- | --- | --- |
+| T1 | Create PRD/tasks/ledger and private corpus directories | Created issue stack and private dirs `reiq`, `directskip`, `realtor`, `internal` | `00-04`; `~/.hermes/private/prop4you-provider-corpus` | PASS |
+| T2 | Provider registry + JSONB helpers DDL | Worker A delivered provider catalog, payload class catalog, provider/class bridge and JSONB path helpers | `providers/0001_provider_registry.sql`; `09-provider-registry-ddl-review.md`; lab proof | PASS after Thor patched recursive helper |
+| T3 | SourceHub raw/corpus/enrichment request DDL | Worker B timed out but left complete artifacts; Thor reviewed and accepted after lab proof | `sourcehub/0001_sourcehub_corpus.sql`; `10-sourcehub-ddl-review.md`; lab proof | PASS |
+| T4 | Matrix semantic dictionary/path mapping DDL | Worker C and C2 failed with Broken pipe; Thor implemented replacement | `matrix/0001_semantic_dictionary.sql`; `11-matrix-ddl-review.md`; lab proof | PASS with documented replacement |
+| T5 | Integrate package apply order and lab proof script | Script now applies base DDL + provider + SourceHub + Matrix into clean lab DB and writes report | `scripts/proof-prop4you-ddl-lab.sh`; `docs/reports/prop4you-sourcehub-matrix-ddl-lab-proof.md` | PASS |
+| T6 | Review/correct gaps | Corrected stale base DDL filenames, fixed JSONB recursive helper, replaced fragile grep validation with Python JSON validation, updated fixture policy | this file; ledger; patch evidence | PASS |
+| T7 | Browser-proof + vision QA | Pending after static HTML generation | `06-browser-proof.md`; `08-browser-render.html` | PENDING |
+| T8 | Final report/commit/push | Pending final checks | `07-final-report.md` | PENDING |
+
+## Requested vs delivered
+
+| User request/answer | Delivered |
+| --- | --- |
+| Private corpus path can be `~/.hermes/private/prop4you-provider-corpus/` | Created with provider subdirs |
+| First DDL experimental starts with SourceHub raw record + Matrix semantic dictionary | Delivered provider/sourcehub/matrix DDL v0 and lab proof |
+| Preserve Django-style extra data lookup behavior | Modeled as `prop4you_sourcehub.enrichment_requests` + enqueue/link response functions; no provider calls in SQL |
+| No fake/redacted fixtures | No fixtures created or committed; policy updated to private real corpus only |
+| PRD/tasks/review/browser/final persisted | PRD/tasks/review/final stack persisted; browser/final pending at this review stage |
+
+## Active corrections by Thor
+
+1. Subagent C failed twice; Thor replaced the Matrix lane.
+2. SourceHub worker timed out but artifacts existed and passed review/lab proof.
+3. Script initially referenced stale base DDL filenames; fixed to glob/sort real base DDL files.
+4. `jsonb_leaf_paths` recursive CTE failed under PG18; patched provider helper.
+5. Validation initially used fragile grep on JSON; replaced with Python JSON parse.
+6. Fixture policy updated: no fake/redacted committed fixtures.
+</pre></section><section><h2>07-final-report.md</h2><pre># Final Report — Prop4You SourceHub + Matrix experimental DDL v0
+
+Status: pending browser/commit at draft time
+Updated: 2026-06-15T19:18:10
+Owner/reviewer: Thor/default
+
+## Verdict
+
+SUPPORTED for first experimental, non-final Prop4You provider registry + SourceHub corpus/enrichment queue + Matrix semantic dictionary DDL, with clean PG18 lab proof.
+
+NOT CLAIMED:
+
+- final Prop4You property/owner/lead schema;
+- provider API calls;
+- production deployment;
+- LeadFinder materialization;
+- raw real corpus ingestion.
+
+## Delivered artifacts
+
+Issue stack:
+
+```text
+docs/issues/02-prop4you-sourcehub-matrix-ddl/
+```
+
+DDL:
+
+```text
+database/ddl/projects/prop4you/providers/0001_provider_registry.sql
+database/ddl/projects/prop4you/sourcehub/0001_sourcehub_corpus.sql
+database/ddl/projects/prop4you/matrix/0001_semantic_dictionary.sql
+```
+
+Proof script/report:
+
+```text
+scripts/proof-prop4you-ddl-lab.sh
+docs/reports/prop4you-sourcehub-matrix-ddl-lab-proof.md
+```
+
+Private corpus path:
+
+```text
+~/.hermes/private/prop4you-provider-corpus/
+  reiq/
+  directskip/
+  realtor/
+  internal/
+```
+
+## Lab proof summary
+
+```text
+Status: PASS
+LAB_DB: pg18_prop4you_ddl_lab
+base DDL applied: 10 files
+Prop4You DDL applied: provider + sourcehub + matrix
+missing_schemas: []
+missing_tables: []
+uncommented_tables: []
+provider_count: 4
+payload_class_count: 5
+canonical_family_count: 7
+mapping_version_count: 4
+jsonb_path_type_smoke: number
+jsonb_leaf_paths_smoke_count: 2
+```
+
+The script drops the clean lab DB after success unless `KEEP_DB=1`.
+
+## Key design decisions
+
+1. No fake/redacted fixtures are committed.
+2. Real corpus path is private and outside git.
+3. Django-style extra lookup trigger is now modeled as durable `enrichment_requests`, not as hidden app code.
+4. SQL stores intent/state; it does not call providers.
+5. Matrix gates provider paths before generated fields/final table columns are frozen.
+6. SourceHub raw records preserve payload lineage but are not canonical property/owner/lead truth.
+
+## Subagent execution
+
+- Worker A delivered provider DDL.
+- Worker B timed out after producing SourceHub artifacts; parent review accepted artifacts after validation.
+- Worker C/C2 failed with Broken pipe; Thor replaced the Matrix lane directly and recorded the substitution.
+
+## Corrections made
+
+- Stale base DDL filename list fixed to dynamic ordered base SQL discovery.
+- `jsonb_leaf_paths` recursive CTE fixed for PG18.
+- Fragile grep validation replaced with Python JSON validation.
+- Fixture policy patched to remove fake/redacted committed fixtures.
+
+## Browser proof
+
+Pending in this draft; final status is stored in `06-browser-proof.md` after browser/vision QA.
+
+## Next steps
+
+1. Create private corpus indexing script that scans `~/.hermes/private/prop4you-provider-corpus/` and writes metadata only to SourceHub tables.
+2. Add RLS/access-control design before loading sensitive raw payloads into DB.
+3. Add source-specific Matrix path candidate extraction from private corpus, no raw value dumps.
+4. Model provider lookup workers outside SQL for enrichment request execution.
+5. Add LeadFinder DTO publication proof after Matrix approvals exist.
+6. Only then begin canonical property/owner table freeze.
+
+## Questions for next slice
+
+1. Should private corpus indexing write raw JSONB into lab DB, or metadata-only first?
+2. Should enrichment request execution be modeled as pgmq jobs, external worker polling, or both?
+3. Should Matrix path candidate extraction use SQL JSONB helpers first or a Python scanner that writes candidates into DB?
+</pre></section><section><h2>09-provider-registry-ddl-review.md</h2><pre># 09-provider-registry-ddl-review — Worker A
+
+Status: delivered by subagent A
+Date: 2026-06-15
+Scope: provider registry + JSONB helper DDL for Prop4You SourceHub + Matrix experimental package.
+
+## [NO_FIXTURES]
+
+No provider payload fixtures were created or committed. The DDL seeds only registry/catalog metadata rows for known provider/origin keys and payload class relationships. It does not include raw, fake, redacted, synthetic, or sample payload JSON documents.
+
+## [NO_PROVIDER_CALLS]
+
+No provider calls were made. The SQL contains no runtime client, endpoint invocation, secret, request header, credential, job, trigger, or network operation. The provider catalog explicitly stores `provider_call_allowed=false` in seed metadata for provider/origin rows.
+
+## [COMMENT_COVERAGE]
+
+Comment coverage added in `database/ddl/projects/prop4you/providers/0001_provider_registry.sql`:
+
+- 1 schema comment for `prop4you_provider`.
+- 3 table comments.
+- 30 column comments across all provider registry/catalog tables.
+- 4 function comments for JSONB helper functions.
+
+Coverage intent: every schema/table/column/function introduced by this worker has an objective `COMMENT ON` statement.
+
+## [DDL_OBJECTS]
+
+Created/updated experimental non-final DDL objects:
+
+- Schema boundary:
+  - `prop4you_provider` comment refreshed for provider registry + helper scope.
+
+- Tables:
+  - `prop4you_provider.providers`
+    - Provider/origin registry for REIQ, DirectSkip, Realtor.com, and internal/product-originated payloads.
+    - Uses `uuidv7()`, constrained text enums, JSONB metadata object guard, and URL format guard for optional human homepage reference.
+  - `prop4you_provider.payload_classes`
+    - Payload class catalog for property/search/owner/skip-trace/internal snapshot review categories.
+    - Uses `uuidv7()`, constrained domain/direction/root type values, JSONB schema hint and metadata object guards.
+  - `prop4you_provider.provider_payload_classes`
+    - Many-to-many registry between providers/origins and payload classes.
+    - Uses `uuidv7()`, FK references, unique provider/class relationship, JSONB metadata object guard.
+
+- Indexes:
+  - `providers_provider_kind_status_idx`
+  - `payload_classes_domain_direction_idx`
+  - `provider_payload_classes_class_idx`
+
+- JSONB helper functions:
+  - `prop4you_provider.jsonb_path_exists(jsonb, text[])`
+  - `prop4you_provider.jsonb_path_type(jsonb, text[])`
+  - `prop4you_provider.jsonb_path_text(jsonb, text[])`
+  - `prop4you_provider.jsonb_leaf_paths(jsonb, integer)`
+
+- Seed metadata rows:
+  - Provider/origin keys: `reiq`, `directskip`, `realtor_com`, `prop4you_internal`.
+  - Payload class keys: `property_search_result`, `property_detail`, `owner_profile`, `skip_trace_result`, `leadfinder_candidate_snapshot`.
+  - Provider/class review links for expected non-final comparison scope.
+
+## Verification
+
+Static checks performed locally:
+
+- `git diff --check -- database/ddl/projects/prop4you/providers/0001_provider_registry.sql database/ddl/projects/prop4you/providers/README.md` completed with exit code 0.
+- A Python count over the SQL file found 3 created tables, 4 created functions, 1 schema comment, 3 table comments, 30 column comments, and 4 function comments.
+
+Runtime SQL application was not performed by this worker because local `psql` access is blocked by host authentication for the current OS role and peer auth for `postgres`. The parent lab installer slice should apply this DDL in the clean `pg18_ddl_lab` proof database once credentials/context are available.
+
+## [RISKS]
+
+- SQL is intentionally experimental and non-final; it should not be treated as the canonical provider integration model or final property/owner/lead schema.
+- `jsonb_leaf_paths` is a review helper. Large payloads can produce many paths; callers should use bounded private corpus review queries and keep `max_depth` conservative.
+- Seeded provider/payload relationships are classification scaffolding from current issue context, not evidence that all providers expose those payloads in production.
+- The provider registry stores human reference metadata only. Runtime endpoint configuration, secrets, and provider clients must remain outside this DDL.
+- Parent integration still needs clean lab application proof after SourceHub and Matrix DDL are added to the package order.
+</pre></section><section><h2>10-sourcehub-ddl-review.md</h2><pre># 10 — SourceHub DDL review (Worker B)
+
+Status: delivered by Worker B
+Date: 2026-06-15
+Scope: `database/ddl/projects/prop4you/sourcehub/0001_sourcehub_corpus.sql`
+
+[DDL_OBJECTS]
+
+Implemented experimental, non-final SourceHub DDL for schema `prop4you_sourcehub`:
+
+- `raw_records`
+  - Stores raw provider/internal JSONB evidence in `raw_payload`.
+  - Tracks provider, payload class, source kind, ingress/review status, Matrix mapping status, LeadFinder publication status, privacy flags, optional provider request refs, and optional private corpus URI/path metadata.
+- `corpus_samples`
+  - Stores private real corpus sample metadata only: provider, sample key, status, purpose, optional private URI/path, checksum, size, redaction/storage policy, and review metadata.
+  - Does not create or commit payload files.
+- `source_lineage_edges`
+  - Captures raw-to-raw and raw-to-derived lineage relationships without declaring canonical property/owner/lead truth.
+- `enrichment_requests`
+  - Durable queue-intent table for extra lookup requests formerly triggered by Django-style application logic.
+  - Stores status, priority, lookup kind, trigger object metadata, idempotency key, non-secret request payload, response raw record pointer, attempts, and errors.
+- Functions:
+  - `enqueue_enrichment_request(...)`
+  - `mark_enrichment_response(...)`
+- Lifecycle triggers:
+  - `base.set_lifecycle_defaults()` / `base.touch_updated_at()` / `base.increment_version()` attached to all four tables.
+- Public-id prefix registrations:
+  - `p4yshr`, `p4yshs`, `p4yshl`, `p4yshe`.
+
+[ENRICHMENT_REQUEST_FLOW]
+
+The old Django-style behavior of “record changed / gap found / trigger another lookup” is represented as database state, not as provider runtime code:
+
+1. `enqueue_enrichment_request(...)` records or deduplicates an enrichment intent.
+2. The request remains queued/ready/blocked/in_progress/succeeded/failed/cancelled/superseded in `enrichment_requests`.
+3. No HTTP/client/provider call is made by SQL.
+4. A future authorized worker can store a response as `raw_records.raw_payload`.
+5. `mark_enrichment_response(...)` links that response row to the request and writes a lineage edge with `lineage_kind = &#x27;enrichment_response_for&#x27;`.
+6. Matrix and LeadFinder gates remain separate; raw payloads do not publish canonical entities directly.
+
+[COMMENT_COVERAGE]
+
+Coverage included in DDL:
+
+- Schema comment: yes.
+- Table comments: 4/4.
+- Column comments: all important/current columns across 4 tables.
+- Function comments: 2/2.
+- Trigger comments: 12/12.
+- Constraint comment: explicit comment on `raw_records_corpus_sample_fk`.
+
+Validation command run:
+
+```text
+python3 lightweight_sql_checks
+```
+
+Observed output summary:
+
+```text
+create_table 4
+create_function 2
+create_trigger 12
+comment_column 119
+insert_into 0
+lightweight_sql_checks=ok
+```
+
+A live `psql` validation was attempted against the local socket but blocked by local auth/role setup (`role &quot;marcelo-karval&quot; does not exist`; `postgres` peer auth failed). No database mutation was performed for validation.
+
+[NO_FIXTURES]
+
+No fixture file was created. The SQL contains zero `insert into` payload/sample fixture statements. The only persistent data-like operation in the file is public-id prefix registration through the base registry helper.
+
+[NO_PROVIDER_CALLS]
+
+No provider/client/runtime/Docker operation was added. The DDL contains no HTTP endpoint invocation, no curl/wget usage, no secrets, and no worker implementation.
+
+[RISKS]
+
+- This is experimental/non-final and should be reviewed with real private provider corpus samples before being treated as canonical.
+- `raw_payload` can hold sensitive personal/provider data; access controls/RLS are not finalized in this Worker B slice.
+- Queue semantics are conceptual; worker locking, retry policy, provider authorization, and operational scheduling remain future work.
+- Private path/URI metadata can leak local/private structure if mishandled by operators.
+- Apply order matters: base DDL, Prop4You schemas, and provider registry must precede SourceHub DDL.
+</pre></section><section><h2>11-matrix-ddl-review.md</h2><pre># 11 — Matrix DDL review
+
+Status: delivered by Thor after two subagent failures
+Date: 2026-06-15T19:12:55
+Scope: `database/ddl/projects/prop4you/matrix/0001_semantic_dictionary.sql`
+
+[MATRIX_DICTIONARY_GATE]
+
+Implemented the first experimental Matrix dictionary gate for provider/internal JSONB comparison before final Prop4You table freeze.
+
+[DDL_OBJECTS]
+
+Objects implemented:
+
+- `prop4you_matrix.canonical_families`
+- `prop4you_matrix.canonical_fields`
+- `prop4you_matrix.mapping_versions`
+- `prop4you_matrix.provider_path_mappings`
+- `prop4you_matrix.mapping_reviews`
+
+Seeded dictionary families only, not raw payloads:
+
+- `property_identity`
+- `owner_identity`
+- `owner_contact`
+- `situation_legal`
+- `valuation_financial`
+- `listing_history_media`
+- `lineage_provenance`
+
+Seeded draft mapping-version shells only:
+
+- `reiq.provider_corpus.v0`
+- `directskip.provider_corpus.v0`
+- `realtor.provider_corpus.v0`
+- `internal.provider_corpus.v0`
+
+[COMMENT_COVERAGE]
+
+DDL includes comments for schema, all tables, all current columns and the semantic boundary. Parent SQL/catalog validation is required before closure.
+
+[NO_FIXTURES]
+
+No fixture files were created. The DDL does not insert raw/fake/redacted provider payloads.
+
+[NO_PROVIDER_CALLS]
+
+No provider call, HTTP client, runtime lookup or worker implementation was added.
+
+[RISKS]
+
+- This is experimental/non-final and only declares the review gate.
+- Provider path mappings remain empty until private real corpus review populates candidates.
+- Canonical fields are table-ready but not heavily seeded beyond families in this slice.
+- RLS/access policy remains future work before real sensitive payload review.
+
+## Subagent note
+
+Worker C and C2 both failed with Broken pipe before producing artifacts. Thor replaced the lane directly, then will validate as parent/orchestrator.
+</pre></section><section><h2>lab-proof-report</h2><pre># Prop4You SourceHub + Matrix DDL Lab Proof
+
+Status: PASS
+LAB_DB: pg18_prop4you_ddl_lab
+PGHOST: 127.0.0.1
+PGPORT: 54318
+
+## Scope
+
+Applied base DDL and experimental Prop4You provider/sourcehub/matrix DDL into a clean lab DB.
+
+No provider calls were made.
+No raw/fake/redacted fixtures were created.
+
+## Apply order
+
+- `database/ddl/base/0001_install_tracking.sql`
+- `database/ddl/base/0002_extensions.sql`
+- `database/ddl/base/0003_base_schemas_roles_context.sql`
+- `database/ddl/base/0004_public_id.sql`
+- `database/ddl/base/0005_lifecycle_columns_triggers.sql`
+- `database/ddl/base/0006_jsonb_contract_helpers.sql`
+- `database/ddl/base/0007_search_normalization.sql`
+- `database/ddl/base/0008_audit_log.sql`
+- `database/ddl/base/0009_realtime_base.sql`
+- `database/ddl/base/0010_api_base.sql`
+- `database/ddl/projects/prop4you/0001_schemas.sql`
+- `database/ddl/projects/prop4you/providers/0001_provider_registry.sql`
+- `database/ddl/projects/prop4you/sourcehub/0001_sourcehub_corpus.sql`
+- `database/ddl/projects/prop4you/matrix/0001_semantic_dictionary.sql`
+
+## Validation JSON
+
+```json
+{&quot;counts&quot;: {&quot;provider_count&quot;: 4, &quot;payload_class_count&quot;: 5, &quot;mapping_version_count&quot;: 4, &quot;canonical_family_count&quot;: 7}, &quot;missing_tables&quot;: [], &quot;missing_schemas&quot;: [], &quot;uncommented_tables&quot;: [], &quot;jsonb_path_type_smoke&quot;: &quot;number&quot;, &quot;jsonb_leaf_paths_smoke_count&quot;: 2}
+```
+
+## Boundary
+
+This proves DDL apply/comment/object smoke for experimental SourceHub + Matrix corpus gate only.
+It does not prove final Prop4You property/owner tables, provider runtime calls, production deployment, or LeadFinder materialization.
+</pre></section>
+</body></html>
