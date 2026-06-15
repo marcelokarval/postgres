@@ -95,3 +95,4 @@ Current DDL lab/extension/cron facts:
 - Default multi-product cron policy: `cron.database_name=postgres`; product DBs use `cron.schedule_in_database(...)` and do not install `pg_cron` directly.
 - See `docs/pg18-multidb-cron-policy.md` and `docs/reports/pg18-ddl-base-lab-proof.md`.
 - Documentation discipline: every database-centric DDL/runtime/script/policy change must update the relevant docs/entrypoints/canonical index in the same work cycle; docs are part of governance, not a later cleanup.
+- Database-centric app model: `docs/database-centric-app-model.md` — apps are DDL modules; Django BaseModel/mixins/services become explicit SQL contracts, functions, triggers, policies, audit/realtime/jobs.

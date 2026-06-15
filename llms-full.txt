@@ -249,6 +249,11 @@ Read `docs/prop4you-core-db-to-ddl-analysis.md` before implementing the DDL inst
 
 For this project, implementation and documentation move together. Every database-centric DDL, runtime/stack, script, extension, policy, lab/proof, gateway, or client-contract change must update the relevant documentation in the same work cycle. Update the nearest README/doc, update `docs/canonical-docs-index.md` when adding/promoting canonical artifacts, and update `AGENTS.md`, `llms.txt`, or `llms-full.txt` when future operators/agents need the rule. Do not leave documentation as a later cleanup task.
 
+
+## Database-centric app model
+
+Read `docs/database-centric-app-model.md` before designing Prop4You or other application modules. In this project, an "app" is an ordered DDL module: schema(s), tables, functions, triggers, policies, views, jobs, audit, realtime events, and API facade. Django app/model/BaseModel/mixin/service patterns are historical source material and translate into explicit database contracts, not PostgreSQL table inheritance by default. Prop4You examples in that document are reference examples for future app modeling.
+
 ## Current DDL lab, extension enablement, and cron policy
 
 The active base DDL package includes `database/ddl/base/0002_extensions.sql`. Extension binaries/control files are provided by the PG18 image/cluster, but `CREATE EXTENSION` is per database, so ordered DDL owns target-database extension enablement and records results in `base.extension_install_results`.

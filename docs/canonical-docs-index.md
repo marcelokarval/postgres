@@ -165,3 +165,4 @@ Then read the domain-specific doc for the task.
 - `docs/reports/pg18-ddl-base-lab-proof.md` — latest evidence for `pg18_ddl_lab` on local postgres18 Swarm.
 - `docs/pg18-multidb-cron-policy.md` — active pg_cron policy: `postgres` as central scheduler with `cron.schedule_in_database(...)` for product DBs.
 - `README.md`, `AGENTS.md`, `llms.txt`, `llms-full.txt` — database-centric documentation discipline: implementation changes must update relevant docs in the same cycle.
+- `docs/database-centric-app-model.md` — canonical methodology for database-centric apps/modules, Django BaseModel-to-DDL contract translation, Prop4You examples, and app completion checklist.
