@@ -613,3 +613,7 @@ RLS/policies if exposed or tenant-bound
 functional proof in pg18_ddl_lab or another clean lab DB
 documentation updated in the same work cycle
 ```
+
+## Prop4You provider-payload addendum
+
+For Prop4You and provider-heavy apps, do not freeze tables directly from Django models. Treat Django/Inertia models as evidence and compare provider/internal JSON payloads first. Preserve raw payloads in JSONB with lineage, normalize through mapper-versioned projections, promote only Matrix/LeadFinder-approved semantics into canonical facts/tables, and add generated/projected JSONB-path fields only after path stability and query need are proven. See `docs/issues/00-prop4you-database-centric-extraction-plan/`.

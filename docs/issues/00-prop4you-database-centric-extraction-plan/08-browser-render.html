@@ -1,0 +1,895 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Prop4You Database-Centric Extraction Plan — Browser Proof</title>
+<style>
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif; margin:32px; line-height:1.45; color:#18212f; background:#f7f9fc;}
+header{background:#0f172a;color:#fff;padding:24px;border-radius:14px;margin-bottom:24px;}
+.badges span{display:inline-block;background:#dbeafe;color:#1e3a8a;border:1px solid #93c5fd;border-radius:999px;padding:4px 10px;margin:4px;font-weight:600;}
+section{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:18px;margin:18px 0;box-shadow:0 1px 2px rgba(0,0,0,.04);}
+pre{white-space:pre-wrap; font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace; font-size:13px; background:#0b1020; color:#e5e7eb; padding:14px; border-radius:10px; max-height:720px; overflow:auto;}
+.verdict{font-size:18px;font-weight:700;color:#14532d;background:#dcfce7;border:1px solid #86efac;padding:10px 14px;border-radius:10px;}
+</style>
+</head>
+<body>
+<header>
+<h1>Prop4You Database-Centric Extraction Plan</h1>
+<p class="verdict">Browser-proof artifact: repo-local documentation/static-contract closure</p>
+<div class="badges">
+<span>JSONB-first</span><span>Matrix</span><span>SourceHub</span><span>LeadFinder</span><span>DDL comments</span><span>PG18 JSON_TABLE smoke passed</span>
+</div>
+</header>
+<section><h2>01-prd.md</h2><pre># PRD — Prop4You database-centric extraction methodology and execution plan
+
+Status: draft
+Owner: Thor/default
+
+## Problem
+
+Prop4You currently has Django/Inertia domain apps, system apps, public facades, and integration logic evolved around Python models/services. The PG18 database-centric project needs a governed plan for extracting business rules into DDL packages without freezing current Django artifacts as final truth prematurely.
+
+The current Django apps are useful evidence, but not final canonical design because many were not created from full provider payload contract analysis. Provider JSON payloads from Realtor.com, DirectSkip/skip trace, SourceHub flows, Matrix semantics, and internally captured JSON must be compared before deciding final durable tables and generated/projected fields.
+
+## Goals
+
+1. Define a database-centric extraction methodology for Prop4You that treats Django apps as evidence, not final truth.
+2. Establish JSONB-first modeling for provider/internal payloads.
+3. Define how generated/projected columns from JSONB paths should be used when fields become stable canonical access paths.
+4. Formalize Matrix &lt;-&gt; SourceHub &lt;-&gt; LeadFinder as a canonical dictionary and semantic comparison pipeline before final DDL freeze.
+5. Define DDL comment/documentation requirements.
+6. Produce a task plan for future implementation against `pg18_ddl_lab`.
+7. Persist all artifacts in the canonical docs stack.
+
+## Non-goals
+
+- Implement final Prop4You DDL tables now.
+- Call third-party provider APIs now.
+- Deploy or mutate production.
+- Replace all Django behavior in one step.
+- Claim runtime/product completeness beyond repo-local/static proof.
+
+## Current evidence
+
+Primary prior report:
+
+```text
+docs/reports/prop4you-inertia-app-inventory-and-extraction-order.md
+```
+
+Active PG18 base substrate:
+
+```text
+database/ddl/base/
+docs/database-centric-app-model.md
+docs/pg18-multidb-cron-policy.md
+docs/reports/pg18-ddl-base-lab-proof.md
+```
+
+Prop4You backend source analyzed:
+
+```text
+/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/backend/src
+```
+
+## Product assumptions
+
+- UUID7/public refs reduce physical coupling, but semantic dependency still matters.
+- Provider payload JSON should be preserved raw with lineage before being projected into canonical fields.
+- Generated/projected fields from JSONB paths should be used only for stable, frequently queried, semantically named paths.
+- Matrix should govern semantic meaning and canonical dictionary, not just hold ad hoc DTOs.
+- SourceHub owns ingress/lineage/handoff boundaries.
+- LeadFinder consumes canonical property/owner/lead semantics, not provider-specific raw payloads directly.
+
+## Acceptance criteria
+
+- PRD persisted.
+- Tasks persisted with status and review target.
+- Execution ledger persisted.
+- Subagent outputs reviewed by Thor.
+- Report defines all active Prop4You apps/surfaces and extraction order.
+- Report includes JSONB/provider payload strategy.
+- Report defines generated/projected field strategy.
+- Report defines DDL comment standards.
+- Browser-proof confirms report rendering artifact is accessible locally.
+- Final report compares requested vs delivered side-by-side.
+- Canonical docs index references the new issue stack.
+
+## Risks
+
+- Static analysis may miss dynamic runtime behavior.
+- Provider payload contracts are not yet fully harvested.
+- Some Matrix files are Pydantic/TypedDict contracts, not durable Django models.
+- Browser proof of static docs does not prove production runtime.
+- DDL implementation must be validated later in `pg18_ddl_lab`.
+</pre></section><section><h2>05-task-review.md</h2><pre># Task Review — requested vs delivered
+
+Status: reviewed
+Updated: 2026-06-15T00:44:05
+Reviewer: Thor/default
+
+| Task | Requested | Delivered | Evidence | Verdict |
+| --- | --- | --- | --- | --- |
+| T1 | Persist executive work order, PRD, task plan, ledger scaffold | Created stack with `00-executive-work-order.md`, `01-prd.md`, `02-tasks.md`, `03-execution-ledger.md`, `04-subagent-manifest.md`, `04-worklog.md` | files exist and were updated | PASS |
+| T2 | JSONB/provider payload strategy | Created JSONB-first strategy covering raw/normalized/canonical layers, generated/projected JSONB fields, indexes, JSON_TABLE, mutation policy and lab plan | `08-jsonb-provider-payload-strategy.md`; A status; grep markers; PG18 smoke | PASS |
+| T3 | Matrix/SourceHub/LeadFinder canonical dictionary plan | Created plan covering semantic ownership, provider corpus comparison, dictionary lifecycle, DTO contracts, conflict resolution, versioning and extraction impact | `09-matrix-sourcehub-leadfinder-canonical-dictionary.md`; B status | PASS |
+| T4 | DDL extraction/comment standards | Created extraction order, package shape, SQL header/comment standards, mutation policy, review checklist and lab validation | `10-ddl-extraction-and-comment-standards.md`; C status | PASS |
+| T5 | Synthesize executive plan and update canonical references | Created executive synthesis; canonical index update pending/then validated in final gate | `11-executive-synthesis.md`; `docs/canonical-docs-index.md` | PASS after final index update |
+| T6 | Review each task and correct gaps | Parent review performed; no critical gaps requiring subagent rework. Skill reference was updated with new JSONB/Matrix reference. | this file; skill reference path | PASS |
+| T7 | Browser-proof and vision QA | Pending at this review moment; to be completed by Thor after HTML generation/server proof | `06-browser-proof.md`, `08-browser-render.html`, screenshot path pending | PENDING -&gt; must close before final |
+| T8 | Final report and next steps | Pending at this review moment; final report to mirror chat response | `07-final-report.md` pending | PENDING -&gt; must close before final |
+
+## Corrections applied by Thor
+
+- Updated user-owned skill `database-centric-app-modeling` with `references/jsonb-provider-matrix-sourcehub-leadfinder.md`.
+- Validated PG18 generated column from JSONB and `JSON_TABLE` syntax in `pg18_ddl_lab` using rollback.
+
+## Side-by-side requested vs delivered
+
+| User request | Delivery status |
+| --- | --- |
+| Add new context about system/Matrix/LeadFinder mutation | Delivered in PRD, JSONB strategy, dictionary plan, synthesis |
+| Treat provider JSON as source for apps/tables | Delivered via raw/normalized/canonical JSONB strategy |
+| Include generated fields/projected paths from JSONB | Delivered with criteria, SQL examples and PG18 smoke |
+| Improve Matrix &lt;-&gt; SourceHub &lt;-&gt; LeadFinder modeling | Delivered with dedicated canonical dictionary plan |
+| Require clear objective DDL comments | Delivered with dedicated DDL comment standards |
+| Use accelerate and subagents only if useful | Delivered: 3 bounded subagents, minimal toolsets, status/final files |
+| Orchestrator final review | Delivered by Thor in this review |
+| Browser-proof + vision | Pending until browser proof section is complete |
+</pre></section><section><h2>08-jsonb-provider-payload-strategy.md</h2><pre># Estratégia JSONB/provider payload — Prop4You extração database-centric
+
+Status: draft para revisão Thor
+Owner: Worker A
+Escopo: estratégia; nenhum DDL real implementado neste arquivo.
+Fonte backend lida em modo read-only: `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/backend/src`
+Stack de issue: `docs/issues/00-prop4you-database-centric-extraction-plan`
+
+## 1. Marcadores de validação
+
+- [VALIDATION:SOURCE_READ] Evidências lidas em código existente: `domains/data/models/sourcehub.py`, `domains/data/models/skip_trace.py`, `domains/data/models/system_cache.py`, `domains/real_estate/models/history_models.py`, `apps/public/address_entry/queries.py`, `apps/system/matrix/models.py`.
+- [VALIDATION:NO_PROVIDER_CALLS] Nenhuma chamada para APIs de terceiros foi feita. A análise foi estática e repo-local.
+- [VALIDATION:NO_RUNTIME_MUTATION] Nenhum runtime, Docker, segredo ou sistema externo foi mutado.
+- [VALIDATION:NO_REAL_DDL] Os blocos SQL abaixo são exemplos comentados de desenho; não foram aplicados em banco.
+- [VALIDATION:JSONB_FIRST] Estratégia cobre preservação raw, linhagem, projeção canônica, campos projetados/gerados, índices, JSON_TABLE, política de mutação, plano de prova em laboratório e riscos residuais.
+
+## 2. Conclusão executiva
+
+A extração Prop4You deve tratar payloads de provider e payloads internos como um fluxo em camadas:
+
+1. Bronze/raw: preservar payload bruto e envelope de execução/linhagem sem interpretação destrutiva.
+2. Silver/normalized: registrar projeções normalizadas e métricas estáveis, ainda rastreáveis ao raw.
+3. Gold/canonical: promover apenas fatos aceitos pelo dicionário canônico Matrix/LeadFinder/SourceHub para tabelas relacionais fortes ou snapshots canônicos.
+4. Projection/index layer: materializar campos gerados/projetados a partir de JSONB somente quando o caminho tiver semântica estável e carga de consulta real.
+
+Regra central: JSONB é substrato de contrato, auditoria e flexibilidade; não substitui tabelas relacionais para identidade, joins, permissões, constraints e workflows críticos.
+
+## 3. Evidências encontradas no backend atual
+
+### 3.1 SourceHub raw ingress
+
+`domains/data/models/sourcehub.py` já modela uma camada raw mínima:
+
+- `SourceHubRawRecord.provider_slug`, `list_type_slug`, `state_slug`.
+- `ingestion_mode`: `api`, `csv`, `manual_upload`, `reprocess`, `product_originated`.
+- `payload_format`: `json`, `csv`, `xml`, `unknown`, `product_seed`.
+- `processing_status`: `pending`, `processed`, `failed`.
+- `external_reference_id`.
+- `payload_hash` com constraint única por escopo provider/list/state/hash.
+- `raw_payload` como `JSONField`.
+- `ingested_at`, `processed_at`.
+
+Interpretação database-centric: este é o bronze record. Ele deve virar um contrato explícito em DDL, com raw imutável, deduplicação por hash e escopo, e referências públicas para reprocessamento.
+
+### 3.2 Skip trace / DirectSkip
+
+`domains/data/models/skip_trace.py` e `domains/data/models/system_cache.py` mostram dois padrões que devem ser preservados, mas reorganizados:
+
+- `SkipTraceRequest` guarda input estruturado do usuário/produto, FK opcional para `real_estate.Property`, ids públicos SourceHub (`sourcehub_request_public_id`, `sourcehub_raw_record_public_id`, `sourcehub_seed_public_id`), retry e status.
+- `SkipTraceResult` guarda resultado normalizado (`phones`, `emails`, `addresses`, `owner_returned`, `related_people`, `match_metrics`, `result_metrics`) e também `raw_response`.
+- `SystemSkipTraceResult` é cache global/dedup por provider, nome/endereço/zip e `canonical_property_public_id`, com JSONs normalizados e métricas.
+- `SkipTraceSnapshot` é trilha imutável de request/response provider com `request_payload`, `response_payload`, status, custo e tempo.
+
+Interpretação: skip trace enriquece; não define verdade final de owner/property. Payloads de request/response devem ser retidos como evidência, e contatos/identidades promovidos só por política canônica e Matrix.
+
+### 3.3 Realtor/address entry
+
+`apps/public/address_entry/queries.py` contém mapeamento de Realtor GraphQL para seed canônica de detalhes do imóvel:
+
+- Extrai root de `data.home.property`, `data.home`, `data.property` ou payload bruto.
+- Lê caminhos como `description.sub_type`, `description.type`, `description.beds`, `description.baths`, `description.sqft`, `description.year_built`, `lot.size`, `estimate.estimate.amount`, `estimates.current_values.amount`.
+- Produz `build_canonical_property_details_seed(...)` e `serialize_public_property_details(...)`.
+
+Interpretação: esses caminhos são candidatos a campos projetados/gerados, mas ainda devem passar por comparação com payloads reais e pelo dicionário canônico antes de congelar DDL.
+
+### 3.4 Property history / snapshots
+
+`domains/real_estate/models/history_models.py` guarda `PropertyHistory.dto` como snapshot JSON do DTO canônico, com `canonical`, `snapshot_kind`, `promotion_kind` e conceito de `portable_canonical_property_snapshot`.
+
+Interpretação: snapshot canônico é gold/read/audit artifact; não deve ser confundido com raw provider. Ele referencia proveniência (`dto_public_id`, `raw_record_public_id` aparecem em testes) e deve ficar reprodutível a partir do raw + regras de promoção.
+
+### 3.5 Matrix
+
+`apps/system/matrix/models.py` usa JSONFields como `baseline_payload`, `metadata` e conceitos de genome, baseline, corpus, field review e growth pressure, incluindo `PROVIDER_DRIFT_OBSERVED`.
+
+Interpretação: Matrix governa semântica e drift. Mudança em path provider não deve virar DDL imediatamente; deve entrar como pressão/field review e só depois promover campos.
+
+## 4. Estratégia de camadas
+
+### 4.1 Bronze: payload bruto imutável
+
+Objetivos:
+
+- Guardar o payload como recebido, preferencialmente `jsonb` quando o formato for JSON.
+- Guardar envelope de execução separadamente do payload: provider, endpoint lógico, operação, ingestão, status HTTP quando existir, idempotency key, request id, correlation id, hash, versão de contrato observada, tenant/user/workspace quando permitido.
+- Não sobrescrever `raw_payload`. Correções/reprocessamentos criam novo raw record ou nova versão derivada.
+- Sanitizar/segregar segredos: API keys nunca entram em raw payload; dados sensíveis pessoais podem existir por obrigação funcional, mas precisam de RLS, minimização de exposição e retenção.
+
+Modelo conceitual:
+
+```sql
+-- EXEMPLO CONCEITUAL, NÃO APLICAR COMO DDL NESTA FASE.
+-- Bronze SourceHub/provider ingress. O raw é append-only.
+create table sourcehub.raw_record_example (
+  id uuid primary key default uuidv7(),
+  public_ref text not null unique,              -- ex.: shraw_...
+  provider_slug text not null,                  -- realtor, directskip, product, csv_vendor
+  provider_operation text not null,             -- address_search, property_detail, skip_trace_response
+  list_type_slug text not null default &#x27;&#x27;,
+  state_slug text not null default &#x27;&#x27;,
+  ingestion_mode text not null,                 -- api/csv/manual_upload/reprocess/product_originated
+  payload_format text not null,                 -- json/csv/xml/product_seed/unknown
+  external_reference_id text not null default &#x27;&#x27;,
+  correlation_ref text not null default &#x27;&#x27;,      -- request/job/outbox/click path; não segredo
+  payload_hash text not null,                   -- sha256 canônico do payload bruto normalizado
+  raw_payload jsonb not null,                   -- payload preservado; append-only
+  provider_envelope jsonb not null default &#x27;{}&#x27;, -- status, headers allowlist, timing, contract version
+  ingest_metadata jsonb not null default &#x27;{}&#x27;,   -- importer, parser, file offset, source uri hash
+  processing_status text not null default &#x27;pending&#x27;,
+  ingested_at timestamptz not null,
+  processed_at timestamptz,
+  -- A unicidade deve deduplicar sem apagar evidência.
+  unique (provider_slug, list_type_slug, state_slug, payload_hash)
+);
+```
+
+### 4.2 Silver: normalização rastreável
+
+Objetivos:
+
+- Transformar raw provider em blocos normalizados de domínio, sem declarar verdade final.
+- Guardar `normalized_payload`/`projection_payload` com versão do mapeador, status, erros e referências ao raw.
+- Separar métricas operacionais de fatos canônicos.
+
+Exemplo:
+
+```sql
+-- EXEMPLO CONCEITUAL.
+-- Uma projeção normalizada pode ser reprocessada quando o mapper muda.
+create table sourcehub.normalized_projection_example (
+  id uuid primary key default uuidv7(),
+  raw_record_id uuid not null,                  -- FK conceitual para sourcehub.raw_record_example
+  mapper_key text not null,                     -- realtor_property_details_v1, directskip_contacts_v2
+  mapper_version text not null,
+  normalized_payload jsonb not null,            -- estrutura estável do mapper, não verdade final
+  projection_status text not null default &#x27;pending&#x27;,
+  validation_errors jsonb not null default &#x27;[]&#x27;,
+  created_at timestamptz not null default now(),
+  unique (raw_record_id, mapper_key, mapper_version)
+);
+```
+
+### 4.3 Gold: promoção canônica
+
+Objetivos:
+
+- Promover para tabelas fortes somente quando Matrix/LeadFinder/SourceHub concordam no significado.
+- Guardar linhagem por fato: qual raw, qual mapper, qual decisão/política, qual snapshot.
+- Permitir reconstrução: raw -&gt; normalized -&gt; canonical fact/snapshot.
+
+Exemplo:
+
+```sql
+-- EXEMPLO CONCEITUAL.
+-- Fatos canônicos devem apontar para evidência, não copiar provider como verdade cega.
+create table real_estate.property_detail_fact_example (
+  id uuid primary key default uuidv7(),
+  property_id uuid not null,
+  fact_name text not null,                      -- bedrooms, bathrooms, year_built, lot_size_sqft
+  fact_value jsonb not null,                    -- mantém tipo/valor/unidade quando necessário
+  confidence numeric(5,2) not null default 0,
+  sourcehub_raw_record_ref text not null,        -- shraw_...
+  normalized_projection_ref text not null default &#x27;&#x27;,
+  matrix_decision_ref text not null default &#x27;&#x27;,
+  effective_at timestamptz not null default now(),
+  superseded_at timestamptz
+);
+```
+
+## 5. Linhagem obrigatória
+
+Cada payload/projeção/fato precisa carregar ou derivar estes campos mínimos:
+
+- `public_ref`: id público estável e auditável.
+- `provider_slug`: origem externa/interna (`realtor`, `directskip`, `sourcehub_csv`, `product_originated`).
+- `provider_operation`: busca, detalhe, skip trace request, skip trace response, import, reprocess.
+- `external_reference_id`: id do provider quando existe, por exemplo property_id Realtor ou tracking id provider.
+- `payload_hash`: dedupe/replay.
+- `ingestion_mode` e `payload_format`.
+- `correlation_ref`: liga UI/request/job/outbox sem expor segredo.
+- `mapper_key`/`mapper_version`: qual código transformou o raw.
+- `promotion_policy_ref`: qual política decidiu promoção.
+- `raw_record_public_id`: referência bronze usada pelo DTO/snapshot.
+- `dto_public_id`/`snapshot_public_id`: quando produzido snapshot canônico.
+
+No backend atual, parte disso já existe em `SourceHubRawRecord`, `SkipTraceRequest`, `SystemSkipTraceResult`, `SkipTraceSnapshot` e `PropertyHistory.dto.provenance`; a DDL deve consolidar essas ideias com nomes e constraints explícitos.
+
+## 6. Projeção canônica e campos gerados/projetados
+
+### 6.1 Critérios para promover um JSONB path
+
+Um path JSONB vira coluna gerada/projetada apenas se todos forem verdadeiros:
+
+1. Semântica aprovada no dicionário Matrix/LeadFinder.
+2. Path observado em corpus real suficiente, não só em fixture ou suposição.
+3. Consulta frequente ou join/filtro/sort exige performance previsível.
+4. Tipo e unidade são estáveis ou normalizáveis.
+5. Drift tem fallback seguro: path ausente não corrompe verdade; vira `null`/erro de validação.
+6. Existe comentário DDL documentando payload origin, JSON path, regra de coerção e política de mutação.
+
+### 6.2 Candidatos vindos do código lido
+
+Realtor/address details:
+
+- `raw_payload #&gt;&gt; &#x27;{data,home,property,description,sub_type}&#x27;` ou variações para `property_type`.
+- `description.beds` -&gt; `bedrooms`.
+- `description.baths` -&gt; `bathrooms`.
+- `description.sqft`/`sqft_calc`/`building_size.size` -&gt; `square_feet`.
+- `description.year_built` -&gt; `year_built`.
+- `lot.size`/`lot_sqft` -&gt; `lot_size_sqft`.
+- `list_price`/`price`/`estimate.estimate.amount`/`estimates.current_values.amount` -&gt; candidato a valuation seed, não necessariamente detail fact.
+
+DirectSkip/skip trace:
+
+- `response_payload`/`raw_response` -&gt; contatos brutos.
+- `phones`, `emails`, `addresses`, `owner_returned`, `related_people` já aparecem como JSON normalizado.
+- Métricas frequentes: `match_metrics.ownerNameExactMatch`, `result_metrics.phonesFound`, `result_metrics.emailsFound`, `providerStatus`.
+
+Property snapshot DTO:
+
+
+[... conteúdo completo no arquivo markdown ...]</pre></section><section><h2>09-matrix-sourcehub-leadfinder-canonical-dictionary.md</h2><pre># Plano — Dicionário canônico Matrix &lt;-&gt; SourceHub &lt;-&gt; LeadFinder
+
+Status: draft para revisão
+Worker: B
+Idioma: pt-BR
+Fonte inspecionada: `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/backend/src`
+
+## 1. Tese operacional
+
+A extração Prop4You para DDL database-centric não deve começar congelando tabelas a partir dos models Django. O fluxo canônico deve começar pelo contrato semântico entre três donos:
+
+1. LeadFinder define o grafo canônico e publica o baseline semântico que descreve famílias, campos, aliases, regras de validação e prioridades de materialização.
+2. Matrix compara payloads de provedores contra esse baseline, mantém o dicionário semântico, aprova genomes/mappings por escopo de provedor/lista/estado/versão e registra conflitos/drift.
+3. SourceHub recebe payloads brutos, preserva linhagem, aplica somente artefatos Matrix ativos, publica DTOs canônicos/famílias de seeds e entrega ao LeadFinder para materialização.
+
+Regra central: Matrix governa significado; SourceHub governa ingresso/linhagem/publicação de DTO; LeadFinder governa o grafo canônico consumível. Skip Trace, Realtor, REIQ e fluxos produto-originated enriquecem ou fornecem evidência, mas não definem por si só verdade durável de propriedade, dono ou situação.
+
+## 2. Evidência de código analisada
+
+### Matrix
+
+Arquivos principais:
+
+- `apps/system/matrix/models.py`
+- `apps/system/matrix/analysis_runtime.py`
+- `apps/system/matrix/provider_admission.py`
+- `apps/system/matrix/*_pre_sourcehub_dto.py`
+- `apps/system/matrix/*_pre_sourcehub_contracts.py`
+- `apps/system/matrix/primitives/*`
+
+Achados relevantes:
+
+- `MatrixLeadFinderDefaultBaseline` armazena snapshot do baseline publicado pelo LeadFinder: `baseline_key`, `baseline_version`, `canonical_ontology_ref`, `published_contract_ref`, `baseline_payload`, `supplied_by`.
+- `MatrixSchemaGenome` é o artefato runtime aprovado por escopo: `provider_slug`, `list_type_slug`, `state_slug`, `mapping_version`, `artifact_version`, `field_mappings`, `transformations`, `validation_rules`, `compiled_schema`, `confidence_threshold`, contadores de campos e vínculo para o baseline LeadFinder.
+- O lifecycle atual diferencia `draft`, `pending_approval`, `approved`, `active`, `deprecated`, `archived` e garante apenas um genome ativo por escopo.
+- `MatrixCorpusSession` modela onboarding/revalidation com `raw_record_public_ids`, `sample_payloads`, `corpus_stats`, `step_outputs`, `analysis_summary` e vínculo a baseline/genome.
+- `MatrixFieldReview`, `MatrixApprovalRecord` e `MatrixGrowthPressureSignal` já representam revisão HITL, aprovação e pressão de crescimento semântico.
+- `analysis_runtime.py` já possui uma costura explícita chamada `build_canonical_dictionary_runtime_snapshot`, que monta `canonical_fields`, famílias, alias catalog, alias entries e alias lookup a partir do baseline LeadFinder + genomes ativos.
+- `provider_admission.py` bloqueia SourceHub se não houver `MatrixSchemaGenome` ativo para `provider_slug/list_type_slug/mapping_version`, expondo `MATRIX_RUNTIME_REENTRY_TRIGGERS`: `new_provider`, `new_list_type`, `new_mapping_version`, `new_canonical_family`, `new_taxonomy_family`, `promotion_rule_change`, `provider_drift_detected`, `semantic_conflict_detected`.
+
+### SourceHub
+
+Arquivos principais:
+
+- `domains/data/models/sourcehub.py`
+- `apps/system/sourcehub/contracts.py`
+- `apps/system/sourcehub/producer.py`
+- `apps/system/sourcehub/*_ingestion.py`
+- `apps/system/sourcehub/*_normalization.py`
+
+Achados relevantes:
+
+- `SourceHubRawRecord` é a camada bronze: `provider_slug`, `list_type_slug`, `state_slug`, `ingestion_mode`, `payload_format`, `processing_status`, `external_reference_id`, `payload_hash`, `raw_payload`, `ingested_at`, `processed_at`; há unicidade por escopo + hash.
+- `contracts.py` declara explicitamente as ownership rules: SourceHub owns raw record persistence, lineage tracking, canonical transformation; Matrix provides semantic mapping artifacts; LeadFinder consumes canonical DTOs.
+- `SourceHubRawPayloadEnvelope` formaliza ingresso bruto.
+- `SourceHubCanonicalDTOEnvelope`, `SourceHubAddressSeedEnvelope`, `SourceHubProductOriginAddressSeedEnvelope`, `SourceHubPropertyDetailsSeedEnvelope`, `SourceHubMailingContactSeedEnvelope`, `SourceHubPartyRolesSeedEnvelope`, `SourceHubRelationshipEvidenceSeedEnvelope`, `SourceHubLegalTimelineSeedEnvelope`, `SourceHubValuationFinancialSeedEnvelope` formalizam publicação por famílias.
+- `CanonicalProvenanceBlock` preserva `provider_mapping_ref`, `canonical_ontology_ref`, `runtime_approval_mode`, `matrix_reentry_triggers`, `raw_record_public_id`, `payload_hash`, `schema_genome_ref`, `matrix_genome_public_id`, artefato compilado e contrato LeadFinder publicado.
+- `SourceHubTaxonomyFramingBlock` distingue framing/taxonomia do provedor (`source_list_type_slug`) de verdade canônica. A própria docstring alerta que `list_type_slug` não vira automaticamente `situation_type`.
+- `CanonicalSituationBlock` deixa claro que situações são fatos estruturados, não tags.
+- `PortableIntelligenceBlock` marca inteligência portátil como `semantic_owner=matrix_artifact` e projeção determinística SourceHub.
+
+### LeadFinder
+
+Arquivos principais:
+
+- `apps/system/lead_finder/baseline.py`
+- `apps/system/lead_finder/baseline_authoring.py`
+- `apps/system/lead_finder/contracts.py`
+- `apps/system/lead_finder/hydration.py`
+- `domains/real_estate/models/canonical_graph.py`
+- `domains/real_estate/models/canonical_party_graph.py`
+- `domains/real_estate/models/situation_models.py`
+- `domains/real_estate/models/*_models.py`
+
+Achados relevantes:
+
+- `baseline.py` declara que o Lead Finder Group owns the canonical/default genome e Matrix consome esse contrato; o conteúdo semântico é JSON-first/versionado.
+- O baseline exige `family_catalog`, `families`, `field_catalog`, `semantic_owner`, `source_of_truth`, `approval_status`, `published_contract_ref`, `canonical_ontology_ref`.
+- `baseline_authoring.py` modela source pack, candidate delta, lifecycle `draft -&gt; candidate_review -&gt; approved -&gt; published -&gt; superseded/retired` e convergência de `MatrixGrowthPressureSignal` para evolução do baseline.
+- `hydration.py` consome DTOs SourceHub e materializa o grafo mínimo: `Property`, `PropertyLocation`, `OwnerEntity`, `Ownership`, `PropertySituation`, `PropertySnapshot/PropertyHistory`, além de famílias de detalhes, valuation, timeline, representantes, contatos, party roles, comparables e overlays.
+- A hidratação declara que lógica provider-specific deve ficar fora do LeadFinder; LeadFinder materializa payloads canônicos, não payload bruto do provedor.
+- Snapshots preservam provenance (`raw_record_public_id`, `dto_public_id`, `mapping_version`, `canonical_schema_version`, `provider_slug`, `list_type_slug`, tempos de ingestão/processamento) e source facts.
+
+## 3. Dicionário canônico: conceito e conteúdo mínimo
+
+O dicionário canônico é um contrato versionado, auditável e consultável no banco que responde:
+
+- Qual é o campo/família canônica?
+- Qual é o significado de negócio?
+- Quais aliases/provedor-campos apontam para ele?
+- Qual transformação/normalização é permitida?
+- Qual validação é obrigatória?
+- Qual materialização downstream é permitida?
+- Quem é o dono semântico?
+- Qual baseline/genome/mapping aprovou a decisão?
+- Qual evidência bruta sustentou a decisão?
+
+### Estrutura sugerida do payload do dicionário
+
+```json
+{
+  &quot;dictionary_ref&quot;: &quot;matrix.dictionary.lead_finder.lf_default.v1&quot;,
+  &quot;dictionary_version&quot;: &quot;lf_default.v1&quot;,
+  &quot;semantic_owner&quot;: &quot;lead_finder_group&quot;,
+  &quot;canonical_ontology_ref&quot;: &quot;matrix.ontology.lead_finder_baseline.v1&quot;,
+  &quot;published_contract_ref&quot;: &quot;lead_finder.default_genome.lf_default.v1&quot;,
+  &quot;families&quot;: {
+    &quot;identity&quot;: [&quot;street_address&quot;, &quot;city&quot;, &quot;state&quot;, &quot;apn&quot;],
+    &quot;owner_identity&quot;: [&quot;owner_display_name&quot;, &quot;owner_entity_type&quot;],
+    &quot;legal_timeline&quot;: [&quot;case_number&quot;, &quot;date_filed&quot;],
+    &quot;valuation_financial&quot;: [&quot;estimated_value&quot;, &quot;equity_percentage&quot;]
+  },
+  &quot;field_catalog&quot;: {
+    &quot;street_address&quot;: {
+      &quot;family&quot;: &quot;identity&quot;,
+      &quot;semantic_type&quot;: &quot;postal_address_line&quot;,
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;business_meaning&quot;: &quot;Linha principal do endereço físico do imóvel canônico.&quot;,
+      &quot;aliases&quot;: [&quot;property_address&quot;, &quot;situs_address&quot;, &quot;address&quot;],
+      &quot;confusable_with&quot;: [&quot;mailing_street_address&quot;],
+      &quot;transform_hints&quot;: [&quot;trim&quot;, &quot;normalize_street&quot;],
+      &quot;validation_rules&quot;: {&quot;required_for_property_identity&quot;: true},
+      &quot;downstream_projection_hints&quot;: [&quot;PropertyLocation.street_address&quot;]
+    }
+  },
+  &quot;alias_catalog&quot;: {
+    &quot;situs_address&quot;: &quot;street_address&quot;,
+    &quot;property_address&quot;: &quot;street_address&quot;
+  },
+  &quot;conflict_rules&quot;: [
+    {
+      &quot;rule_key&quot;: &quot;mailing_address_not_property_identity&quot;,
+      &quot;when_alias&quot;: &quot;mailing_address&quot;,
+      &quot;do_not_promote_to&quot;: &quot;street_address&quot;,
+      &quot;route_to_family&quot;: &quot;mailing_contact&quot;
+    }
+  ]
+}
+```
+
+### Entidades DDL futuras sugeridas
+
+Em DDL database-centric, o dicionário deve virar schemas/tabelas/funções, não apps Python:
+
+- `matrix.semantic_dictionary`
+  - `public_id`, `dictionary_ref`, `dictionary_version`, `semantic_owner`, `canonical_ontology_ref`, `published_contract_ref`, `status`, `payload jsonb`, `activated_at`, `deprecated_at`.
+- `matrix.canonical_family`
+  - família, descrição, prioridade, consumidores obrigatórios, regras de promoção.
+- `matrix.canonical_field`
+  - campo, família, tipo, semantic_type, significado, exemplos, anti-exemplos, validações, transform hints.
+- `matrix.field_alias`
+  - alias normalizado, campo canônico, escopo opcional de provider/list/state, confiança, origem (`lead_finder_published_contract`, `active_provider_genome`, `peer_active_genome`, `hitl_review`).
+- `matrix.provider_payload_corpus`
+  - amostras de `SourceHubRawRecord`, hashes, estatísticas de campos, paths JSON, tipos observados.
+- `matrix.provider_field_mapping`
+  - source path -&gt; canonical field/family, confidence, match_type, transformation_ref, validation_ref, review status.
+- `matrix.semantic_conflict`
+  - conflito, severidade, campos/provedores afetados, decisão, status, resolução.
+- `sourcehub.raw_record`
+  - equivalente database-centric de `SourceHubRawRecord`.
+- `sourcehub.canonical_dto_publication`
+  - envelope DTO/seed publicado, lineage, hash, schema version, matrix artifact refs.
+- `lead_finder.property_graph_*`
+  - grafo canônico consumindo DTOs, nunca payload bruto diretamente.
+
+## 4. Workflow canônico de comparação de payloads
+
+### 4.1 Ingresso e preservação bruta
+
+1. SourceHub recebe `SourceHubRawPayloadEnvelope`.
+2. Persiste `SourceHubRawRecord` com `raw_payload`, `payload_hash`, `provider_slug`, `list_type_slug`, `state_slug`, `ingestion_mode`, `payload_format`.
+3. Nenhuma escrita canônica ocorre neste passo.
+4. Se o provider/list/mapping ainda não tem genome Matrix ativo, SourceHub deve marcar o item como aguardando admissão/Matrix, não improvisar mapeamento.
+
+### 4.2 Formação de corpus Matrix
+
+1. Matrix cria `MatrixCorpusSession` de `onboarding` ou `revalidation` apontando para `raw_record_public_ids`.
+2. Extrai paths JSON, tipos observados, samples, cardinalidade, presença/frequência, nullish values, formatos de data/telefone/email/número.
+3. Compara cada path contra:
+   - `field_catalog` do baseline LeadFinder.
+   - `alias_catalog` do baseline.
+   - aliases contextualizados.
+   - genomes ativos do mesmo list_type/state e peers.
+4. Classifica cada campo como:
+   - match canônico de alta confiança;
+   - match canônico de baixa confiança;
+   - evidência não materializável;
+   - framing/taxonomia;
+   - campo novo candidato;
+   - conflito semântico;
+   - drift de provider.
+
+### 4.3 Revisão e aprovação
+
+1. Campos ambíguos geram `MatrixFieldReview`.
+2. Lacunas geram `MatrixGrowthPressureSignal`:
+   - `missing_canonical_field`
+   - `underfed_canonical_family`
+   - `promotion_rule_gap`
+   - `sourcehub_framing_gap`
+   - `provider_drift_observed`
+3. HITL decide: aprovar, rejeitar, deferir ou pedir baseline delta.
+4. Matrix compila `MatrixSchemaGenome` com `field_mappings`, `transformations`, `validation_rules`, `compiled_schema`, `analysis_summary`, `growth_classification`.
+5. Genome só entra em runtime após `approve()` + `activate()`.
+
+### 4.4 Admissão SourceHub
+
+1. SourceHub chama a regra equivalente a `get_matrix_approved_provider_artifact`.
+2. Se não houver genome ativo para provider/list/mapping, bloqueia admissão.
+3. Se houver, SourceHub transforma raw -&gt; DTO/seed e carrega no `CanonicalProvenanceBlock`:
+   - `provider_mapping_ref`
+   - `canonical_ontology_ref`
+   - `matrix_genome_public_id`
+   - `schema_genome_ref`
+   - `matrix_compiled_artifact_ref/version`
+   - `published_contract_ref/version`
+   - `lead_finder_published_contract_ref/version`
+   - `raw_record_public_id`
+   - `payload_hash`
+4. SourceHub publica uma das famílias:
+
+[... conteúdo completo no arquivo markdown ...]</pre></section><section><h2>10-ddl-extraction-and-comment-standards.md</h2><pre># Padrões de extração DDL e comentários — Prop4You database-centric
+
+Status: draft/subagent-C
+Data: 2026-06-14
+Escopo: plano documental; não implementa DDL de produção.
+
+## 1. Objetivo
+
+Definir o padrão que deve guiar a futura extração das regras do Prop4You para pacotes DDL versionados em PostgreSQL 18, com foco em:
+
+- ordem de extração dos domínios;
+- formato esperado do pacote DDL;
+- padrões de `COMMENT ON` para schemas, tabelas, colunas, funções, triggers, views, políticas e jobs;
+- política de mutação dos DDLs enquanto Matrix, SourceHub, LeadFinder e payloads de provedores ainda estão em revisão;
+- checklist de revisão;
+- plano de validação em laboratório.
+
+Este documento usa como evidência principal:
+
+```text
+docs/reports/prop4you-inertia-app-inventory-and-extraction-order.md
+docs/database-centric-app-model.md
+docs/database-centric-soft-ddd-rule.md
+docs/pg18-database-centric-ddl-strategy.md
+database/ddl/base/README.md
+/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/backend/src
+```
+
+## 2. Princípios normativos
+
+1. DDL de projeto não entra na imagem PG18 base. Prop4You deve viver sob `database/ddl/projects/prop4you/`.
+2. Django/Inertia é evidência, não desenho final. Modelos, serviços, tasks e migrations ajudam a identificar regras, mas não devem ser copiados mecanicamente.
+3. Schemas são domínios/bounded contexts; tabelas são verdade durável, ledgers, snapshots, filas ou registros operacionais; funções são casos de uso; `api.*` é fachada.
+4. Tabelas de domínio não devem ser expostas diretamente para clientes por padrão. Use funções/views controladas em `api`.
+5. JSONB e lineage são substrato de primeira classe para payloads de provedores, SourceHub, Matrix e DTOs internos.
+6. DDLs devem ser explicitamente versionados, revisáveis e aplicáveis em laboratório limpo antes de qualquer uso fora do lab.
+7. Comentários SQL são parte do contrato. Objeto sem comentário objetivo é objeto incompleto.
+8. Arquivos DDL já aplicados e registrados por checksum não devem ser reescritos silenciosamente; correções devem virar novos arquivos versionados.
+
+## 3. Ordem de extração DDL
+
+A ordem abaixo combina o inventário da aplicação com o modelo database-centric. Ela prioriza dependência semântica, não apenas FK física.
+
+### 3.1 Ordem macro
+
+0. `base/core substrate` já existente
+   - Validar que o pacote `database/ddl/base/` cobre install tracking, extensões, contexto, public refs, lifecycle, JSONB helpers, normalização, audit, realtime e `api` base.
+   - Não transformar `core.db` Django em um domínio Prop4You separado salvo se surgirem regras de produto não cobertas pela base.
+
+1. `identity`
+   - Usuários, perfil, onboarding, MFA, legal acceptance, tokens, feature flags e limites de segurança.
+   - Razão: quase todos os domínios referenciam usuário/ator/workspace.
+
+2. `geography`
+   - Áreas, endereços, candidatos de geocodificação, termos/feed de área.
+   - Razão: propriedade e contato de proprietário dependem de endereço/área.
+
+3. `billing` / `finance`
+   - Planos, créditos, USD balance, uso, payment metadata, checkout/session tokens, limites de acesso.
+   - Razão: gates de acesso, delinquency e uso precisam de verdade estável para testes de API e RLS.
+
+4. `property` / `leadfinder` canonical graph
+   - Propriedade, localização, owner entity, ownership, party roles, contatos, valuations, details, situations estruturadas, lead score/intelligence, workspace CRM.
+   - Razão: este é o núcleo de negócio. Lead Finder define o grafo canônico; situations são fatos estruturados, não tags genéricas.
+
+5. `sourcehub`
+   - Ingresso, raw records, lineage, snapshots, publicação de DTO canônico, batches de importação.
+   - Razão: SourceHub deve preservar payload e origem, depois publicar/promover para o grafo canônico sem redefinir propriedade/owner como verdade final.
+
+6. `skiptrace`
+   - Requests, provider runs, results, candidate contacts, caches, snapshots, financial projections.
+   - Razão: Skip Trace enriquece owner/property; não define a verdade primária do grafo.
+
+7. `matrix`
+   - Genomas/schema semantics, baselines, approval records, corpus sessions, field review, growth pressure signals, dicionário canônico e contratos DTO quando duráveis.
+   - Razão: Matrix governa significado, comparação e mapeamentos; deve ser extraída depois que limites de canonical graph e SourceHub estiverem explícitos.
+
+8. `sales`
+   - Contacts, deals, stages, tasks, documents, handoffs, analytics.
+   - Razão: CRM depende de identity e, conceitualmente, do grafo de propriedade/owner/lead.
+
+9. `communication`
+   - Templates, campaigns, recipients, mensagens operacionais.
+   - Razão: comunicação ativa leads/CRM e depende de identity/sales/lead context.
+
+10. `invitations/onboarding adjunct`
+    - Só extrair DDL próprio se houver tabelas/regras duráveis de produto; no inventário atual não há modelos first-party relevantes.
+
+11. `api facade` e interfaces públicas
+    - Traduzir `apps.public.*` e `interfaces.web.*` por último para `api.*` functions/views, após domínio, RLS e contratos JSON estarem estáveis.
+
+### 3.2 Slices recomendados
+
+| Slice | Nome sugerido | Conteúdo | Gate antes de avançar |
+| --- | --- | --- | --- |
+| S0 | `prop4you_base_alignment` | dependências em `base`, prefixos públicos reservados, schemas vazios comentados | base package revalidado em lab |
+| S1 | `prop4you_identity_core` | account/user/profile/legal/token/onboarding | atores e contexto resolvíveis |
+| S2 | `prop4you_geography_core` | areas, addresses, spatial/index strategy | endereço normalizado consultável |
+| S3 | `prop4you_billing_usage` | planos, créditos, usage/limits | gates de acesso testáveis |
+| S4 | `prop4you_property_graph_core` | property/location/owner/ownership/contacts/party roles | grafo canônico mínimo testável |
+| S5 | `prop4you_property_workspace` | lists, saved properties, notes, tags/status/list registries, filter presets | workspace RLS/projeções testáveis |
+| S6 | `prop4you_lead_intelligence` | situations, scores, intelligence, attempts, valuations/details | facts estruturados e scores auditáveis |
+| S7 | `prop4you_sourcehub_lineage` | raw records, ingest batches, lineage, DTO publication | raw -&gt; canonical promotion auditável |
+| S8 | `prop4you_skiptrace_enrichment` | requests/results/provider runs/candidates/cache | enriquecimento sem redefinir truth |
+| S9 | `prop4you_matrix_semantics` | dictionary, mapping artifacts, approvals, reviews | dicionário com ciclo de aprovação |
+| S10 | `prop4you_sales_communication` | CRM/deals/campaigns | domínio core completo |
+| S11 | `prop4you_api_facade` | `api.*` RPC/views/client contracts | domínio + policies completos |
+
+## 4. Formato do pacote DDL
+
+### 4.1 Local canônico
+
+```text
+database/ddl/projects/prop4you/
+  README.md
+  0001_schemas.sql
+  0002_identity_tables.sql
+  0003_geography_tables.sql
+  0004_billing_tables.sql
+  0005_property_graph_tables.sql
+  0006_property_workspace_tables.sql
+  0007_lead_intelligence_tables.sql
+  0008_sourcehub_lineage_tables.sql
+  0009_skiptrace_enrichment_tables.sql
+  0010_matrix_semantics_tables.sql
+  0011_sales_communication_tables.sql
+  0012_public_id_registry.sql
+  0013_lifecycle_triggers.sql
+  0014_constraints_indexes.sql
+  0015_domain_functions.sql
+  0016_views_projections.sql
+  0017_api_facade.sql
+  0018_audit_realtime_hooks.sql
+  0019_jobs.sql
+  0020_policies.sql
+  0021_comments_contract.sql
+  tests/
+    0001_smoke.sql
+    0002_comments_catalog_check.sql
+    0003_idempotency_probe.sql
+```
+
+Observação: o shape acima é orientativo. O pacote pode ser dividido por domínio quando o volume justificar, mas a ordem deve continuar explícita e numérica.
+
+### 4.2 Cabeçalho obrigatório por arquivo SQL
+
+Cada arquivo DDL futuro deve começar com um bloco de metadados em comentário SQL comum:
+
+```sql
+-- package: prop4you
+-- file: 0005_property_graph_tables.sql
+-- status: draft|experimental|stable|deprecated
+-- purpose: cria o núcleo canônico de propriedade/owner/ownership.
+-- depends-on: base&gt;=0001, prop4you:0001_schemas, prop4you:0003_geography_tables
+-- idempotency: idempotent_where_possible
+-- destructive: false
+-- review-gate: property_graph_schema_review
+```
+
+Regras:
+
+- `purpose` descreve o porquê do arquivo, não uma repetição do nome.
+- `depends-on` deve listar dependências de pacote/arquivo/domínio relevantes.
+- `destructive: true` exige arquivo separado, plano de migração e aprovação explícita.
+- O cabeçalho não substitui `COMMENT ON`; ele documenta o arquivo, não os objetos.
+
+### 4.3 Ordem interna por arquivo
+
+Dentro de cada arquivo, preferir esta ordem:
+
+1. `create schema if not exists` quando aplicável;
+2. `create type/domain` somente se necessário e bem justificado;
+3. tabelas base sem FKs cíclicas primeiro;
+4. tabelas dependentes;
+5. constraints adicionais quando não couberem inline;
+6. indexes;
+7. triggers;
+8. funções internas do domínio;
+9. views/projeções;
+10. grants/RLS/policies;
+11. `COMMENT ON` próximo do objeto ou em arquivo dedicado `0021_comments_contract.sql` quando a revisão de comentários for separada.
+
+### 4.4 Dependência de base
+
+Prop4You deve usar explicitamente o contrato base quando adequado:
+
+- `id uuid primary key default uuidv7()`;
+- `created_at`, `updated_at`, `deleted_at`, `version`, `metadata`;
+- triggers de lifecycle do `base`;
+- `base.public_id_prefix_registry` e helpers de public ref;
+- `audit.log` para mutações significativas;
+- `realtime.event_outbox` para eventos transportáveis;
+- JSONB helpers quando o payload for aceito diretamente;
+- `jobs.*` para trabalhos internos chamados via `cron.schedule_in_database(...)` a partir do DB scheduler.
+
+Não usar herança PostgreSQL (`INHERITS`) como padrão para simular BaseModel Django.
+
+## 5. Padrão de comentários SQL
+
+### 5.1 Regra geral
+
+Todo objeto durável ou invocável deve ter `COMMENT ON` objetivo, documental e orientado a contrato.
+
+Obrigatório comentar:
+
+- schemas;
+- tabelas;
+- colunas de tabelas duráveis;
+- constraints não triviais;
+- indexes com semântica de consulta importante;
+- funções/procedures;
+- triggers;
+- views/materialized views;
+- policies RLS;
+- tipos/domains/enums criados pelo projeto.
+
+Comentários devem responder, quando aplicável:
+
+```text
+O que este objeto representa?
+
+[... conteúdo completo no arquivo markdown ...]</pre></section><section><h2>11-executive-synthesis.md</h2><pre># Executive Synthesis — Prop4You database-centric extraction plan
+
+Status: reviewed
+Updated: 2026-06-15T00:44:05
+Owner: Thor/default
+
+## Verdict
+
+SUPPORTED for repo-local/documentation/static-contract closure.
+
+INCOMPLETE for final Prop4You DDL/runtime/product claims because this slice intentionally does not implement final DDL, call providers, or run product runtime flows.
+
+## Final architectural stance
+
+The Prop4You DDL extraction must not copy Django models mechanically. The current backend is evidence. The final database-centric shape must be derived from:
+
+1. current Django/Inertia domains and relations;
+2. provider/internal payload contracts;
+3. JSONB raw/normalized/canonical layering;
+4. Matrix semantic dictionary and field review lifecycle;
+5. SourceHub ingress/lineage/DTO publication;
+6. LeadFinder canonical graph consumption;
+7. DDL comments and lab proof before promotion.
+
+## Critical addition from Karval
+
+The `system` group that composes LeadFinder/Matrix/SourceHub is expected to mutate. Many existing apps were not designed from broad provider payload comparison. Therefore provider JSON and internal captured JSON must be first-class evidence, not incidental metadata.
+
+## Extraction strategy
+
+Recommended implementation order remains dependency-aware but now gains one extra gate: before freezing DDL fields for provider-driven domains, run provider payload corpus comparison and dictionary approval.
+
+```text
+0. base/core substrate
+1. identity
+2. geography
+3. finance/billing where access gates are needed
+4. property/leadfinder canonical graph
+5. sourcehub raw/lineage/DTO publication
+6. skiptrace enrichment
+7. matrix semantic dictionary/governance
+8. sales/communication
+9. api facade
+```
+
+For the Matrix/SourceHub/LeadFinder cluster, the operational order is:
+
+```text
+sourcehub.raw_record corpus
+  -&gt; matrix semantic dictionary / genome / reviews
+  -&gt; sourcehub canonical DTO publication
+  -&gt; leadfinder graph materialization
+  -&gt; generated/projected fields after stability
+```
+
+## JSONB stance
+
+Use JSONB heavily, but governed:
+
+- raw provider/internal payloads are append-only evidence;
+- normalized projections are mapper-versioned;
+- canonical facts/tables only promote approved semantics;
+- generated/projected fields from JSONB paths are for stable/high-value paths;
+- JSON_TABLE is available in PG18 lab for row projection from JSON structures;
+- every projection must preserve lineage to raw payload and dictionary decision.
+
+## DDL comments stance
+
+DDL comments are mandatory contract, not decoration. Future DDLs must use `COMMENT ON` for schemas, tables, columns, functions, triggers, policies and views. Comments must be objective, orientative and documentary.
+
+## Parent/orchestrator validation evidence
+
+- Subagent artifacts were read by Thor.
+- Status files were read.
+- Marker grep confirmed required sections and claims.
+- PG18 lab smoke validated JSONB generated projection and JSON_TABLE in `pg18_ddl_lab` using temporary table and rollback.
+- No provider API calls, runtime mutation, Docker/Swarm mutation, or production changes were made.
+
+## Artifacts synthesized
+
+- `08-jsonb-provider-payload-strategy.md`
+- `09-matrix-sourcehub-leadfinder-canonical-dictionary.md`
+- `10-ddl-extraction-and-comment-standards.md`
+
+## Residual gates
+
+- Collect representative provider payload samples without secrets.
+- Build actual `database/ddl/projects/prop4you` package.
+- Add lab proof script for Prop4You package.
+- Validate comments/catalog checks against real DDL.
+- Browser/runtime proof for any user-facing flow remains future work.
+</pre></section>
+</body>
+</html>
