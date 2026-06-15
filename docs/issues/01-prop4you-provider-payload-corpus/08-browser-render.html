@@ -1,0 +1,791 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Prop4You Provider Payload Corpus — Browser Proof</title><style>
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;margin:32px;background:#f8fafc;color:#111827;line-height:1.45}
+header{background:#111827;color:#fff;padding:24px;border-radius:16px;margin-bottom:22px}
+.verdict{background:#dcfce7;color:#14532d;border:1px solid #86efac;border-radius:10px;padding:10px 14px;font-weight:700}
+.badges span{display:inline-block;background:#dbeafe;color:#1e3a8a;border:1px solid #93c5fd;border-radius:999px;padding:4px 10px;margin:4px;font-weight:700}
+section{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:18px;margin:18px 0;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+pre{white-space:pre-wrap;background:#0b1020;color:#e5e7eb;padding:14px;border-radius:10px;font:13px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;max-height:700px;overflow:auto}
+</style></head><body>
+<header><h1>Prop4You Provider Payload Corpus</h1><p class="verdict">Browser-proof artifact: repo-local provider corpus planning/static-contract closure</p><div class="badges"><span>REIQ base</span><span>DirectSkip owner</span><span>Realtor enrichment</span><span>JSONB corpus</span><span>Package + subpackages</span><span>No provider calls</span></div></header>
+<section><h2>01-prd.md</h2><pre># PRD — Prop4You provider payload corpus and canonical DDL decision gate
+
+Status: draft
+Owner: Thor/default
+
+## Goal
+
+Create a persisted, reviewable provider payload corpus plan and first repo-local artifact stack that enables future Prop4You database-centric DDL design to be driven by side-by-side JSON/provider comparison instead of mechanically copying Django models.
+
+## Providers in v0
+
+Priority order and role:
+
+```text
+1. REIQ       — current/base data source
+2. DirectSkip — owner/contact enrichment source
+3. Realtor.com — broad property enrichment source
+4. Internal/manual/product-originated payloads — supporting corpus
+```
+
+## Requirements
+
+- Analyze available backend code, tests, fixtures, sample JSONs, DTOs and contracts related to REIQ, DirectSkip, Realtor.com, SourceHub, Matrix and LeadFinder.
+- Produce provider-by-provider payload/path inventory without leaking secrets or PII.
+- Produce side-by-side comparison matrix: identity/property/owner/contact/situation/valuation/legal/lineage/enrichment fields.
+- Define canonical dictionary decision gates.
+- Define package + subpackage DDL structure, but do not freeze final tables until corpus comparison is reviewed.
+- Define fixture policy for a DDL system separate from PG18 base.
+- Define PII/RLS/retention boundaries for raw payloads.
+- Create initial Prop4You DDL package skeleton only if safe/non-committal.
+- Create lab-proof plan/script skeleton that does not claim final DDL execution.
+
+## Non-goals
+
+- No provider API calls.
+- No real payload dumps in chat or docs.
+- No production/runtime mutation.
+- No final table schema freeze.
+- No persistent DB mutation beyond optional temporary/rollback smoke checks.
+
+## Acceptance criteria
+
+- Issue stack created and referenced in canonical docs.
+- Subagent artifacts exist for REIQ, DirectSkip and Realtor/internal comparison lanes.
+- Parent/orchestrator review compares requested vs delivered.
+- Provider corpus strategy answers the four user decisions.
+- DDL package + subpackage skeleton exists or is explicitly deferred with reason.
+- Browser-proof + vision confirms rendered report.
+- Final report persists next steps/questions.
+</pre></section><section><h2>05-task-review.md</h2><pre># Task Review — Prop4You provider payload corpus
+
+Status: reviewed
+Updated: 2026-06-15T01:14:49
+Reviewer: Thor/default
+
+| Task | Requested | Delivered | Evidence | Verdict |
+| --- | --- | --- | --- | --- |
+| T1 | Create PRD/tasks/ledger/manifest scaffold | Created 00-04 stack files before delegation | `00-detection-and-analysis.md`, `01-prd.md`, `02-tasks.md`, `03-execution-ledger.md`, `04-subagent-manifest.md` | PASS |
+| T2 | Analyze REIQ/base data payload evidence | Worker A inventoried REIQ envelopes, SourceHub producer, mappings, list types, registry/local corpus, canonical implications | `08-reiq-payload-inventory.md`; `A-status.md`; marker grep | PASS |
+| T3 | Analyze DirectSkip/owner payload evidence | Worker B inventoried DirectSkip request/response/contact/owner evidence, candidate graph and PII risks | `09-directskip-payload-inventory.md`; `B-status.md`; marker grep | PASS after parent corrected path-root drift |
+| T4 | Analyze Realtor.com/property enrichment + internal payloads | Worker C inventoried Realtor property/enrichment paths and internal/product-originated payloads | `10-realtor-internal-payload-inventory.md`; `C-status.md`; marker grep | PASS |
+| T5 | Synthesize side-by-side provider comparison and canonical dictionary gate | Thor created provider comparison by canonical family and defined decision gates | `11-side-by-side-provider-comparison.md` | PASS |
+| T6 | Define fixture/privacy policy for separate DDL system | Thor created repo/local/private fixture and PII/RLS/retention policy | `12-fixture-privacy-policy.md` | PASS |
+| T7 | Create package + subpackage skeleton and lab script skeleton | Created non-final `database/ddl/projects/prop4you/` package/subpackages, `0001_schemas.sql`, and dry-run proof script | `database/ddl/projects/prop4you/`; `scripts/proof-prop4you-ddl-lab.sh`; bash/psql rollback validation | PASS |
+| T8 | Review all tasks and correct gaps | Parent review performed; path-root drift corrected; no raw PII dumped; no provider calls | this file; `03-execution-ledger.md` | PASS |
+| T9 | Browser-proof + vision QA | Pending until local render proof completes | `06-browser-proof.md`, `08-browser-render.html` | PENDING |
+| T10 | Final report/commit/push | Pending until browser proof and final checks complete | `07-final-report.md` | PENDING |
+
+## Corrections applied by Thor
+
+- Copied misplaced `09-directskip-payload-inventory.md` from parent path into the correct repo issue stack.
+- Copied subagent status files from parent `.tmp` path into the correct repo `.tmp` path.
+- Removed orphan parent `docs/issues/01-prop4you-provider-payload-corpus` and `.tmp/prop4you-payload-corpus` after verification.
+- Validated the DDL skeleton with dry-run and `psql` transaction rollback.
+
+## Requested vs delivered
+
+| User answer/request | Delivery |
+| --- | --- |
+| Analyze all providers side by side; priority REIQ -&gt; DirectSkip -&gt; Realtor.com | Delivered through inventories and side-by-side synthesis |
+| Think model and JSONB before deciding DDL | Delivered; final tables gated by corpus/dictionary |
+| DDL is for separate system from postgres18 | Delivered; package under `database/ddl/projects/prop4you`, not base image |
+| DDL decision only after JSON comparison | Delivered; no final tables frozen; skeleton only |
+| Package and subpackages | Delivered with package/subpackage README skeletons |
+| Browser-proof + vision | Pending until T9 closure |
+</pre></section><section><h2>11-side-by-side-provider-comparison.md</h2><pre># Side-by-side provider comparison — REIQ x DirectSkip x Realtor.com
+
+Status: reviewed/synthesized
+Updated: 2026-06-15T01:13:10
+Owner: Thor/default
+
+## Executive verdict
+
+The first Prop4You DDL implementation decision remains intentionally gated: final canonical tables should not be frozen until the provider corpus comparison below is converted into Matrix dictionary entries and reviewed against representative payload samples.
+
+However, the available local evidence is enough to define the first non-final package/subpackage skeleton and the corpus decision model.
+
+## Provider role ranking from Karval
+
+```text
+REIQ       -&gt; current/base data source
+DirectSkip -&gt; owner/contact data source
+Realtor.com -&gt; broad property enrichment source
+Internal/manual/product-originated -&gt; supporting local/product capture source
+```
+
+## Side-by-side by canonical family
+
+| Canonical family | REIQ | DirectSkip | Realtor.com | Internal/product-originated | DDL implication |
+| --- | --- | --- | --- | --- | --- |
+| Property identity/address | Strong base source: `property.location`, address source facts, list/state context | Request context only; should not define property identity | Strong enrichment/verification via `location.address.*`, provider property id/permalink | Manual property creation and user-captured address | Canonical `property/location` comes from approved graph; preserve provider-specific raw/source facts separately |
+| Owner identity | Has owner/ownership/projection candidates by list type | Strong owner/contact evidence via names/contacts/relatives | Generally weak/not primary owner source in inspected evidence | Manual owner/name inputs possible | Owner truth requires candidate graph + Matrix/LeadFinder approval; DirectSkip evidence must not auto-promote |
+| Ownership/party roles | Strong for REIQ legal/list-type datasets: party roles, owner projection, legal parties | Evidence-only; relationships/relatives can support but not define ownership | Not primary | Manual corrections possible | Need `owner_candidate`, `ownership_evidence`, and approval/materialization flow |
+| Contacts: phone/email/address | Some REIQ lanes expose locked/restricted/contact hints and role addresses | Strong phone/email/confirmed_address/relatives evidence | Not primary | Manual skip trace submissions and user-entered contacts | Contacts should be evidence records with confidence/source, then promoted to owner contact satellites |
+| Situations/distress/legal | Strong base via list types: pre_foreclosure, loan_modification, probates, eviction, tax_sale, divorce, heirship, appointment trustee | Not a situation source; can enrich owner resolution | Listing/history can enrich but not define distress situation | User/product signals possible | Situation facts must be structured, not tags; list_type does not auto-create situation without canonical block |
+| Valuation/financial | Strong in REIQ for equity/valuation/loan terms/tax sale etc. | Not primary | Strong enrichment: estimates, valuation, listing price, history, spot offer | Manual valuations/overlays possible | Use fact/snapshot model with source lineage and timestamp; do not overwrite canonical blindly |
+| Listing/history/media | Limited depending lane | None | Strong: history, listing status, photos/media, similar/nearby homes | Product overlays | Realtor belongs mostly to enrichment/read model/source facts, not base truth |
+| Lineage/provenance | SourceHub raw record + mapping versions visible | raw_response/request/response snapshots and SourceHub handoffs | Matrix DTO + SourceHub DTO evidence | product_originated seeds | All providers require raw -&gt; normalized -&gt; canonical lineage tables |
+| Generated/projected JSONB paths | Candidate paths depend on REIQ list type and envelope shape | Useful for contact counts/status/result code, but PII requires caution | Strong for property metrics and estimates; array paths need JSON_TABLE/staging | Useful for internal source classification | Only add generated/projected fields after Matrix dictionary approval and stable query need |
+
+## DDL decision gate
+
+Final DDL tables require these gates:
+
+1. Provider corpus sample set exists for REIQ, DirectSkip, Realtor and internal payloads.
+2. Raw paths are summarized without leaking PII.
+3. Matrix dictionary declares canonical family/field/alias/confusable-with rules.
+4. SourceHub lineage and DTO publication boundary is explicit.
+5. LeadFinder materialization rule is explicit.
+6. PII/RLS/retention policy is accepted.
+7. Lab proof validates skeleton/package plus any generated JSONB projections.
+
+## Recommended first implementation route
+
+Because Karval clarified that table decisions happen after JSON comparison, the first DDL implementation should be:
+
+```text
+prop4you_sourcehub_corpus + prop4you_matrix_dictionary_skeleton
+```
+
+not full identity/property/owner tables yet.
+
+Reason:
+
+```text
+REIQ/DirectSkip/Realtor comparison must govern canonical dictionary first;
+then property/owner/materialized graph tables can be frozen with less rework.
+```
+
+## What should not happen
+
+- Do not copy Django models into final DDL one-to-one.
+- Do not treat REIQ list type as canonical situation automatically.
+- Do not treat DirectSkip returned contact as canonical owner contact automatically.
+- Do not treat Realtor estimate/listing/media as current truth automatically.
+- Do not commit raw PII fixture values to repo.
+</pre></section><section><h2>12-fixture-privacy-policy.md</h2><pre># Fixture and privacy policy — Prop4You provider payload corpus
+
+Status: reviewed/synthesized
+Updated: 2026-06-15T01:13:10
+Owner: Thor/default
+
+## Decision
+
+Because Prop4You DDL is a separate system from the PG18 base image, fixture strategy should be explicit and layered.
+
+## Allowed in repo
+
+Commit only privacy-safe artifacts:
+
+```text
+1. path inventories
+2. schema/path summaries
+3. redacted/minimized JSON fixtures
+4. synthetic fixtures generated from observed shapes
+5. hash/count/type summaries
+6. Matrix dictionary examples without real PII
+```
+
+## Not allowed in repo by default
+
+```text
+1. raw provider payloads containing names, addresses, phones, emails, case numbers or provider IDs
+2. API keys, tokens, headers, cookies, auth envelopes
+3. full DirectSkip responses with real contact data
+4. full REIQ/Realtor payloads containing real property/owner data unless explicitly sanitized
+5. raw screenshots/HTML dumps with PII
+```
+
+## Local/private corpus layout proposal
+
+Private corpus can live outside git, for example:
+
+```text
+~/.hermes/private/prop4you-provider-corpus/
+  reiq/
+  directskip/
+  realtor/
+  internal/
+```
+
+Repo stores only summaries under:
+
+```text
+docs/issues/01-prop4you-provider-payload-corpus/
+```
+
+Future lab scripts should accept a local private corpus path:
+
+```bash
+PROP4YOU_PROVIDER_CORPUS_DIR=~/.hermes/private/prop4you-provider-corpus   scripts/proof-prop4you-ddl-lab.sh --dry-run
+```
+
+## Redaction rules
+
+Before any sample fixture is committed:
+
+- Replace names with stable fake names.
+- Replace street addresses with fake-but-valid format.
+- Replace phones/emails with test domains/numbers.
+- Replace provider IDs with deterministic fake IDs preserving shape only.
+- Remove API keys and request headers.
+- Keep JSON path structure, types, array cardinality and null/missing behavior.
+
+## RLS/retention guidance
+
+Raw provider payload tables require:
+
+- RLS by tenant/workspace/user/project boundary where applicable.
+- Separation of raw payload from public API views.
+- Retention class per provider and payload type.
+- Audit of access to PII-bearing payloads.
+- Redacted projection views for operator/reporting workflows.
+
+## Decision for current slice
+
+No raw fixtures are committed in this slice. Only inventories, side-by-side comparison, DDL skeleton and proof script skeleton are committed.
+</pre></section><section><h2>08-reiq-payload-inventory.md</h2><pre># Worker A — Inventário de evidências REIQ/base payload
+
+Status: COMPLETED
+Escopo: análise estática/read-only do corpus e código Prop4You Inertia para REIQ/base data.
+
+[NO_PROVIDER_CALLS]
+Nenhuma chamada a provider/API foi executada. A evidência abaixo vem apenas de arquivos locais em `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/backend/src` e do repositório de destino.
+
+[NO_PII_DUMP]
+Este relatório lista nomes de caminhos JSON, famílias de dados, versões e referências de arquivo/linha. Valores brutos de payloads, nomes, endereços, IDs externos e demais PII não são reproduzidos.
+
+[REIQ_PATH_INVENTORY]
+
+## 1. Inventário de fontes locais observadas
+
+### Código SourceHub/REIQ
+
+- `apps/system/sourcehub/producer.py:1236-1242`
+  - `_extract_reiq_result()` aceita dois formatos de payload:
+    - wrapper `$.data.result.*`
+    - objeto plano no root `$.&lt;field&gt;`
+  - Implicação: o dicionário Matrix deve registrar ambos os envelopes como formatos válidos até que a ingestão seja normalizada.
+
+- `apps/system/sourcehub/producer.py:2323-2387`
+  - `_build_reiq_base_canonical_dto()` cria o DTO canônico base:
+    - `canonical_dto.property.location`
+    - `canonical_dto.owners[]`
+    - `canonical_dto.ownerships[]`
+    - `canonical_dto.situations[]`
+    - `canonical_dto.provenance`
+    - `canonical_dto.address_source_facts[]`
+    - `canonical_dto.property_source_facts[]`
+
+- `apps/system/sourcehub/producer.py:2390-2416`
+  - blocos opcionais comuns REIQ:
+    - `property.details`
+    - `party_roles[]`
+    - `legal_timeline`
+    - `valuation_financial`
+
+- `apps/system/sourcehub/producer.py:2419-2476`
+  - extensões atuais para `loan_modification` e `pre_foreclosure`:
+    - `owner_projection_candidate`
+    - `loan_terms_evidence` para `loan_modification`
+    - `distress_evidence` para `pre_foreclosure`
+    - `operator_context`
+
+- `apps/system/sourcehub/producer.py:2479-2936` e `2960-3213`
+  - builders/lanes existentes para outras list types REIQ, mesmo quando o corpus local completo não aparece para todas:
+    - `probates`: `mailing_address`, `role_addresses[]`, `contact_phones[]`, `contact_emails[]`
+    - `heirship`: `party_roles[]`, `role_addresses[]`, `contact_phones[]`, `contact_emails[]`
+    - `eviction`: `role_addresses[]`
+    - `tax_sale`: `owner_projection_candidate`, `mailing_address`, `tax_sale_evidence`
+    - `divorce`: `owner_projection_candidate`, `mailing_address`, `divorce_evidence`
+    - `appt_of_sub_trustee`: `owner_projection_candidate`, `loan_terms_evidence`, `lender_evidence`
+
+- `apps/system/sourcehub/producer.py:3257-3395`
+  - `produce_reiq_pilot_handoff()` exige aprovação Matrix via `assert_matrix_approved_sourcehub_admission()`, persiste `SourceHubRawRecord`, escolhe o builder por `list_type_slug`, adiciona `portable_intelligence` e retorna handoff SourceHub -&gt; Lead Finder.
+  - List types roteados no código: `loan_modification`, `probates`, `eviction`, `tax_sale`, `appt_of_sub_trustee`, `heirship`, `divorce`; fallback para `pre_foreclosure`.
+
+- `apps/system/sourcehub/producer.py:3398-3418`
+  - `build_reiq_raw_envelope()` fixa:
+    - `provider_slug=reiq`
+    - `payload_format=json`
+    - `ingestion_mode=api`
+    - `stage=sourcehub`
+    - `list_type_slug` parametrizado, default `pre_foreclosure`
+    - `state_slug` vindo do argumento ou de `property_state`
+    - `external_reference_id` vindo de `internal_id`
+
+### Runners de ingestão
+
+- `apps/system/sourcehub/reiq_pre_foreclosure_tx_ingestion.py:23-36`
+  - default source dir aponta para arquivo histórico/arquivado sob `_projeto-antigo/.../matrix/registry/reiq/pre_foreclosure/tx/data/2025-11-27`, mas esse caminho não existe no checkout `backend/src` analisado.
+
+- `apps/system/sourcehub/reiq_pre_foreclosure_tx_ingestion.py:57-64`
+  - runner de produção-style:
+    - `DEFAULT_LIST_TYPE_SLUG=pre_foreclosure`
+    - `DEFAULT_STATE_SLUG=tx`
+    - `DEFAULT_MAPPING_VERSION=reiq.pre_foreclosure.tx.v1`
+    - `RUNNER_NAME=sourcehub.reiq_pre_foreclosure_tx_ingestion`
+
+- `apps/system/sourcehub/reiq_pre_foreclosure_tx_ingestion.py:67-162`
+  - `run_from_directory()` e `ingest_payload()` leem JSON local, montam envelope, persistem raw record, produzem handoff e hidratam Lead Finder; gerenciam `processed/skipped/failed/replayed` em `SourceHubRawRecord`.
+
+- `apps/system/sourcehub/reiq_pre_foreclosure_fl_ingestion.py:22-37`
+  - especialização FL para `pre_foreclosure`:
+    - `DEFAULT_STATE_SLUG=fl`
+    - `DEFAULT_MAPPING_VERSION=reiq.pre_foreclosure.fl.v1`
+    - source dir esperado: `apps/system/matrix/registry/reiq/pre_foreclosure/fl/data/...`
+
+- `apps/system/sourcehub/reiq_loan_modification_fl_ingestion.py:5-12` e `apps/system/sourcehub/reiq_loan_modification_tx_ingestion.py:5-12`
+  - subclasses/reexports baseadas no runner `REIQPreForeclosureTXIngestionService` para lanes `loan_modification`.
+
+### Testes e fixtures
+
+- `domains/real_estate/tests/test_lead_finder_hydration.py:88-119`
+  - fixture sintética `$.data.result` para `pre_foreclosure` com famílias: identidade de propriedade, proprietário, lead/situação, valuation/equity, timeline legal/processual, ocupação e tenant.
+
+- `domains/real_estate/tests/test_lead_finder_hydration.py:121-245`
+  - valida criação de `PropertyLeadFinder`, `PropertyLocation`, `OwnerEntity`, `Ownership`, `PropertySituation`, `PartyRole`, `PropertyHistory`, `PropertyValuation` e `PropertyEvent` a partir de REIQ.
+  - Verifica provenance `provider_slug=reiq`, `list_type_slug=pre_foreclosure` e presença de `raw_record_public_id`.
+
+- `domains/real_estate/tests/test_lead_finder_hydration.py:247-288`
+  - caso com nomes de owner/mortgagor ambíguos e ampersand para `pre_foreclosure`, versão `reiq.pre_foreclosure.tx.v1`.
+
+- `domains/real_estate/tests/test_lead_finder_hydration.py:297-328`
+  - caso `loan_modification` FL, versão `reiq.loan_modification.fl.middle_name.v1`, focado em nome com middle initial.
+
+- `apps/system/sourcehub/tests/test_reiq_pre_foreclosure_tx_ingestion.py:23-73`
+  - seed Matrix runtime genome para `provider_slug=reiq`, `list_type_slug=pre_foreclosure`, `state_slug=tx`, `mapping_version=reiq.pre_foreclosure.tx.v1`, `artifact_version=1.0.0`.
+  - baseline usado: `lf_default.v1`, ontology `matrix.ontology.lead_finder_baseline.v1`, provider mapping `matrix.provider_mapping.reiq.pre_foreclosure.tx.v1`, genome `matrix.genome.reiq.pre_foreclosure.tx.v1`.
+  - famílias baseline: `identity_address`, `legal_timeline`, `owner_ownership`, `valuation_financial`; taxonomy: `lead_type`, `source_list_type`.
+
+- `apps/system/sourcehub/tests/test_reiq_pre_foreclosure_tx_ingestion.py:76-110`
+  - fixture sintética wrapper `$.data.result` para `pre_foreclosure/tx` com campos de foreclosure, endereço, equity, ocupação e locked contact keys.
+
+- `apps/system/sourcehub/tests/test_reiq_pre_foreclosure_tx_ingestion.py:117-278`
+  - valida ingestão local sem provider call, idempotência por status processed, healing de runtime state, force replay, falha/retry e management command.
+
+- `apps/system/sourcehub/tests/test_reiq_loan_modification_fl_ingestion.py:22-25`
+  - fixture local real/arquivada referenciada em `apps/system/matrix/registry/reiq/loan_modification/fl/data/2025-11-27/FL_loan-modification_*.json`.
+
+- `apps/system/sourcehub/tests/test_reiq_loan_modification_fl_ingestion.py:28-80`
+  - seed Matrix runtime genome para `provider_slug=reiq`, `list_type_slug=loan_modification`, `state_slug=fl`, `mapping_version=reiq.loan_modification.fl.middle_name.v1`, `artifact_version=1.0.0`.
+  - provider mapping `matrix.provider_mapping.reiq.loan_modification.fl.middle_name.v1`, genome `matrix.genome.reiq.loan_modification.fl.middle_name.v1`.
+
+- `apps/system/sourcehub/tests/test_reiq_loan_modification_fl_ingestion.py:83-162`
+  - lê fixture real local e valida materialização, status processed, idempotência e command `ingest_reiq_loan_modification_fl`.
+
+### Matrix registry local observado
+
+Comando estático executado: inventário Python local sobre `apps/system/matrix/registry/reiq/**/*.json`, sem imprimir valores de PII.
+
+Resultado observado:
+
+- Total REIQ registry JSON: 98 arquivos.
+- Estrutura presente no checkout:
+  - `apps/system/matrix/registry/reiq/loan_modification/context.json` — 1
+  - `apps/system/matrix/registry/reiq/loan_modification/fl/context.json` — 1
+  - `apps/system/matrix/registry/reiq/loan_modification/fl/contracts/*.json` — 19
+  - `apps/system/matrix/registry/reiq/loan_modification/fl/analysis/baseline-only/*.json` — 19
+  - `apps/system/matrix/registry/reiq/loan_modification/fl/analysis/contextual/*.json` — 19
+  - `apps/system/matrix/registry/reiq/loan_modification/fl/analysis/discrepancy/*.json` — 19
+  - `apps/system/matrix/registry/reiq/loan_modification/fl/data/*_source_manifest.json` — 19
+  - `apps/system/matrix/registry/reiq/loan_modification/fl/data/2025-11-27/FL_loan-modification_*.json` — 1 payload raw local.
+
+Contrato Matrix observado nos `contracts/session_*.json`:
+
+- `artifact_kind` alterna entre `matrix_registry_contract_bundle` e `matrix_registry_contract_lineage`.
+- `provider_slug=reiq`.
+- `list_type_slug=loan_modification`.
+- `state_slug=fl`.
+- `baseline_version` aparece como `lf_default.v1` e em um artefato antigo como `lf-default.v1`.
+- `published_contract_ref` aparece como `lead_finder.default_genome.lf_default.v1` e em um artefato antigo como `lead_finder.default_genome.lf-default.v1`.
+- `contract_refs` recorrentes:
+  - `registry/contracts/baseline_only_analysis.contract.json`
+  - `registry/contracts/contextual_analysis.contract.json`
+  - `registry/contracts/dataset_discrepancy_report.contract.json`
+  - `registry/contracts/source_manifest.contract.json`
+- Snapshots embutidos, quando presentes, usam contratos versão `1.0.0` para baseline-only/contextual/discrepancy/source-manifest.
+
+### Payload raw local real observado sem valores
+
+Arquivo: `apps/system/matrix/registry/reiq/loan_modification/fl/data/2025-11-27/FL_loan-modification_*.json`
+
+Formato: objeto plano no root, não wrapper `$.data.result`.
+
+Campos observados por família:
+
+- Identidade/localização da propriedade:
+  - `property_address`, `property_city`, `property_state`, `property_zip_code`, `property_id`, `county`, `subdivision`, `legal_description`
+- Características físicas/assessoria:
+  - `bed`, `bath`, `garage`, `pool`, `sq_ft`, `yr_bt`, `appraised_value`, `assessed_value`, `comments`
+- Proprietário/mortgagor/mailing:
+  - `owner_first_name`, `owner_last_name`, `owner_address`, `owner_city`, `owner_state`, `owner_zip_code`, `ownership`, `mortgagor_first_name`, `mortgagor_last_name`
+- Situação/lista/timeline:
+  - `internal_id`, `lead_type`, `date_added`, `date_filed`, `file_number`, `loan_modification_instrument_number`
+- Valuation/financeiro:
+  - `estimated_equity`, `equity`, `estimated_unpaid_balance`, `original_loan_amount`
+
+[... conteúdo completo no arquivo markdown ...]</pre></section><section><h2>09-directskip-payload-inventory.md</h2><pre># 09 — Inventário DirectSkip / skip trace owner-contact payload
+
+Status: análise estática concluída por Worker B.
+Escopo: backend Prop4You read-only em `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/backend/src`; repo de destino em `/home/marcelo-karval/Backup/Projetos/supabase-postgres-18-fork`.
+
+[NO_PROVIDER_CALLS]
+Nenhuma chamada a provider/API foi realizada. A análise usou somente código, testes, fixtures e contratos locais.
+
+[NO_PII_DUMP]
+Este inventário não reproduz valores reais de nomes, telefones, e-mails, endereços, IDs de request ou payloads brutos. Quando fixtures/testes continham PII ou dados com aparência de PII, foram inventariados apenas caminhos, famílias de campos, contagens, chaves e implicações sem valores.
+
+## Resumo executivo
+
+DirectSkip aparece em dois níveis principais:
+
+1. Cliente/contrato operacional de skip trace:
+   - request canônico: owner name + property address + mailing address opcional + custom fields;
+   - response bruto DirectSkip: `status`, `result_code`, `contacts[]` com `names[]`, `phones[]`, `emails[]`, `confirmed_address[]`, `relatives[]`;
+   - response normalizado: `ProviderResponse` com `phones`, `emails`, `related_people`, `addresses`, `confirmed_address`, `owner_returned`, `match_metrics`, `result_metrics`, `raw_data`.
+
+2. Matrix/SourceHub/Lead Finder:
+   - DirectSkip é provider corpus `directskip` / `skip_trace_contact_discovery`;
+   - Matrix compila DTO pre-SourceHub com `materialization_policy = evidence_only_before_sourcehub`;
+   - SourceHub produz handoffs familiares para mailing/contact satellites/relationship evidence e mantém raw provider response como lineage;
+   - promoção para owner/canonical graph é condicionada por candidate graph, owner-match e policy gates; skip trace enriquece, não define verdade canônica de owner/property.
+
+[DIRECTSKIP_PATH_INVENTORY]
+
+| Área | Caminho | Evidência útil |
+|---|---|---|
+| Cliente DirectSkip | `infrastructure/integrations/directskip/client.py` | Payload DirectSkip de 14 campos; parse de `status`, `result_code`, `contacts`, `phones`, `emails`, `confirmed_address`, `relatives`; normaliza para `ProviderResponse`; preserva `raw_data`. |
+| Schemas multi-provider | `infrastructure/integrations/skiptrace/schemas.py` | `StandardSearchFields`, `PhoneContact`, `EmailContact`, `RelativeContact`, `ProviderResponse`; inclui campos forenses `owner_returned`, `match_metrics`, `result_metrics`, `raw_data`. |
+| Modelos de request/result | `domains/data/models/skip_trace.py` | `SkipTraceRequest` guarda owner/property/mailing input; `SkipTraceResult` guarda structured contacts, `owner_returned`, `related_people`, `match_metrics`, `result_metrics`, `raw_response`, `provider_name`. |
+| Cache/auditoria system | `domains/data/models/system_cache.py` | `SystemSkipTraceResult` e `SystemSkipTraceSnapshot`; snapshots têm `request_payload` e `response_payload`; cache dedup inclui owner/contact JSONs. |
+| Auditoria snapshot | `domains/data/services/skip_trace/audit.py` | Enriquecimento de `request_payload` com tracking id e persistência de `response_payload`/error payload. |
+| Orquestração skip trace | `domains/data/services/skip_trace/orchestrator.py` | Conecta `ProviderResponse.raw_data`, `SkipTraceResult` e SourceHub handoffs; mapping version `directskip.skip_trace_contact_discovery.v2`; promotion guard antes de materialização. |
+| Provider contract helpers | `domains/data/services/skip_trace/provider_contract.py` | Construção de request payload/custom fields para DirectSkip. |
+| SourceHub producer | `apps/system/sourcehub/producer.py` | Normaliza `owner_returned`; deriva confidence; constrói candidate graph; bloqueia promoção address-only; produz handoffs por família. |
+| Owner-resolution adapter | `domains/real_estate/services/owner_resolution/skiptrace_adapter.py` | Transforma `SkipTraceResult` em `OwnerIdentityEvidence` por identity, phone, email, address, relationship. |
+| Matrix DTO compiler | `apps/system/matrix/directskip_owner_resolution_dto.py` | Compila payload DirectSkip bruto em semantic primitives e envelope pre-SourceHub. |
+| Matrix field mapping | `apps/system/matrix/directskip_owner_resolution_mapping.py` | Inventário field-level: input context, provider outcome, contacts/names/phones/emails/address/relatives. |
+| Contact specs | `apps/system/matrix/directskip_owner_resolution_contact_specs.py` | Mapeamento das famílias DirectSkip retornadas para owner_identity, owner_phone, owner_email, owner_contact_address, owner_relationship_evidence. |
+| Teste DTO | `apps/system/matrix/tests/test_directskip_owner_resolution_dto.py` | Confirma campos brutos esperados e landing semântico; contém asserts com PII, não reproduzidos aqui. |
+| Teste primitives | `apps/system/matrix/tests/test_directskip_owner_primitives_pilot.py` | Confirma semantic primitives: name, address anchor, mailing address, contact phone, email, relationship person; contém PII, não reproduzidos aqui. |
+| Teste SourceHub promotion | `domains/data/tests/test_skip_trace_sourcehub_promotion.py` | Confirma handoffs por família, Matrix artifact approval, candidate graph e bloqueio de address-only owner promotion; contém fixtures sintéticas com PII-like, não reproduzidas aqui. |
+| Fixture real local | `apps/system/matrix/tests/fixtures/directskip_real_response.json` | Shape real local DirectSkip; top-level `input/status/contacts/result_code`; não foi dumpado. |
+| Registry raw copy | `apps/system/matrix/registry/directskip/skip_trace_contact_discovery/tx/data/undated/directskip_real_response.json` | Cópia corpus local com o mesmo shape DirectSkip; não foi dumpada. |
+| Registry Matrix | `apps/system/matrix/registry/directskip/skip_trace_contact_discovery/{schema,contracts,data,analysis,tx/...}/*.json` | 211 JSONs locais no subtree; análise estática mostra artifacts de schema/contracts/data/analysis para provider/list type, sem chamadas externas. |
+
+## Estruturas de payload observadas
+
+### Request payload / input context
+
+Famílias de campos de entrada DirectSkip:
+
+- Identidade owner solicitada:
+  - `first_name` / `firstname`
+  - `last_name` / `lastname`
+  - `middle_name` aparece no modelo interno `SkipTraceRequest`, mas o payload DirectSkip operacional usa first/last no contrato cliente.
+- Property context:
+  - `property_address`
+  - `property_city` ou `city` conforme camada
+  - `property_state` ou `state`
+  - `property_zip` ou `zip_code`
+  - `property_unit` existe no modelo de request interno, mas não aparece como campo DirectSkip client payload dedicado.
+- Mailing / owner contact context opcional:
+  - `mailing_address` / `mailing_street`
+  - `mailing_city`
+  - `mailing_state`
+  - `mailing_zip`
+- Provider tracking / residue:
+  - `custom_field_1`, `custom_field_2`, `custom_field_3` no cliente;
+  - mapping Matrix também cobre `input.custom_field1`, `input.custom_field2`, `input.custom_field3` em fixture/contract shape;
+  - snapshots adicionam `_tracking_id` no audit layer.
+- Segredos:
+  - cliente monta `api_key`; não deve entrar em payload corpus canônico nem logs/documentos.
+
+Implicação: o request payload mistura owner seed, property context, mailing context e tracking provider slots. O corpus canônico precisa distinguir `request_context` de evidência observada pelo provider.
+
+### Raw response / response_payload shape
+
+Shape DirectSkip bruto local confirmado por código/fixture:
+
+- top-level:
+  - `input`
+  - `status`
+  - `contacts`
+  - `result_code`
+- `status`:
+  - `error`
+- `result_code`:
+  - `result_code`
+- `contacts[]`:
+  - `names[]`
+  - `phones[]`
+  - `emails[]`
+  - `confirmed_address[]`
+  - `relatives[]`
+- `contacts[].names[]` keys observadas/inventariadas:
+  - `firstname`
+  - `lastname`
+  - `age`
+  - `deceased`
+- `contacts[].phones[]`:
+  - `phonenumber`
+  - `phonetype`
+- `contacts[].emails[]`:
+  - `email`
+- `contacts[].confirmed_address[]`:
+  - `street`
+  - `city`
+  - `state`
+  - `zip`
+- `contacts[].relatives[]`:
+  - `name`
+  - `age`
+  - `phones[]`
+- `contacts[].relatives[].phones[]`:
+  - `phonenumber`
+  - `phonetype`
+
+Persistência/lineage:
+
+- `ProviderResponse.raw_data` preserva o bruto.
+- `SkipTraceResult.raw_response` guarda raw provider response.
+- `SystemSkipTraceSnapshot.response_payload` guarda payload de sucesso/erro em auditoria.
+- `SourceHubRawRecord.raw_payload` recebe handoff provider/list type com request public id, provider payloads, metrics e lineage.
+
+## Famílias owner/contact e landing semântico
+
+| Família | Raw DirectSkip | Landing atual | Observação |
+|---|---|---|---|
+| Owner identity | `contacts[].names[].firstname`, `lastname`, `age`, `deceased`; também owner_returned normalizado | `owner_identity`; `OwnerIdentityEvidence` identity fields | Observado pelo provider, mas ainda evidência, não verdade canônica por si só. |
+| Owner phone | `contacts[].phones[].phonenumber`, `phonetype` | `owner_phone`, `PhoneContact`, `OwnerIdentityEvidence.PHONE` | `phonetype` exige normalização de taxonomia; mapping marca gap para novo campo/dicionário. |
+| Owner email | `contacts[].emails[].email` | `owner_email`, `EmailContact`, `OwnerIdentityEvidence.EMAIL` | E-mail é contato satellite; precisa dedupe/normalização lower-case. |
+| Owner contact address / mailing | `contacts[].confirmed_address[].street/city/state/zip` | `owner_contact_address`, mailing/address primitives | Pode diferir de property address; deve virar contact/mailing evidence, não propriedade canônica automaticamente. |
+| Related people | `contacts[].relatives[].name/age/phones[]` | `owner_relationship_evidence`, `related_people`, relationship primitive | Telefones de relatives não devem ser promovidos como owner_phone sem subject/link explícito. |
+| Provider outcome | `status.error`, `result_code.result_code` | provider outcome/result metrics/residue | Operacional/lineage; não é owner property fact. |
+| Request context | `input.*`, `custom_field*` | request context/residue | Útil para comparação e explainability; não deve ser confundido com provider-observed truth. |
+
+## Evidence rows úteis para corpus
+
+| Evidence row | Fonte | Campo(s) | Uso recomendado |
+|---|---|---|---|
+| R1 | `directskip/client.py` parse legacy/modern | `status.error`, `result_code`, first `contacts[]` | Contrato mínimo para parser e provider outcome. |
+| R2 | `directskip/client.py` `_build_payload` | 14-field payload DirectSkip | Dicionário de request context; separar owner/property/mailing/custom/api_key. |
+| R3 | `skiptrace/schemas.py` `ProviderResponse` | `owner_returned`, `match_metrics`, `result_metrics`, `raw_data` | Esqueleto provider-normalized corpus. |
+| R4 | `models/skip_trace.py` `SkipTraceResult` | structured JSON + `raw_response` | Alvo persistido de response bruto e normalizado. |
+| R5 | `matrix/directskip_owner_resolution_mapping.py` | 30 raw fields esperados | Inventário field-level com fit/gap/residue policy. |
+| R6 | `matrix/directskip_owner_resolution_contact_specs.py` | contact family specs | Regras para owner vs related-person contacts. |
+| R7 | `matrix/directskip_owner_resolution_dto.py` | semantic primitives | Ponte para canonical owner resolution pre-SourceHub. |
+| R8 | `sourcehub/producer.py` candidate graph | provider candidates/address-only/relative/co-owner | Regras de promoção e bloqueios. |
+| R9 | `owner_resolution/skiptrace_adapter.py` | `OwnerIdentityEvidence` rows | Como transformar result em evidência addressable por source ref. |
+| R10 | registry `directskip/skip_trace_contact_discovery` | schema/contracts/analysis artifacts | Corpus local Matrix para comparison/drift sem provider call. |
+
+[OWNER_CANONICAL_IMPLICATIONS]
+
+1. DirectSkip deve permanecer enrichment/evidence source. O próprio stack já usa `materialization_policy = evidence_only_before_sourcehub` e Matrix como semantic owner.
+2. Request context não é evidência independente. Nome/endereço enviados ao provider devem ser guardados para lineage/comparação, mas não podem reforçar a própria identidade sem observação retornada.
+3. `confirmed_address` deve ser tratado como owner contact/mailing address candidate. Quando difere de property address, SourceHub já classifica como mailing differs from property; não promover para property truth.
+4. Related-person contacts são subject-linked. Telefones/e-mails/endereços de relatives precisam permanecer vinculados ao related person, não ao owner principal.
+5. Candidate graph é obrigatório para payloads multi-contact ou ambiguous. Address-only match não prova owner identity; co-owner lane requer canonical owner public id; submitted owner relative-only deve bloquear promoção automática de contatos para o owner submetido.
+6. `owner_returned` precisa de comparação com canonical owners e request owner. Sem match de nome/canonical owner, confidence deve ser capado ou promotion blocked.
+7. `phonetype`/phone taxonomy precisa de dicionário canônico antes de uso analítico forte (`Mobile`, `Residential`, `landline`, `voip`, `unknown`, etc.).
+8. Provider outcome (`status.error`, `result_code`) deve alimentar observability, retry/error classification e corpus drift, não owner graph.
+
+## Necessidades de comparação com canonical dictionary
+
+Prioridade alta:
+
+- Mapear `contacts[].phones[].phonetype` para taxonomia canônica de phone type e preservar raw label.
+- Comparar `contacts[].names[]` e `owner_returned` com canonical owner dictionary: name normalization, aliases, middle initials, suffixes, entity type person/company/trust/LLC.
+- Comparar `confirmed_address` com canonical address dictionary: property address vs mailing/contact address; unit normalization; PO Box; occupancy parsing.
+- Formalizar relationship dictionary para `relatives[].relationship` quando presente/ausente; atualmente tests usam fallback/unknown/relative.
+- Definir policy para `age`, `date_of_birth`, `deceased`: identity evidence only, retention/minimization e access controls.
+- Distinguir provider `input.*` field names (`firstname`, `address`, `zip`) de application payload names (`first_name`, `property_address`, `zip_code`) no corpus dictionary.
+- Registrar raw_response key dictionary com versionamento `directskip.skip_trace_contact_discovery.v2` e drift checks.
+
+Prioridade média:
+
+
+[... conteúdo completo no arquivo markdown ...]</pre></section><section><h2>10-realtor-internal-payload-inventory.md</h2><pre># Worker C — Realtor.com/property enrichment + internal payload inventory
+
+[NO_PROVIDER_CALLS]
+
+Escopo executado: inspeção estática de código, testes, contratos e referências a fixtures locais no backend Prop4You. Não foram feitas chamadas a Realtor.com, InstantStreetView, skip-trace providers, Docker, banco runtime ou sistemas externos.
+
+[NO_PII_DUMP]
+
+Este inventário descreve famílias de caminhos JSON, formatos contratuais e implicações canônicas. Valores reais de endereços, nomes, e-mails, telefones, URLs completas, IDs públicos de usuários/propriedades e outros dados sensíveis foram omitidos ou generalizados.
+
+## Evidência inspecionada
+
+Backend read-only analisado em:
+
+- `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/backend/src`
+
+Arquivos principais:
+
+- `apps/system/matrix/realtor_property_enrichment_pre_sourcehub_dto.py`
+- `apps/system/matrix/realtor_property_enrichment_pre_sourcehub_contracts.py`
+- `apps/system/matrix/tests/test_realtor_property_enrichment_pre_sourcehub_dto.py`
+- `apps/system/matrix/tests/test_realtor_property_enrichment_pre_sourcehub_contracts.py`
+- `apps/public/address_entry/queries.py`
+- `apps/public/address_entry/contracts.py`
+- `apps/public/address_entry/tests/test_queries.py`
+- `infrastructure/integrations/realtor/autocomplete_resolution.py`
+- `infrastructure/integrations/tests/test_realtor_autocomplete_resolution.py`
+- `apps/system/sourcehub/producer.py`
+- `apps/system/sourcehub/contracts.py`
+- `domains/data/tests/test_realtor_sourcehub_producer.py`
+- `apps/system/lead_finder/tests/test_realtor_property_enrichment_materialization.py`
+- `apps/public/my_property/service.py`
+- `apps/public/my_property/actions.py`
+- `domains/data/services/skip_trace/validation.py`
+- `domains/real_estate/services/address_entry_normalization_service.py`
+- `domains/real_estate/tests/test_manual_property_coordinate_backfill_service.py`
+
+Fixtures locais referenciadas por testes, sem dump de conteúdo:
+
+- `_projeto-antigo/backend/.reports/realtor_api_endpoints_test/fetch_property_details.json`
+- `_projeto-antigo/backend/.reports/realtor_api_endpoints_test/fetch_property_estimates.json`
+- `_projeto-antigo/backend/.reports/realtor_api_endpoints_test/fetch_property_history.json`
+- `_projeto-antigo/backend/.reports/realtor_api_endpoints_test/fetch_spot_offer_evaluation.json`
+- `_projeto-antigo/backend/.reports/realtor_api_endpoints_test/fetch_similar_homes.json`
+- `_projeto-antigo/backend/.reports/realtor_api_endpoints_test/fetch_nearby_homes.json`
+- `_projeto-antigo/backend/.reports/realtor_api_endpoints_test/fetch_recently_sold.json`
+
+[REALTOR_PATH_INVENTORY]
+
+## 1. Realtor property enrichment — famílias de caminhos JSON
+
+A camada Matrix compila payloads Realtor para `realtor_property_enrichment_pre_sourcehub_dto.v1`; SourceHub consome esse DTO para publicar handoff canônico/semicanônico.
+
+### 1.1 Envelope e raiz
+
+A raiz é normalizada por `_coerce_root(payload)`:
+
+- Se `payload.data` é objeto: raiz = `payload.data`
+- Caso contrário: raiz = `payload`
+
+Caminhos de envelope preservados em `operator_context`:
+
+- `endpoint`
+- `timestamp`
+- `status`
+
+Caminhos usados para referência primária:
+
+- `data.property_id` ou `property_id`
+- `data.permalink` ou `permalink`
+- `raw_envelope.external_reference_id` como fallback SourceHub
+
+### 1.2 Identidade/endereço da propriedade
+
+Caminhos Realtor para seed de localização/ref de propriedade:
+
+- `data.location.address.line`
+- `data.location.address.city`
+- `data.location.address.state_code`
+- `data.location.address.state`
+- `data.location.address.postal_code`
+- `data.property_id`
+
+Destino Matrix:
+
+- `property_seed_ref.street_address`
+- `property_seed_ref.city`
+- `property_seed_ref.state`
+- `property_seed_ref.zip_code`
+- `property_seed_ref.normalized_address`
+- `property_seed_ref.address_hash`
+- `property_seed_ref.provider_property_ref`
+
+Destino SourceHub canonical DTO:
+
+- `canonical_dto.property.location.street_address`
+- `canonical_dto.property.location.city`
+- `canonical_dto.property.location.state`
+- `canonical_dto.property.location.zip_code`
+- `canonical_dto.property.location.normalized_address`
+- `canonical_dto.property.location.address_hash`
+
+Fallback SourceHub quando payload de estimates/history não traz endereço:
+
+- `canonical_property_public_id` é usado para buscar a propriedade canônica existente via `PropertyLeadFinder.objects.select_related(&quot;location&quot;)` e preencher `canonical_dto.property.location` a partir da localização canônica.
+
+### 1.3 Referências do provider/listing/source
+
+Caminhos Realtor:
+
+- `data.property_id`
+- `data.permalink`
+- `data.href`
+- `data.source.id`
+- `data.source.name`
+- `data.source.type`
+- `data.source.listing_id`
+- `data.property_history[].listing.listing_id`
+- `data.property_history[].source_listing_id`
+- `data.property_history[].source_name`
+
+Destino:
+
+- `provider_reference.provider_property_ref`
+- `provider_reference.provider_listing_id`
+- `provider_reference.provider_permalink`
+- `provider_reference.provider_url`
+- `provider_reference.provider_source_id`
+- `provider_reference.provider_source_name`
+- `provider_reference.provider_source_type`
+
+Observação: `provider_reference` preserva identidade do provider; não deve virar identidade canônica de propriedade/owner por si só.
+
+### 1.4 Beds/baths/sqft/year/lot/property type/garage
+
+Caminhos Realtor em property details:
+
+- `data.description.type`
+- `data.description.sub_type`
+- `data.description.beds`
+- `data.description.baths_full`
+- `data.description.baths`
+- `data.description.sqft`
+- `data.description.year_built`
+- `data.description.lot_sqft`
+- `data.description.garage`
+- `data.list_price` como `estimated_value` no seed de detalhes
+
+Destino Matrix:
+
+- `property_details_seed.property_type`
+- `property_details_seed.bedrooms`
+- `property_details_seed.bathrooms`
+- `property_details_seed.square_feet`
+- `property_details_seed.year_built`
+- `property_details_seed.lot_size_sqft`
+- `property_details_seed.estimated_value`
+- `property_details_seed.garage`
+
+Destino SourceHub canonical DTO:
+
+- `canonical_dto.property.details.property_type`
+- `canonical_dto.property.details.bedrooms`
+- `canonical_dto.property.details.bathrooms`
+- `canonical_dto.property.details.square_feet`
+- `canonical_dto.property.details.year_built`
+- `canonical_dto.property.details.garage`
+- `canonical_dto.valuation_financial.estimated_value` quando derivado de `property_details_seed.estimated_value`
+
+Nota: `lot_size_sqft` existe no seed e no contrato de detalhes públicos, mas o runtime SourceHub/Lead Finder visto para Realtor materializa principalmente building/details + valuation; checar materialização explícita de land/lot como evolução separada.
+
+### 1.5 Valuation/estimates/spot offer
+
+Caminhos Realtor de valuation:
+
+- `data.estimates.current_values[]`
+- `data.estimates.current_values[].isbest_homevalue`
+- `data.estimates.current_values[].estimate`
+- `data.estimates.current_values[].estimate_high`
+- `data.estimates.current_values[].estimate_low`
+
+[... conteúdo completo no arquivo markdown ...]</pre></section>
+</body></html>

@@ -617,3 +617,7 @@ documentation updated in the same work cycle
 ## Prop4You provider-payload addendum
 
 For Prop4You and provider-heavy apps, do not freeze tables directly from Django models. Treat Django/Inertia models as evidence and compare provider/internal JSON payloads first. Preserve raw payloads in JSONB with lineage, normalize through mapper-versioned projections, promote only Matrix/LeadFinder-approved semantics into canonical facts/tables, and add generated/projected JSONB-path fields only after path stability and query need are proven. See `docs/issues/00-prop4you-database-centric-extraction-plan/`.
+
+## Prop4You provider corpus gate
+
+For Prop4You, final project DDL must be gated by the provider payload corpus comparison stack in `docs/issues/01-prop4you-provider-payload-corpus/`. REIQ is the current/base data source, DirectSkip is the owner/contact enrichment source, Realtor.com is the broad property enrichment source, and internal/product-originated payloads provide supporting evidence. Use package + subpackages under `database/ddl/projects/prop4you/`; do not freeze final tables before Matrix dictionary review of representative JSON paths.

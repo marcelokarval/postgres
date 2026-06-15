@@ -1,57 +1,37 @@
-# Prop4You Project DDL Package
+# Prop4You DDL package
 
-Prop4You-specific database-centric DDL belongs here.
+Status: skeleton / non-final
 
-This package is a consumer of the PG18 base image/stack. It must not be baked into the PG18 image.
+This package is the future home for Prop4You database-centric DDL.
 
-Canonical platform boundaries:
-
-- Lead Finder defines the canonical graph.
-- Matrix governs semantic meaning and mapping artifacts.
-- SourceHub owns ingress, lineage and canonical DTO publication.
-- Skip Trace enriches; it does not define owner/property truth.
-- Situations are structured facts, not tags.
-
-## Soft-DDD project rule
-
-Prop4You DDL follows `docs/database-centric-soft-ddd-rule.md`.
-
-Schemas are bounded contexts/domains such as:
+Important boundary:
 
 ```text
-identity
-property
-leadfinder
-matrix
-sourcehub
-skiptrace
-realtime
-billing
-audit
-api
+This package is separate from the PG18 base image and base DDL substrate.
+It must not freeze final product tables until provider/internal JSON payload comparison is reviewed.
 ```
 
-The `api` schema is the client/PostgREST facade. Domain tables should not be exposed directly by default.
-
-Potential future scope examples:
+Current decision:
 
 ```text
-org/<org_id>
-property/<property_id>
-lead/<lead_id>
-owner/<owner_id>
-room/<room_id>
+package + subpackages
 ```
 
-File sequence example:
+Initial subpackages:
 
 ```text
-0001_schemas.sql
-0002_identity_and_membership.sql
-0003_canonical_graph.sql
-0004_realtime_scopes.sql
-0005_rls_policies.sql
-0006_rpc_contracts.sql
+sourcehub/   raw ingress, corpus and lineage skeleton
+matrix/      semantic dictionary and provider mapping skeleton
+leadfinder/  canonical graph materialization boundary skeleton
+providers/   shared provider corpus contracts
+reiq/        REIQ-specific corpus notes and future DDL
+skiptrace/   DirectSkip/owner enrichment future DDL
+realtor/     Realtor.com enrichment future DDL
+internal/    manual/product-originated payload future DDL
+identity/    future identity package, not first frozen slice
+geography/   future geography package, not first frozen slice
+property/    future property graph package, gated by corpus/dictionary
+owner/       future owner graph package, gated by DirectSkip/REIQ comparison
 ```
 
-No project SQL files have been installed here yet. The next correct step is to inventory inherited Prop4You scripts and convert them into ordered, reviewable `.sql` files.
+Do not treat this skeleton as final schema. It exists to give future DDL work a governed landing zone.
