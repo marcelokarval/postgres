@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Prop4You DDL lab proof.
-# Applies base DDL + current experimental Prop4You package into a clean lab DB.
+# Applies base DDL + current experimental Prop4You provider/sourcehub/matrix/leadfinder package into a clean lab DB.
 # Does not call providers and does not create raw/fake/redacted payload fixtures.
 
 LAB_DB="${LAB_DB:-pg18_prop4you_ddl_lab}"
@@ -51,6 +51,7 @@ apply_files=(
   "$P4Y_DDL_DIR/providers/0001_provider_registry.sql"
   "$P4Y_DDL_DIR/sourcehub/0001_sourcehub_corpus.sql"
   "$P4Y_DDL_DIR/matrix/0001_semantic_dictionary.sql"
+  "$P4Y_DDL_DIR/leadfinder/0001_canonical_dictionary.sql"
 )
 
 for f in "${apply_files[@]}"; do
@@ -89,7 +90,7 @@ done
 
 validation_sql=$(cat <<'SQL'
 with expected_schemas(schema_name) as (
-  values ('prop4you_provider'), ('prop4you_sourcehub'), ('prop4you_matrix')
+  values ('prop4you_provider'), ('prop4you_sourcehub'), ('prop4you_matrix'), ('prop4you_leadfinder')
 ), expected_tables(schema_name, table_name) as (
   values
     ('prop4you_provider','providers'),
@@ -103,7 +104,12 @@ with expected_schemas(schema_name) as (
     ('prop4you_matrix','canonical_fields'),
     ('prop4you_matrix','mapping_versions'),
     ('prop4you_matrix','provider_path_mappings'),
-    ('prop4you_matrix','mapping_reviews')
+    ('prop4you_matrix','mapping_reviews'),
+    ('prop4you_leadfinder','canonical_dictionary_versions'),
+    ('prop4you_leadfinder','canonical_families'),
+    ('prop4you_leadfinder','canonical_fields'),
+    ('prop4you_leadfinder','canonical_gaps'),
+    ('prop4you_leadfinder','growth_pressure_signals')
 ), missing_schemas as (
   select schema_name from expected_schemas e
   where not exists (select 1 from information_schema.schemata s where s.schema_name=e.schema_name)
@@ -123,8 +129,11 @@ with expected_schemas(schema_name) as (
   select
     (select count(*) from prop4you_provider.providers) as provider_count,
     (select count(*) from prop4you_provider.payload_classes) as payload_class_count,
-    (select count(*) from prop4you_matrix.canonical_families) as canonical_family_count,
-    (select count(*) from prop4you_matrix.mapping_versions) as mapping_version_count
+    (select count(*) from prop4you_matrix.canonical_families) as matrix_mirror_family_count,
+    (select count(*) from prop4you_matrix.mapping_versions) as mapping_version_count,
+    (select count(*) from prop4you_leadfinder.canonical_dictionary_versions) as leadfinder_dictionary_version_count,
+    (select count(*) from prop4you_leadfinder.canonical_families) as leadfinder_family_count,
+    (select count(*) from prop4you_leadfinder.canonical_fields) as leadfinder_field_count
 )
 select jsonb_build_object(
   'missing_schemas', coalesce((select jsonb_agg(schema_name) from missing_schemas), '[]'::jsonb),
@@ -150,7 +159,7 @@ if payload.get('jsonb_path_type_smoke') != 'number':
 if int(payload.get('jsonb_leaf_paths_smoke_count') or 0) < 2:
     errors.append(f"jsonb_leaf_paths_smoke_count={payload.get('jsonb_leaf_paths_smoke_count')!r}")
 counts = payload.get('counts') or {}
-for key in ['provider_count', 'payload_class_count', 'canonical_family_count', 'mapping_version_count']:
+for key in ['provider_count', 'payload_class_count', 'matrix_mirror_family_count', 'mapping_version_count', 'leadfinder_dictionary_version_count', 'leadfinder_family_count', 'leadfinder_field_count']:
     if int(counts.get(key) or 0) <= 0:
         errors.append(f'{key}={counts.get(key)!r}')
 if errors:
@@ -160,7 +169,7 @@ PY
 
 mkdir -p "$(dirname "$REPORT_PATH")"
 cat > "$REPORT_PATH" <<REPORT
-# Prop4You SourceHub + Matrix DDL Lab Proof
+# Prop4You Provider + SourceHub + Matrix + LeadFinder DDL Lab Proof
 
 Status: PASS
 LAB_DB: $LAB_DB
@@ -169,7 +178,7 @@ PGPORT: $PGPORT
 
 ## Scope
 
-Applied base DDL and experimental Prop4You provider/sourcehub/matrix DDL into a clean lab DB.
+Applied base DDL and experimental Prop4You provider/sourcehub/matrix/leadfinder DDL into a clean lab DB.
 
 No provider calls were made.
 No raw/fake/redacted fixtures were created.
@@ -186,8 +195,8 @@ $validation_json
 
 ## Boundary
 
-This proves DDL apply/comment/object smoke for experimental SourceHub + Matrix corpus gate only.
-It does not prove final Prop4You property/owner tables, provider runtime calls, production deployment, or LeadFinder materialization.
+This proves DDL apply/comment/object smoke for experimental Provider + SourceHub + Matrix mirror/candidate + LeadFinder dictionary gate.
+It does not prove final Prop4You property/owner tables, provider runtime calls, production deployment, real raw ingestion, or LeadFinder materialization.
 REPORT
 
 if [[ "$KEEP_DB" != "1" ]]; then

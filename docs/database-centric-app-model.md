@@ -629,3 +629,7 @@ The first experimental Prop4You DDL implementation is documented in `docs/issues
 ## Prop4You LeadFinder canonical cycle correction
 
 The corrected ownership model is documented in `docs/issues/03-prop4you-leadfinder-canonical-cycle-analysis/`. LeadFinder group is the canonical generator and dictionary owner. Matrix consumes a LeadFinder dictionary version plus raw/new evidence to produce a transformation artifact/DTO. SourceHub consumes raw/provider DTO plus Matrix artifact and publishes LeadFinder-consumable JSON/DTO with lineage. Issue 02 SourceHub/Matrix DDL remains experimental until LeadFinder-owned dictionary/gap contracts exist.
+
+## Prop4You LeadFinder dictionary born from raws
+
+The LeadFinder Group owns the canonical dictionary, but that dictionary is born/evolved from raw/provider/internal evidence. `docs/issues/04-prop4you-leadfinder-dictionary-from-raws/` implements the first experimental LeadFinder-owned dictionary DDL at `database/ddl/projects/prop4you/leadfinder/0001_canonical_dictionary.sql`. Matrix `canonical_*` tables are explicitly reclassified as mirror/candidate/review structures; LeadFinder `canonical_*` tables are the dictionary authority.

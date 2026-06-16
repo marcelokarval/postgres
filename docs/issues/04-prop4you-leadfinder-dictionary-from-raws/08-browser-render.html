@@ -1,0 +1,574 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Prop4You LeadFinder Dictionary From Raws — Browser Proof</title><style>body{font-family:system-ui;margin:32px;background:#f8fafc;color:#111827}header{background:#111827;color:white;padding:24px;border-radius:16px}.ok{background:#dcfce7;color:#14532d;border:1px solid #86efac;border-radius:10px;padding:10px 14px;font-weight:700}.badges span{display:inline-block;background:#dbeafe;color:#1e3a8a;border:1px solid #93c5fd;border-radius:999px;padding:4px 10px;margin:4px;font-weight:700}section{background:white;border:1px solid #e5e7eb;border-radius:14px;padding:18px;margin:18px 0}pre{white-space:pre-wrap;background:#0b1020;color:#e5e7eb;padding:14px;border-radius:10px;font:13px ui-monospace,monospace;max-height:720px;overflow:auto}</style></head><body><header><h1>Prop4You LeadFinder Dictionary From Raws</h1><p class="ok">Browser-proof artifact: LeadFinder-owned dictionary v0 born from raw/code/baseline evidence</p><div class="badges"><span>Raw-born canonical</span><span>LeadFinder owns dictionary</span><span>Matrix mirror/candidate</span><span>15 families</span><span>36 fields</span><span>No fixtures</span><span>No provider calls</span><span>PG18 lab PASS</span></div></header><section><h2>01-prd.md</h2><pre># PRD — Prop4You LeadFinder dictionary from raws
+
+Status: draft
+
+## Problem
+
+LeadFinder Group owns the canonical dictionary, but that dictionary is born from raw/provider/internal evidence. The current PG18 DDL has SourceHub and Matrix experimental structures, but lacks a LeadFinder-owned dictionary that can receive raw-derived candidate families/fields and govern what later becomes final LeadFinder materialization.
+
+## Goals
+
+- Analyze the locally found raw-like/provider/baseline evidence into LeadFinder families and fields without PII/raw dumps.
+- Mark Matrix `canonical_*` as experimental mirror/candidate structures, not canonical ownership.
+- Implement LeadFinder-owned canonical dictionary DDL v0 with families, fields, gaps and growth signals.
+- Seed initial family/field candidates from raw/code evidence, including property/owner/phone/email/details/situations/valuation/lineage/opportunity families.
+- Extend lab proof to apply LeadFinder dictionary DDL after provider/sourcehub/matrix experimental DDL.
+- Persist review/final report and browser proof.
+
+## Non-goals
+
+- No final property/owner/phone/email materialization tables yet.
+- No raw corpus ingestion into DB in this slice.
+- No provider calls.
+- No production deployment.
+- No committed raw/fake/redacted fixtures.
+
+## Acceptance criteria
+
+- DDL exists under `database/ddl/projects/prop4you/leadfinder/0001_canonical_dictionary.sql`.
+- Matrix DDL/docs clearly state `canonical_*` are experimental mirrors/candidates.
+- Lab proof applies base + Prop4You provider/sourcehub/matrix/leadfinder DDL in clean PG18 lab DB.
+- Report includes counts and non-claim boundaries.
+- Browser proof renders PRD/task review/final/lab proof.
+</pre></section><section><h2>05-task-review.md</h2><pre># Task Review — LeadFinder dictionary from raws
+
+Status: delivered
+Updated: 2026-06-16T12:32:24
+Reviewer: Thor/default
+
+| Task | Requested | Delivered | Evidence | Verdict |
+| --- | --- | --- | --- | --- |
+| T1 | Create PRD/tasks/ledger stack | Stack 04 with PRD/tasks/ledger/worklog | `00-04` | PASS |
+| T2 | Analyze raw-like/baseline evidence into LeadFinder families/fields | Raw-to-family report with no raw/PII dumps | `08-raw-to-leadfinder-family-field-analysis.md` | PASS |
+| T3 | Design/implement LeadFinder dictionary DDL v0 | DDL with 5 tables, 15 families, 36 field candidates | `leadfinder/0001_canonical_dictionary.sql`; `09-leadfinder-dictionary-ddl-review.md` | PASS |
+| T4 | Reclassify Matrix canonical tables as mirror/candidate | Matrix README/DDL comments/seed metadata patched; C timeout recovered by Thor | `10-matrix-canonical-mirror-reclassification.md`; `C-status.md` | PASS |
+| T5 | Integrate lab proof and validate in PG18 clean lab | Proof script applies provider/sourcehub/matrix/leadfinder and validates counts/comments/helpers | `docs/reports/prop4you-sourcehub-matrix-ddl-lab-proof.md` | PASS |
+| T6 | Browser-proof + vision QA | Pending before browser step | `06-browser-proof.md`; `08-browser-render.html` | PENDING |
+| T7 | Final report/commit/push | Pending final gate | `07-final-report.md` | PENDING |
+
+## Requested vs delivered
+
+| User point | Delivered |
+| --- | --- |
+| LeadFinder Group nasce da análise dos raws | DDL dictionary v0 uses raw-derived candidate source basis and evidence_origin metadata |
+| Seed fields/families as most correct | Seeded 15 families and 36 field candidates, not only families |
+| Reclassify Matrix now | Matrix canonical_* reclassified as mirror/candidate/review now |
+| Analyze raws to model LeadFinder Group | Report maps raw-like DirectSkip/REIQ + baselines/code to family/field candidates |
+| Use PG18 JSONB power without premature freeze | JSONB evidence_origin/metadata + future projection gate; no final materialization tables yet |
+
+## Parent corrections/recovery
+
+- Worker C timed out after writing artifacts; Thor verified artifacts and created recovery status.
+- Lab proof regenerated after adding LeadFinder DDL.
+- Report naming updated to Provider + SourceHub + Matrix + LeadFinder.
+</pre></section><section><h2>07-final-report.md</h2><pre># Final Report — LeadFinder dictionary from raws
+
+Status: delivered before browser/commit final gate
+Updated: 2026-06-16T12:32:24
+Owner/reviewer: Thor/default
+
+## Verdict
+
+SUPPORTED for experimental/non-final LeadFinder-owned canonical dictionary v0 born from local raw/code/baseline evidence, plus Matrix mirror/candidate reclassification and clean PG18 lab proof.
+
+NOT CLAIMED:
+
+- final property/owner/phone/email materialization;
+- real private raw ingestion into DB;
+- provider runtime calls;
+- production deploy;
+- generated columns/indexes on final provider paths.
+
+## Delivered DDL
+
+```text
+database/ddl/projects/prop4you/leadfinder/0001_canonical_dictionary.sql
+database/ddl/projects/prop4you/leadfinder/README.md
+```
+
+LeadFinder objects:
+
+```text
+prop4you_leadfinder.canonical_dictionary_versions
+prop4you_leadfinder.canonical_families
+prop4you_leadfinder.canonical_fields
+prop4you_leadfinder.canonical_gaps
+prop4you_leadfinder.growth_pressure_signals
+```
+
+Seeded:
+
+```text
+leadfinder.raw_candidate.v0
+15 family candidates
+36 field candidates
+```
+
+## Matrix reclassification
+
+```text
+prop4you_matrix.canonical_families = mirror/candidate/review
+prop4you_matrix.canonical_fields = mirror/candidate/review
+```
+
+LeadFinder now owns canonical dictionary authority.
+
+## Lab proof
+
+Report:
+
+```text
+docs/reports/prop4you-sourcehub-matrix-ddl-lab-proof.md
+```
+
+Validation summary:
+
+```text
+provider_count: 4
+payload_class_count: 5
+mapping_version_count: 4
+matrix_mirror_family_count: 7
+leadfinder_dictionary_version_count: 1
+leadfinder_family_count: 15
+leadfinder_field_count: 36
+missing_schemas: []
+missing_tables: []
+uncommented_tables: []
+jsonb_path_type_smoke: number
+jsonb_leaf_paths_smoke_count: 2
+```
+
+## Raw/code evidence conclusion
+
+The dictionary is raw-born but governed:
+
+- DirectSkip raw-like evidence motivates owner/contact/relationship/address candidates.
+- REIQ raw-like evidence motivates property/details/situation/valuation/owner/taxonomy candidates.
+- LeadFinder baselines/models/tests expand the initial family set beyond the two narrow raw files.
+- Realtor remains code-supported but not raw-supported in local JSON scan.
+
+## Next steps
+
+1. Add Matrix mapping_sessions/transformation_artifacts linked to `prop4you_leadfinder.canonical_dictionary_versions`.
+2. Add SourceHub translated DTO publication table linked to raw_record + Matrix artifact + LeadFinder dictionary version.
+3. Implement raw ingestion to lab DB from private corpus using raw JSONB, with no repo payload commits.
+4. Implement both SQL and Python path candidate extractors; compare outputs.
+5. Implement both pgmq + polling enrichment request execution model.
+6. Only after that start canonical materialization tables: property, property_details/photos/history/situation/valuation, owner, ownership_history, phone/email/contact satellites, lead/opportunity.
+
+## Questions for next slice
+
+1. Should the next slice be Matrix `mapping_sessions/transformation_artifacts` or SourceHub `translated_dto_publications` first?
+2. Should raw ingestion into lab DB load the two local raw-like files immediately, or wait for private corpus files under `~/.hermes/private/prop4you-provider-corpus/`?
+3. Should field candidates be promoted from `candidate` to `in_review` only after path extractor output exists?
+</pre></section><section><h2>08-raw-to-leadfinder-family-field-analysis.md</h2><pre># 08 — Análise raw/local para candidatos LeadFinder família/campo
+
+Status: entregue
+Escopo: Worker A
+Idioma: pt-BR
+
+[NO_PROVIDER_CALLS]
+Nenhuma chamada a provider, API externa, web ou serviço remoto foi executada. A análise usou apenas arquivos locais sob:
+
+- PG18: `/home/marcelo-karval/Backup/Projetos/supabase-postgres-18-fork/postgres`
+- Prop4You backend read-only: `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/backend/src`
+
+[NO_PII_DUMP]
+Este relatório não despeja valores raw, nomes reais, endereços, telefones, emails, IDs de pessoas/propriedades, payloads integrais, secrets ou respostas de provider. A evidência raw é limitada a caminhos, tipos estruturais, nomes de campos/chaves e contagens estruturais. Campos de contato/identidade aparecem apenas como nomes canônicos ou paths sem valores.
+
+## Evidência local consultada
+
+- Issue 03:
+  - `docs/issues/03-prop4you-leadfinder-canonical-cycle-analysis/08-raw-corpus-evidence.md`
+  - `docs/issues/03-prop4you-leadfinder-canonical-cycle-analysis/11-executive-synthesis.md`
+- Raw-like local, por paths/tipos:
+  - `apps/system/matrix/registry/directskip/skip_trace_contact_discovery/tx/data/undated/directskip_real_response.json`
+  - `apps/system/matrix/registry/reiq/loan_modification/fl/data/2025-11-27/FL_loan-modification_c45a1057-8de0-11ee-9e90-42010a800019.json`
+- LeadFinder baseline/genome:
+  - `apps/system/lead_finder/artifacts/lead_finder_default_genome.lf_default.v1.json`
+  - `apps/system/lead_finder/baselines/owner/*.json`
+  - `apps/system/lead_finder/baselines/owner/model_inventory/*.json`
+- LeadFinder/SourceHub contracts e materializers:
+  - `apps/system/lead_finder/contracts.py`
+  - `apps/system/lead_finder/hydration.py`
+  - `apps/system/sourcehub/contracts.py`
+  - `apps/system/sourcehub/property_details_normalization.py`
+  - `apps/system/sourcehub/legal_timeline_normalization.py`
+  - `apps/system/sourcehub/valuation_financial_normalization.py`
+- Django-era canonical graph/model evidence:
+  - `domains/real_estate/models/canonical_graph.py`
+  - `domains/real_estate/models/canonical_party_graph.py`
+  - `domains/real_estate/models/detail_models.py`
+  - `domains/real_estate/models/valuation_models.py`
+  - `domains/real_estate/models/situation_models.py`
+  - `domains/real_estate/models/event_models.py`
+  - `domains/real_estate/models/lead_intelligence_models.py`
+  - `domains/real_estate/models/relationship_models.py`
+  - `domains/real_estate/models/history_models.py`
+
+## Resumo de suporte observado
+
+- Raw-supported local forte/estreito:
+  - DirectSkip: contato/skip trace com input de endereço/nome e arrays de contatos, emails, phones, relatives, confirmed_address.
+  - REIQ loan_modification/fl: registro flat scalar-heavy com propriedade, owner/mortgagor, legal/loan, datas, valuation/financial e taxonomy/list type.
+- Code/baseline-supported amplo:
+  - LeadFinder default genome já enumera 10 famílias: `identity_address`, `property_details`, `owner_ownership`, `mailing_address`, `contact_satellites`, `party_roles`, `relationship_evidence`, `legal_timeline`, `valuation_financial`, `systemic_taxonomy`.
+  - `LeadFinderMaterializationFamily` adiciona `entity_representatives` como família explícita em contratos/hydration, embora o artifact default genome consultado não a liste como family_catalog separada.
+  - Baselines owner cobrem `owner_identity`, `owner_structural_position`, `owner_contact_address`, `owner_phone`, `owner_email`, `owner_relationship_evidence`.
+- Não suportado por raw local nesta rodada:
+  - Realtor raw JSON local; há code/test evidence para property enrichment/comparables/market, mas sem raw-like JSON em `backend/src` segundo issue 03.
+  - Corpus privado local; issue 03 reportou caminho existente com 0 JSONs.
+
+[RAW_TO_CANONICAL]
+
+Mapeamento recomendado de evidência raw/local para famílias LeadFinder. `Suporte` usa:
+
+- RAW: aparece em raw-like JSON local por path/tipo/campo.
+- CODE: aparece em SourceHub/LeadFinder contracts, normalizers, hydration ou Django models/tests.
+- BASELINE: aparece em LeadFinder default genome ou owner baselines.
+
+| Evidência local sem valores | Família LeadFinder candidata | Campos canônicos iniciais | Suporte |
+|---|---|---|---|
+| DirectSkip `input.*` com endereço de propriedade e contexto de busca | `identity_address` | `street_address`, `city`, `state`, `zip_code`, `normalized_address`, `address_hash`, `country`, `provider_property_ref` quando houver ref externa | RAW, CODE, BASELINE |
+| DirectSkip `contacts[].confirmed_address[]` | `mailing_address` / `owner_contact_address` | `mailing_address`, `contact_address_type`, `is_po_box`, `mailing_equals_property`, `property_address_match_status`, `property_address_confirmed_by_provider`, `system_address`, `address_type`, `validation_status`, `is_deliverable` | RAW, CODE, BASELINE |
+| DirectSkip `contacts[].phones[]` | `contact_satellites` / `owner_phone` | `phone_number`, `phone_normalized`, `phone_type`, `phone_subtype`, `contact_role`, `contact_source_confidence`, `status`, `is_valid`, `is_dnc`, `quality_score`, `last_called_at`, `call_count` | RAW, CODE, BASELINE |
+| DirectSkip `contacts[].emails[]` | `contact_satellites` / `owner_email` | `email`, `email_address`, `email_normalized`, `email_type`, `contact_role`, `contact_source_confidence`, `status`, `is_valid`, `is_primary`, `quality_score`, `bounce_type`, `bounce_count` | RAW, CODE, BASELINE |
+| DirectSkip `contacts[].names[]` | `owner_ownership`, `owner_identity`, `party_roles` | `display_name`, `entity_type`, `first_name`, `middle_name`, `last_name`, `company_name`, `role_in_record`, `party_ref` | RAW, CODE, BASELINE |
+| DirectSkip `contacts[].relatives[]` | `relationship_evidence` | `evidence_ref`, `display_name`, `first_name`, `middle_name`, `last_name`, `relationship_label`, `relationship_type`, `age`, `identity_resolution_status`, `owner_match_confidence`, `relationship_evidence_confidence` | RAW, CODE, BASELINE |
+| DirectSkip `status` / `result_code` | `source_lineage` / operational metadata, não domínio final | `provider_slug`, `list_type_slug`, `raw_record_public_id`, `payload_hash`, `provider_mapping_ref`, `mapping_version`, `runtime_approval_mode`, `ingested_at`, `processed_at` | RAW, CODE |
+| REIQ property address fields | `identity_address` | `street_address`, `city`, `state`, `zip_code`, `county`, `apn`, `provider_property_ref`, `normalized_address`, `address_hash` | RAW, CODE, BASELINE |
+| REIQ building/detail fields | `property_details` | `bedrooms`, `bathrooms`, `square_feet`, `garage`, `pool`, `year_built`, `subdivision`, `legal_description`, `property_type`, `lot_size_sqft` | RAW, CODE, BASELINE |
+| REIQ date/file/instrument/list fields | `legal_timeline` | `source_list_type_slug`, `lead_type`, `record_date`, `date_filed`, `instrument_no`, `external_reference_id`, `document_id`, `case_number`, `situation_type`, `situation_status` | RAW, CODE, BASELINE |
+| REIQ loan/equity/value fields | `valuation_financial` | `estimated_value`, `assessed_value`, `appraised_value`, `estimated_equity`, `equity_amount`, `equity_percentage`, `estimated_unpaid_balance`, `original_loan_amount`, `interest_rate`, `maturity_date`, `creditor_name`, `loan_type` | RAW, CODE, BASELINE |
+| REIQ owner/mortgagor/ownership fields | `owner_ownership`, `owner_identity`, `party_roles` | `display_name`, `entity_type`, `first_name`, `last_name`, `ownership_type`, `owner_occupancy_status`, `absentee_owner`, `occupancy_hint`, `role_type`, `role_in_record` | RAW, CODE, BASELINE |
+| REIQ owner mailing fields | `mailing_address` / `owner_contact_address` | `mailing_address`, `contact_address_type`, `mailing_equals_property`, `is_po_box`, `system_address`, `source_confidence` | RAW, CODE, BASELINE |
+| REIQ `lead_type` / source list context | `systemic_taxonomy` plus `legal_timeline` provenance | `source_list_type`, `source_list_type_slug`, `lead_situation_type`, `system_property_tag`, `system_property_label`; do not auto-promote source list to final situation without Matrix/LF dictionary rule | RAW, CODE, BASELINE |
+
+[FAMILY_FIELD_CANDIDATES]
+
+Famílias recomendadas para LeadFinder dictionary v0, com candidatos iniciais. A lista prioriza campos com pelo menos um dos suportes locais acima e separa aliases/overlays de verdade canônica final.
+
+1. `identity_address`
+   - Objetivo: identidade física/endereço/parcel anchor do imóvel.
+   - Campos iniciais: `street_address`, `secondary_address_line`, `address_number`, `street_line`, `street_name`, `street_pre_directional`, `street_post_type`, `street_post_directional`, `occupancy_type`, `occupancy_identifier`, `city`, `state`, `zip_code`, `county`, `country`, `apn`, `normalized_address`, `address_hash`, `latitude`, `longitude`, `provider_property_ref`.
+   - Suporte: RAW DirectSkip/REIQ; CODE SourceHub `CanonicalPropertyLocationBlock`, `CanonicalAddressSeedBlock`, LeadFinder acquisition/hydration, `PropertyLocation`; BASELINE default genome.
+
+2. `property_details`
+   - Objetivo: características físicas, land/building e detalhes reduzidos para materialização.
+   - Campos iniciais: `property_type`, `bedrooms`, `bathrooms`, `square_feet`, `year_built`, `garage`, `pool`, `lot_size_sqft`, `subdivision`, `legal_description`, `listing_status`, `listing_price`, `days_on_market`, `features`, `hoa_fee`, `hoa_name`, `neighborhood`.
+   - Suporte: RAW REIQ para bed/bath/sqft/garage/pool/year/legal/subdivision; CODE normalizer/details model/Realtor materialization tests; BASELINE default genome para core reduced slice.
+   - Nota: `estimated_value` aparece como details-seed em normalizer mas pertence semanticamente a `valuation_financial`; manter como cross-family candidate ou projection-only no seed.
+
+3. `owner_identity`
+   - Objetivo: identidade da entidade proprietária/pessoa/empresa antes de papéis ou contato.
+   - Campos iniciais: `entity_type`, `display_name`, `legal_name`, `first_name`, `middle_name`, `last_name`, `full_name_normalized`, `age`, `is_deceased`, `company_name`, `company_name_normalized`, `company_ein`, `company_type`, `primary_address_normalized`, `slug_id`, `data_sources`, `source_confidence`.
+   - Suporte: RAW DirectSkip names e REIQ mortgagor/owner fields; CODE `OwnerEntity`, SourceHub owner/projection blocks, LeadFinder hydration; BASELINE owner identity.
+
+4. `owner_ownership`
+   - Objetivo: relação owner-property e postura de ocupação/investidor.
+   - Campos iniciais: `owner_ref`, `ownership_type`, `ownership_percentage`, `is_current`, `from_date`, `to_date`, `owner_occupancy_status`, `absentee_owner`, `occupancy_hint`, `is_absentee`, `absentee_state`, `is_in_state`, `investor_score`, `is_cash_buyer`, `portfolio_size`, `purchase_price`, `purchase_method`, `role_in_record`.
+   - Suporte: RAW REIQ ownership/mortgagor hints; CODE `Ownership`, owner projection promotion rules; BASELINE default genome and owner_structural_position.
+
+5. `mailing_address` / `owner_contact_address`
+   - Objetivo: endereço de contato/mailing distinto da identidade física do imóvel.
+   - Campos iniciais: `mailing_address`, `address_line`, `secondary_address_line`, `city`, `state`, `zip_code`, `county`, `country`, `normalized_address`, `address_hash`, `contact_address_type`, `address_type`, `is_primary`, `is_current`, `is_po_box`, `is_property`, `is_deliverable`, `mailing_equals_property`, `mailing_truth_status`, `property_address_match_status`, `property_address_confirmed_by_provider`, `validation_status`, `system_address`, `source_confidence`.
+   - Suporte: RAW DirectSkip confirmed address and REIQ owner address fields; CODE SourceHub mailing/role address seed blocks and `OwnerContactAddress`; BASELINE default genome + owner_contact_address.
+
+6. `contact_satellites` / `owner_phone` / `owner_email`
+   - Objetivo: telefones/emails como satélites de contato da entidade, com qualidade/status operacional.
+   - Campos phone: `phone_number`, `phone_normalized`, `phone_type`, `phone_subtype`, `contact_role`, `contact_source_confidence`, `status`, `is_valid`, `is_dnc`, `dnc_registered_at`, `dnc_reason`, `last_called_at`, `call_count`, `quality_score`.
+   - Campos email: `email`, `email_address`, `email_normalized`, `email_type`, `contact_role`, `contact_source_confidence`, `status`, `is_valid`, `is_primary`, `bounce_type`, `bounce_reason`, `bounce_count`, `last_bounce_at`, `last_sent_at`, `sent_count`, `open_count`, `click_count`, `quality_score`.
+   - Suporte: RAW DirectSkip phones/emails; CODE SourceHub contact seed blocks, LeadFinder hydration, `OwnerPhone`, `OwnerEmail`; BASELINE default genome + owner_phone/owner_email.
+
+7. `party_roles`
+   - Objetivo: papéis heterogêneos de pessoas/entidades em um registro sem forçar tudo a owner atual.
+   - Campos iniciais: `party_ref`, `role_type`, `display_name`, `entity_type`, `first_name`, `middle_name`, `last_name`, `company_name`, `related_owner_ref`, `relationship`, `source_reference`, `is_current`, `source_confidence`.
+   - Suporte: RAW REIQ mortgagor/owner role pressure, DirectSkip names adjacent to contact result; CODE `CanonicalPartyRoleSeedBlock`, `PartyRole`; BASELINE default genome + owner_structural_position.
+
+8. `entity_representatives`
+   - Objetivo: representação empresa -&gt; pessoa quando provider ou resolução distinguir company owner de representante.
+   - Campos iniciais: `representative_ref`, `company_owner_ref`, `role_type`, `display_name`, `first_name`, `last_name`, `title`, `is_active`, `from_date`, `to_date`, `source_reference`, `source_confidence`.
+   - Suporte: CODE LeadFinder materialization family, SourceHub `CanonicalEntityRepresentativeSeedBlock`, `OwnerEntityRepresentative`, hydration/tests; BASELINE owner_structural_position has representative fields. RAW local direto: não observado no corpus estreito, portanto `code/baseline-supported`, não `raw-supported`.
+
+9. `relationship_evidence`
+   - Objetivo: evidência de parentes/associados e relação pessoa-pessoa sem promover a owner/property role.
+   - Campos iniciais: `evidence_ref`, `display_name`, `first_name`, `middle_name`, `last_name`, `relationship_label`, `relationship_type`, `age`, `identity_resolution_status`, `possible_duplicate_of_owner`, `duplicate_intelligence_note`, `duplicate_resolution_vote_required`, `owner_match_confidence`, `relationship_evidence_confidence`, `phone_seeds`, `email_seeds`.
+   - Suporte: RAW DirectSkip relatives; CODE SourceHub relationship seed, LeadFinder relationship materialization, `PersonRelationship`; BASELINE default genome + owner_relationship_evidence.
+
+10. `legal_timeline`
+    - Objetivo: datas/documentos/casos/list-origin que descrevem eventos legais e situação do imóvel.
+    - Campos iniciais: `source_list_type_slug`, `lead_type`, `record_date`, `record_date_at`, `date_filed`, `date_filed_at`, `auction_date_time`, `court_hearing_date`, `date_of_death`, `date_of_death_at`, `case_number`, `document_id`, `instrument_no`, `external_reference_id`, `doc_type`, `situation_type`, `situation_status`.
+    - Suporte: RAW REIQ date/file/instrument/lead type fields; CODE SourceHub legal timeline normalizer, `PropertySituation`, `PropertyEvent`; BASELINE default genome.
+
+11. `valuation_financial`
+    - Objetivo: valuation, equity, mortgage/loan/creditor evidence.
+    - Campos iniciais: `estimated_value`, `assessed_value`, `appraised_value`, `estimated_equity`, `equity_amount`, `equity_percentage`, `mortgage_balance`, `estimated_unpaid_balance`, `original_loan_amount`, `interest_rate`, `historical_interest_rate`, `loan_type`, `maturity_date`, `maturity_date_at`, `new_principal_balance`, `monthly_principal_interest_payment`, `monthly_escrow_payment_amount`, `total_monthly_payment`, `payment_begins_on`, `interest_rate_date_change`, `months_to_pay`, `loan_origination_month`, `loan_origination_year`, `creditor_name`, `mortgagee_bank_name`, `min_bid`, `adjudged_value`.
+    - Suporte: RAW REIQ loan/equity/value fields; CODE SourceHub valuation normalizer/contracts, `PropertyValuation`; BASELINE default genome.
+
+12. `systemic_taxonomy`
+    - Objetivo: t</pre></section><section><h2>09-leadfinder-dictionary-ddl-review.md</h2><pre># Review — LeadFinder dictionary DDL v0
+
+Status: implemented by Worker B
+
+## [LEADFINDER_OWNS_CANONICAL]
+
+Implemented an experimental/non-final LeadFinder-owned dictionary package in `database/ddl/projects/prop4you/leadfinder/0001_canonical_dictionary.sql`.
+
+The DDL explicitly declares that LeadFinder owns canonical dictionary semantics. Matrix remains a mirror/candidate mapping and review support layer; SourceHub remains raw ingress/lineage owner.
+
+## [NO_FIXTURES]
+
+No fixtures were created. The seed data is limited to dictionary version, family candidates, and field candidates. It contains only semantic labels, descriptions, review metadata, and `evidence_origin` category labels.
+
+No raw payload values, fake payloads, redacted payloads, names, phone numbers, emails, addresses, provider responses, or secrets were inserted.
+
+## [NO_PROVIDER_CALLS]
+
+No provider calls were made or implemented. The SQL has no HTTP/client/runtime enrichment logic.
+
+Local DB validation was attempted but the running local PostgreSQL instance rejects the current OS role and peer-auth postgres access:
+
+- `psql --version`: PostgreSQL client 16.14 available.
+- `pg_isready`: local server accepting connections.
+- `psql -d postgres`: failed with `FATAL: role &quot;marcelo-karval&quot; does not exist`.
+- `psql -U postgres -d postgres`: failed with `FATAL: Peer authentication failed for user &quot;postgres&quot;`.
+- `sudo -n -u postgres ...`: failed because sudo requires a password.
+
+Static repository checks were run instead:
+
+- `git diff --check -- database/ddl/projects/prop4you/leadfinder/0001_canonical_dictionary.sql database/ddl/projects/prop4you/leadfinder/README.md` returned cleanly.
+- Python static count check confirmed expected object/comment/seed markers.
+
+## [DDL_OBJECTS]
+
+Created DDL for schema `prop4you_leadfinder` and these tables:
+
+1. `prop4you_leadfinder.canonical_dictionary_versions`
+   - UUIDv7 primary key.
+   - Unique `version_key`.
+   - JSONB `metadata` object constraint.
+   - Review/source/ownership constraints.
+
+2. `prop4you_leadfinder.canonical_families`
+   - UUIDv7 primary key.
+   - FK to dictionary version.
+   - Unique `(dictionary_version_id, family_key)`.
+   - Candidate status, family role, JSONB `evidence_origin`, JSONB `metadata`.
+   - B-tree and GIN indexes.
+
+3. `prop4you_leadfinder.canonical_fields`
+   - UUIDv7 primary key.
+   - FK to dictionary version and family.
+   - Unique `(dictionary_version_id, family_id, field_key)`.
+   - Candidate status, materialization intent, privacy classification, JSONB `evidence_origin`, JSONB `metadata`.
+   - B-tree and GIN indexes.
+
+4. `prop4you_leadfinder.canonical_gaps`
+   - UUIDv7 primary key.
+   - FK to dictionary version, optional family, optional field.
+   - Unique `(dictionary_version_id, gap_key)`.
+   - Gap kind/severity/status constraints and indexes.
+
+5. `prop4you_leadfinder.growth_pressure_signals`
+   - UUIDv7 primary key.
+   - FK to dictionary version, optional family, optional field.
+   - Unique `(dictionary_version_id, signal_key)`.
+   - Signal kind/status/pressure constraints and indexes.
+
+Seeded dictionary version:
+
+- `leadfinder.raw_candidate.v0`
+
+Seeded approved family list:
+
+- `property_identity`
+- `property_details`
+- `property_media`
+- `property_history`
+- `situation_legal`
+- `valuation_financial`
+- `owner_identity`
+- `ownership_history`
+- `party_roles`
+- `owner_contact_address`
+- `owner_phone`
+- `owner_email`
+- `relationship_evidence`
+- `lead_opportunity`
+- `source_lineage`
+
+Seeded field candidates include property reference/address/parcel candidates, property detail/media/history candidates, situation/legal candidates, valuation/financial candidates, owner identity/ownership/party-role candidates, owner contact address/phone/email quality candidates, relationship evidence candidates, lead opportunity candidates, and source lineage reference candidates.
+
+## [COMMENT_COVERAGE]
+
+Comment coverage added for:
+
+- Schema: `prop4you_leadfinder`.
+- All 5 tables.
+- All 64 table columns.
+
+Static count result from the implemented SQL:
+
+```text
+create_table_count 5
+comment_table_count 5
+comment_column_count 64
+uuidv7_count 5
+no_fixtures_marker True
+no_provider_calls_marker True
+leadfinder_marker True
+family_seed_count 15
+```
+
+## [RISKS]
+
+- Runtime SQL execution against `pg18_ddl_lab` could not be completed from this session due local PostgreSQL authentication constraints. Parent/Thor should run the integrated lab proof with appropriate DB credentials.
+- The dictionary is intentionally non-final. Candidate fields are semantic placeholders and must not be treated as final materialized property/owner/contact/lead schema.
+- `evidence_origin` metadata contains only category labels; downstream reviewers must continue to prevent raw payload values or PII from being copied into dictionary metadata.
+- Future DDL may need lifecycle triggers/public refs if the broader Prop4You package standardizes those for dictionary objects.
+</pre></section><section><h2>10-matrix-canonical-mirror-reclassification.md</h2><pre># Matrix canonical tables reclassification
+
+Status: delivered by Worker C
+
+[MATRIX_IS_NOT_CANONICAL_OWNER]
+
+Matrix is not the canonical owner of the LeadFinder dictionary. The canonical ownership target for dictionary families/fields/versions belongs to LeadFinder. Matrix remains a review/mapping package for provider/internal JSONB corpus comparison.
+
+[MIRROR_CANDIDATE_REVIEW]
+
+The existing `prop4you_matrix.canonical_families` and `prop4you_matrix.canonical_fields` names are retained for compatibility, but their classification is now experimental mirror/candidate/review:
+
+- `canonical_families`: Matrix mirror/candidate/review family catalog.
+- `canonical_fields`: Matrix mirror/candidate/review field meaning catalog.
+- `provider_path_mappings.canonical_field_id`: compatibility column pointing to a Matrix review field candidate, not proof of canonical dictionary ownership.
+- `mapping_reviews.canonical_field_id`: review linkage to a Matrix candidate field, while LeadFinder remains the canonical dictionary owner.
+
+[NO_BREAKING_CHANGE]
+
+The patch does not remove objects, rename tables/columns, add constraints, or add an FK to a table that may not exist yet. It changes only comments and safe seed metadata/descriptions in the idempotent Matrix DDL.
+
+[DDL_PATCH]
+
+Changed files:
+
+- `database/ddl/projects/prop4you/matrix/0001_semantic_dictionary.sql`
+- `database/ddl/projects/prop4you/matrix/README.md`
+
+DDL-level changes:
+
+- Added package markers documenting that Matrix is not canonical dictionary owner.
+- Updated schema/table/column comments to say Matrix rows are mirror/candidate/review structures.
+- Added comments noting future non-breaking lineage/FK target to `leadfinder_dictionary_version` after LeadFinder dictionary DDL exists.
+- Updated seeded `canonical_families` descriptions and metadata with:
+  - `dictionary_owner: leadfinder`
+  - `matrix_classification: mirror_candidate_review`
+  - `future_fk: leadfinder_dictionary_version`
+
+[RISKS]
+
+- Existing object names still include `canonical_*` for compatibility, so consumers must read comments/README and not infer ownership from names.
+- No FK was added now because the LeadFinder dictionary version table/contract is not present in this slice; adding it prematurely could break lab apply.
+- Seed metadata updates are idempotent but will overwrite previous metadata for these seeded families through the existing `on conflict` path.
+</pre></section><section><h2>11-executive-synthesis.md</h2><pre># 11 — Executive synthesis: LeadFinder dictionary born from raws
+
+Status: delivered
+Updated: 2026-06-16T12:32:24
+Reviewer: Thor/default
+
+## Core correction
+
+The canonical center is owned by LeadFinder Group, but it is born/evolved from raw analysis. The safe model is not provider-first and not top-down-only. It is governed feedback:
+
+```text
+raw/provider/internal evidence
+  -&gt; LeadFinder family/field candidates
+  -&gt; LeadFinder dictionary version
+  -&gt; Matrix transformation artifact
+  -&gt; SourceHub translated DTO
+  -&gt; LeadFinder materialization
+  -&gt; LeadFinder gaps/growth pressure
+  -&gt; next dictionary version
+```
+
+## What changed in DDL
+
+- Added LeadFinder-owned dictionary package:
+  - `prop4you_leadfinder.canonical_dictionary_versions`
+  - `prop4you_leadfinder.canonical_families`
+  - `prop4you_leadfinder.canonical_fields`
+  - `prop4you_leadfinder.canonical_gaps`
+  - `prop4you_leadfinder.growth_pressure_signals`
+- Seeded `leadfinder.raw_candidate.v0`.
+- Seeded 15 family candidates and 36 field candidates.
+- Reclassified Matrix `canonical_*` as mirror/candidate/review, not canonical ownership.
+
+## Raw-derived insight
+
+Local raw-like corpus is narrow but enough to justify v0 candidate families:
+
+- DirectSkip raw-like structure supports owner/contact/relationship/address evidence.
+- REIQ loan-modification raw-like structure supports property identity/details, legal/situation, valuation/loan/equity, owner hints and taxonomy pressure.
+- LeadFinder baselines/models/tests support broader families that are not fully represented by raw local files yet.
+- Realtor remains code-supported but lacks raw-like JSON evidence in local scan.
+
+## Correct status of issue 02
+
+Issue 02 is now explicitly experimental:
+
+```text
+prop4you_matrix.canonical_* = Matrix mirror/candidate/review
+prop4you_leadfinder.canonical_* = LeadFinder-owned dictionary authority
+```
+
+## PG18/JSONB stance
+
+This keeps PG18 JSONB power available without prematurely freezing tables:
+
+- raw payloads remain JSONB evidence;
+- LeadFinder dictionary records raw-derived concepts without raw values;
+- Matrix maps JSONB paths to candidate fields/artifacts;
+- SourceHub later publishes translated DTO JSONB;
+- generated/projected fields should be added only after dictionary + artifact + usage stability.
+</pre></section><section><h2>lab-proof-report</h2><pre># Prop4You Provider + SourceHub + Matrix + LeadFinder DDL Lab Proof
+
+Status: PASS
+LAB_DB: pg18_prop4you_ddl_lab
+PGHOST: 127.0.0.1
+PGPORT: 54318
+
+## Scope
+
+Applied base DDL and experimental Prop4You provider/sourcehub/matrix/leadfinder DDL into a clean lab DB.
+
+No provider calls were made.
+No raw/fake/redacted fixtures were created.
+
+## Apply order
+
+- `database/ddl/base/0001_install_tracking.sql`
+- `database/ddl/base/0002_extensions.sql`
+- `database/ddl/base/0003_base_schemas_roles_context.sql`
+- `database/ddl/base/0004_public_id.sql`
+- `database/ddl/base/0005_lifecycle_columns_triggers.sql`
+- `database/ddl/base/0006_jsonb_contract_helpers.sql`
+- `database/ddl/base/0007_search_normalization.sql`
+- `database/ddl/base/0008_audit_log.sql`
+- `database/ddl/base/0009_realtime_base.sql`
+- `database/ddl/base/0010_api_base.sql`
+- `database/ddl/projects/prop4you/0001_schemas.sql`
+- `database/ddl/projects/prop4you/providers/0001_provider_registry.sql`
+- `database/ddl/projects/prop4you/sourcehub/0001_sourcehub_corpus.sql`
+- `database/ddl/projects/prop4you/matrix/0001_semantic_dictionary.sql`
+- `database/ddl/projects/prop4you/leadfinder/0001_canonical_dictionary.sql`
+
+## Validation JSON
+
+```json
+{&quot;counts&quot;: {&quot;provider_count&quot;: 4, &quot;payload_class_count&quot;: 5, &quot;mapping_version_count&quot;: 4, &quot;leadfinder_field_count&quot;: 36, &quot;leadfinder_family_count&quot;: 15, &quot;matrix_mirror_family_count&quot;: 7, &quot;leadfinder_dictionary_version_count&quot;: 1}, &quot;missing_tables&quot;: [], &quot;missing_schemas&quot;: [], &quot;uncommented_tables&quot;: [], &quot;jsonb_path_type_smoke&quot;: &quot;number&quot;, &quot;jsonb_leaf_paths_smoke_count&quot;: 2}
+```
+
+## Boundary
+
+This proves DDL apply/comment/object smoke for experimental Provider + SourceHub + Matrix mirror/candidate + LeadFinder dictionary gate.
+It does not prove final Prop4You property/owner tables, provider runtime calls, production deployment, real raw ingestion, or LeadFinder materialization.
+</pre></section></body></html>

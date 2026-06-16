@@ -1,17 +1,20 @@
 -- package: prop4you/matrix
 -- file: 0001_semantic_dictionary.sql
--- status: experimental / non-final
--- purpose: Matrix semantic dictionary, canonical field catalog, provider JSON path mappings, and review gates for Prop4You corpus-driven DDL.
+-- status: experimental / non-final / mirror-candidate-review
+-- purpose: Matrix mirror/candidate/review dictionary, provider JSON path mappings, and review gates for Prop4You corpus-driven DDL. Matrix is not the canonical owner of LeadFinder dictionary truth.
 -- depends-on: database/ddl/base, database/ddl/projects/prop4you/0001_schemas.sql, database/ddl/projects/prop4you/providers/0001_provider_registry.sql, database/ddl/projects/prop4you/sourcehub/0001_sourcehub_corpus.sql
 -- idempotency: idempotent
 -- destructive: false
 -- review-gate: provider_payload_corpus_review
 -- [NO_FIXTURES] This DDL creates catalogs and dictionary seeds only; it does not insert raw/fake/redacted payload fixtures.
 -- [NO_PROVIDER_CALLS] This DDL contains no provider client, HTTP call, or runtime lookup implementation.
+-- [MATRIX_IS_NOT_CANONICAL_OWNER] LeadFinder owns the canonical dictionary/version graph. Matrix mirrors or proposes families/fields only for mapping review.
+-- [MIRROR_CANDIDATE_REVIEW] Objects named canonical_* are retained for compatibility but are classified as experimental mirror/candidate/review structures.
+-- [NO_BREAKING_CHANGE] This patch changes comments and safe seed metadata only; it does not drop, rename, or constrain existing objects.
 
 create schema if not exists prop4you_matrix;
 comment on schema prop4you_matrix is
-'Prop4You Matrix schema. Experimental non-final semantic dictionary and provider JSON path mapping gate used before SourceHub payloads can be treated as LeadFinder canonical DTO inputs.';
+'Prop4You Matrix schema. Experimental non-final mirror/candidate/review dictionary and provider JSON path mapping gate used before SourceHub payloads can be treated as LeadFinder DTO inputs. [MATRIX_IS_NOT_CANONICAL_OWNER] LeadFinder owns canonical dictionary truth and future Matrix rows should link to a LeadFinder dictionary version when that DDL exists.';
 
 create table if not exists prop4you_matrix.canonical_families (
   id uuid primary key default uuidv7(),
@@ -31,16 +34,16 @@ create table if not exists prop4you_matrix.canonical_families (
 );
 
 comment on table prop4you_matrix.canonical_families is
-'Experimental Matrix catalog of canonical semantic families used to compare provider/internal payload fields before Prop4You final tables are frozen.';
-comment on column prop4you_matrix.canonical_families.id is 'UUIDv7 primary key for one Matrix canonical family.';
+'Experimental Matrix mirror/candidate/review catalog of semantic families used to compare provider/internal payload fields before Prop4You final tables are frozen. Name retained for compatibility; this table is not the canonical LeadFinder dictionary owner. Future non-breaking FK target: LeadFinder dictionary version.';
+comment on column prop4you_matrix.canonical_families.id is 'UUIDv7 primary key for one Matrix mirror/candidate/review family row.';
 comment on column prop4you_matrix.canonical_families.family_key is 'Stable lowercase semantic family key, for example property_identity, owner_identity, contact, valuation, or lineage.';
 comment on column prop4you_matrix.canonical_families.display_name is 'Human-readable semantic family label.';
 comment on column prop4you_matrix.canonical_families.family_role is 'Coarse semantic role used for review grouping and DDL freeze decisions.';
 comment on column prop4you_matrix.canonical_families.description is 'Objective explanation of what this semantic family means in Prop4You.';
-comment on column prop4you_matrix.canonical_families.review_status is 'Matrix review state for this canonical family.';
-comment on column prop4you_matrix.canonical_families.metadata is 'Non-secret JSONB review metadata for this canonical family.';
-comment on column prop4you_matrix.canonical_families.created_at is 'Timestamp when this canonical family was inserted.';
-comment on column prop4you_matrix.canonical_families.updated_at is 'Timestamp when this canonical family was last updated.';
+comment on column prop4you_matrix.canonical_families.review_status is 'Matrix mirror/candidate/review state for this family; approval here does not make Matrix the canonical LeadFinder dictionary owner.';
+comment on column prop4you_matrix.canonical_families.metadata is 'Non-secret JSONB review metadata for this mirror/candidate/review family. May later carry/link LeadFinder dictionary version lineage after the canonical LeadFinder dictionary DDL exists.';
+comment on column prop4you_matrix.canonical_families.created_at is 'Timestamp when this Matrix family candidate was inserted.';
+comment on column prop4you_matrix.canonical_families.updated_at is 'Timestamp when this Matrix family candidate was last updated.';
 
 create table if not exists prop4you_matrix.canonical_fields (
   id uuid primary key default uuidv7(),
@@ -68,19 +71,19 @@ create index if not exists canonical_fields_family_status_idx
   on prop4you_matrix.canonical_fields (family_id, review_status);
 
 comment on table prop4you_matrix.canonical_fields is
-'Experimental Matrix catalog of canonical field meanings. A row here declares meaning, not final physical table placement.';
-comment on column prop4you_matrix.canonical_fields.id is 'UUIDv7 primary key for one canonical field meaning.';
-comment on column prop4you_matrix.canonical_fields.family_id is 'Canonical semantic family that owns this field meaning.';
+'Experimental Matrix mirror/candidate/review catalog of field meanings. A row here proposes or mirrors meaning for review; it is not final physical placement and is not the canonical LeadFinder dictionary owner. Future non-breaking FK target: LeadFinder dictionary version.';
+comment on column prop4you_matrix.canonical_fields.id is 'UUIDv7 primary key for one Matrix mirror/candidate/review field meaning.';
+comment on column prop4you_matrix.canonical_fields.family_id is 'Matrix mirror/candidate/review family associated with this field meaning.';
 comment on column prop4you_matrix.canonical_fields.field_key is 'Stable field key within its family, independent of provider path names.';
 comment on column prop4you_matrix.canonical_fields.display_name is 'Human-readable canonical field name.';
 comment on column prop4you_matrix.canonical_fields.value_kind is 'Expected normalized value kind for this field meaning.';
 comment on column prop4you_matrix.canonical_fields.cardinality is 'Whether the field meaning is one, optional, many, or not yet known.';
 comment on column prop4you_matrix.canonical_fields.materialization_policy is 'Controls whether provider values stay raw/evidence, can form DTO candidates, or may be promoted later.';
 comment on column prop4you_matrix.canonical_fields.description is 'Objective explanation of this field meaning and why it matters.';
-comment on column prop4you_matrix.canonical_fields.review_status is 'Matrix review state for this canonical field.';
-comment on column prop4you_matrix.canonical_fields.metadata is 'Non-secret JSONB review metadata for this canonical field.';
-comment on column prop4you_matrix.canonical_fields.created_at is 'Timestamp when this canonical field was inserted.';
-comment on column prop4you_matrix.canonical_fields.updated_at is 'Timestamp when this canonical field was last updated.';
+comment on column prop4you_matrix.canonical_fields.review_status is 'Matrix mirror/candidate/review state for this field; approval here does not make Matrix the canonical LeadFinder dictionary owner.';
+comment on column prop4you_matrix.canonical_fields.metadata is 'Non-secret JSONB review metadata for this mirror/candidate/review field. May later carry/link LeadFinder dictionary version lineage after the canonical LeadFinder dictionary DDL exists.';
+comment on column prop4you_matrix.canonical_fields.created_at is 'Timestamp when this Matrix field candidate was inserted.';
+comment on column prop4you_matrix.canonical_fields.updated_at is 'Timestamp when this Matrix field candidate was last updated.';
 
 create table if not exists prop4you_matrix.mapping_versions (
   id uuid primary key default uuidv7(),
@@ -144,12 +147,12 @@ create index if not exists provider_path_mappings_metadata_gin_idx
   on prop4you_matrix.provider_path_mappings using gin (metadata jsonb_path_ops);
 
 comment on table prop4you_matrix.provider_path_mappings is
-'Experimental mapping from provider/internal JSONB text[] paths to Matrix canonical fields. This table is the review gate before generated fields or final DDL columns are frozen.';
+'Experimental mapping from provider/internal JSONB text[] paths to Matrix mirror/candidate/review fields. This table is the review gate before generated fields or final DDL columns are frozen; Matrix is not the canonical LeadFinder dictionary owner.';
 comment on column prop4you_matrix.provider_path_mappings.id is 'UUIDv7 primary key for one provider path mapping candidate or approved mapping.';
 comment on column prop4you_matrix.provider_path_mappings.provider_id is 'Provider or internal origin that exposes the JSON path.';
 comment on column prop4you_matrix.provider_path_mappings.payload_class_id is 'Optional payload class where this path was observed.';
 comment on column prop4you_matrix.provider_path_mappings.mapping_version_id is 'Optional Matrix mapping artifact version that owns or proposed this path mapping.';
-comment on column prop4you_matrix.provider_path_mappings.canonical_field_id is 'Canonical Matrix field meaning that the provider path may represent.';
+comment on column prop4you_matrix.provider_path_mappings.canonical_field_id is 'Matrix mirror/candidate/review field meaning that the provider path may represent; retained column name is compatibility-only and does not assign canonical dictionary ownership to Matrix.';
 comment on column prop4you_matrix.provider_path_mappings.provider_path is 'PostgreSQL text[] JSONB path components. Array indexes may be represented as numeric path strings for review.';
 comment on column prop4you_matrix.provider_path_mappings.provider_path_label is 'Optional human-readable dotted/bracket path label for reviewers.';
 comment on column prop4you_matrix.provider_path_mappings.observed_json_type is 'Observed JSON type or mixed/unknown classification for values at the provider path.';
@@ -183,7 +186,7 @@ comment on table prop4you_matrix.mapping_reviews is
 'Experimental Matrix review log for field/path/mapping decisions. It can reference SourceHub raw records without embedding raw payload values in review notes.';
 comment on column prop4you_matrix.mapping_reviews.id is 'UUIDv7 primary key for one Matrix mapping review row.';
 comment on column prop4you_matrix.mapping_reviews.mapping_version_id is 'Optional mapping version under review.';
-comment on column prop4you_matrix.mapping_reviews.canonical_field_id is 'Optional canonical field under review.';
+comment on column prop4you_matrix.mapping_reviews.canonical_field_id is 'Optional Matrix mirror/candidate/review field under review; LeadFinder dictionary ownership remains outside Matrix.';
 comment on column prop4you_matrix.mapping_reviews.raw_record_id is 'Optional SourceHub raw record providing private evidence for the review.';
 comment on column prop4you_matrix.mapping_reviews.review_status is 'Workflow status of this mapping review.';
 comment on column prop4you_matrix.mapping_reviews.decision is 'Current review decision: undecided, approve, reject, needs_more_corpus, conflict, or defer.';
@@ -196,13 +199,13 @@ comment on column prop4you_matrix.mapping_reviews.updated_at is 'Timestamp when 
 insert into prop4you_matrix.canonical_families
   (family_key, display_name, family_role, description, review_status, metadata)
 values
-  ('property_identity', 'Property identity and address', 'property', 'Canonical family for property address, provider property references, and address matching evidence.', 'candidate', '{"seeded_by":"experimental_ddl"}'::jsonb),
-  ('owner_identity', 'Owner identity', 'owner', 'Canonical family for owner/entity identity evidence and candidate owner resolution.', 'candidate', '{"seeded_by":"experimental_ddl"}'::jsonb),
-  ('owner_contact', 'Owner contact evidence', 'contact', 'Canonical family for phone, email, mailing address, relative and relationship contact evidence.', 'candidate', '{"seeded_by":"experimental_ddl"}'::jsonb),
-  ('situation_legal', 'Situation and legal timeline', 'situation', 'Canonical family for distress, legal, foreclosure, probate, eviction, tax and related situation evidence.', 'candidate', '{"seeded_by":"experimental_ddl"}'::jsonb),
-  ('valuation_financial', 'Valuation and financial evidence', 'valuation', 'Canonical family for equity, valuation, estimate, listing price, loan and financial evidence.', 'candidate', '{"seeded_by":"experimental_ddl"}'::jsonb),
-  ('listing_history_media', 'Listing, history and media', 'listing', 'Canonical family for Realtor/listing history, media and enrichment-only property facts.', 'candidate', '{"seeded_by":"experimental_ddl"}'::jsonb),
-  ('lineage_provenance', 'Lineage and provenance', 'lineage', 'Canonical family for raw record, provider, mapping and publication provenance.', 'candidate', '{"seeded_by":"experimental_ddl"}'::jsonb)
+  ('property_identity', 'Property identity and address', 'property', 'Matrix mirror/candidate/review family for property address, provider property references, and address matching evidence. LeadFinder owns canonical dictionary truth.', 'candidate', '{"seeded_by":"experimental_ddl","dictionary_owner":"leadfinder","matrix_classification":"mirror_candidate_review","future_fk":"leadfinder_dictionary_version"}'::jsonb),
+  ('owner_identity', 'Owner identity', 'owner', 'Matrix mirror/candidate/review family for owner/entity identity evidence and candidate owner resolution. LeadFinder owns canonical dictionary truth.', 'candidate', '{"seeded_by":"experimental_ddl","dictionary_owner":"leadfinder","matrix_classification":"mirror_candidate_review","future_fk":"leadfinder_dictionary_version"}'::jsonb),
+  ('owner_contact', 'Owner contact evidence', 'contact', 'Matrix mirror/candidate/review family for phone, email, mailing address, relative and relationship contact evidence. LeadFinder owns canonical dictionary truth.', 'candidate', '{"seeded_by":"experimental_ddl","dictionary_owner":"leadfinder","matrix_classification":"mirror_candidate_review","future_fk":"leadfinder_dictionary_version"}'::jsonb),
+  ('situation_legal', 'Situation and legal timeline', 'situation', 'Matrix mirror/candidate/review family for distress, legal, foreclosure, probate, eviction, tax and related situation evidence. LeadFinder owns canonical dictionary truth.', 'candidate', '{"seeded_by":"experimental_ddl","dictionary_owner":"leadfinder","matrix_classification":"mirror_candidate_review","future_fk":"leadfinder_dictionary_version"}'::jsonb),
+  ('valuation_financial', 'Valuation and financial evidence', 'valuation', 'Matrix mirror/candidate/review family for equity, valuation, estimate, listing price, loan and financial evidence. LeadFinder owns canonical dictionary truth.', 'candidate', '{"seeded_by":"experimental_ddl","dictionary_owner":"leadfinder","matrix_classification":"mirror_candidate_review","future_fk":"leadfinder_dictionary_version"}'::jsonb),
+  ('listing_history_media', 'Listing, history and media', 'listing', 'Matrix mirror/candidate/review family for Realtor/listing history, media and enrichment-only property facts. LeadFinder owns canonical dictionary truth.', 'candidate', '{"seeded_by":"experimental_ddl","dictionary_owner":"leadfinder","matrix_classification":"mirror_candidate_review","future_fk":"leadfinder_dictionary_version"}'::jsonb),
+  ('lineage_provenance', 'Lineage and provenance', 'lineage', 'Matrix mirror/candidate/review family for raw record, provider, mapping and publication provenance. LeadFinder owns canonical dictionary truth.', 'candidate', '{"seeded_by":"experimental_ddl","dictionary_owner":"leadfinder","matrix_classification":"mirror_candidate_review","future_fk":"leadfinder_dictionary_version"}'::jsonb)
 on conflict (family_key) do update
   set display_name = excluded.display_name,
       family_role = excluded.family_role,

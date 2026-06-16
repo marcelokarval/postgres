@@ -172,3 +172,5 @@ Then read the domain-specific doc for the task.
 - `docs/issues/02-prop4you-sourcehub-matrix-ddl/` — PRD/tasks/review stack for first experimental Prop4You provider registry, SourceHub corpus/enrichment queue, Matrix semantic dictionary DDL and lab proof.
 - `docs/reports/prop4you-sourcehub-matrix-ddl-lab-proof.md` — lab proof applying base + Prop4You provider/sourcehub/matrix experimental DDL in a clean PG18 lab DB.
 - `docs/issues/03-prop4you-leadfinder-canonical-cycle-analysis/` — analysis correcting Matrix/SourceHub/LeadFinder ownership: LeadFinder generates canonical dictionary; Matrix produces transformation artifacts; SourceHub translates raw into LeadFinder-consumable DTOs.
+- `docs/issues/04-prop4you-leadfinder-dictionary-from-raws/` — PRD/tasks/review stack implementing LeadFinder-owned canonical dictionary v0 born from raw/code/baseline evidence and reclassifying Matrix canonical tables as mirror/candidate review.
+- `database/ddl/projects/prop4you/leadfinder/0001_canonical_dictionary.sql` — experimental LeadFinder dictionary v0 with 15 family candidates and 36 field candidates.
