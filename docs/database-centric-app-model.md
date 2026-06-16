@@ -637,3 +637,7 @@ The LeadFinder Group owns the canonical dictionary, but that dictionary is born/
 ## Prop4You Matrix artifacts and REIQ raw lab ingestion
 
 `docs/issues/05-prop4you-matrix-artifacts-reiq-raws/` adds the next gate after LeadFinder dictionary v0: Matrix mapping sessions/transformation artifacts/field mappings. `database/ddl/projects/prop4you/matrix/0002_mapping_sessions.sql` requires a LeadFinder dictionary version FK. `scripts/ingest-prop4you-reiq-raws-lab.py` proves REIQ raw JSONB lab ingestion without committing payloads or printing raw values.
+
+## Prop4You raw extractors before SourceHub DTO
+
+`docs/issues/06-prop4you-raw-extractors-leadfinder-modeling/` records the extractor-first decision: raw/provider data generates canonical candidates and LeadFinder Group modeling evidence, while LeadFinder filters provide demand-side pressure for organized/rastreável fields. `database/ddl/projects/prop4you/matrix/0003_raw_path_extractors.sql` and `scripts/extract-prop4you-reiq-path-candidates.py` provide SQL/Python path/type/count extractors before SourceHub translated DTO publication.

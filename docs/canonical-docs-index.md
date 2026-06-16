@@ -177,3 +177,6 @@ Then read the domain-specific doc for the task.
 - `docs/issues/05-prop4you-matrix-artifacts-reiq-raws/` — PRD/tasks/review stack for Matrix mapping sessions/transformation artifacts and REIQ raw JSONB lab ingestion proof.
 - `database/ddl/projects/prop4you/matrix/0002_mapping_sessions.sql` — experimental Matrix artifact gate linking mapping sessions/artifacts/field mappings to LeadFinder dictionary versions.
 - `scripts/ingest-prop4you-reiq-raws-lab.py` — lab-only REIQ raw JSONB ingestion script; dry-run by default and no payload values printed.
+- `docs/issues/06-prop4you-raw-extractors-leadfinder-modeling/` — PRD/tasks/review stack for SQL/Python raw path extractors feeding LeadFinder Group modeling evidence.
+- `database/ddl/projects/prop4you/matrix/0003_raw_path_extractors.sql` — experimental Matrix SQL extractor gate for SourceHub raw_records JSONB path/type/count evidence.
+- `scripts/extract-prop4you-reiq-path-candidates.py` — safe local Python scanner for REIQ path/type/frequency summaries without raw values.

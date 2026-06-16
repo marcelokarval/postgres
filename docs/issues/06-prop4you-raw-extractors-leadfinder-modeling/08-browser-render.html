@@ -1,0 +1,573 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Prop4You Raw Extractors + LeadFinder Modeling — Browser Proof</title><style>body{font-family:system-ui;margin:32px;background:#f8fafc;color:#111827}header{background:#111827;color:white;padding:24px;border-radius:16px}.ok{background:#dcfce7;color:#14532d;border:1px solid #86efac;border-radius:10px;padding:10px 14px;font-weight:700}.badges span{display:inline-block;background:#dbeafe;color:#1e3a8a;border:1px solid #93c5fd;border-radius:999px;padding:4px 10px;margin:4px;font-weight:700}section{background:white;border:1px solid #e5e7eb;border-radius:14px;padding:18px;margin:18px 0}pre{white-space:pre-wrap;background:#0b1020;color:#e5e7eb;padding:14px;border-radius:10px;font:13px ui-monospace,monospace;max-height:760px;overflow:auto}</style></head><body><header><h1>Prop4You Raw Extractors + LeadFinder Modeling</h1><p class="ok">Browser-proof artifact: extractor-first modeling gate</p><div class="badges"><span>SQL/Python first</span><span>Matrix 0003</span><span>REIQ 97 raws</span><span>Python 3,685 path/type</span><span>SQL 9,650 summaries</span><span>172,700 observations</span><span>LeadFinder filter pressure</span><span>No raw values</span><span>No provider calls</span><span>PG18 lab PASS</span></div></header><section><h2>01-prd.md</h2><pre># PRD — Prop4You raw extractors for LeadFinder Group modeling
+
+Status: active
+
+## Problem
+
+The architecture is aligned that raw provider/internal data generates canonical candidates and also informs the shape of the LeadFinder Group. However, we need explicit SQL/Python extractor gates before SourceHub DTO publication so we can derive modeling evidence from raw JSONB and LeadFinder filters instead of guessing tables too early.
+
+## Goals
+
+- Implement SQL-side extractor DDL that can observe raw JSONB paths/types/counts from `prop4you_sourcehub.raw_records`.
+- Implement Python-side scanner for local REIQ focused corpus that emits path/type/frequency summaries without values.
+- Analyze LeadFinder filters/code pressure from Prop4You-Inertia as demand-side guide for needed organized/rastreável fields.
+- Persist a LeadFinder modeling evidence report connecting raw path evidence + filter pressure + current LeadFinder candidate families.
+- Extend lab proof to apply extractor DDL and validate raw ingestion + SQL extraction over REIQ raw_records.
+- Keep SourceHub DTO publication deferred until extraction evidence exists.
+- Browser-proof PRD/tasks/reviews/final/lab proof.
+
+## Non-goals
+
+- No final SourceHub translated DTO table implementation in this slice.
+- No final LeadFinder materialization tables.
+- No production deployment.
+- No provider calls.
+- No raw payload values or PII in repo artifacts.
+- No candidate promotion to `in_review` until evidence is reviewed.
+
+## Acceptance criteria
+
+- `database/ddl/projects/prop4you/matrix/0003_raw_path_extractors.sql` exists and applies in PG18 lab.
+- SQL extractor can read `raw_records` and produce path/type/count summaries.
+- Python extractor can scan 97 focused REIQ JSON files and emit safe summary artifact.
+- A LeadFinder filter-pressure/modeling report exists.
+- Lab proof inserts 97 REIQ records and validates SQL path extraction count &gt; 0 without printing payloads.
+- Browser proof renders stack 06 and lab evidence with console 0 errors + vision PASS.
+</pre></section><section><h2>05-task-review.md</h2><pre># Task Review — raw extractors for LeadFinder modeling
+
+Status: delivered
+Updated: 2026-06-16T16:52:19
+Reviewer: Thor/default
+
+| Task | Requested | Delivered | Evidence | Verdict |
+| --- | --- | --- | --- | --- |
+| T1 | Create PRD/tasks/ledger stack 06 | Stack 06 created | `00`..`04` | PASS |
+| T2 | Analyze LeadFinder filters/code pressure | A timed out; A2 completed reduced safe analysis | `08-leadfinder-filter-pressure-analysis.md`; A-status.md | PASS |
+| T3 | Implement SQL raw path extractor DDL | Matrix `0003_raw_path_extractors.sql` with runs, summaries, views, refresh function | `09-sql-extractor-ddl-review.md`; PG18 proof | PASS |
+| T4 | Implement Python REIQ path scanner | `scripts/extract-prop4you-reiq-path-candidates.py`; py_compile + 97-file scan | `10-python-extractor-review.md`; `.tmp/.../reiq-path-candidates-final.*` | PASS |
+| T5 | Integrate proof script | `scripts/proof-prop4you-ddl-lab.sh` applies Matrix 0003 and validates objects | DDL proof report | PASS |
+| T6 | Run PG18 lab proof + REIQ ingest + SQL extraction | 97 raw_records ingested; SQL extraction refreshed 9,650 summary rows | `/tmp/sql-extractor-counts-06b.json` | PASS |
+| T7 | Persist modeling synthesis/reviews/final | Review/final/synthesis docs persisted | `05`, `07`, `11` | PASS |
+| T8 | Browser-proof + vision QA | Pending before browser step | `06`, `08-browser-render.html` | PENDING |
+| T9 | Commit/push and closeout | Pending final gate | git | PENDING |
+
+## Requested vs delivered
+
+| User request | Delivered |
+| --- | --- |
+| Decide whether SourceHub or SQL/Python gives modeling context | Decision documented: SQL/Python first |
+| Raw data generate canonical and LeadFinder Group modeling | Extractors implemented to turn raw JSONB into path/type/count evidence |
+| Filters guide data organization/rastreabilidade | LeadFinder filter-pressure analysis persisted |
+| Use subagents with max 3 and no unnecessary MCPs | 3 initial lanes; A timed out; A2 replacement; file+terminal only |
+| Active correction without HITL | Corrected validation strategy after volatile CTE mismatch; reran proof with separate query |
+| Browser-proof + vision + final report | Browser step pending final gate |
+
+## Active corrections
+
+- A timed out without artifacts; replaced with scoped A2.
+- Initial SQL validation query incorrectly counted summary rows via same-statement volatile CTE; corrected by separating refresh and table count.
+- DDL proof updated to include Matrix 0003 tables/functions/views.
+</pre></section><section><h2>07-final-report.md</h2><pre># Final Report — raw extractors for LeadFinder modeling
+
+Status: delivered before browser/commit final gate
+Updated: 2026-06-16T16:52:19
+Owner/reviewer: Thor/default
+
+## Verdict
+
+SUPPORTED for extractor-first modeling gate.
+
+The right next move was not SourceHub translated DTO publication. SQL/Python extractors give the modeling context needed for the LeadFinder Group because raw data is the matrix for canonical discovery, while LeadFinder filters define demand-side organization and traceability pressure.
+
+## Delivered artifacts
+
+```text
+database/ddl/projects/prop4you/matrix/0003_raw_path_extractors.sql
+scripts/extract-prop4you-reiq-path-candidates.py
+docs/issues/06-prop4you-raw-extractors-leadfinder-modeling/08-leadfinder-filter-pressure-analysis.md
+docs/issues/06-prop4you-raw-extractors-leadfinder-modeling/09-sql-extractor-ddl-review.md
+docs/issues/06-prop4you-raw-extractors-leadfinder-modeling/10-python-extractor-review.md
+```
+
+## SQL DDL objects
+
+```text
+prop4you_matrix.jsonb_path_label(text[])
+prop4you_matrix.raw_path_extraction_runs
+prop4you_matrix.raw_path_summary_evidence
+prop4you_matrix.v_raw_record_leaf_path_evidence
+prop4you_matrix.v_raw_path_current_summary
+prop4you_matrix.refresh_raw_path_summary_evidence(...)
+prop4you_matrix.raw_record_path_type_evidence(uuid, integer)
+```
+
+## Python extractor proof
+
+```json
+{
+  &quot;artifact_class_counts&quot;: {
+    &quot;context&quot;: 1,
+    &quot;matrix_analysis_baseline_only&quot;: 19,
+    &quot;matrix_analysis_contextual&quot;: 19,
+    &quot;matrix_analysis_discrepancy&quot;: 19,
+    &quot;matrix_contract&quot;: 19,
+    &quot;provider_raw_payload&quot;: 1,
+    &quot;source_manifest&quot;: 19
+  },
+  &quot;expected_count&quot;: 97,
+  &quot;expected_count_ok&quot;: true,
+  &quot;file_count&quot;: 97,
+  &quot;ok&quot;: true,
+  &quot;output_json&quot;: &quot;.tmp/prop4you-raw-extractors/reiq-path-candidates-final.json&quot;,
+  &quot;output_md&quot;: &quot;.tmp/prop4you-raw-extractors/reiq-path-candidates-final.md&quot;,
+  &quot;parse_error_count&quot;: 0,
+  &quot;privacy_contract&quot;: &quot;No raw JSON values are emitted; only paths, JSON types, counts, byte sizes, and short SHA-256 samples.&quot;,
+  &quot;root&quot;: &quot;/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/backend/src/apps/system/matrix/registry/reiq/loan_modification/fl&quot;,
+  &quot;root_type_counts&quot;: {
+    &quot;object&quot;: 97
+  },
+  &quot;total_bytes&quot;: 7027134,
+  &quot;unique_path_type_count&quot;: 3685
+}
+```
+
+## SQL extractor proof
+
+```json
+{
+  &quot;live_summary_rows&quot;: 9650,
+  &quot;no_raw_values_printed&quot;: true,
+  &quot;raw_record_count&quot;: 97,
+  &quot;run_count&quot;: 1,
+  &quot;run_counts&quot;: [
+    {
+      &quot;distinct_path_count&quot;: 9650,
+      &quot;extracted_path_count&quot;: 172700,
+      &quot;source_record_count&quot;: 97
+    }
+  ],
+  &quot;summary_rows&quot;: 9650
+}
+```
+
+## Boundaries
+
+Not claimed:
+
+- SourceHub translated DTO table implemented;
+- final LeadFinder materialization implemented;
+- field candidates promoted to `in_review`;
+- production deployment;
+- provider/API calls;
+- raw payloads committed or printed.
+
+## Subagent status
+
+- Worker A timed out and produced no usable artifact.
+- Worker A2 completed the reduced filter-pressure analysis.
+- Worker B completed SQL extractor DDL.
+- Worker C completed Python extractor script.
+- Thor independently reviewed artifacts and ran proof.
+
+## Next steps
+
+1. Implement a gap/proposal bridge from `raw_path_summary_evidence` + Python summaries + filter pressure into `prop4you_leadfinder.canonical_gaps` / `growth_pressure_signals`.
+2. Generate first Matrix `quality_report` artifact from extractor evidence.
+3. Generate first Matrix `field_mapping_set` artifact only after gap bridge exists.
+4. Then implement SourceHub `translated_dto_publications` against selected artifact + dictionary version.
+5. Only after that promote selected field candidates from `candidate` to `in_review`.
+</pre></section><section><h2>08-leadfinder-filter-pressure-analysis.md</h2><pre># LeadFinder filter-pressure analysis (Prop4You-Inertia)
+
+Escopo: análise curta, somente por caminhos, nomes de código e strings estruturais do backend Prop4You-Inertia. Não foram lidos/dumpados payloads raw; a evidência abaixo vem de nomes de arquivos, funções, classes, campos e contratos de consulta.
+
+## Evidência de pressão de filtros
+
+1. LeadFinder é uma superfície própria, não apenas um relatório estático.
+   - Rotas e boundaries aparecem em `interfaces/web/lead_finder/urls.py`, `views/api_endpoints.py`, `views/mutations.py` e `apps/public/lead_finder/*`.
+   - Endpoints/nomeações indicam `markers`, `detail`, `summaries`, `enrich`, `location_search`, `save`, `unsave`, `bulk-save`, `presets`, `lists` e `tags`.
+   - Isso pressiona a modelagem para suportar leitura geográfica, detalhe hidratado, enriquecimento de proprietário e organização CRM/workspace.
+
+2. O contrato de filtros é amplo e composável.
+   - `apps/public/lead_finder/filters.py` parseia `lead_types`, `property_types`, `bbox`, `system_area_ids`, `states`, `counties`, `zip_codes`, `city`, ranges físicos (`bedrooms`, `bathrooms`, `year_built`, `sqft`, `lot_size`, `stories`), flags (`has_pool`, `has_garage`, `is_vacant`, `is_owner_occupied`, `has_tax_debt`), valuation (`equity`, `estimated_value`, `mortgage_balance`, `listing_price`) e ownership (`owner_type`, `is_absentee`, `is_in_state`, `is_cash_buyer`, `portfolio_size`, `years_owned`).
+   - `has_active_search_filters()` separa filtros reais de controles técnicos (`page`, `page_size`, `sort_by`), evitando busca ampla sem intenção explícita.
+
+3. A engine de domínio confirma pressão por índices/colunas canônicas.
+   - `domains/real_estate/services/property_filters.py` descreve quatro tiers: quick filters, location filters, advanced filters e sort/pagination.
+   - Quick filters dependem de `situations__situation_type` + `SituationStatus.ACTIVE` e `details__property_type`.
+   - Location usa PostGIS bbox (`location__location__intersects`) e texto normalizado por `state`, `county`, `zip_code`, `city`.
+   - Valuation usa métricas mais recentes via subquery (`latest_equity_percentage`, `latest_estimated_equity`) e ranges de valor/saldo/listing.
+   - Ownership combina `is_current`, `entity_type`, `is_absentee`, `is_in_state`, `is_cash_buyer`, `portfolio_size`, `from_date`.
+
+4. Map/search exige resultados resumidos e estáveis.
+   - `apps/public/lead_finder/api_queries.py` chama `PropertyQueryService.search_properties_for_map(..., limit=2000)` e emite `queryState`, `counts`, `meta`, `items`.
+   - Marker render usa `score` para status `HOT/WARM/COLD`, além de `stackingCount`, `primaryLeadType`, `propertyType`, `priceBand`, coordenadas e clusterização.
+   - Isso pressiona armazenamento canônico para score/classificação, coordenadas, tipo primário de lead, tipo de imóvel e bandas de preço/valor.
+
+5. Owner/contact é parte do fluxo LeadFinder, mas contato bruto deve ficar controlado.
+   - `actions.py` expõe `enrich_lead_finder_property_owner` e retorna contagens (`phonesAdded`, `emailsAdded`) em vez de promover payload raw.
+   - `PropertyQueryService` monta page/detail querysets com `Ownership`, `OwnerPhone`, `OwnerEmail`, contagens de contatos válidos e prefetch de contatos válidos no detalhe.
+   - `canonical_party_graph.py` possui `OwnerPhone` com status `correct/wrong/no_answer/dnc/dead_line`, `is_dnc`, `is_valid`, `confidence_score` e índice `re_phone_valid_dnc_idx`.
+   - `OwnerEmail` possui status `active/inactive/bounced/invalid`, `bounce_type`, `bounce_reason`, `bounce_count`, `last_bounce_at`, `is_valid` e campos normalizados.
+
+6. Status operacional e score também têm pressão própria.
+   - `lead_score_models.py` modela `total_score`, sub-scores, `classification`, `score_drivers`, índices por classificação/score e menciona sinais de urgência, financeiros, qualidade de contato e recência.
+   - `lead_intelligence_models.py` adiciona `qualification_status`, `queue_status` com `DEAD`, tentativas de contato, `next_contact_at`, outcomes e score corrente.
+   - Esses nomes indicam que status de funil, dead-lead e score não são apenas deriváveis de raw; são estados operacionais a persistir.
+
+## Implicações para modelagem PG18/raw extractors
+
+- Separar claramente camadas: raw provider payload -&gt; extrações path-level -&gt; entidade canônica LeadFinder -&gt; estado operacional/workspace.
+- Priorizar colunas/indexes para filtros de alta pressão: geografia, situação ativa, tipo de imóvel, occupancy, valuation/equity, ownership atual e score/classificação.
+- Modelar contato de proprietário como satélites com validade/status/DNC/bounce/dead-line; evitar materializar payload raw na superfície LeadFinder.
+- Manter presets/listas/tags como workspace artifacts sobre filtros e propriedades canônicas, não como parte do raw provider corpus.
+- Tratar `page/page_size/sort_by`, bbox/cluster e query signature como contrato de consulta, não como semântica de domínio.
+
+## Riscos residuais
+
+- A análise não prova cardinalidade real nem seletividade dos filtros, pois não acessou dados/raw payloads.
+- Campos de front-end minificado em `static/front-react/assets/feature-lead-finder-*.js` não foram usados como fonte principal para evitar ruído.
+- Pode haver filtros legados fora do boundary `apps/public/lead_finder`/`domains/real_estate` que exijam revisão posterior.
+</pre></section><section><h2>09-sql-extractor-ddl-review.md</h2><pre># Review — Worker B SQL raw path extractor DDL
+
+Status: delivered for Thor review.
+
+## Resultado
+
+Implementei `database/ddl/projects/prop4you/matrix/0003_raw_path_extractors.sql` como DDL experimental, idempotente e não destrutivo para a Matrix extrair evidência segura de paths/tipos/contagens a partir de `prop4you_sourcehub.raw_records`.
+
+A implementação mantém a regra de privacidade do slice:
+
+- não cria fixtures de payload;
+- não executa chamadas a providers;
+- não lê arquivos externos;
+- não expõe nem persiste valores escalares brutos do JSONB;
+- usa `prop4you_provider.jsonb_leaf_paths` para enumerar paths/tipos;
+- usa `prop4you_provider.jsonb_path_type` no extrator per-record seguro.
+
+## Objetos criados
+
+Arquivo: `database/ddl/projects/prop4you/matrix/0003_raw_path_extractors.sql`
+
+Objetos principais:
+
+1. `prop4you_matrix.jsonb_path_label(text[])`
+   - Formata `text[]` JSONB path em label de revisão (`$.items[0][&quot;owner name&quot;]`).
+   - Não lê valores do payload.
+
+2. `prop4you_matrix.raw_path_extraction_runs`
+   - Header de execução/lab para refresh idempotente de evidências.
+   - Registra filtros, `max_depth`, contagens e sumário agregado.
+   - Usa `public_ref` com prefixo `p4yrpe`.
+
+3. `prop4you_matrix.raw_path_summary_evidence`
+   - Tabela agregada de evidência por run/provider/payload_class/path/type.
+   - Campos principais: `source_path`, `source_path_label`, `observed_json_type`, `occurrence_count`, `raw_record_count`, janela `captured_at`.
+   - Não armazena valores brutos.
+
+4. `prop4you_matrix.v_raw_record_leaf_path_evidence`
+   - View segura per-record para path/type evidence em profundidade padrão 8.
+   - Expõe `raw_record_public_ref`, provider/payload labels, path e tipo.
+   - Não expõe `raw_payload` nem valores escalares.
+
+5. `prop4you_matrix.v_raw_path_current_summary`
+   - View live agregada sobre os raw records ativos/não deletados.
+   - Retorna paths, tipos, contagens e janela temporal.
+
+6. `prop4you_matrix.refresh_raw_path_summary_evidence(...)`
+   - Refresh idempotente da tabela agregada por `run_key`.
+   - Suporta filtros opcionais por `provider_id` e `payload_class_id` e clamp de profundidade 1..32.
+   - Regrava apenas as evidências daquela run.
+
+7. `prop4you_matrix.raw_record_path_type_evidence(uuid, integer)`
+   - Extrator seguro para um raw record específico.
+   - Usa `jsonb_leaf_paths` + `jsonb_path_type` para retornar só path/type.
+
+8. Prefixo público registrado:
+   - `p4yrpe` -&gt; `prop4you_matrix.raw_path_extraction_runs`.
+
+## Validação executada
+
+Ambiente: container PG18 local `postgres18_postgres.1.w09al3xi32rt4ve65wnqjgr8s`, database isolada temporária `p4y_worker_b_raw_path_lab`.
+
+DDL aplicado em ordem:
+
+1. `database/ddl/base/*.sql`
+2. `database/ddl/projects/prop4you/0001_schemas.sql`
+3. `database/ddl/projects/prop4you/providers/0001_provider_registry.sql`
+4. `database/ddl/projects/prop4you/sourcehub/0001_sourcehub_corpus.sql`
+5. `database/ddl/projects/prop4you/leadfinder/0001_canonical_dictionary.sql`
+6. `database/ddl/projects/prop4you/matrix/0001_semantic_dictionary.sql`
+7. `database/ddl/projects/prop4you/matrix/0002_mapping_sessions.sql`
+8. `database/ddl/projects/prop4you/matrix/0003_raw_path_extractors.sql`
+9. Reaplicação de `0003_raw_path_extractors.sql` para provar idempotência.
+
+Saída relevante:
+
+```text
+PG18 validation database: p4y_worker_b_raw_path_lab
+objects=4
+functions=3
+path_label=$.items[0][&quot;owner name&quot;]
+empty_refresh_status=completed
+empty_refresh_counts=0/0/0
+```
+
+Interpretação:
+
+- os 2 tables/views esperados principais existem (`objects=4`);
+- as 3 funções esperadas existem (`functions=3`);
+- label de path funciona sem ler valor bruto;
+- refresh sem raw records finaliza como `completed` com contagens zero;
+- a DDL nova foi reaplicada sem erro.
+
+A database temporária foi removida ao final da validação.
+
+## Notas de design
+
+- O DDL grava aggregate evidence em Matrix porque Matrix é a fronteira de revisão semântica; SourceHub continua dono dos raw payloads.
+- `raw_path_summary_evidence.evidence_summary` pode guardar refs públicas de amostra para navegação de revisão, mas não valores.
+- As views são úteis em lab sem materializar dados sensíveis.
+- `refresh_raw_path_summary_evidence` não altera `prop4you_sourcehub.raw_records.matrix_mapping_status`; a promoção de status deve permanecer como decisão posterior de workflow/review.
+
+## Bloqueios
+
+Nenhum bloqueio técnico para o slice B.
+
+## Riscos residuais
+
+- Em corpora muito grandes, `jsonb_leaf_paths` via recursive walk pode ser caro; recomenda-se Thor avaliar volume e talvez usar filtros por provider/payload_class/run.
+- `sample_raw_record_public_refs` em `evidence_summary` usa todos os refs distintos por path; se o corpus crescer muito, pode ser necessário limitar/amostrar em uma iteração futura.
+- Não validei contra payload real por exigência do slice de não criar fixtures nem inserir valores brutos.
+
+## Próxima task sugerida
+
+Thor/T5: integrar `0003_raw_path_extractors.sql` ao proof script e executar validação com corpus privado/controlado quando disponível, verificando volume, tempo de execução e formato de summaries para consumo por LeadFinder modeling.
+</pre></section><section><h2>10-python-extractor-review.md</h2><pre># Python extractor review — REIQ path candidates
+
+Status: delivered by Worker C at 2026-06-16T19:36:04Z.
+
+## Scope
+
+Implemented `scripts/extract-prop4you-reiq-path-candidates.py` to scan the focused local REIQ corpus and emit a safe path/type/frequency summary for LeadFinder modeling evidence.
+
+Focused root used for validation:
+
+`/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/backend/src/apps/system/matrix/registry/reiq/loan_modification/fl`
+
+## Safety posture
+
+The scanner does not print raw JSON payload values. Its outputs are limited to:
+
+- JSON paths and JSON types;
+- occurrence counts and per-file frequencies;
+- aggregate byte counts;
+- short SHA-256 file hashes (`sha256_12`);
+- relative file paths and artifact classes for traceability.
+
+Array indexes are normalized as `[]`. Suspicious/non-identifier object-key path segments are represented as short key hashes rather than raw key text.
+
+## Validation run
+
+Commands executed from repo root `postgres/`:
+
+```bash
+python3 -m py_compile scripts/extract-prop4you-reiq-path-candidates.py
+scripts/extract-prop4you-reiq-path-candidates.py \
+  --root /home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/backend/src/apps/system/matrix/registry/reiq/loan_modification/fl \
+  --expected-count 97 \
+  --output-json .tmp/prop4you-raw-extractors/reiq-path-candidates.json \
+  --output-md .tmp/prop4you-raw-extractors/reiq-path-candidates.md
+```
+
+Observed safe stdout summary:
+
+```json
+{
+  &quot;artifact_class_counts&quot;: {
+    &quot;context&quot;: 1,
+    &quot;matrix_analysis_baseline_only&quot;: 19,
+    &quot;matrix_analysis_contextual&quot;: 19,
+    &quot;matrix_analysis_discrepancy&quot;: 19,
+    &quot;matrix_contract&quot;: 19,
+    &quot;provider_raw_payload&quot;: 1,
+    &quot;source_manifest&quot;: 19
+  },
+  &quot;expected_count&quot;: 97,
+  &quot;expected_count_ok&quot;: true,
+  &quot;file_count&quot;: 97,
+  &quot;ok&quot;: true,
+  &quot;parse_error_count&quot;: 0,
+  &quot;root_type_counts&quot;: {
+    &quot;object&quot;: 97
+  },
+  &quot;total_bytes&quot;: 7027134,
+  &quot;unique_path_type_count&quot;: 3685
+}
+```
+
+## Generated local artifacts
+
+These are local proof artifacts under `.tmp/` and contain no raw JSON values:
+
+- `.tmp/prop4you-raw-extractors/reiq-path-candidates.json`
+- `.tmp/prop4you-raw-extractors/reiq-path-candidates.md`
+
+## Result
+
+Acceptance criterion for Task T4 is satisfied: the Python extractor scanned all 97 focused REIQ JSON files, found 3,685 unique path/type pairs, reported zero parse errors, and produced safe JSON/Markdown summaries without dumping provider/raw payload values or PII.
+</pre></section><section><h2>11-executive-synthesis.md</h2><pre># Executive synthesis — raw extractors for LeadFinder modeling
+
+Status: delivered
+Updated: 2026-06-16T16:52:19
+Reviewer: Thor/default
+
+## Decision resolved
+
+Question: implement SourceHub DTO first or SQL/Python extractors first?
+
+Answer:
+
+```text
+SQL/Python extractors first.
+```
+
+Reason:
+
+```text
+raw data are the matriz for canonical discovery and LeadFinder Group modeling;
+LeadFinder filters are demand-side pressure for organized/rastreável data;
+SourceHub translated DTO publication should not freeze before path/type/filter evidence shapes the LeadFinder Group contract.
+```
+
+## Delivered gates
+
+```text
+raw REIQ JSON files
+  -&gt; Python path/type/frequency scanner
+  -&gt; SourceHub raw_records JSONB lab ingestion
+  -&gt; SQL path extraction from raw_records
+  -&gt; Matrix aggregate path evidence
+  -&gt; LeadFinder modeling pressure synthesis
+```
+
+## Python extractor evidence
+
+```json
+{
+  &quot;artifact_class_counts&quot;: {
+    &quot;context&quot;: 1,
+    &quot;matrix_analysis_baseline_only&quot;: 19,
+    &quot;matrix_analysis_contextual&quot;: 19,
+    &quot;matrix_analysis_discrepancy&quot;: 19,
+    &quot;matrix_contract&quot;: 19,
+    &quot;provider_raw_payload&quot;: 1,
+    &quot;source_manifest&quot;: 19
+  },
+  &quot;expected_count&quot;: 97,
+  &quot;expected_count_ok&quot;: true,
+  &quot;file_count&quot;: 97,
+  &quot;ok&quot;: true,
+  &quot;output_json&quot;: &quot;.tmp/prop4you-raw-extractors/reiq-path-candidates-final.json&quot;,
+  &quot;output_md&quot;: &quot;.tmp/prop4you-raw-extractors/reiq-path-candidates-final.md&quot;,
+  &quot;parse_error_count&quot;: 0,
+  &quot;privacy_contract&quot;: &quot;No raw JSON values are emitted; only paths, JSON types, counts, byte sizes, and short SHA-256 samples.&quot;,
+  &quot;root&quot;: &quot;/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/backend/src/apps/system/matrix/registry/reiq/loan_modification/fl&quot;,
+  &quot;root_type_counts&quot;: {
+    &quot;object&quot;: 97
+  },
+  &quot;total_bytes&quot;: 7027134,
+  &quot;unique_path_type_count&quot;: 3685
+}
+```
+
+## SQL extractor evidence
+
+```json
+{
+  &quot;live_summary_rows&quot;: 9650,
+  &quot;no_raw_values_printed&quot;: true,
+  &quot;raw_record_count&quot;: 97,
+  &quot;run_count&quot;: 1,
+  &quot;run_counts&quot;: [
+    {
+      &quot;distinct_path_count&quot;: 9650,
+      &quot;extracted_path_count&quot;: 172700,
+      &quot;source_record_count&quot;: 97
+    }
+  ],
+  &quot;summary_rows&quot;: 9650
+}
+```
+
+## LeadFinder filter pressure
+
+The existing LeadFinder code demands organized/indexable concepts around:
+
+```text
+geography/bbox/location
+property type/specs
+active situations
+occupancy
+valuation/equity/debt
+ownership current/history
+owner type/portfolio/cash buyer/absentee/in-state
+phone validity/DNC/dead_line/status/priority
+email validity/bounce/status
+lead score/classification/queue/dead
+lists/tags/presets/workspace overlays
+```
+
+## Architectural consequence
+
+The next model should not be SourceHub DTO first. The correct next promoted artifact is a modeling/gap bridge:
+
+```text
+raw path evidence + filter pressure -&gt; LeadFinder family/field gap candidates
+```
+
+Then SourceHub DTO can be implemented against known target families/fields.
+</pre></section><section><h2>lab-proof-report</h2><pre># Prop4You Provider + SourceHub + Matrix + LeadFinder DDL Lab Proof
+
+Status: PASS
+LAB_DB: pg18_prop4you_ddl_lab
+PGHOST: 127.0.0.1
+PGPORT: 54318
+
+## Scope
+
+Applied base DDL and experimental Prop4You provider/sourcehub/matrix/leadfinder DDL into a clean lab DB.
+
+No provider calls were made.
+No raw/fake/redacted fixtures were created.
+
+## Apply order
+
+- `database/ddl/base/0001_install_tracking.sql`
+- `database/ddl/base/0002_extensions.sql`
+- `database/ddl/base/0003_base_schemas_roles_context.sql`
+- `database/ddl/base/0004_public_id.sql`
+- `database/ddl/base/0005_lifecycle_columns_triggers.sql`
+- `database/ddl/base/0006_jsonb_contract_helpers.sql`
+- `database/ddl/base/0007_search_normalization.sql`
+- `database/ddl/base/0008_audit_log.sql`
+- `database/ddl/base/0009_realtime_base.sql`
+- `database/ddl/base/0010_api_base.sql`
+- `database/ddl/projects/prop4you/0001_schemas.sql`
+- `database/ddl/projects/prop4you/providers/0001_provider_registry.sql`
+- `database/ddl/projects/prop4you/sourcehub/0001_sourcehub_corpus.sql`
+- `database/ddl/projects/prop4you/matrix/0001_semantic_dictionary.sql`
+- `database/ddl/projects/prop4you/leadfinder/0001_canonical_dictionary.sql`
+- `database/ddl/projects/prop4you/matrix/0002_mapping_sessions.sql`
+- `database/ddl/projects/prop4you/matrix/0003_raw_path_extractors.sql`
+
+## Validation JSON
+
+```json
+{&quot;counts&quot;: {&quot;provider_count&quot;: 4, &quot;payload_class_count&quot;: 5, &quot;mapping_version_count&quot;: 4, &quot;leadfinder_field_count&quot;: 36, &quot;leadfinder_family_count&quot;: 15, &quot;matrix_mirror_family_count&quot;: 7, &quot;matrix_raw_path_view_count&quot;: 2, &quot;matrix_artifact_table_count&quot;: 3, &quot;matrix_raw_path_table_count&quot;: 2, &quot;matrix_raw_path_function_count&quot;: 3, &quot;leadfinder_dictionary_version_count&quot;: 1}, &quot;missing_tables&quot;: [], &quot;missing_schemas&quot;: [], &quot;uncommented_tables&quot;: [], &quot;jsonb_path_type_smoke&quot;: &quot;number&quot;, &quot;jsonb_leaf_paths_smoke_count&quot;: 2}
+```
+
+## Boundary
+
+This proves DDL apply/comment/object smoke for experimental Provider + SourceHub + Matrix mirror/candidate + LeadFinder dictionary gate.
+It does not prove final Prop4You property/owner tables, provider runtime calls, production deployment, real raw ingestion, or LeadFinder materialization.
+</pre></section></body></html>
