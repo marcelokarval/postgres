@@ -174,3 +174,6 @@ Then read the domain-specific doc for the task.
 - `docs/issues/03-prop4you-leadfinder-canonical-cycle-analysis/` — analysis correcting Matrix/SourceHub/LeadFinder ownership: LeadFinder generates canonical dictionary; Matrix produces transformation artifacts; SourceHub translates raw into LeadFinder-consumable DTOs.
 - `docs/issues/04-prop4you-leadfinder-dictionary-from-raws/` — PRD/tasks/review stack implementing LeadFinder-owned canonical dictionary v0 born from raw/code/baseline evidence and reclassifying Matrix canonical tables as mirror/candidate review.
 - `database/ddl/projects/prop4you/leadfinder/0001_canonical_dictionary.sql` — experimental LeadFinder dictionary v0 with 15 family candidates and 36 field candidates.
+- `docs/issues/05-prop4you-matrix-artifacts-reiq-raws/` — PRD/tasks/review stack for Matrix mapping sessions/transformation artifacts and REIQ raw JSONB lab ingestion proof.
+- `database/ddl/projects/prop4you/matrix/0002_mapping_sessions.sql` — experimental Matrix artifact gate linking mapping sessions/artifacts/field mappings to LeadFinder dictionary versions.
+- `scripts/ingest-prop4you-reiq-raws-lab.py` — lab-only REIQ raw JSONB ingestion script; dry-run by default and no payload values printed.

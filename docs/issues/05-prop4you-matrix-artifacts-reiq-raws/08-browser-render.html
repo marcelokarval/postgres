@@ -1,0 +1,700 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Prop4You Matrix Artifacts + REIQ Raws — Browser Proof</title><style>body{font-family:system-ui;margin:32px;background:#f8fafc;color:#111827}header{background:#111827;color:white;padding:24px;border-radius:16px}.ok{background:#dcfce7;color:#14532d;border:1px solid #86efac;border-radius:10px;padding:10px 14px;font-weight:700}.badges span{display:inline-block;background:#dbeafe;color:#1e3a8a;border:1px solid #93c5fd;border-radius:999px;padding:4px 10px;margin:4px;font-weight:700}section{background:white;border:1px solid #e5e7eb;border-radius:14px;padding:18px;margin:18px 0}pre{white-space:pre-wrap;background:#0b1020;color:#e5e7eb;padding:14px;border-radius:10px;font:13px ui-monospace,monospace;max-height:720px;overflow:auto}</style></head><body><header><h1>Prop4You Matrix Artifacts + REIQ Raw Corpus</h1><p class="ok">Browser-proof artifact: Matrix artifact gate + REIQ raw JSONB lab ingestion</p><div class="badges"><span>Matrix 0002</span><span>LeadFinder dictionary FK</span><span>REIQ 97 focused JSONs</span><span>INSERT 0 97 lab proof</span><span>No payload commit</span><span>No provider calls</span><span>PG18 lab PASS</span><span>SourceHub DTO next</span></div></header><section><h2>01-prd.md</h2><pre># PRD — Prop4You Matrix artifacts and REIQ raw corpus gate
+
+Status: draft
+
+## Problem
+
+LeadFinder now owns the raw-born canonical dictionary v0, but Matrix lacks a versioned session/artifact layer that can analyze REIQ/provider raw evidence against a LeadFinder dictionary version and emit a transformation artifact for later SourceHub translation. The local environment also has many REIQ raw payloads that must be used safely without committing payloads or dumping PII.
+
+## Goals
+
+- Implement Matrix DDL for mapping sessions, transformation artifacts, and artifact field mappings referencing LeadFinder dictionary versions.
+- Keep existing Matrix `canonical_*` tables as mirror/candidate/review, not authority.
+- Inventory local REIQ raw files by path/type/count/hash-size metadata only, without raw values.
+- Add a repo script that can ingest raw JSON files into a lab DB as JSONB without committing payloads.
+- Prepare the SourceHub DTO publication contract/design so the next slice has a clear target.
+- Extend proof script to apply the new Matrix artifact DDL and validate clean PG18 lab apply.
+- Persist PRD/tasks/reviews/final/browser proof.
+
+## Non-goals
+
+- No provider/API calls.
+- No raw payload commits.
+- No production mutation.
+- No final SourceHub translated DTO table implementation unless safe as documentation/contract only.
+- No promotion of LeadFinder fields from `candidate` to `in_review` until extractor output exists.
+
+## Acceptance criteria
+
+- `database/ddl/projects/prop4you/matrix/0002_mapping_sessions.sql` exists and applies in lab.
+- It references `prop4you_leadfinder.canonical_dictionary_versions`.
+- Lab proof validates session/artifact tables exist and comments are present.
+- REIQ raw inventory report exists without PII/raw values.
+- Raw ingestion script exists and supports dry-run/path-limited mode.
+- Browser proof renders PRD/task review/final/lab proof.
+</pre></section><section><h2>05-task-review.md</h2><pre># Task Review — Matrix artifacts + REIQ raw corpus
+
+Status: delivered
+Updated: 2026-06-16T15:36:33
+Reviewer: Thor/default
+
+| Task | Requested | Delivered | Evidence | Verdict |
+| --- | --- | --- | --- | --- |
+| T1 | Create PRD/tasks/ledger stack | Stack 05 created | `00-04` | PASS |
+| T2 | Discover and inventory REIQ raw corpus safely | 98 REIQ JSONs total, 97 FL focus; no PII/raw dumps | `08-reiq-raw-corpus-inventory.md` | PASS |
+| T3 | Implement Matrix mapping_sessions/transformation_artifacts DDL | 3 new Matrix artifact tables with LeadFinder dictionary FKs | `matrix/0002_mapping_sessions.sql`; `09-matrix-artifact-ddl-review.md` | PASS |
+| T4 | Design SourceHub translated DTO publication readiness | Contract doc and SourceHub README update | `10-sourcehub-translated-dto-readiness.md` | PASS |
+| T5 | Add raw JSONB lab ingestion script | Script dry-run + execute mode; dry-run PASS; lab execute inserted 97 | `scripts/ingest-prop4you-reiq-raws-lab.py` | PASS |
+| T6 | Run PG18 lab proof and active corrections | DDL proof PASS; ingestion script corrected for `class_key`, SQL CTE cross join, and apply order | `docs/reports/prop4you-sourcehub-matrix-ddl-lab-proof.md`; `/tmp/reiq-ingest-execute.out` | PASS |
+| T7 | Browser-proof + vision QA | Pending before browser step | `06-browser-proof.md`; `08-browser-render.html` | PENDING |
+| T8 | Final report/commit/push | Pending final gate | `07-final-report.md` | PENDING |
+
+## Requested vs delivered
+
+| User request | Delivered |
+| --- | --- |
+| Siga recomendação: Matrix artifacts primeiro | Implemented Matrix `0002_mapping_sessions.sql` |
+| Temos centenas/muitos raw REIQ para usar | Inventory covered 98/97 JSONs and lab ingestion inserted 97 focused files |
+| Manter candidates até extractor | No LeadFinder candidate promoted; artifacts remain review-gated |
+| Orchestration with subagents | 3 lanes used; B/C timed out after writing artifacts/status; parent verified artifacts and proof |
+| Browser proof + final report | Browser proof scheduled in final gate |
+
+## Active corrections
+
+- Fixed proof apply order: LeadFinder dictionary must apply before Matrix 0002.
+- Fixed ingestion script `payload_class_key` -&gt; `class_key`.
+- Fixed generated SQL to cross join provider/payload_class CTEs outside `VALUES`.
+- Reduced psql noise with `-q` while preserving `ON_ERROR_STOP`.
+</pre></section><section><h2>07-final-report.md</h2><pre># Final Report — Matrix artifacts + REIQ raw corpus
+
+Status: delivered before browser/commit final gate
+Updated: 2026-06-16T15:36:33
+Owner/reviewer: Thor/default
+
+## Verdict
+
+SUPPORTED for experimental/non-final Matrix artifact gate and REIQ raw JSONB lab ingestion proof.
+
+NOT CLAIMED:
+
+- SourceHub translated DTO table implementation;
+- final LeadFinder materialization;
+- production deployment;
+- provider/API calls;
+- committed raw payloads;
+- field candidate promotion to `in_review`.
+
+## DDL delivered
+
+```text
+database/ddl/projects/prop4you/matrix/0002_mapping_sessions.sql
+```
+
+Objects:
+
+```text
+prop4you_matrix.mapping_sessions
+prop4you_matrix.transformation_artifacts
+prop4you_matrix.artifact_field_mappings
+```
+
+Required FK authority:
+
+```text
+prop4you_leadfinder.canonical_dictionary_versions(id)
+```
+
+## REIQ raw corpus delivered
+
+Inventory:
+
+```text
+docs/issues/05-prop4you-matrix-artifacts-reiq-raws/08-reiq-raw-corpus-inventory.md
+```
+
+Counts:
+
+```text
+registry/reiq: 98 JSONs
+loan_modification/fl: 97 JSONs
+all focused JSON root type: object
+```
+
+Focused classes:
+
+```text
+source_manifest: 19
+provider_raw_payload: 1
+matrix_contract: 19
+matrix_analysis_baseline_only: 19
+matrix_analysis_contextual: 19
+matrix_analysis_discrepancy: 19
+context: 1
+```
+
+## Raw ingestion proof
+
+Script:
+
+```text
+scripts/ingest-prop4you-reiq-raws-lab.py
+```
+
+Dry-run proof:
+
+```text
+file_count: 97
+expected_count_match: true
+no_payload_values_printed: true
+```
+
+Execute proof:
+
+```text
+INSERT 0 97
+```
+
+Target during proof:
+
+```text
+pg18_prop4you_ddl_lab.prop4you_sourcehub.raw_records
+```
+
+Lab DB was dropped after proof.
+
+## DDL proof
+
+Report:
+
+```text
+docs/reports/prop4you-sourcehub-matrix-ddl-lab-proof.md
+```
+
+Applied includes:
+
+```text
+matrix/0002_mapping_sessions.sql
+```
+
+## SourceHub next contract
+
+Prepared:
+
+```text
+docs/issues/05-prop4you-matrix-artifacts-reiq-raws/10-sourcehub-translated-dto-readiness.md
+```
+
+Next DDL should implement:
+
+```text
+prop4you_sourcehub.translated_dto_publications
+```
+
+with dependencies:
+
+```text
+raw_record_id
+matrix_artifact_id
+leadfinder_dictionary_version_id
+translated_dto jsonb
+checksum/status/gap references
+```
+
+## Subagent status
+
+- A completed normally.
+- B/C timed out in delegate response but wrote expected artifacts/status; parent verified and accepted after proof.
+
+## Next steps
+
+1. Implement SourceHub `0002_translated_dto_publications.sql`.
+2. Implement SQL + Python path extractors over ingested REIQ raw_records.
+3. Generate Matrix artifact rows from extractor outputs without promoting fields yet.
+4. Compare extractor findings against LeadFinder candidate fields.
+5. Only then consider promoting selected field candidates to `in_review`.
+</pre></section><section><h2>08-reiq-raw-corpus-inventory.md</h2><pre># Inventário seguro do corpus REIQ bruto para ingestão JSONB lab
+
+Escopo: inventário local, somente leitura, do corpus em `prop4you-inertia/backend/src/apps/system/matrix/registry/reiq`, com foco em `loan_modification/fl/{data,contracts,analysis}`.
+
+[NO_PROVIDER_CALLS]
+Nenhuma chamada a provedor externo, API remota, LLM provider ou serviço de produção foi executada. A análise foi feita localmente por varredura de arquivos e parse JSON.
+
+[NO_PII_DUMP]
+Este relatório não despeja valores brutos, nomes, endereços, telefones, documentos, identificadores pessoais, payloads completos ou segredos. Identificadores de sessão foram agregados ou pseudonimizados por hash curto apenas para contagem operacional.
+
+## Método seguro
+
+- Varredura local com Python sobre arquivos `.json`.
+- Parse JSON apenas para forma estrutural: objeto/array, contagens, tamanho em bytes, presença por classe de artefato.
+- Hashes usados somente como resumo de integridade/agregação; não há conteúdo bruto no relatório.
+- Campos do payload datado foram classificados por famílias sem expor valores.
+
+## Raiz analisada
+
+- Corpus REIQ local: `apps/system/matrix/registry/reiq`
+- Foco REIQ FL loan modification: `apps/system/matrix/registry/reiq/loan_modification/fl`
+
+[REIQ_RAW_COUNT]
+
+Resumo global do corpus REIQ local:
+
+| Escopo | Arquivos totais | JSON válidos | Observação |
+| --- | ---: | ---: | --- |
+| `registry/reiq` | 98 | 98 | Todos os arquivos encontrados são JSON parseáveis |
+| `loan_modification/fl` | 97 | 97 | Foco principal do inventário |
+| Fora de `fl` | 1 | 1 | `loan_modification/context.json` no nível da família |
+
+Contagem por família/estado no corpus REIQ:
+
+| Família/estado | JSON |
+| --- | ---: |
+| `loan_modification/fl` | 97 |
+| `loan_modification/context.json` | 1 |
+
+Contagem por diretório/classe no foco `loan_modification/fl`:
+
+| Classe | JSON | Bytes totais | Min bytes | Max bytes | Shape JSON | Hash agregado curto |
+| --- | ---: | ---: | ---: | ---: | --- | --- |
+| `data` manifests de sessão | 19 | 98.182 | 4.876 | 5.195 | 19 objetos | `aadc512196eabd8d` |
+| `data/date_payload` | 1 | 1.677 | 1.677 | 1.677 | 1 objeto | `5a8bf6dd697667c7` |
+| `contracts` | 19 | 106.451 | 1.115 | 7.692 | 19 objetos | `89a7c7b4ebf0399f` |
+| `analysis/baseline-only` | 19 | 5.933.549 | 3.143 | 329.467 | 19 objetos | `107103d11241d9e6` |
+| `analysis/contextual` | 19 | 555.322 | 5.986 | 30.530 | 19 objetos | `83b92d4a64419636` |
+| `analysis/discrepancy` | 19 | 329.259 | 3 | 18.292 | 19 objetos | `f88891361b1308a1` |
+| `context.json` local | 1 | 2.694 | 2.694 | 2.694 | 1 objeto | `bf4295b506e9e8f5` |
+
+Resumo agregado do foco `loan_modification/fl`:
+
+| Métrica | Valor |
+| --- | ---: |
+| JSON no foco | 97 |
+| Bytes totais | 7.027.134 |
+| Menor arquivo | 3 bytes |
+| Maior arquivo | 329.467 bytes |
+| Média por arquivo | 72.444,7 bytes |
+| Hash agregado curto do conjunto | `6d239b1e18a54f46` |
+| Erros de parse JSON | 0 |
+
+## Contagens por data
+
+| Data derivada de diretório | JSON | Classe |
+| --- | ---: | --- |
+| 2025-11-27 | 1 | payload bruto datado em `data/&lt;data&gt;/...json` |
+
+O payload datado é um objeto JSON com 51 chaves de topo. Os nomes e valores dos campos não foram despejados neste relatório por segurança.
+
+## Contagens por sessão
+
+Foram detectadas 19 sessões. Cada sessão possui exatamente 5 artefatos associados no foco:
+
+- 1 manifesto em `data`
+- 1 contrato em `contracts`
+- 1 análise `baseline-only`
+- 1 análise `contextual`
+- 1 análise `discrepancy`
+
+Distribuição: `19 sessões x 5 artefatos = 95 artefatos de sessão`.
+
+Hashes curtos pseudonimizados de sessão e contagem por classe:
+
+| Sessão hash12 | data | contracts | baseline-only | contextual | discrepancy | Total |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `03045f19d81a` | 1 | 1 | 1 | 1 | 1 | 5 |
+| `22d1ddb512e4` | 1 | 1 | 1 | 1 | 1 | 5 |
+| `250b993e966a` | 1 | 1 | 1 | 1 | 1 | 5 |
+| `3407fc59d959` | 1 | 1 | 1 | 1 | 1 | 5 |
+| `4d51e6026f31` | 1 | 1 | 1 | 1 | 1 | 5 |
+| `4de643c1d5f0` | 1 | 1 | 1 | 1 | 1 | 5 |
+| `67cf0ccd09cd` | 1 | 1 | 1 | 1 | 1 | 5 |
+| `798c6f334f0d` | 1 | 1 | 1 | 1 | 1 | 5 |
+| `7adc9602162f` | 1 | 1 | 1 | 1 | 1 | 5 |
+| `7e3ed4f70fe4` | 1 | 1 | 1 | 1 | 1 | 5 |
+| `886e16483a85` | 1 | 1 | 1 | 1 | 1 | 5 |
+| `900a701121c0` | 1 | 1 | 1 | 1 | 1 | 5 |
+| `a5c679ed948b` | 1 | 1 | 1 | 1 | 1 | 5 |
+| `b6973b75da0a` | 1 | 1 | 1 | 1 | 1 | 5 |
+| `c49303512905` | 1 | 1 | 1 | 1 | 1 | 5 |
+| `d650ecce2d5e` | 1 | 1 | 1 | 1 | 1 | 5 |
+| `d65d10448c1d` | 1 | 1 | 1 | 1 | 1 | 5 |
+| `eca556c76baa` | 1 | 1 | 1 | 1 | 1 | 5 |
+| `f83e37209cff` | 1 | 1 | 1 | 1 | 1 | 5 |
+
+## Shapes JSON de topo
+
+| Escopo | Objetos | Arrays | Outros | Parse errors |
+| --- | ---: | ---: | ---: | ---: |
+| `registry/reiq` | 98 | 0 | 0 | 0 |
+| `loan_modification/fl` | 97 | 0 | 0 | 0 |
+| `loan_modification/fl/data` manifests | 19 | 0 | 0 | 0 |
+| `loan_modification/fl/data/date_payload` | 1 | 0 | 0 | 0 |
+| `loan_modification/fl/contracts` | 19 | 0 | 0 | 0 |
+| `loan_modification/fl/analysis/*` | 57 | 0 | 0 | 0 |
+| `loan_modification/fl/context.json` | 1 | 0 | 0 | 0 |
+
+[RAW_CLASSIFICATION]
+
+Categorias candidatas identificadas, sem valores brutos:
+
+1. Manifestos de fonte/sessão (`data/session_*_source_manifest.json`)
+   - Artefatos de linhagem e superfície de fonte.
+   - Bons candidatos para ingestão JSONB como `artifact_kind = source_manifest` ou classe equivalente.
+   - Baixo risco operacional se permanecerem em tabela lab com acesso restrito; ainda podem conter metadados de sessão e fonte.
+
+2. Payload bruto datado (`data/&lt;YYYY-MM-DD&gt;/...json`)
+   - Registro bruto pontual do provedor/lista.
+   - Contém famílias de dados sensíveis: metadados internos/processuais, partes/pessoas, propriedade/endereço, características do imóvel, instituição/financiamento e estimativas financeiras.
+   - Deve ser ingerido como JSONB bruto em área lab restrita, sem projeções públicas e sem logs de payload.
+
+3. Contratos de sessão (`contracts/session_*.json`)
+   - Snapshots/refs de contrato semântico entre sessão, baseline e contratos publicados.
+   - Candidatos para tabela de `transformation_artifacts`/`mapping_artifacts`, com JSONB preservado e colunas derivadas mínimas.
+
+4. Análise baseline-only (`analysis/baseline-only/session_*.json`)
+   - Artefatos grandes de snapshots de dicionário, cobertura, drift e evidências semânticas.
+   - Maior volume do corpus; requer JSONB com TOAST normal, checksum e ingestão idempotente.
+
+5. Análise contextual (`analysis/contextual/session_*.json`)
+   - Artefatos de contexto Matrix/workspace e análise de campos.
+   - Úteis para reconstruir decisões de mapeamento sem depender de runtime Django.
+
+6. Análise discrepancy (`analysis/discrepancy/session_*.json`)
+   - Artefatos de perfil/discrepâncias de dataset e padrões entre campos.
+   - Há pelo menos um arquivo mínimo de 3 bytes, provavelmente objeto vazio; tratar como artefato válido, não como erro.
+
+7. Contexto local (`context.json`)
+   - Regras/assunções de contexto da família/estado.
+   - Deve ser ingerido como artefato de contexto separado ou como parent artifact ligado a família/lista/estado.
+
+## Recomendações de ingestão JSONB lab
+
+[INGESTION_RECOMMENDATION]
+
+1. Ingestão raw-first, sem tradução inicial
+   - Criar/usar uma tabela lab de artefatos REIQ brutos com `raw_payload jsonb not null`.
+   - Preservar o arquivo inteiro como JSONB e não decompor PII em colunas nesta fase.
+   - Derivar somente metadados seguros: provider/list_type/state, artifact_class, source_relpath, source_date quando existir, byte_size, content_sha256, ingested_at.
+
+2. Idempotência e lineage
+   - Chave natural recomendada para lab: `(source_relpath, content_sha256)` ou `(provider, list_type, state, artifact_class, session_hash/source_date, content_sha256)`.
+   - Guardar hash completo no banco, mas logs/provas devem usar hash curto.
+   - Não usar nome bruto de sessão como identificador público; usar hash/pseudônimo interno quando necessário em relatórios.
+
+3. Separar payload bruto de artefatos Matrix
+   - `data/date_payload` deve ser classificado como raw provider record.
+   - `data/session_*_source_manifest`, `contracts` e `analysis/*` devem ser classificados como Matrix/sourcehub artifacts.
+   - O DDL deve permitir ambos no mesmo envelope JSONB, mas com `artifact_class`/`artifact_kind` explícitos.
+
+4. Segurança e RLS
+   - Tabelas lab devem ficar em schema não exposto ao PostgREST público.
+   - Sem grants para `anon`/cliente.
+   - Sem views públicas sobre `raw_payload`.
+   - Qualquer projeção posterior deve mascarar ou excluir campos pessoais/endereço/financeiros.
+
+5. Validação de ingestão
+   - Validar parse JSON e contagem de linhas esperada: 98 no corpus REIQ total ou 97 no foco FL, conforme escopo do script.
+   - Validar `object` como shape esperado em todos os arquivos atuais.
+   - Validar soma por classe: manifests 19, contracts 19, analyses 57, payload datado 1, context local 1 no foco FL.
+
+6. Performance/armazenamento
+   - O maior custo atual está em `analysis/baseline-only` (~5,93 MB de 7,03 MB do foco).
+   - JSONB puro é aceitável para lab; adiar índices GIN até existir consulta real.
+   - Inicialmente indexar somente metadados escalares seguros e checksum.
+
+[GAPS]
+
+- O corpus local REIQ contém apenas `loan_modification/fl` mais um `context.json`; não há, nesta árvore `registry/reiq`, dados brutos locais para outros estados/listas.
+- Existe somente 1 payload bruto datado em `data/&lt;YYYY-MM-DD&gt;`; os demais 19 itens em `data` são manifestos de sessão, não registros provider brutos.
+- Não foi validada correspondência semântica contra banco de dados ou migrações em execução; este inventário é filesystem-only.
+- Não foi feita leitura/dump de valores internos do payload, por desenho de segurança.
+- Um arquivo `analysis/discrepancy` tem 3 bytes e parseia como objeto JSON; recomendação é ingerir como artefato válido e marcar tamanho mínimo para revisão posterior, não falhar a carga.
+- Se o script de ingestão T5 mirar somente `data/**/*.json`, ele perderá contratos/análises; se mirar todo `loan_modification/fl/**/*.json`, ele deve classificar corretamente `context.json`, manifests, payload datado, contracts e analysis.
+
+## Checklist para T5
+
+- [ ] Escopo explícito: corpus REIQ total (98) ou foco FL (97).
+- [ ] Sem logs de `raw_payload`.
+- [ ] Contagens esperadas parametrizadas por classe.
+- [ ] `content_sha256` calculado antes de inserir.
+- [ ] Insert idempotente por path+hash.
+- [ ] Teste/prova mostra somente contagens, shapes, tamanhos e hashes curtos.
+</pre></section><section><h2>09-matrix-artifact-ddl-review.md</h2><pre># Review — Worker B Matrix artifact DDL
+
+Status: delivered by subagent B
+
+## [MATRIX_ARTIFACT_GATE]
+
+Implemented `database/ddl/projects/prop4you/matrix/0002_mapping_sessions.sql` as an experimental/non-final Matrix artifact gate. The DDL models review workflow state for mapping sessions, transformation artifacts, and artifact field mappings. These rows can gate later SourceHub DTO publication work, but they do not publish DTOs and do not materialize LeadFinder canonical graph rows.
+
+## [LEADFINDER_DICTIONARY_FK]
+
+The new DDL includes required foreign keys to `prop4you_leadfinder.canonical_dictionary_versions` on:
+
+- `prop4you_matrix.mapping_sessions.dictionary_version_id`
+- `prop4you_matrix.transformation_artifacts.dictionary_version_id`
+- `prop4you_matrix.artifact_field_mappings.dictionary_version_id`
+
+It also includes optional safe links to existing Matrix, SourceHub, Provider, and LeadFinder objects:
+
+- `prop4you_matrix.mapping_versions`
+- `prop4you_matrix.provider_path_mappings`
+- `prop4you_matrix.canonical_fields` as mirror/candidate/review compatibility
+- `prop4you_sourcehub.raw_records` for lineage only
+- `prop4you_provider.providers`
+- `prop4you_provider.payload_classes`
+- `prop4you_leadfinder.canonical_fields`
+
+## [NO_FIXTURES]
+
+No insert statements, fixture values, raw payload samples, fake payload samples, or redacted payload values were added. The SQL creates schema objects, constraints, indexes, and comments only.
+
+## [NO_PROVIDER_CALLS]
+
+No provider/API calls, HTTP clients, lookup functions, network calls, runtime enrichment code, or provider credentials were added. JSONB columns and comments explicitly state that raw provider values and secrets do not belong in Matrix artifacts.
+
+## [DDL_OBJECTS]
+
+Created DDL for these objects:
+
+- `prop4you_matrix.mapping_sessions`
+  - UUIDv7 primary key and generated public ref.
+  - Required LeadFinder dictionary version FK.
+  - Optional provider/payload/mapping/source lineage FKs.
+  - Status constraints for session lifecycle and artifact gate lifecycle.
+  - JSONB object checks for input scope, extraction summary, and metadata.
+  - Useful btree and GIN indexes.
+  - Table and column comments.
+
+- `prop4you_matrix.transformation_artifacts`
+  - UUIDv7 primary key and generated public ref.
+  - Required mapping session FK and required LeadFinder dictionary version FK.
+  - Optional provider/payload/mapping/source lineage FKs.
+  - Artifact kind/status/gate constraints, checksum constraint, JSONB object checks.
+  - Useful btree and GIN indexes.
+  - Table and column comments.
+
+- `prop4you_matrix.artifact_field_mappings`
+  - UUIDv7 primary key and generated public ref.
+  - Required artifact, mapping session, and LeadFinder dictionary version FKs.
+  - Optional LeadFinder field, Matrix mirror field, provider path mapping, provider/payload/source lineage FKs.
+  - `text[]` source path, target field key, transform policy, status, confidence, and ordinal constraints.
+  - Unique artifact/path/target index plus btree and GIN indexes.
+  - Table and column comments.
+
+Updated `database/ddl/projects/prop4you/matrix/README.md` to list `0002_mapping_sessions.sql` and document the artifact gate rules.
+
+## [RISKS]
+
+- The DDL is intentionally experimental/non-final; status vocabularies and artifact JSONB contracts may need adjustment after raw corpus extractor output lands.
+- `create table if not exists` is idempotent for clean installs but will not retrofit column/constraint changes if an earlier divergent table already exists in a target database.
+- `artifact_payload`, `evidence_summary`, and `transform_spec` are flexible JSONB objects; downstream tooling must enforce the no-raw-values policy during artifact generation.
+- The optional `prop4you_matrix.mapping_versions` links preserve compatibility with the existing Matrix 0001 model, but future cleanup may migrate all artifact ownership to the new session/artifact tables.
+</pre></section><section><h2>10-sourcehub-translated-dto-readiness.md</h2><pre># SourceHub translated DTO publication — contrato/readiness
+
+Status: contrato de prontidão para próxima fatia; sem implementação final de DDL nesta entrega.
+
+[SOURCEHUB_DTO_PUBLICATION_NEXT]
+
+A próxima fatia de SourceHub deve publicar uma tabela conceitual `prop4you_sourcehub.translated_dto_publications` somente depois que o raw record passar por revisão de SourceHub, artefato Matrix e versão de dicionário LeadFinder. A tabela não deve materializar entidades finais de propriedade, owner ou lead; ela deve registrar a publicação de um DTO traduzido, versionado e auditável, pronto para consumo controlado por LeadFinder ou por revisores.
+
+Contrato mínimo recomendado:
+
+- `id uuid primary key default uuidv7()`.
+- `public_ref text generated always as (base.make_public_ref(&#x27;p4yshd&#x27;, id)) stored`.
+- `raw_record_id uuid not null references prop4you_sourcehub.raw_records(id) on delete restrict`.
+- `matrix_artifact_id uuid not null` apontando para o artefato Matrix aprovado da próxima DDL de Matrix.
+- `leadfinder_dictionary_version_id uuid not null references prop4you_leadfinder.canonical_dictionary_versions(id) on delete restrict`.
+- `translated_dto jsonb not null`, com constraint `jsonb_typeof(translated_dto) = &#x27;object&#x27;`.
+- `translated_dto_sha256 text`, lowercase SHA-256 do JSON canônico ou payload textual definido pela pipeline; constraint `^[0-9a-f]{64}$` quando preenchido.
+- `publication_status text not null default &#x27;candidate&#x27;` com vocabulário inicial sugerido: `candidate`, `blocked`, `ready_for_review`, `published`, `rejected`, `superseded`, `archived`.
+- `publication_kind text not null default &#x27;leadfinder_candidate&#x27;` com vocabulário inicial sugerido: `leadfinder_candidate`, `review_snapshot`, `gap_evidence`, `regression_fixture_metadata`, `unknown`.
+- `rejection_reason_code text` e `rejection_summary text` para recusas sem dump de payload/PII.
+- `gap_reference_schema name`, `gap_reference_table name`, `gap_reference_id uuid` para apontar lacunas de Matrix ou LeadFinder sem acoplar a um nome ainda não congelado.
+- `source_lineage_edge_id uuid references prop4you_sourcehub.source_lineage_edges(id) on delete set null` quando a publicação tiver aresta explícita `candidate_dto_for` ou `derived_from`.
+- `metadata jsonb not null default &#x27;{}&#x27;::jsonb` para metadados não secretos.
+- colunas de lifecycle padrão (`active`, `activated_at`, `deactivated_at`, `deleted`, `deleted_at`, `deleted_by_actor_id`, `created_at`, `updated_at`, `last_modified_by_actor_id`, `version`) alinhadas com `raw_records`, `corpus_samples`, `source_lineage_edges` e `enrichment_requests`.
+
+Índices recomendados:
+
+- `(raw_record_id, publication_status)`.
+- `(matrix_artifact_id, publication_status)`.
+- `(leadfinder_dictionary_version_id, publication_status)`.
+- `translated_dto` GIN com `jsonb_path_ops` somente para revisão controlada.
+- índice parcial para `gap_reference_*` quando `gap_reference_id is not null`.
+- chave única ou dedupe lógico em `(raw_record_id, matrix_artifact_id, leadfinder_dictionary_version_id, translated_dto_sha256)` quando checksum existir.
+
+[MATRIX_ARTIFACT_DEPENDENCY]
+
+A DDL atual de Matrix existente neste checkout é `prop4you_matrix.0001_semantic_dictionary.sql`, com tabelas mirror/candidate/review `canonical_families`, `canonical_fields`, `provider_field_candidates` e `field_mapping_reviews`. O PRD desta issue exige uma próxima DDL `database/ddl/projects/prop4you/matrix/0002_mapping_sessions.sql` com sessões e artefatos de transformação.
+
+Para evitar divergência de nomes, SourceHub deve aguardar os nomes finais da próxima fatia Matrix. O contrato esperado é que `matrix_artifact_id` referencie a tabela de artefatos de transformação aprovada por Matrix, provavelmente `prop4you_matrix.transformation_artifacts(id)` se o Worker B/Thor mantiver o nome do PRD. Se o nome final diferir, preservar o conceito: uma publicação DTO deve sempre apontar para exatamente um artefato Matrix aprovado, contendo mapeamentos de campos/path e evidência sem valores brutos.
+
+Pré-condições Matrix para permitir `publication_status = &#x27;published&#x27;`:
+
+- artefato Matrix existe e não foi soft-deletado;
+- artefato está em estado aprovado/publicável, não apenas candidato;
+- artefato registra ou referencia a mesma versão de dicionário LeadFinder usada na publicação;
+- artefato não exige provider call para completar o DTO;
+- gaps de mapeamento críticos estão resolvidos ou explicitamente vinculados em `gap_reference_*`.
+
+[LEADFINDER_DICTIONARY_DEPENDENCY]
+
+LeadFinder já possui `prop4you_leadfinder.canonical_dictionary_versions`, `canonical_families`, `canonical_fields`, `canonical_gaps` e `growth_pressure_signals`. A publicação DTO deve ter FK obrigatória para `prop4you_leadfinder.canonical_dictionary_versions(id)` porque LeadFinder é o dono do dicionário canônico; Matrix apenas autoriza/explica a transformação.
+
+Regras de prontidão LeadFinder:
+
+- A versão de dicionário deve existir em `prop4you_leadfinder.canonical_dictionary_versions`.
+- Preferir `version_status in (&#x27;approved&#x27;,&#x27;active&#x27;)` para publicação; `draft`/`in_review` podem gerar apenas `candidate` ou `ready_for_review`.
+- Lacunas de dicionário devem apontar para `prop4you_leadfinder.canonical_gaps(id)` quando forem lacunas canônicas conhecidas; usar `gap_reference_*` para manter flexibilidade enquanto a DDL final não congela uma FK específica.
+- DTO traduzido deve declarar em `metadata` a `dictionary_version_key` observada, mas a FK por `id` é a verdade relacional.
+
+[NO_PROVIDER_CALLS]
+
+Este contrato não chama provedores, não cria worker, não agenda cron, não usa HTTP, não lê corpus privado e não exige segredos. Qualquer resposta futura de provedor deve entrar primeiro como `prop4you_sourcehub.raw_records`; publicação DTO é derivação/revisão, não coleta de dados.
+
+[NO_PII_DUMP]
+
+Este arquivo não contém payloads REIQ/provedor, valores de owners, contatos, endereços ou amostras raw. A tabela futura deve evitar logs de valores sensíveis em `rejection_summary`, `metadata` e comentários; `translated_dto` pode conter dados pessoais somente sob política/RLS de SourceHub definida em fatia própria, nunca como fixture ou dump gitado.
+
+[RISKS]
+
+- Nomes finais da próxima DDL Matrix ainda podem mudar; não congelar FK para `matrix_artifact_id` antes de `0002_mapping_sessions.sql` existir e aplicar em lab.
+- `translated_dto` tende a carregar PII se representar owners/contatos; RLS/políticas de leitura precisam ser definidas antes de expor via PostgREST ou clients.
+- Checksum precisa de serialização canônica definida pela pipeline; `jsonb::text` pode não ser contrato suficiente para interoperabilidade externa.
+- Publicação sem vínculo consistente entre `raw_record_id`, artefato Matrix e versão LeadFinder pode gerar DTO semanticamente inválido.
+- `gap_reference_*` é flexível, mas menos seguro que FKs específicas; converter para FKs quando os objetos de gap Matrix/LeadFinder estiverem estáveis.
+- Esta prontidão não substitui prova lab da futura DDL; ela apenas prepara o contrato e os gates de aceitação.
+
+Checklist para próxima fatia:
+
+1. Confirmar nomes reais da DDL Matrix 0002 e escolher FK concreta de `matrix_artifact_id`.
+2. Criar DDL `0002_translated_dto_publications.sql` ou nome equivalente em `database/ddl/projects/prop4you/sourcehub/`.
+3. Registrar prefixo público `p4yshd` com `base.register_public_id_prefix`.
+4. Adicionar comentários para tabela/colunas/constraints/triggers.
+5. Criar triggers base de lifecycle.
+6. Provar em lab que as dependências aplicam na ordem: base, schemas, providers, leadfinder, matrix 0001, matrix 0002, sourcehub 0001, sourcehub DTO publication.
+</pre></section><section><h2>11-executive-synthesis.md</h2><pre># Executive synthesis — Matrix artifacts + REIQ raw corpus
+
+Status: delivered
+Updated: 2026-06-16T15:36:33
+Reviewer: Thor/default
+
+## Core result
+
+This slice implements the next gate after LeadFinder dictionary v0:
+
+```text
+LeadFinder dictionary version
+  -&gt; Matrix mapping session
+  -&gt; Matrix transformation artifact
+  -&gt; artifact field mappings
+  -&gt; future SourceHub translated DTO publication
+```
+
+## REIQ corpus reality
+
+The local REIQ registry has 98 JSON files, with 97 under `loan_modification/fl`.
+
+The focused FL corpus contains:
+
+```text
+19 source manifests
+1 dated provider raw payload
+19 contracts
+19 baseline-only analyses
+19 contextual analyses
+19 discrepancy analyses
+1 context.json
+```
+
+All 97 focused JSON files parse as root objects. No raw values or PII were persisted in repo reports.
+
+## DDL result
+
+Added:
+
+```text
+database/ddl/projects/prop4you/matrix/0002_mapping_sessions.sql
+```
+
+Objects:
+
+```text
+prop4you_matrix.mapping_sessions
+prop4you_matrix.transformation_artifacts
+prop4you_matrix.artifact_field_mappings
+```
+
+All reference `prop4you_leadfinder.canonical_dictionary_versions` as the required dictionary authority.
+
+## Ingestion result
+
+Added:
+
+```text
+scripts/ingest-prop4you-reiq-raws-lab.py
+```
+
+Validated:
+
+```text
+dry-run: 97 files, object root type, no payload values printed
+execute lab: INSERT 0 97 into prop4you_sourcehub.raw_records
+```
+
+The lab DB was dropped after proof. Payloads were not committed.
+
+## SourceHub readiness
+
+SourceHub translated DTO publication should be next, now that Matrix artifact IDs exist:
+
+```text
+raw_record_id
+matrix_artifact_id -&gt; prop4you_matrix.transformation_artifacts(id)
+leadfinder_dictionary_version_id -&gt; prop4you_leadfinder.canonical_dictionary_versions(id)
+translated_dto jsonb
+checksum/status/gap references
+```
+</pre></section><section><h2>lab-proof-report</h2><pre># Prop4You Provider + SourceHub + Matrix + LeadFinder DDL Lab Proof
+
+Status: PASS
+LAB_DB: pg18_prop4you_ddl_lab
+PGHOST: 127.0.0.1
+PGPORT: 54318
+
+## Scope
+
+Applied base DDL and experimental Prop4You provider/sourcehub/matrix/leadfinder DDL into a clean lab DB.
+
+No provider calls were made.
+No raw/fake/redacted fixtures were created.
+
+## Apply order
+
+- `database/ddl/base/0001_install_tracking.sql`
+- `database/ddl/base/0002_extensions.sql`
+- `database/ddl/base/0003_base_schemas_roles_context.sql`
+- `database/ddl/base/0004_public_id.sql`
+- `database/ddl/base/0005_lifecycle_columns_triggers.sql`
+- `database/ddl/base/0006_jsonb_contract_helpers.sql`
+- `database/ddl/base/0007_search_normalization.sql`
+- `database/ddl/base/0008_audit_log.sql`
+- `database/ddl/base/0009_realtime_base.sql`
+- `database/ddl/base/0010_api_base.sql`
+- `database/ddl/projects/prop4you/0001_schemas.sql`
+- `database/ddl/projects/prop4you/providers/0001_provider_registry.sql`
+- `database/ddl/projects/prop4you/sourcehub/0001_sourcehub_corpus.sql`
+- `database/ddl/projects/prop4you/matrix/0001_semantic_dictionary.sql`
+- `database/ddl/projects/prop4you/leadfinder/0001_canonical_dictionary.sql`
+- `database/ddl/projects/prop4you/matrix/0002_mapping_sessions.sql`
+
+## Validation JSON
+
+```json
+{&quot;counts&quot;: {&quot;provider_count&quot;: 4, &quot;payload_class_count&quot;: 5, &quot;mapping_version_count&quot;: 4, &quot;leadfinder_field_count&quot;: 36, &quot;leadfinder_family_count&quot;: 15, &quot;matrix_mirror_family_count&quot;: 7, &quot;matrix_artifact_table_count&quot;: 3, &quot;leadfinder_dictionary_version_count&quot;: 1}, &quot;missing_tables&quot;: [], &quot;missing_schemas&quot;: [], &quot;uncommented_tables&quot;: [], &quot;jsonb_path_type_smoke&quot;: &quot;number&quot;, &quot;jsonb_leaf_paths_smoke_count&quot;: 2}
+```
+
+## Boundary
+
+This proves DDL apply/comment/object smoke for experimental Provider + SourceHub + Matrix mirror/candidate + LeadFinder dictionary gate.
+It does not prove final Prop4You property/owner tables, provider runtime calls, production deployment, real raw ingestion, or LeadFinder materialization.
+</pre></section></body></html>

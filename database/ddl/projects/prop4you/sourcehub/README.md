@@ -52,10 +52,30 @@ Primary indexes/themes:
 - raw JSONB and metadata GIN review indexes
 - lineage from/to/derived-object lookup
 
+[SOURCEHUB_DTO_PUBLICATION_NEXT]
+
+The next SourceHub slice should add a documented/DDL-backed publication table, tentatively `prop4you_sourcehub.translated_dto_publications`, after Matrix artifact DDL is finalized. The publication record should link:
+
+- `raw_record_id` -> `prop4you_sourcehub.raw_records(id)`.
+- `matrix_artifact_id` -> the approved Matrix transformation artifact table from the next Matrix DDL slice.
+- `leadfinder_dictionary_version_id` -> `prop4you_leadfinder.canonical_dictionary_versions(id)`.
+- `translated_dto jsonb` plus `translated_dto_sha256`, `publication_status`, rejection metadata and gap references.
+
+See `docs/issues/05-prop4you-matrix-artifacts-reiq-raws/10-sourcehub-translated-dto-readiness.md` for the readiness contract. This README intentionally does not implement final DTO-publication DDL yet because the Matrix artifact table name/FK target must be frozen first.
+
+[MATRIX_ARTIFACT_DEPENDENCY]
+
+SourceHub DTO publication must be gated by an approved Matrix transformation artifact. Existing `prop4you_matrix` objects are mirror/candidate/review structures; SourceHub should not publish DTOs directly from raw provider paths without Matrix approval.
+
+[LEADFINDER_DICTIONARY_DEPENDENCY]
+
+SourceHub DTO publication must reference the LeadFinder-owned canonical dictionary version in `prop4you_leadfinder.canonical_dictionary_versions`; Matrix does not own final dictionary semantics.
+
 [RISKS]
 
 - Non-final: column names/status vocabularies may change after real provider corpus comparison and Matrix review.
 - `raw_payload` can contain sensitive data; access policy/RLS is intentionally not finalized in this slice.
+- A future `translated_dto` can also contain sensitive/PII data and must not be dumped into docs, fixtures, logs, or public clients without explicit policy.
 - The queue table does not implement locking/worker semantics yet; it only captures durable intent.
 - Private corpus URI/path metadata must be handled carefully by operators to avoid leaking local paths or secrets.
-- Apply order requires base DDL, Prop4You schemas, and provider registry before SourceHub DDL.
+- Apply order requires base DDL, Prop4You schemas, provider registry, LeadFinder dictionary, and Matrix artifact DDL before final DTO publication DDL.
