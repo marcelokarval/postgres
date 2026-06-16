@@ -171,3 +171,4 @@ Then read the domain-specific doc for the task.
 - `docs/issues/01-prop4you-provider-payload-corpus/` — provider payload corpus PRD/tasks/review stack for REIQ, DirectSkip, Realtor.com and internal payload side-by-side comparison before Prop4You DDL freeze.
 - `docs/issues/02-prop4you-sourcehub-matrix-ddl/` — PRD/tasks/review stack for first experimental Prop4You provider registry, SourceHub corpus/enrichment queue, Matrix semantic dictionary DDL and lab proof.
 - `docs/reports/prop4you-sourcehub-matrix-ddl-lab-proof.md` — lab proof applying base + Prop4You provider/sourcehub/matrix experimental DDL in a clean PG18 lab DB.
+- `docs/issues/03-prop4you-leadfinder-canonical-cycle-analysis/` — analysis correcting Matrix/SourceHub/LeadFinder ownership: LeadFinder generates canonical dictionary; Matrix produces transformation artifacts; SourceHub translates raw into LeadFinder-consumable DTOs.

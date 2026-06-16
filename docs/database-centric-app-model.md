@@ -625,3 +625,7 @@ For Prop4You, final project DDL must be gated by the provider payload corpus com
 ## Prop4You SourceHub + Matrix DDL v0
 
 The first experimental Prop4You DDL implementation is documented in `docs/issues/02-prop4you-sourcehub-matrix-ddl/` and proved by `docs/reports/prop4you-sourcehub-matrix-ddl-lab-proof.md`. It creates provider registry, SourceHub raw/corpus/enrichment request tables, and Matrix semantic dictionary/path mapping gates. It intentionally commits no fake/redacted payload fixtures; real provider corpus files belong outside git under `~/.hermes/private/prop4you-provider-corpus/`.
+
+## Prop4You LeadFinder canonical cycle correction
+
+The corrected ownership model is documented in `docs/issues/03-prop4you-leadfinder-canonical-cycle-analysis/`. LeadFinder group is the canonical generator and dictionary owner. Matrix consumes a LeadFinder dictionary version plus raw/new evidence to produce a transformation artifact/DTO. SourceHub consumes raw/provider DTO plus Matrix artifact and publishes LeadFinder-consumable JSON/DTO with lineage. Issue 02 SourceHub/Matrix DDL remains experimental until LeadFinder-owned dictionary/gap contracts exist.
