@@ -645,3 +645,7 @@ The LeadFinder Group owns the canonical dictionary, but that dictionary is born/
 ## Prop4You gap bridge and quality report phases
 
 `docs/issues/07-prop4you-leadfinder-gap-bridge-quality-report/` records the T2/T3 modeling phase: `leadfinder/0002_raw_evidence_gap_bridge.sql` turns raw path extraction evidence into LeadFinder-owned gap/proposal and growth-pressure records, while `matrix/0004_quality_report_artifacts.sql` keeps quality reporting as a separate Matrix `transformation_artifacts` contract. T4 SourceHub DTO publication and T5 LeadFinder materialization remain later phases.
+
+## Gateway-agnostic Matrix translation to LeadFinder prepare-only promotions
+
+`docs/issues/08-prop4you-matrix-field-mapping-prepare-promotions/` records the gateway-agnostic translation boundary. Matrix `0005_field_mapping_set_artifacts.sql` creates `field_mapping_set` artifacts from LeadFinder bridge rows. LeadFinder `0003_prepare_dictionary_promotions.sql` prepares dictionary promotion proposals without automatically mutating canonical families/fields. Raw evidence remains a dual generator for LFG app modeling and canonical dictionary evolution. SourceHub DTO publication and LFG materialization remain later phases.

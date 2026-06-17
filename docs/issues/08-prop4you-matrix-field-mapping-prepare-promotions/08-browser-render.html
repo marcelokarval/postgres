@@ -1,0 +1,194 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Prop4You Matrix Field Mapping + Prepare-only Promotions</title><style>body{font-family:system-ui;margin:32px;background:#f8fafc;color:#111827}header{background:#111827;color:white;padding:24px;border-radius:16px}.ok{background:#dcfce7;color:#14532d;border:1px solid #86efac;border-radius:10px;padding:10px 14px;font-weight:700}.badges span{display:inline-block;background:#dbeafe;color:#1e3a8a;border:1px solid #93c5fd;border-radius:999px;padding:4px 10px;margin:4px;font-weight:700}section{background:white;border:1px solid #e5e7eb;border-radius:14px;padding:18px;margin:18px 0}pre{white-space:pre-wrap;background:#0b1020;color:#e5e7eb;padding:14px;border-radius:10px;font:13px ui-monospace,monospace;max-height:720px;overflow:auto}</style></head><body><header><h1>Prop4You Matrix Field Mapping + Prepare-only Promotions</h1><p class="ok">Browser-proof artifact: gateway-agnostic T3.5/T3.6 gate</p><div class="badges"><span>Gateway agnostic</span><span>Matrix 0005</span><span>LeadFinder 0003</span><span>Raw dual role</span><span>REIQ 97 raws</span><span>10 bridge rows</span><span>1 field_mapping_set</span><span>10 prepare-only proposals</span><span>0 SourceHub DTO</span><span>0 LFG materialization</span><span>No raw values</span><span>No provider calls</span><span>PG18 lab PASS</span></div></header><section><h2>01-prd.md</h2><pre># PRD — Matrix field_mapping_set + LeadFinder prepare-only promotions
+
+Status: active
+
+## Problem
+
+The current stack has raw evidence, LeadFinder gap bridge rows, and Matrix quality_report artifacts. We now need the missing semantic translation artifact: a Matrix `field_mapping_set` generated from the first 10 LeadFinder bridge rows, plus a LeadFinder prepare-only promotion surface that turns those mappings into review proposals without mutating canonical fields/families.
+
+## Goals
+
+- Keep gateway/framework/runtime agnostic.
+- Treat raws as both LFG app-model generators and canonical dictionary generators.
+- Implement Matrix `0005_field_mapping_set_artifacts.sql`.
+- Implement LeadFinder `0003_prepare_dictionary_promotions.sql`.
+- Start from 10 bridge rows; support later expansion.
+- Do not publish SourceHub DTO yet.
+- Do not materialize LFG runtime tables yet.
+- Do not auto-promote canonical dictionary rows.
+
+## Non-goals
+
+- No Django-specific contract.
+- No PostgREST-specific contract.
+- No SourceHub translated DTO publication.
+- No LFG materialization/runtime filters.
+- No raw values/PII printing or commit.
+- No provider calls.
+
+## Acceptance
+
+- PG18 lab applies all DDL through Matrix 0005 + LeadFinder 0003.
+- REIQ 97 raw ingest + extractor + 10 bridges + quality_report + field_mapping_set + prepare-only promotions pass.
+- Proof shows 1 field_mapping_set and promotion proposals &gt; 0 without canonical field mutation.
+</pre></section><section><h2>05-task-review.md</h2><pre># Task Review — Matrix field_mapping_set + prepare-only promotions
+
+Status: delivered
+Updated: 2026-06-17T18:41:10
+Reviewer: Thor/default
+
+| Task | Requested | Delivered | Evidence | Verdict |
+| --- | --- | --- | --- | --- |
+| T1 | Keep gateway/runtime agnostic | DDL contracts have no Django/PostgREST/ORM dependency | Matrix 0005 / LeadFinder 0003 | PASS |
+| T2 | Raw drives LFG app modeling and canonical dictionary | Artifact/proposals carry `raw_dual_role` and separate hints | proof JSON + DDL metadata | PASS |
+| T3 | Matrix field_mapping_set first | `matrix/0005_field_mapping_set_artifacts.sql` | PG18 proof: 1 artifact, 10 mappings | PASS |
+| T4 | LeadFinder prepare-only | `leadfinder/0003_prepare_dictionary_promotions.sql` | PG18 proof: 10 prepared proposals; canonical counts unchanged | PASS |
+| T5 | No SourceHub DTO/LFG materialization | Explicit non-goals; proof counts 0 | `/tmp/slice08-counts.json` | PASS |
+| T6 | Browser-proof + vision | Pending browser gate | 06/08 | PENDING |
+
+## Proof
+
+```json
+{
+  &quot;bridge_count&quot;: 10,
+  &quot;canonical_family_count_after_prepare&quot;: 15,
+  &quot;canonical_field_count_after_prepare&quot;: 36,
+  &quot;field_mapping_contract&quot;: &quot;matrix.field_mapping_set.raw_path.v0&quot;,
+  &quot;field_mapping_gateway_agnostic&quot;: true,
+  &quot;field_mapping_mapping_count&quot;: 10,
+  &quot;field_mapping_set_count&quot;: 1,
+  &quot;lfg_materialization_created&quot;: 0,
+  &quot;no_raw_values_printed&quot;: true,
+  &quot;promotion_preparation_count&quot;: 10,
+  &quot;quality_report_count&quot;: 1,
+  &quot;raw_record_count&quot;: 97,
+  &quot;run_distinct_path_count&quot;: 9650,
+  &quot;run_extracted_path_count&quot;: 172700,
+  &quot;run_source_record_count&quot;: 97,
+  &quot;sourcehub_dto_publications_created&quot;: 0
+}
+```
+
+## Corrections
+
+- Corrected Matrix 0005 against real `mapping_sessions` columns (`session_purpose`, `input_scope`, `extraction_summary`, `review_summary`) instead of invented `session_kind/session_goal`.
+- Corrected lab script for PostgreSQL safe-update guard by adding `where true` to temp-table update.
+</pre></section><section><h2>07-final-report.md</h2><pre># Final Report — Matrix field_mapping_set + prepare-only promotions
+
+Status: delivered before browser/commit final gate
+Updated: 2026-06-17T18:41:10
+Reviewer: Thor/default
+
+## Verdict
+
+Architecture remains correct and now explicit:
+
+```text
+gateway/runtime = 100% agnostic
+raws generate LFG app-modeling evidence
+raws generate/evolve the LeadFinder canonical dictionary
+Matrix owns field_mapping_set translation artifacts
+SourceHub DTO depends on Matrix artifacts
+LeadFinder prepare-only proposals do not mutate canonical dictionary automatically
+```
+
+## Delivered
+
+```text
+database/ddl/projects/prop4you/matrix/0005_field_mapping_set_artifacts.sql
+database/ddl/projects/prop4you/leadfinder/0003_prepare_dictionary_promotions.sql
+```
+
+## Proof
+
+```json
+{
+  &quot;bridge_count&quot;: 10,
+  &quot;canonical_family_count_after_prepare&quot;: 15,
+  &quot;canonical_field_count_after_prepare&quot;: 36,
+  &quot;field_mapping_contract&quot;: &quot;matrix.field_mapping_set.raw_path.v0&quot;,
+  &quot;field_mapping_gateway_agnostic&quot;: true,
+  &quot;field_mapping_mapping_count&quot;: 10,
+  &quot;field_mapping_set_count&quot;: 1,
+  &quot;lfg_materialization_created&quot;: 0,
+  &quot;no_raw_values_printed&quot;: true,
+  &quot;promotion_preparation_count&quot;: 10,
+  &quot;quality_report_count&quot;: 1,
+  &quot;raw_record_count&quot;: 97,
+  &quot;run_distinct_path_count&quot;: 9650,
+  &quot;run_extracted_path_count&quot;: 172700,
+  &quot;run_source_record_count&quot;: 97,
+  &quot;sourcehub_dto_publications_created&quot;: 0
+}
+```
+
+## Non-claims
+
+- No Django dependency.
+- No PostgREST dependency.
+- No SourceHub DTO publication yet.
+- No LFG runtime/materialization yet.
+- No provider calls.
+- No raw values printed or committed.
+- No automatic dictionary mutation.
+</pre></section><section><h2>11-executive-synthesis.md</h2><pre># Executive synthesis — Slice 08
+
+Status: delivered
+Updated: 2026-06-17T18:41:10
+
+The missing translation layer is now represented as a Matrix-owned `field_mapping_set` artifact. LeadFinder receives prepare-only dictionary promotion proposals from that artifact. This preserves the architecture:
+
+```text
+SourceHub raw evidence -&gt; Matrix extraction/quality/field mapping -&gt; LeadFinder prepare-only dictionary proposals -&gt; later SourceHub DTO -&gt; later LFG materialization
+```
+
+The gateway remains fully agnostic: direct SQL, SQLAlchemy, Django ORM, PostgREST, FastAPI, Go, desktop/mobile gateway, or any other transport can call the same database contracts.
+</pre></section><section><h2>lab-proof-report</h2><pre># Prop4You Provider + SourceHub + Matrix + LeadFinder DDL Lab Proof
+
+Status: PASS
+LAB_DB: pg18_prop4you_ddl_lab
+PGHOST: 127.0.0.1
+PGPORT: 54318
+
+## Scope
+
+Applied base DDL and experimental Prop4You provider/sourcehub/matrix/leadfinder DDL into a clean lab DB.
+
+No provider calls were made.
+No raw/fake/redacted fixtures were created.
+
+## Apply order
+
+- `database/ddl/base/0001_install_tracking.sql`
+- `database/ddl/base/0002_extensions.sql`
+- `database/ddl/base/0003_base_schemas_roles_context.sql`
+- `database/ddl/base/0004_public_id.sql`
+- `database/ddl/base/0005_lifecycle_columns_triggers.sql`
+- `database/ddl/base/0006_jsonb_contract_helpers.sql`
+- `database/ddl/base/0007_search_normalization.sql`
+- `database/ddl/base/0008_audit_log.sql`
+- `database/ddl/base/0009_realtime_base.sql`
+- `database/ddl/base/0010_api_base.sql`
+- `database/ddl/projects/prop4you/0001_schemas.sql`
+- `database/ddl/projects/prop4you/providers/0001_provider_registry.sql`
+- `database/ddl/projects/prop4you/sourcehub/0001_sourcehub_corpus.sql`
+- `database/ddl/projects/prop4you/matrix/0001_semantic_dictionary.sql`
+- `database/ddl/projects/prop4you/leadfinder/0001_canonical_dictionary.sql`
+- `database/ddl/projects/prop4you/matrix/0002_mapping_sessions.sql`
+- `database/ddl/projects/prop4you/matrix/0003_raw_path_extractors.sql`
+- `database/ddl/projects/prop4you/leadfinder/0002_raw_evidence_gap_bridge.sql`
+- `database/ddl/projects/prop4you/matrix/0004_quality_report_artifacts.sql`
+- `database/ddl/projects/prop4you/matrix/0005_field_mapping_set_artifacts.sql`
+- `database/ddl/projects/prop4you/leadfinder/0003_prepare_dictionary_promotions.sql`
+
+## Validation JSON
+
+```json
+{&quot;counts&quot;: {&quot;provider_count&quot;: 4, &quot;payload_class_count&quot;: 5, &quot;mapping_version_count&quot;: 4, &quot;leadfinder_field_count&quot;: 36, &quot;leadfinder_family_count&quot;: 15, &quot;matrix_mirror_family_count&quot;: 7, &quot;matrix_raw_path_view_count&quot;: 4, &quot;matrix_artifact_table_count&quot;: 3, &quot;matrix_raw_path_table_count&quot;: 2, &quot;matrix_raw_path_function_count&quot;: 3, &quot;leadfinder_gap_bridge_table_count&quot;: 1, &quot;leadfinder_dictionary_version_count&quot;: 1, &quot;matrix_field_mapping_function_count&quot;: 1, &quot;leadfinder_gap_bridge_function_count&quot;: 2, &quot;matrix_quality_report_function_count&quot;: 1, &quot;leadfinder_promotion_prepare_table_count&quot;: 1, &quot;leadfinder_promotion_prepare_function_count&quot;: 1}, &quot;missing_tables&quot;: [], &quot;missing_schemas&quot;: [], &quot;uncommented_tables&quot;: [], &quot;jsonb_path_type_smoke&quot;: &quot;number&quot;, &quot;jsonb_leaf_paths_smoke_count&quot;: 2}
+```
+
+## Boundary
+
+This proves DDL apply/comment/object smoke for experimental Provider + SourceHub + Matrix mirror/candidate + LeadFinder dictionary gate.
+It does not prove final Prop4You property/owner tables, provider runtime calls, production deployment, real raw ingestion, or LeadFinder materialization.
+</pre></section></body></html>

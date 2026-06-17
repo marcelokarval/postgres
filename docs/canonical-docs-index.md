@@ -183,3 +183,6 @@ Then read the domain-specific doc for the task.
 - `docs/issues/07-prop4you-leadfinder-gap-bridge-quality-report/` — PRD/tasks/review stack for LeadFinder raw evidence gap bridge and separate Matrix quality report.
 - `database/ddl/projects/prop4you/leadfinder/0002_raw_evidence_gap_bridge.sql` — LeadFinder-owned bridge from raw path evidence to canonical gaps/growth pressure signals.
 - `database/ddl/projects/prop4you/matrix/0004_quality_report_artifacts.sql` — separate Matrix quality_report artifact helper over raw path extraction evidence.
+- `docs/issues/08-prop4you-matrix-field-mapping-prepare-promotions/` — PRD/tasks/review stack for gateway-agnostic Matrix field_mapping_set and LeadFinder prepare-only promotions.
+- `database/ddl/projects/prop4you/matrix/0005_field_mapping_set_artifacts.sql` — Matrix field_mapping_set artifacts generated from LeadFinder bridge rows.
+- `database/ddl/projects/prop4you/leadfinder/0003_prepare_dictionary_promotions.sql` — LeadFinder prepare-only dictionary promotion proposals from Matrix field_mapping_set artifacts.

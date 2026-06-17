@@ -33,11 +33,13 @@ No raw/fake/redacted fixtures were created.
 - `database/ddl/projects/prop4you/matrix/0003_raw_path_extractors.sql`
 - `database/ddl/projects/prop4you/leadfinder/0002_raw_evidence_gap_bridge.sql`
 - `database/ddl/projects/prop4you/matrix/0004_quality_report_artifacts.sql`
+- `database/ddl/projects/prop4you/matrix/0005_field_mapping_set_artifacts.sql`
+- `database/ddl/projects/prop4you/leadfinder/0003_prepare_dictionary_promotions.sql`
 
 ## Validation JSON
 
 ```json
-{"counts": {"provider_count": 4, "payload_class_count": 5, "mapping_version_count": 4, "leadfinder_field_count": 36, "leadfinder_family_count": 15, "matrix_mirror_family_count": 7, "matrix_raw_path_view_count": 3, "matrix_artifact_table_count": 3, "matrix_raw_path_table_count": 2, "matrix_raw_path_function_count": 3, "leadfinder_gap_bridge_table_count": 1, "leadfinder_dictionary_version_count": 1, "leadfinder_gap_bridge_function_count": 2, "matrix_quality_report_function_count": 1}, "missing_tables": [], "missing_schemas": [], "uncommented_tables": [], "jsonb_path_type_smoke": "number", "jsonb_leaf_paths_smoke_count": 2}
+{"counts": {"provider_count": 4, "payload_class_count": 5, "mapping_version_count": 4, "leadfinder_field_count": 36, "leadfinder_family_count": 15, "matrix_mirror_family_count": 7, "matrix_raw_path_view_count": 4, "matrix_artifact_table_count": 3, "matrix_raw_path_table_count": 2, "matrix_raw_path_function_count": 3, "leadfinder_gap_bridge_table_count": 1, "leadfinder_dictionary_version_count": 1, "matrix_field_mapping_function_count": 1, "leadfinder_gap_bridge_function_count": 2, "matrix_quality_report_function_count": 1, "leadfinder_promotion_prepare_table_count": 1, "leadfinder_promotion_prepare_function_count": 1}, "missing_tables": [], "missing_schemas": [], "uncommented_tables": [], "jsonb_path_type_smoke": "number", "jsonb_leaf_paths_smoke_count": 2}
 ```
 
 ## Boundary
