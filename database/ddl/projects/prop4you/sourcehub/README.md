@@ -7,6 +7,7 @@ SourceHub owns raw provider/internal payload evidence, private corpus metadata, 
 Implemented DDL:
 
 - `0001_sourcehub_corpus.sql` — creates `prop4you_sourcehub.raw_records`, `corpus_samples`, `source_lineage_edges`, `enrichment_requests`, helper functions, lifecycle triggers, indexes, comments, and public-id prefix registrations.
+- `0002_translated_dto_publications.sql` — creates T4 SourceHub translated DTO publication records from `raw_record + Matrix field_mapping_set + LeadFinder dictionary_version`, with validation trigger, review view, and gateway-agnostic publication function.
 
 Boundaries:
 
@@ -38,11 +39,14 @@ Tables:
 - `prop4you_sourcehub.corpus_samples`
 - `prop4you_sourcehub.source_lineage_edges`
 - `prop4you_sourcehub.enrichment_requests`
+- `prop4you_sourcehub.translated_dto_publications`
 
 Functions:
 
 - `prop4you_sourcehub.enqueue_enrichment_request(...)`
 - `prop4you_sourcehub.mark_enrichment_response(...)`
+- `prop4you_sourcehub.validate_translated_dto_publication()`
+- `prop4you_sourcehub.publish_translated_dtos_from_field_mapping_set(...)`
 
 Primary indexes/themes:
 
@@ -52,16 +56,18 @@ Primary indexes/themes:
 - raw JSONB and metadata GIN review indexes
 - lineage from/to/derived-object lookup
 
-[SOURCEHUB_DTO_PUBLICATION_NEXT]
+[SOURCEHUB_DTO_PUBLICATION]
 
-The next SourceHub slice should add a documented/DDL-backed publication table, tentatively `prop4you_sourcehub.translated_dto_publications`, after Matrix artifact DDL is finalized. The publication record should link:
+`0002_translated_dto_publications.sql` implements the T4 publication gate. It creates `prop4you_sourcehub.translated_dto_publications`, validates that every publication references a Matrix `field_mapping_set` artifact whose dictionary version matches the SourceHub publication, and exposes `publish_translated_dtos_from_field_mapping_set(...)` for any gateway/runtime to call.
+
+The publication record links:
 
 - `raw_record_id` -> `prop4you_sourcehub.raw_records(id)`.
-- `matrix_artifact_id` -> the approved Matrix transformation artifact table from the next Matrix DDL slice.
+- `matrix_artifact_id` -> `prop4you_matrix.transformation_artifacts(id)` with `artifact_kind = 'field_mapping_set'`.
 - `leadfinder_dictionary_version_id` -> `prop4you_leadfinder.canonical_dictionary_versions(id)`.
-- `translated_dto jsonb` plus `translated_dto_sha256`, `publication_status`, rejection metadata and gap references.
+- `translated_dto jsonb` plus `translated_dto_sha256`, `publication_status`, summaries and explicit T4/T5_later temporal metadata.
 
-See `docs/issues/05-prop4you-matrix-artifacts-reiq-raws/10-sourcehub-translated-dto-readiness.md` for the readiness contract. This README intentionally does not implement final DTO-publication DDL yet because the Matrix artifact table name/FK target must be frozen first.
+This is still not LeadFinder/LFG materialization; T5 remains a later package.
 
 [MATRIX_ARTIFACT_DEPENDENCY]
 

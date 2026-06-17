@@ -186,3 +186,5 @@ Then read the domain-specific doc for the task.
 - `docs/issues/08-prop4you-matrix-field-mapping-prepare-promotions/` — PRD/tasks/review stack for gateway-agnostic Matrix field_mapping_set and LeadFinder prepare-only promotions.
 - `database/ddl/projects/prop4you/matrix/0005_field_mapping_set_artifacts.sql` — Matrix field_mapping_set artifacts generated from LeadFinder bridge rows.
 - `database/ddl/projects/prop4you/leadfinder/0003_prepare_dictionary_promotions.sql` — LeadFinder prepare-only dictionary promotion proposals from Matrix field_mapping_set artifacts.
+- `docs/issues/09-prop4you-sourcehub-translated-dto-publications/` — PRD/tasks/review stack for T4 SourceHub translated DTO publications.
+- `database/ddl/projects/prop4you/sourcehub/0002_translated_dto_publications.sql` — SourceHub T4 translated DTO publication table, validation trigger, review view, and publication function.

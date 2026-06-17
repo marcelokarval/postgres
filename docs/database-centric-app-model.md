@@ -649,3 +649,7 @@ The LeadFinder Group owns the canonical dictionary, but that dictionary is born/
 ## Gateway-agnostic Matrix translation to LeadFinder prepare-only promotions
 
 `docs/issues/08-prop4you-matrix-field-mapping-prepare-promotions/` records the gateway-agnostic translation boundary. Matrix `0005_field_mapping_set_artifacts.sql` creates `field_mapping_set` artifacts from LeadFinder bridge rows. LeadFinder `0003_prepare_dictionary_promotions.sql` prepares dictionary promotion proposals without automatically mutating canonical families/fields. Raw evidence remains a dual generator for LFG app modeling and canonical dictionary evolution. SourceHub DTO publication and LFG materialization remain later phases.
+
+## SourceHub translated DTO publication T4
+
+`docs/issues/09-prop4you-sourcehub-translated-dto-publications/` records the T4 publication gate. SourceHub `0002_translated_dto_publications.sql` publishes translated DTO records from `raw_record + Matrix field_mapping_set + LeadFinder dictionary_version`, with validation that the Matrix artifact is `artifact_kind='field_mapping_set'` and dictionary versions match. The publication remains gateway-agnostic and does not create LeadFinder/LFG operational materialization; T5 remains a later package.

@@ -58,6 +58,7 @@ apply_files=(
   "$P4Y_DDL_DIR/matrix/0004_quality_report_artifacts.sql"
   "$P4Y_DDL_DIR/matrix/0005_field_mapping_set_artifacts.sql"
   "$P4Y_DDL_DIR/leadfinder/0003_prepare_dictionary_promotions.sql"
+  "$P4Y_DDL_DIR/sourcehub/0002_translated_dto_publications.sql"
 )
 
 for f in "${apply_files[@]}"; do
@@ -106,6 +107,7 @@ with expected_schemas(schema_name) as (
     ('prop4you_sourcehub','corpus_samples'),
     ('prop4you_sourcehub','source_lineage_edges'),
     ('prop4you_sourcehub','enrichment_requests'),
+    ('prop4you_sourcehub','translated_dto_publications'),
     ('prop4you_matrix','canonical_families'),
     ('prop4you_matrix','canonical_fields'),
     ('prop4you_matrix','mapping_versions'),
@@ -142,6 +144,9 @@ with expected_schemas(schema_name) as (
   select
     (select count(*) from prop4you_provider.providers) as provider_count,
     (select count(*) from prop4you_provider.payload_classes) as payload_class_count,
+    (select count(*) from information_schema.tables where table_schema='prop4you_sourcehub' and table_name='translated_dto_publications') as sourcehub_translated_dto_table_count,
+    (select count(*) from information_schema.views where table_schema='prop4you_sourcehub' and table_name='v_translated_dto_publication_review') as sourcehub_translated_dto_view_count,
+    (select count(*) from information_schema.routines where routine_schema='prop4you_sourcehub' and routine_name in ('publish_translated_dtos_from_field_mapping_set','validate_translated_dto_publication')) as sourcehub_translated_dto_function_count,
     (select count(*) from prop4you_matrix.canonical_families) as matrix_mirror_family_count,
     (select count(*) from prop4you_matrix.mapping_versions) as mapping_version_count,
     (select count(*) from information_schema.tables where table_schema='prop4you_matrix' and table_name in ('mapping_sessions','transformation_artifacts','artifact_field_mappings')) as matrix_artifact_table_count,
@@ -182,7 +187,7 @@ if payload.get('jsonb_path_type_smoke') != 'number':
 if int(payload.get('jsonb_leaf_paths_smoke_count') or 0) < 2:
     errors.append(f"jsonb_leaf_paths_smoke_count={payload.get('jsonb_leaf_paths_smoke_count')!r}")
 counts = payload.get('counts') or {}
-for key in ['provider_count', 'payload_class_count', 'matrix_mirror_family_count', 'mapping_version_count', 'matrix_artifact_table_count', 'matrix_raw_path_table_count', 'matrix_raw_path_function_count', 'matrix_raw_path_view_count', 'matrix_quality_report_function_count', 'matrix_field_mapping_function_count', 'leadfinder_gap_bridge_function_count', 'leadfinder_gap_bridge_table_count', 'leadfinder_promotion_prepare_function_count', 'leadfinder_promotion_prepare_table_count', 'leadfinder_dictionary_version_count', 'leadfinder_family_count', 'leadfinder_field_count']:
+for key in ['provider_count', 'payload_class_count', 'sourcehub_translated_dto_table_count', 'sourcehub_translated_dto_view_count', 'sourcehub_translated_dto_function_count', 'matrix_mirror_family_count', 'mapping_version_count', 'matrix_artifact_table_count', 'matrix_raw_path_table_count', 'matrix_raw_path_function_count', 'matrix_raw_path_view_count', 'matrix_quality_report_function_count', 'matrix_field_mapping_function_count', 'leadfinder_gap_bridge_function_count', 'leadfinder_gap_bridge_table_count', 'leadfinder_promotion_prepare_function_count', 'leadfinder_promotion_prepare_table_count', 'leadfinder_dictionary_version_count', 'leadfinder_family_count', 'leadfinder_field_count']:
     if int(counts.get(key) or 0) <= 0:
         errors.append(f'{key}={counts.get(key)!r}')
 if errors:

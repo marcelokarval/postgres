@@ -1,0 +1,1109 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Prop4You SourceHub Translated DTO Publications</title><style>body{font-family:system-ui;margin:32px;background:#f8fafc;color:#111827}header{background:#111827;color:white;padding:24px;border-radius:16px}.ok{background:#dcfce7;color:#14532d;border:1px solid #86efac;border-radius:10px;padding:10px 14px;font-weight:700}.badges span{display:inline-block;background:#dbeafe;color:#1e3a8a;border:1px solid #93c5fd;border-radius:999px;padding:4px 10px;margin:4px;font-weight:700}section{background:white;border:1px solid #e5e7eb;border-radius:14px;padding:18px;margin:18px 0}pre{white-space:pre-wrap;background:#0b1020;color:#e5e7eb;padding:14px;border-radius:10px;font:13px ui-monospace,monospace;max-height:720px;overflow:auto}</style></head><body><header><h1>Prop4You SourceHub Translated DTO Publications</h1><p class="ok">Browser-proof artifact: gateway-agnostic T4 SourceHub publication gate</p><div class="badges"><span>Gateway agnostic</span><span>SourceHub 0002</span><span>T4 DTO publication</span><span>Matrix field_mapping_set dependency</span><span>LeadFinder dictionary dependency</span><span>REIQ 97 raws</span><span>10 bridge rows</span><span>1 field_mapping_set</span><span>10 translated DTO publications</span><span>10 hashes</span><span>0 LFG materialization</span><span>No provider calls</span><span>No raw values printed</span><span>PG18 lab PASS</span></div></header><section><h2>01-prd.md</h2><pre># PRD — SourceHub translated DTO publications
+
+Status: active
+
+## Problem
+
+We have raw REIQ records, Matrix path extraction/quality_report/field_mapping_set, and LeadFinder prepare-only dictionary proposals. The missing next database-centric stage is SourceHub publication of versioned translated DTOs that reference raw lineage and Matrix semantics without materializing LFG operational tables.
+
+## Goals
+
+- Implement `sourcehub/0002_translated_dto_publications.sql`.
+- Publish translated DTOs from `raw_record + Matrix field_mapping_set + LeadFinder dictionary_version`.
+- Keep gateway/framework/runtime agnostic.
+- Preserve raw lineage and hash reproducibility.
+- Store DTO JSONB but do not print raw values in proof/docs.
+- Keep LFG materialization at T5 later.
+- Start with 10 mapped rows/records and support later expansion.
+
+## Non-goals
+
+- No Django-specific code.
+- No PostgREST-specific code.
+- No LFG materialized tables.
+- No provider calls.
+- No automatic canonical dictionary promotion.
+- No raw payload dumps in docs.
+
+## Acceptance
+
+- PG18 lab applies SourceHub 0002 after Matrix 0005 and LeadFinder 0003.
+- REIQ 97 raw ingest + extractor + 10 bridges + quality_report + field_mapping_set + prepare-only + translated DTO publication passes.
+- Proof shows at least 10 translated DTO publications, linked to raw_record, Matrix artifact and dictionary version.
+- Proof shows LFG materialization count remains 0.
+</pre></section><section><h2>05-task-review.md</h2><pre># Task Review — SourceHub translated DTO publications
+
+Status: delivered
+Updated: 2026-06-17T20:49:02
+Reviewer: Thor/default
+
+| Task | Requested | Delivered | Evidence | Verdict |
+| --- | --- | --- | --- | --- |
+| T1 | Persist PRD/tasks/ledger | Stack 09 created and maintained | 00-04 docs | PASS |
+| T2 | Worker A contract review | Contract review delivered and independently read | 08-sourcehub-dto-contract-review.md | PASS |
+| T3 | Worker B DDL proposal | DDL proposal delivered and independently read | 09-sourcehub-dto-ddl-review.md | PASS |
+| T4 | Worker C gateway/temporal review | T0-T5/gateway review delivered and independently read | 10-gateway-temporal-review.md | PASS |
+| T5 | Implement SourceHub translated DTO publication | `sourcehub/0002_translated_dto_publications.sql` implemented with table, trigger, view, function | PG18 proof | PASS |
+| T6 | PG18 lab proof through T4 | 97 raws -&gt; 10 DTO publications; hashes/lineage validated; LFG=0 | `/tmp/slice09-counts.json` | PASS |
+| T7 | Browser-proof + vision | Pending browser gate at this doc write | 06/08 | PENDING |
+
+## Proof JSON
+
+```json
+{
+  &quot;bridge_count&quot;: 10,
+  &quot;dictionary_match_count&quot;: 10,
+  &quot;field_mapping_artifact_kind_count&quot;: 10,
+  &quot;field_mapping_set_count&quot;: 1,
+  &quot;gateway_agnostic&quot;: true,
+  &quot;lfg_materialization_created&quot;: 0,
+  &quot;no_raw_values_printed&quot;: true,
+  &quot;promotion_preparation_count&quot;: 10,
+  &quot;quality_report_count&quot;: 1,
+  &quot;raw_record_count&quot;: 97,
+  &quot;run_distinct_path_count&quot;: 9650,
+  &quot;run_extracted_path_count&quot;: 172700,
+  &quot;run_source_record_count&quot;: 97,
+  &quot;sourcehub_t4_statuses&quot;: [
+    &quot;ready_for_review&quot;
+  ],
+  &quot;translated_dto_contract&quot;: &quot;sourcehub.translated_dto.v0&quot;,
+  &quot;translated_dto_hash_count&quot;: 10,
+  &quot;translated_dto_publication_count&quot;: 10
+}
+```
+
+## Active corrections
+
+- Corrected `sourcehub/0002` apply order to run after Matrix 0005 + LeadFinder 0003.
+- Enforced Matrix artifact validation through trigger because cross-table checks cannot be expressed as a plain CHECK constraint.
+- Kept DTO proof redacted: counts/hashes/status only; no raw values printed.
+</pre></section><section><h2>07-final-report.md</h2><pre># Final Report — SourceHub translated DTO publications
+
+Status: delivered before browser/commit final gate
+Updated: 2026-06-17T20:49:02
+Reviewer: Thor/default
+
+## Verdict
+
+T4 is now implemented as a SourceHub-owned, gateway-agnostic translated DTO publication layer.
+
+```text
+T0 SourceHub raw evidence
+  -&gt; T1 Matrix extraction
+    -&gt; T2 LeadFinder gap bridge
+      -&gt; T3 Matrix quality_report
+        -&gt; T3.5 Matrix field_mapping_set
+          -&gt; T3.6 LeadFinder prepare-only promotions
+            -&gt; T4 SourceHub translated DTO publication
+              -&gt; T5 LFG materialization later
+```
+
+## Delivered
+
+```text
+database/ddl/projects/prop4you/sourcehub/0002_translated_dto_publications.sql
+```
+
+Objects:
+
+```text
+prop4you_sourcehub.translated_dto_publications
+prop4you_sourcehub.validate_translated_dto_publication()
+prop4you_sourcehub.v_translated_dto_publication_review
+prop4you_sourcehub.publish_translated_dtos_from_field_mapping_set(...)
+```
+
+## Proof
+
+```json
+{
+  &quot;bridge_count&quot;: 10,
+  &quot;dictionary_match_count&quot;: 10,
+  &quot;field_mapping_artifact_kind_count&quot;: 10,
+  &quot;field_mapping_set_count&quot;: 1,
+  &quot;gateway_agnostic&quot;: true,
+  &quot;lfg_materialization_created&quot;: 0,
+  &quot;no_raw_values_printed&quot;: true,
+  &quot;promotion_preparation_count&quot;: 10,
+  &quot;quality_report_count&quot;: 1,
+  &quot;raw_record_count&quot;: 97,
+  &quot;run_distinct_path_count&quot;: 9650,
+  &quot;run_extracted_path_count&quot;: 172700,
+  &quot;run_source_record_count&quot;: 97,
+  &quot;sourcehub_t4_statuses&quot;: [
+    &quot;ready_for_review&quot;
+  ],
+  &quot;translated_dto_contract&quot;: &quot;sourcehub.translated_dto.v0&quot;,
+  &quot;translated_dto_hash_count&quot;: 10,
+  &quot;translated_dto_publication_count&quot;: 10
+}
+```
+
+## Non-claims
+
+- No Django dependency.
+- No PostgREST dependency.
+- No ORM dependency.
+- No provider calls.
+- No automatic canonical dictionary promotion.
+- No LFG runtime/materialization.
+- No raw payload values printed in docs/proofs.
+</pre></section><section><h2>08-sourcehub-dto-contract-review.md</h2><pre># Revisão de contrato — SourceHub translated DTO publications (T4)
+
+Status: proposta arquitetural / revisão de contrato
+Worker: A
+Escopo: SourceHub DTO traduzido publicado a partir de `raw_records` + Matrix `field_mapping_set` + LeadFinder `dictionary_version`
+Data: 2026-06-17
+
+## 1. Veredito
+
+O contrato T4 deve existir como uma publicação SourceHub própria, não como mutação direta de LeadFinder nem como extensão informal de `raw_records`.
+
+Recomendação: criar uma tabela/projeção futura em `prop4you_sourcehub` para publicações DTO traduzidas, com dependências explícitas para:
+
+- `prop4you_sourcehub.raw_records.id` — evidência bruta e linhagem de origem.
+- `prop4you_matrix.transformation_artifacts.id` — artefato Matrix `field_mapping_set` aprovado/revisado.
+- `prop4you_leadfinder.canonical_dictionary_versions.id` — versão do dicionário LeadFinder usada para nomear/semantizar campos.
+
+A publicação T4 deve materializar um DTO JSONB semântico, revisável e versionado, mas ainda não deve criar entidades canônicas finais de propriedade, owner, lead, contato ou situação. Esse passo continua sendo T5/later ou outro fluxo explícito de materialização.
+
+## 2. Requested vs recommended
+
+| Tema | Requested / necessário | Recommended / contrato proposto |
+| --- | --- | --- |
+| Owner do T4 | SourceHub translated DTO publication | `prop4you_sourcehub` deve possuir a tabela de publicação; Matrix fornece tradução; LeadFinder fornece dicionário. |
+| Entrada mínima | `raw_record` + `field_mapping_set` + `dictionary_version` | Exigir FK para os três elementos e validar consistência entre `field_mapping_artifact.dictionary_version_id` e `dictionary_version_id` da publicação. |
+| Forma do DTO | Publicar DTO traduzido | Armazenar `translated_dto jsonb` como objeto, com envelope explícito: contract/version, source, dictionary, fields, lineage, quality. |
+| Gate Matrix | Usar `field_mapping_set` | Só aceitar artefato `artifact_kind = &#x27;field_mapping_set&#x27;`, `artifact_schema_version = &#x27;matrix.field_mapping_set.raw_path.v0&#x27;` ou sucessor compatível, `artifact_gate_status in (&#x27;passed&#x27;,&#x27;ready_for_review&#x27;)` conforme ambiente; produção deve exigir `passed`. |
+| Gate SourceHub raw | Usar raw existente | Exigir `raw_records.deleted = false`, `raw_records.active = true`, `review_status = &#x27;accepted_for_mapping&#x27;` ou estado equivalente aprovado, `matrix_mapping_status = &#x27;mapped&#x27;`. |
+| Gate LeadFinder | Usar dictionary version | Exigir versão de dicionário ativa/aprovada/compatível quando o DDL de status do dicionário estiver consolidado. Não inferir versão por chave textual. |
+| Valores brutos | DTO traduzido pode conter valores derivados do raw | Permitido conter valores normalizados necessários ao DTO, mas nunca segredos, credenciais, dumps brutos, payload completo, nem PII não classificada. Diferenciar `raw_payload` de `translated_dto`. |
+| Publicação | Criar registro publicável | Publicação deve ser idempotente por `(raw_record_id, field_mapping_artifact_id, dictionary_version_id, dto_contract_version)` ou por `publication_key`. |
+| Materialização LeadFinder | Não solicitada agora | Não criar/alterar `canonical_families`, `canonical_fields`, runtime LFG, propriedades ou leads. Apenas publicar candidato DTO SourceHub. |
+
+## 3. Contrato recomendado
+
+Nome sugerido da tabela futura:
+
+```text
+prop4you_sourcehub.translated_dto_publications
+```
+
+Nome alternativo aceitável se o time preferir enfatizar estágio candidato:
+
+```text
+prop4you_sourcehub.dto_candidate_publications
+```
+
+Contrato lógico:
+
+```text
+raw_records.raw_payload
+  -&gt; Matrix raw path extraction / gap bridge / quality_report
+  -&gt; Matrix transformation_artifacts(artifact_kind = field_mapping_set)
+  -&gt; LeadFinder dictionary_version context
+  -&gt; SourceHub translated_dto_publications.translated_dto
+  -&gt; later LeadFinder/LFG materialization, explicitly outside T4
+```
+
+## 4. Colunas obrigatórias
+
+Colunas de identidade e publicação:
+
+- `id uuid primary key default uuidv7()`
+- `public_ref text generated always as (base.make_public_ref(&#x27;p4yshdto&#x27;, id)) stored` ou prefixo curto registrado equivalente.
+- `publication_key text not null` — chave estável e idempotente.
+- `publication_status text not null default &#x27;draft&#x27;`
+- `dto_contract_version text not null` — exemplo: `sourcehub.translated_dto.v0`.
+
+Colunas de dependência/linhagem:
+
+- `raw_record_id uuid not null references prop4you_sourcehub.raw_records(id) on delete restrict`
+- `field_mapping_artifact_id uuid not null references prop4you_matrix.transformation_artifacts(id) on delete restrict`
+- `dictionary_version_id uuid not null references prop4you_leadfinder.canonical_dictionary_versions(id) on delete restrict`
+- `provider_id uuid references prop4you_provider.providers(id) on delete restrict`
+- `payload_class_id uuid references prop4you_provider.payload_classes(id) on delete restrict`
+- `source_lineage_edge_id uuid references prop4you_sourcehub.source_lineage_edges(id) on delete set null` opcional, se a publicação também registrar edge `candidate_dto_for`.
+
+Colunas de conteúdo:
+
+- `translated_dto jsonb not null` — DTO traduzido; deve ser objeto.
+- `translation_summary jsonb not null default &#x27;{}&#x27;::jsonb` — contagens, campos aplicados, campos bloqueados, warnings.
+- `quality_summary jsonb not null default &#x27;{}&#x27;::jsonb` — snapshot dos sinais de qualidade usados para publicar.
+- `redaction_summary jsonb not null default &#x27;{}&#x27;::jsonb` — política de PII/redação aplicada.
+- `content_sha256 text` — checksum determinístico do DTO publicado, quando disponível.
+- `metadata jsonb not null default &#x27;{}&#x27;::jsonb`
+
+Colunas de workflow/revisão:
+
+- `publication_gate_status text not null default &#x27;not_started&#x27;`
+- `review_status text not null default &#x27;unreviewed&#x27;`
+- `published_at timestamptz`
+- `published_by_actor_id text`
+- `reviewed_at timestamptz`
+- `reviewed_by_actor_id text`
+- `superseded_by_publication_id uuid references prop4you_sourcehub.translated_dto_publications(id) on delete set null`
+- `superseded_at timestamptz`
+
+Colunas de lifecycle padrão:
+
+- `active boolean not null default true`
+- `activated_at timestamptz`
+- `deactivated_at timestamptz`
+- `deleted boolean not null default false`
+- `deleted_at timestamptz`
+- `deleted_by_actor_id text`
+- `created_at timestamptz not null default now()`
+- `updated_at timestamptz not null default now()`
+- `last_modified_by_actor_id text`
+- `version integer not null default 1`
+
+## 5. Estados recomendados
+
+`publication_status`:
+
+- `draft`
+- `generated`
+- `in_review`
+- `published`
+- `blocked`
+- `rejected`
+- `superseded`
+- `archived`
+
+`publication_gate_status`:
+
+- `not_started`
+- `checking`
+- `ready_for_review`
+- `passed`
+- `blocked`
+- `not_applicable`
+
+`review_status`:
+
+- `unreviewed`
+- `in_review`
+- `accepted_for_publication`
+- `needs_mapping_revision`
+- `needs_dictionary_revision`
+- `needs_redaction`
+- `rejected`
+
+## 6. Invariantes
+
+1. A publicação T4 é SourceHub-owned.
+   - Matrix não publica DTO final.
+   - LeadFinder não publica DTO SourceHub.
+   - SourceHub não redefine semântica de campo; apenas aplica Matrix + dictionary_version.
+
+2. `field_mapping_artifact_id` deve apontar para `transformation_artifacts.artifact_kind = &#x27;field_mapping_set&#x27;`.
+
+3. `dictionary_version_id` da publicação deve ser igual ao `dictionary_version_id` do artefato Matrix.
+
+4. `raw_record_id` deve permanecer como evidência bruta imutável de origem. `translated_dto` nunca substitui `raw_payload`.
+
+5. `translated_dto` deve ser JSON object, não array/scalar.
+
+6. `translation_summary`, `quality_summary`, `redaction_summary` e `metadata` devem ser JSON objects.
+
+7. `content_sha256`, se informado, deve ser lowercase SHA-256 de 64 hex chars.
+
+8. Publicação deve ser idempotente. Reexecução com o mesmo raw/artifact/dictionary/contract não deve criar duplicata não intencional.
+
+9. Publicação `published` deve ter `published_at` não nulo.
+
+10. Publicação `superseded` deve ter `superseded_at` ou `superseded_by_publication_id`.
+
+11. DTO publicado não pode conter o payload bruto completo nem campos secretos operacionais.
+
+12. Campos PII/contact/person devem exigir `redaction_summary` ou classificação explícita antes de `publication_gate_status = &#x27;passed&#x27;`.
+
+13. Uma publicação bloqueada por Matrix deve apontar para `review_status = &#x27;needs_mapping_revision&#x27;` ou equivalente.
+
+14. Uma publicação bloqueada por LeadFinder dictionary deve apontar para `review_status = &#x27;needs_dictionary_revision&#x27;` ou equivalente.
+
+15. T4 não deve mutar `canonical_families`, `canonical_fields`, runtime LFG, property/owner/lead tables ou provider request queues.
+
+## 7. Envelope mínimo do `translated_dto`
+
+Formato recomendado de alto nível:
+
+```json
+{
+  &quot;contract&quot;: &quot;sourcehub.translated_dto.v0&quot;,
+  &quot;source&quot;: {
+    &quot;raw_record_id&quot;: &quot;uuid&quot;,
+    &quot;raw_record_public_ref&quot;: &quot;p4yshr_...&quot;,
+    &quot;provider_key&quot;: &quot;optional&quot;,
+    &quot;payload_class_key&quot;: &quot;optional&quot;
+  },
+  &quot;dictionary&quot;: {
+    &quot;dictionary_version_id&quot;: &quot;uuid&quot;,
+    &quot;dictionary_version_key&quot;: &quot;...&quot;
+  },
+  &quot;matrix&quot;: {
+    &quot;field_mapping_artifact_id&quot;: &quot;uuid&quot;,
+    &quot;artifact_key&quot;: &quot;...&quot;,
+    &quot;artifact_schema_version&quot;: &quot;matrix.field_mapping_set.raw_path.v0&quot;
+  },
+  &quot;fields&quot;: {
+    &quot;family_key.field_key&quot;: {
+      &quot;value&quot;: &quot;normalized value or structured value&quot;,
+      &quot;value_kind&quot;: &quot;text|numeric|boolean|date|timestamp|uuid|enum|jsonb|unknown&quot;,
+      &quot;source_path_label&quot;: &quot;...&quot;,
+      &quot;confidence&quot;: &quot;unknown|low|medium|high|reviewed&quot;
+    }
+  },
+  &quot;lineage&quot;: {
+    &quot;phase&quot;: &quot;T4_sourcehub_translated_dto&quot;,
+    &quot;raw_payload_embedded&quot;: false
+  },
+  &quot;quality&quot;: {
+    &quot;warnings&quot;: [],
+    &quot;blocked_fields&quot;: []
+  }
+}
+```
+
+Observação: o envelope pode evoluir, mas deve preservar `contract`, `source`, `dictionary`, `matrix`, `fields`, `lineage` e `quality` como chaves mínimas enquanto `sourcehub.translated_dto.v0` estiver em uso.
+
+## 8. Validação esperada
+
+Validação por constraint/trigger/RPC futura:
+
+- FK existentes para `raw_record_id`, `field_mapping_artifact_id`, `dictionary_version_id`.
+- Check de formato para `publication_key` e `dto_contract_version`.
+- Check de enum para `publication_status`, `publication_gate_status`, `review_status`.
+- Check JSON object para `translated_dto`, summaries e metadata.
+- Check SHA-256 para `content_sha256`.
+- Unique recomendado: `(raw_record_id, field_mapping_artifact_id, dictionary_version_id, dto_contract_version)` quando `deleted = false`, ou unique global em `publication_key`.
+- Trigger/RPC para validar que o artefato é `field_mapping_set` e pertence à mesma `dictionary_version_id`.
+- Trigger/RPC para impedir `published` sem gate `passed`, `published_at`, e DTO com envelope mínimo.
+- Trigger/RPC para atualizar `raw_records.leadfinder_publication_status` para `candidate_dto_ready` ou `published` somente após sucesso T4, sem materializar LeadFinder.
+- Inserção opcional em `source_lineage_edges` com `lineage_kind = &#x27;candidate_dto_for&#x27;` para ligar raw record a publicação DTO, se a tabela futura puder ser referenciada por `(derived_object_schema, derived_object_table, derived_object_id)`.
+
+Validação de prova esperada em lab:
+
+- DDL aplica sem alterar os DDLs principais existentes nesta revisão.
+- Raw record de teste aprovado para mapping gera exatamente 1 publicação para 1 artifact/dictionary/contract.
+- Reexecução não duplica publicação.
+- Artefato que não seja `field_mapping_set` é rejeitado.
+- Artefato com `dictionary_version_id` divergente é rejeitado.
+- DTO sem envelope mínimo é rejeitado.
+- DTO com `raw_payload` embutido é rejeitado ou bloqueado.
+- Publicação T4 não altera contagem de `canonical_families`/`canonical_fields`.
+- Publicação T4 não cria materialização LFG/runtime.
+
+## 9. Não-goals
+
+- Não editar DDL principal nesta revisão.
+- Não criar provider calls, workers, HTTP clients ou integrações externas.
+- Não commitar raw payload real, fixtures com PII ou valores de provider.
+- Não transformar Matrix em owner de DTO publicado.
+- Não transformar LeadFinder em owner de payload bruto ou publicação SourceHub.
+- Não materializar property/owner/lead/contact/situation canônicos.
+- Não auto-promover dictionary proposals.
+- Não definir contrato Django/PostgREST/FastAPI específico; o contrato é database-centric e gateway-agnostic.
+
+## 10. Compatibilidade com os DDLs revisados
+
+### SourceHub `0001_sourcehub_corpus.sql`
+
+Compatível. `raw_records` já separa raw evidence de publicação futura via:
+
+- `matrix_mapping_status`
+- `leadfinder_publication_status`
+- `raw_payload` como evidência, não DTO
+- `source_lineage_edges.lineage_kind` incluindo `candidate_dto_for` e `matrix_mapping_input`
+
+A lacuna é apenas a tabela/RPC T4 explícita; não há necessidade de mudar o DDL existente nesta revisão.
+
+### Matrix `0005_field_mapping_set_artifacts.sql`
+
+Compatível. O artefato `field_mapping_set` declara:
+
+- `contract = matrix.field_mapping_set.raw_path.v0`
+- `artifact_kind = field_mapping_set`
+- `sourcehub_dependency = SourceHub translated DTO publication must reference this artifact after review`
+- `temporal_phase.sourcehub_dto = T4_later`
+- `value_policy = no_raw_values`
+
+T4 deve consumir esse artifact após revisão, não substituí-lo.
+
+### LeadFinder `0003_prepare_dictionary_promotions.sql`
+
+Compatível. O prepare-only preserva o limite correto:
+
+- prepara propostas de dictionary promotion
+- não muta canonical dictionary
+- não publica DTO SourceHub
+- marca `sourcehub_dto = T4_later`
+
+T4 deve usar a `dictionary_version_id` e, quando aplicável, o resultado humano/revisado das promoções; não deve aplicar promoções automaticamente.
+
+## 11. Decisão recomendada
+
+Aprovar o desenho T4 como nova unidade SourceHub, em slice posterior, com DDL próprio e RPC idempotente de publicação. Manter os DDLs revisados intactos nesta tarefa.
+
+Prioridade para o próximo worker/slice:
+
+1. Especificar PRD T4.
+2. Criar `prop4you_sourcehub.translated_dto_publications`.
+3. Criar função idempotente `publish_translated_dto_from_mapping(...)` ou nome equivalente.
+4. Adicionar prova integrada mostrando T4 sem mutação de LeadFinder canonical dictionary e sem materialização LFG.
+</pre></section><section><h2>09-sourcehub-dto-ddl-review.md</h2><pre># Review/proposta — SourceHub translated DTO publications
+
+Status: proposta de implementação DDL, não decisão final.
+Worker: B — SourceHub DTO DDL implementation proposal.
+Escopo alvo: `database/ddl/projects/prop4you/sourcehub/0002_translated_dto_publications.sql`.
+
+## 1. Conclusão curta
+
+A implementação de `sourcehub/0002_translated_dto_publications.sql` é viável agora que `prop4you_matrix.transformation_artifacts` existe em `matrix/0002` e o artefato `field_mapping_set` foi formalizado em `matrix/0005`.
+
+Minha recomendação é criar uma tabela SourceHub própria, `prop4you_sourcehub.translated_dto_publications`, com:
+
+- FK obrigatória para `prop4you_sourcehub.raw_records(id)`.
+- FK obrigatória para `prop4you_matrix.transformation_artifacts(id)`.
+- FK obrigatória para `prop4you_leadfinder.canonical_dictionary_versions(id)`.
+- `translated_dto jsonb` como DTO traduzido/revisável, não entidade LeadFinder final.
+- hash `translated_dto_sha256` opcional, validado por regex, mas sem fingir canonicalização universal dentro do banco.
+- função publish idempotente que faz upsert por chave lógica.
+- views de revisão/publicação/gaps.
+- linha temporal explícita: T0 raw, T1/T2/T3/T3_5 Matrix/LeadFinder bridge, T4 SourceHub DTO, T5 LeadFinder materialization posterior.
+
+Não recomendo materializar qualquer tabela LFG/LeadFinder nesta fatia. Esta fatia deve publicar somente DTO candidato/auditável em SourceHub.
+
+## 2. Evidência lida no repo
+
+Arquivos revisados:
+
+- `database/ddl/projects/prop4you/sourcehub/0001_sourcehub_corpus.sql`
+- `database/ddl/projects/prop4you/sourcehub/README.md`
+- `database/ddl/projects/prop4you/matrix/0002_mapping_sessions.sql`
+- `database/ddl/projects/prop4you/matrix/0005_field_mapping_set_artifacts.sql`
+- `database/ddl/projects/prop4you/leadfinder/0003_prepare_dictionary_promotions.sql`
+- `docs/issues/05-prop4you-matrix-artifacts-reiq-raws/10-sourcehub-translated-dto-readiness.md`
+
+Pontos relevantes:
+
+- `sourcehub/0001` já define raw evidence, corpus samples, lineage edges e enrichment queue. Ele não publica DTO final.
+- O README de SourceHub já antecipa `translated_dto_publications` e o prefixo `p4yshd`.
+- `matrix/0002` congelou o FK natural para artefatos: `prop4you_matrix.transformation_artifacts(id)`.
+- `matrix/0005` define o `field_mapping_set` como artifact_kind e declara SourceHub DTO como T4_later, LeadFinder materialization como T5_later.
+- `leadfinder/0003` é prepare-only; não materializa famílias/campos finais. Isso reforça que `sourcehub/0002` também deve ser prepare/publish-only, sem LFG materialization.
+
+## 3. Boundaries obrigatórios
+
+A DDL proposta deve declarar no cabeçalho:
+
+```sql
+-- package: prop4you/sourcehub
+-- file: 0002_translated_dto_publications.sql
+-- status: experimental / non-final
+-- purpose: SourceHub translated DTO publication records derived from raw SourceHub evidence and approved Matrix artifacts.
+-- depends-on: database/ddl/base, prop4you schemas, providers, sourcehub/0001, leadfinder/0001, matrix/0002, matrix/0005
+-- idempotency: idempotent
+-- destructive: false
+-- [GATEWAY_AGNOSTIC] Callable by any gateway/ORM/PostgREST/direct SQL.
+-- [NO_PROVIDER_CALLS] No HTTP/provider calls, workers, cron, secrets, or corpus reads.
+-- [NO_LFG_MATERIALIZATION] Does not insert/update LeadFinder canonical graph/materialized entities.
+-- [SOURCEHUB_T4] Publishes translated DTO records only; LeadFinder materialization remains T5_later.
+```
+
+## 4. Tabela recomendada
+
+Nome: `prop4you_sourcehub.translated_dto_publications`.
+
+Campos recomendados:
+
+```sql
+create table if not exists prop4you_sourcehub.translated_dto_publications (
+  id uuid primary key default uuidv7(),
+  public_ref text generated always as (base.make_public_ref(&#x27;p4yshd&#x27;, id)) stored,
+
+  raw_record_id uuid not null references prop4you_sourcehub.raw_records(id) on delete restrict,
+  matrix_artifact_id uuid not null references prop4you_matrix.transformation_artifacts(id) on delete restrict,
+  leadfinder_dictionary_version_id uuid not null references prop4you_leadfinder.canonical_dictionary_versions(id) on delete restrict,
+
+  publication_key text not null,
+  publication_status text not null default &#x27;candidate&#x27;,
+  publication_kind text not null default &#x27;leadfinder_candidate&#x27;,
+  dto_schema_version text not null default &#x27;sourcehub.translated_dto.v0&#x27;,
+
+  translated_dto jsonb not null,
+  translated_dto_sha256 text,
+  source_payload_sha256 text,
+  matrix_artifact_sha256 text,
+
+  publication_gate_status text not null default &#x27;ready_for_review&#x27;,
+  rejection_reason_code text,
+  rejection_summary text,
+
+  gap_reference_schema name,
+  gap_reference_table name,
+  gap_reference_id uuid,
+  source_lineage_edge_id uuid references prop4you_sourcehub.source_lineage_edges(id) on delete set null,
+
+  temporal_phase jsonb not null default jsonb_build_object(
+    &#x27;raw_capture&#x27;,&#x27;T0&#x27;,
+    &#x27;matrix_extraction&#x27;,&#x27;T1&#x27;,
+    &#x27;leadfinder_gap_bridge&#x27;,&#x27;T2&#x27;,
+    &#x27;matrix_quality_report&#x27;,&#x27;T3&#x27;,
+    &#x27;matrix_field_mapping_set&#x27;,&#x27;T3_5&#x27;,
+    &#x27;sourcehub_dto_publication&#x27;,&#x27;T4&#x27;,
+    &#x27;leadfinder_materialization&#x27;,&#x27;T5_later&#x27;
+  ),
+  metadata jsonb not null default &#x27;{}&#x27;::jsonb,
+
+  active boolean not null default true,
+  activated_at timestamptz,
+  deactivated_at timestamptz,
+  deleted boolean not null default false,
+  deleted_at timestamptz,
+  deleted_by_actor_id text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  last_modified_by_actor_id text,
+  version integer not null default 1,
+
+  constraint translated_dto_publications_public_ref_key unique (public_ref),
+  constraint translated_dto_publications_publication_key_key unique (publication_key),
+  constraint translated_dto_publications_publication_key_format_chk check (publication_key ~ &#x27;^[a-z][a-z0-9_.:-]{1,191}$&#x27;),
+  constraint translated_dto_publications_status_chk check (publication_status in (&#x27;candidate&#x27;,&#x27;blocked&#x27;,&#x27;ready_for_review&#x27;,&#x27;published&#x27;,&#x27;rejected&#x27;,&#x27;superseded&#x27;,&#x27;archived&#x27;)),
+  constraint translated_dto_publications_kind_chk check (publication_kind in (&#x27;leadfinder_candidate&#x27;,&#x27;review_snapshot&#x27;,&#x27;gap_evidence&#x27;,&#x27;regression_fixture_metadata&#x27;,&#x27;unknown&#x27;)),
+  constraint translated_dto_publications_schema_version_chk check (dto_schema_version ~ &#x27;^[a-z][a-z0-9_.:-]{1,79}$&#x27;),
+  constraint translated_dto_publications_dto_object_chk check (jsonb_typeof(translated_dto) = &#x27;object&#x27;),
+  constraint translated_dto_publications_dto_sha256_chk check (translated_dto_sha256 is null or translated_dto_sha256 ~ &#x27;^[0-9a-f]{64}$&#x27;),
+  constraint translated_dto_publications_source_sha256_chk check (source_payload_sha256 is null or source_payload_sha256 ~ &#x27;^[0-9a-f]{64}$&#x27;),
+  constraint translated_dto_publications_artifact_sha256_chk check (matrix_artifact_sha256 is null or matrix_artifact_sha256 ~ &#x27;^[0-9a-f]{64}$&#x27;),
+  constraint translated_dto_publications_gate_status_chk check (publication_gate_status in (&#x27;not_started&#x27;,&#x27;ready_for_review&#x27;,&#x27;passed&#x27;,&#x27;blocked&#x27;,&#x27;not_applicable&#x27;)),
+  constraint translated_dto_publications_gap_reference_chk check (
+    (gap_reference_schema is null and gap_reference_table is null and gap_reference_id is null)
+    or
+    (gap_reference_schema is not null and gap_reference_table is not null and gap_reference_id is not null)
+  ),
+  constraint translated_dto_publications_metadata_object_chk check (jsonb_typeof(metadata) = &#x27;object&#x27;),
+  constraint translated_dto_publications_temporal_phase_object_chk check (jsonb_typeof(temporal_phase) = &#x27;object&#x27;),
+  constraint translated_dto_publications_published_gate_chk check (publication_status &lt;&gt; &#x27;published&#x27; or publication_gate_status = &#x27;passed&#x27;),
+  constraint translated_dto_publications_version_positive_chk check (version &gt; 0)
+);
+```
+
+### Observação sobre idempotência e hash
+
+Eu manteria `translated_dto_sha256` opcional por dois motivos:
+
+1. O contrato lido alerta que `jsonb::text` pode não ser uma canonicalização externa suficiente.
+2. A pipeline/gateway pode calcular uma serialização canônica fora do banco e persistir o hash.
+
+Para dedupe, usar dois níveis:
+
+```sql
+create unique index if not exists translated_dto_publications_hash_dedupe_key
+  on prop4you_sourcehub.translated_dto_publications (
+    raw_record_id,
+    matrix_artifact_id,
+    leadfinder_dictionary_version_id,
+    translated_dto_sha256
+  )
+  where translated_dto_sha256 is not null and deleted = false;
+```
+
+E `publication_key` como chave idempotente universal quando o hash ainda não existe.
+
+## 5. Índices recomendados
+
+```sql
+create index if not exists translated_dto_publications_raw_status_idx
+  on prop4you_sourcehub.translated_dto_publications (raw_record_id, publication_status);
+
+create index if not exists translated_dto_publications_matrix_status_idx
+  on prop4you_sourcehub.translated_dto_publications (matrix_artifact_id, publication_status);
+
+create index if not exists translated_dto_publications_dictionary_status_idx
+  on prop4you_sourcehub.translated_dto_publications (leadfinder_dictionary_version_id, publication_status);
+
+create index if not exists translated_dto_publications_gate_idx
+  on prop4you_sourcehub.translated_dto_publications (publication_gate_status, publication_status, created_at desc);
+
+create index if not exists translated_dto_publications_gap_reference_idx
+  on prop4you_sourcehub.translated_dto_publications (gap_reference_schema, gap_reference_table, gap_reference_id)
+  where gap_reference_id is not null;
+
+create index if not exists translated_dto_publications_dto_gin_idx
+  on prop4you_sourcehub.translated_dto_publications using gin (translated_dto jsonb_path_ops);
+
+create index if not exists translated_dto_publications_metadata_gin_idx
+  on prop4you_sourcehub.translated_dto_publications using gin (metadata jsonb_path_ops);
+```
+
+## 6. Views recomendadas
+
+### 6.1 Review projection
+
+`prop4you_sourcehub.v_translated_dto_publication_review` deve juntar:
+
+- publication id/public_ref/key/status/kind/gate.
+- raw record public_ref, provider_id/payload_class_id, raw hash.
+- Matrix artifact key/kind/status/gate/schema version.
+- LeadFinder dictionary version key/status.
+- hashes e timestamps.
+
+Filtro: `p.deleted = false`.
+
+### 6.2 Published/candidate safe projection
+
+`prop4you_sourcehub.v_translated_dto_publication_candidates` pode expor o DTO somente para `publication_status in (&#x27;ready_for_review&#x27;,&#x27;published&#x27;)` e `active = true`, mas ainda sem presumir exposição pública. Nome deve deixar claro que é projeção de SourceHub, não facade client final.
+
+### 6.3 Gap projection
+
+`prop4you_sourcehub.v_translated_dto_publication_gaps` para rows `blocked` ou com `gap_reference_id is not null`, ajudando reviewers a voltar para Matrix/LeadFinder sem materializar LFG.
+
+## 7. Função publish recomendada
+
+Nome: `prop4you_sourcehub.publish_translated_dto(...)`.
+
+Assinatura proposta:
+
+```sql
+create or replace function prop4you_sourcehub.publish_translated_dto(
+  p_raw_record_id uuid,
+  p_matrix_artifact_id uuid,
+  p_leadfinder_dictionary_version_id uuid,
+  p_translated_dto jsonb,
+  p_publication_key text default null,
+  p_translated_dto_sha256 text default null,
+  p_publication_status text default &#x27;ready_for_review&#x27;,
+  p_publication_kind text default &#x27;leadfinder_candidate&#x27;,
+  p_gap_reference_schema name default null,
+  p_gap_reference_table name default null,
+  p_gap_reference_id uuid default null,
+  p_actor_id text default null,
+  p_metadata jsonb default &#x27;{}&#x27;::jsonb
+)
+returns prop4you_sourcehub.translated_dto_publications
+language plpgsql
+volatile
+as $$
+-- proposta: ver corpo abaixo
+$$;
+```
+
+Regras no corpo:
+
+1. Validar parâmetros nulos: raw, artifact, dictionary, translated_dto.
+2. Validar `jsonb_typeof(p_translated_dto) = &#x27;object&#x27;`.
+3. Buscar `raw_records`; bloquear se `deleted = true`, `review_status` não está aceito ou `leadfinder_publication_status` está `blocked/not_ready`, exceto quando status pedido for `candidate`/`blocked`.
+4. Buscar `transformation_artifacts`; exigir `deleted=false`.
+5. Para `published`, exigir `artifact_status=&#x27;approved&#x27;` e `artifact_gate_status=&#x27;passed&#x27;`. Para `ready_for_review`, aceitar `artifact_status in (&#x27;generated&#x27;,&#x27;in_review&#x27;,&#x27;approved&#x27;)` e gate `ready_for_review/passed`.
+6. Exigir que `artifact.dictionary_version_id = p_leadfinder_dictionary_version_id`.
+7. Buscar `canonical_dictionary_versions`; para `published`, preferir/exigir `version_status in (&#x27;approved&#x27;,&#x27;active&#x27;)` se esse vocabulário estiver confirmado no `leadfinder/0001`.
+8. Gerar `publication_key` determinístico quando não informado, por exemplo:
+   - com hash: `dto:` + raw uuid sem hífen + `:` + artifact uuid sem hífen + `:` + primeiros 16 chars do hash.
+   - sem hash: `dto:` + raw uuid sem hífen + `:` + artifact uuid sem hífen + `:` + dictionary uuid sem hífen.
+9. Fazer `insert ... on conflict (publication_key) do update`.
+10. Retornar a linha.
+11. Opcional, mas recomendado: criar/atualizar `source_lineage_edges` com `lineage_kind=&#x27;candidate_dto_for&#x27;` e `derived_object_schema/table/id` apontando para a tabela publication, guardando o id em `source_lineage_edge_id`.
+
+Pseudocorpo essencial:
+
+```sql
+-- Buscar raw/artifact/dictionary em variáveis.
+-- Validar Matrix gate/status conforme p_publication_status.
+-- Validar dictionary_version_id consistente.
+-- effective_key := coalesce(nullif(btrim(p_publication_key), &#x27;&#x27;), generated_key);
+
+insert into prop4you_sourcehub.translated_dto_publications as p (
+  raw_record_id,
+  matrix_artifact_id,
+  leadfinder_dictionary_version_id,
+  publication_key,
+  publication_status,
+  publication_kind,
+  dto_schema_version,
+  translated_dto,
+  translated_dto_sha256,
+  source_payload_sha256,
+  matrix_artifact_sha256,
+  publication_gate_status,
+  gap_reference_schema,
+  gap_reference_table,
+  gap_reference_id,
+  temporal_phase,
+  metadata,
+  last_modified_by_actor_id
+) values (
+  p_raw_record_id,
+  p_matrix_artifact_id,
+  p_leadfinder_dictionary_version_id,
+  effective_key,
+  p_publication_status,
+  p_publication_kind,
+  &#x27;sourcehub.translated_dto.v0&#x27;,
+  p_translated_dto,
+  nullif(btrim(p_translated_dto_sha256), &#x27;&#x27;),
+  raw_row.raw_payload_sha256,
+  artifact_row.content_sha256,
+  case when p_publication_status = &#x27;published&#x27; then &#x27;passed&#x27; else &#x27;ready_for_review&#x27; end,
+  p_gap_reference_schema,
+  p_gap_reference_table,
+  p_gap_reference_id,
+  jsonb_build_object(...linha temporal... ),
+  jsonb_build_object(
+    &#x27;source&#x27;,&#x27;prop4you_sourcehub.publish_translated_dto&#x27;,
+    &#x27;gateway_agnostic&#x27;,true,
+    &#x27;no_provider_calls&#x27;,true,
+    &#x27;no_lfg_materialization&#x27;,true,
+    &#x27;sourcehub_phase&#x27;,&#x27;T4&#x27;,
+    &#x27;leadfinder_materialization&#x27;,&#x27;T5_later&#x27;
+  ) || coalesce(p_metadata, &#x27;{}&#x27;::jsonb),
+  p_actor_id
+)
+on conflict (publication_key) do update
+  set publication_status = excluded.publication_status,
+      publication_kind = excluded.publication_kind,
+      translated_dto = excluded.translated_dto,
+      translated_dto_sha256 = excluded.translated_dto_sha256,
+      source_payload_sha256 = excluded.source_payload_sha256,
+      matrix_artifact_sha256 = excluded.matrix_artifact_sha256,
+      publication_gate_status = excluded.publication_gate_status,
+      gap_reference_schema = excluded.gap_reference_schema,
+      gap_reference_table = excluded.gap_reference_table,
+      gap_reference_id = excluded.gap_reference_id,
+      metadata = p.metadata || excluded.metadata,
+      updated_at = now(),
+      last_modified_by_actor_id = p_actor_id
+returning * into row_out;
+```
+
+### Cuidado importante
+
+Se usar a unique index parcial por hash, `on conflict` não deve tentar mirar essa partial index diretamente. O caminho robusto é `on conflict (publication_key)` e a partial unique index fica como guarda adicional.
+
+## 8. Lifecycle, comentários e prefixo
+
+Seguir padrão de `sourcehub/0001`:
+
+```sql
+drop trigger if exists translated_dto_publications_set_lifecycle_defaults on prop4you_sourcehub.translated_dto_publications;
+create trigger translated_dto_publications_set_lifecycle_defaults
+  before insert on prop4you_sourcehub.translated_dto_publications
+  for each row execute function base.set_lifecycle_defaults();
+
+-- touch_updated_at
+-- increment_version
+
+select base.register_public_id_prefix(&#x27;p4yshd&#x27;, &#x27;prop4you_sourcehub&#x27;, &#x27;translated_dto_publications&#x27;, &#x27;Prop4You SourceHub translated DTO publication&#x27;);
+```
+
+Adicionar `comment on table`, `comment on column` para todas as colunas e comentários nas views/função/triggers. O texto deve repetir explicitamente que `translated_dto` é DTO publicado/revisável, não entidade LeadFinder materializada.
+
+## 9. Linha temporal proposta
+
+A DDL deve fixar o mapa temporal em comments e metadata:
+
+- T0: SourceHub `raw_records` captura payload bruto/evidência.
+- T1: Matrix extrai caminhos/tipos/contagens.
+- T2: LeadFinder gap bridge/preparação cruza lacunas e dicionário.
+- T3: Matrix quality report.
+- T3_5: Matrix `field_mapping_set` artifact (`matrix/0005`).
+- T4: SourceHub `translated_dto_publications` publica DTO traduzido e auditável.
+- T5_later: LeadFinder/LFG materialization, fora do escopo desta DDL.
+
+## 10. Gateway agnostic
+
+A função publish deve ser SQL/RPC pura. Nada de Django signal, PostgREST-only, provider SDK, job worker ou HTTP. Qualquer gateway deve poder chamar a função com os mesmos argumentos e obter a mesma linha idempotente.
+
+## 11. No LFG materialization
+
+Esta DDL não deve:
+
+- inserir em entidades finais LeadFinder;
+- atualizar `canonical_families`/`canonical_fields`;
+- promover dictionary preparations;
+- gerar owners/properties/leads;
+- assumir tabela LFG final.
+
+O único vínculo LeadFinder obrigatório é a FK para `canonical_dictionary_versions(id)` e, opcionalmente, referência flexível de gap via `gap_reference_*`.
+
+## 12. Incertezas / decisões pendentes
+
+1. Confirmar o vocabulário real de `canonical_dictionary_versions.version_status` em `leadfinder/0001` antes de codificar gate rígido para `published`.
+2. Definir se `publication_kind=&#x27;regression_fixture_metadata&#x27;` deve permanecer, pois pode soar como fixture; se mantido, comentar que é metadata only e sem payload raw gitado.
+3. Definir a canonicalização de `translated_dto_sha256`. Recomendo não calcular automaticamente em SQL nesta fatia;</pre></section><section><h2>10-gateway-temporal-review.md</h2><pre># Gateway/temporal review — SourceHub translated DTO publications
+
+Status: delivered for Thor review
+Worker: C
+Updated: 2026-06-17T19:40:50-04:00
+
+## Escopo
+
+Este review verifica se a Slice 09 mantém a publicação de DTO traduzido do SourceHub como contrato database-centric, gateway/runtime agnóstico, e temporalmente separada da materialização LeadFinder/LFG.
+
+Fontes revisadas neste checkout:
+
+- `docs/issues/09-prop4you-sourcehub-translated-dto-publications/00-detection-and-analysis.md`
+- `docs/issues/09-prop4you-sourcehub-translated-dto-publications/01-prd.md`
+- `database/ddl/projects/prop4you/sourcehub/0001_sourcehub_corpus.sql`
+- `database/ddl/projects/prop4you/matrix/0004_quality_report_artifacts.sql`
+- `database/ddl/projects/prop4you/matrix/0005_field_mapping_set_artifacts.sql`
+- `database/ddl/projects/prop4you/leadfinder/0003_prepare_dictionary_promotions.sql`
+- `docs/issues/05-prop4you-matrix-artifacts-reiq-raws/10-sourcehub-translated-dto-readiness.md`
+- `docs/issues/07-prop4you-leadfinder-gap-bridge-quality-report/10-temporal-phase-modeling-review.md`
+- `docs/issues/08-prop4you-matrix-field-mapping-prepare-promotions/11-executive-synthesis.md`
+
+## Veredito curto
+
+PASS com guardrails obrigatórios para a implementação de `sourcehub/0002_translated_dto_publications.sql`.
+
+A intenção da Slice 09 está correta: SourceHub deve publicar DTOs traduzidos, versionados e rastreáveis a partir de `raw_record + Matrix field_mapping_set + LeadFinder dictionary_version`, sem criar runtime LeadFinder, sem materializar LFG, sem depender de Django/PostgREST/ORM e sem chamadas a providers.
+
+O principal cuidado de implementação é nomear e modelar a tabela como publicação/contrato de DTO, não como tabela operacional de lead/property/owner. A publicação DTO pode ser consumível pelo LeadFinder depois, mas não deve ser a própria materialização LeadFinder.
+
+## Linha temporal T0-T5 validada
+
+```text
+T0 SourceHub raw capture / lineage
+  -&gt; T1 Matrix raw path extraction / structural evidence
+    -&gt; T2 LeadFinder gap/proposal bridge / demand pressure
+      -&gt; T3 Matrix quality_report / semantic quality gate
+        -&gt; T3.5 Matrix field_mapping_set / translation contract
+          -&gt; T4 SourceHub translated DTO publication
+            -&gt; T5 LeadFinder/LFG materialization later
+```
+
+### T0 — SourceHub raw capture
+
+Responsável por ingress, raw payload, corpus metadata, provider/source metadata e lineage. `sourcehub/0001_sourcehub_corpus.sql` já separa raw records de entidades canônicas e registra que raw records não são property, owner ou lead.
+
+Guardrail para Slice 09: `translated_dto_publications` deve referenciar `raw_records(id)` e preservar lineage, mas nunca reclassificar o raw record como verdade operacional.
+
+### T1 — Matrix extraction
+
+Responsável por evidência estrutural segura: paths, tipos, contagens e frequência. Não deve copiar valores escalares raw para docs/proofs.
+
+Guardrail para Slice 09: DTO publicado pode conter JSONB de contrato traduzido, mas os proofs/docs da slice devem mostrar contagens, refs, hashes e chaves, não payloads raw ou PII.
+
+### T2 — LeadFinder gap/proposal bridge
+
+Responsável por pressão de modelagem e lacunas, não runtime. O bridge ainda não é filtro final de mapa/lista/detail.
+
+Guardrail para Slice 09: publicação DTO pode apontar para gaps/preparations como contexto, mas não deve criar tabelas LFG, filas operacionais, views finais de busca, ranking, scoring, lists, presets ou materialized views de runtime.
+
+### T3 — Matrix quality_report
+
+Responsável por revisão de qualidade e readiness semântico. `matrix/0004_quality_report_artifacts.sql` explicita `sourcehub_dto_publication = false` e `leadfinder_materialization = T5_later`.
+
+Guardrail para Slice 09: um quality_report sozinho não autoriza publicação. O gate publicável precisa exigir field_mapping_set adequado e dictionary version coerente.
+
+### T3.5 — Matrix field_mapping_set
+
+Responsável por contrato de tradução. `matrix/0005_field_mapping_set_artifacts.sql` marca `gateway_agnostic = true`, `sourcehub_dto = T4_later`, `lfg_materialization = T5_later`, e declara que Matrix é dona do artefato semântico.
+
+Guardrail para Slice 09: `translated_dto_publications.matrix_artifact_id` deve referenciar `prop4you_matrix.transformation_artifacts(id)` com `artifact_kind = &#x27;field_mapping_set&#x27;`, não qualquer artefato Matrix genérico sem checagem.
+
+### T4 — SourceHub translated DTO publication
+
+Responsável por publicar um DTO traduzido, versionado, auditável e vinculado a raw lineage + Matrix artifact + LeadFinder dictionary version.
+
+O DTO é uma fronteira de integração e revisão. Ele não é materialização operacional.
+
+Requisitos recomendados para T4:
+
+- tabela em `prop4you_sourcehub`, preferencialmente `translated_dto_publications`;
+- FK obrigatória para `prop4you_sourcehub.raw_records(id)`;
+- FK obrigatória para `prop4you_matrix.transformation_artifacts(id)`;
+- FK obrigatória para `prop4you_leadfinder.canonical_dictionary_versions(id)`;
+- check ou trigger que garanta `artifact_kind = &#x27;field_mapping_set&#x27;` no artefato Matrix;
+- check ou trigger que garanta coerência entre `matrix_artifact.dictionary_version_id` e `leadfinder_dictionary_version_id`;
+- `translated_dto jsonb not null` com objeto JSON;
+- `translated_dto_sha256` para reprodutibilidade/hash;
+- status de publicação separado de status de materialização;
+- public ref com prefixo SourceHub novo, por exemplo `p4yshd`;
+- lifecycle padrão base;
+- comentários explícitos de gateway-agnostic, no provider calls e no LFG materialization.
+
+### T5 — LeadFinder/LFG materialization later
+
+Responsável por tabelas finais de busca, filtros, mapa/list/detail, scoring, ranking, workspaces/listas/presets, owner/contact operational views e índices runtime.
+
+Guardrail para Slice 09: nenhuma tabela, função, view ou proof deve reivindicar LFG materialization. A acceptance da slice deve provar contagem 0 para materialização LFG.
+
+## Gateway/runtime agnostic review
+
+A slice deve permanecer agnóstica porque a regra do repo é: gateways são transporte/consumidores, não donos da verdade de negócio.
+
+Critérios PASS:
+
+- DDL SQL puro sob `database/ddl/projects/prop4you/sourcehub/`.
+- Nenhum pacote Django, model Python, serializer DRF, PostgREST-specific RPC ou rota HTTP obrigatória.
+- Sem dependência de framework para gerar IDs, timestamps, lifecycle ou status.
+- Funções SQL, se existirem, recebem IDs/JSONB e retornam records/projeções; qualquer gateway pode chamá-las.
+- Comentários/proofs podem mencionar PostgREST/Django apenas como possíveis consumidores, nunca como owner ou pré-requisito.
+
+Red flags a bloquear:
+
+- nomes como `leadfinder_materialized_*`, `lfg_*`, `property_*`, `owner_*` dentro de SourceHub 0002;
+- colunas que representem filtro final (`list_status`, `map_cluster_id`, `score`, `workspace_id`, `preset_id`) em `translated_dto_publications`;
+- trigger que publique automaticamente em tabelas LeadFinder;
+- job/cron/provider call embutido;
+- RLS/exposure pública antes de política explícita de leitura do DTO.
+
+## DTO publication vs LFG materialization
+
+Diferença obrigatória:
+
+- DTO publication: registro auditável de uma tradução de evidência raw para um contrato JSONB versionado, com lineage e hash.
+- LFG materialization: criação de fatos/entidades/índices operacionais LeadFinder para busca e uso do produto.
+
+A Slice 09 deve implementar somente a primeira.
+
+A tabela de publicação pode ter status como `candidate`, `ready_for_review`, `published`, `rejected`, `superseded`, `archived`. Ela não deve ter status como `materialized`, `indexed_for_search`, `lead_active`, `in_campaign`, ou equivalentes de runtime. Se houver necessidade de rastrear consumo futuro, usar `metadata` não-secreta ou uma futura tabela explícita de T5.
+
+## Riscos
+
+1. Confundir `published` com `materialized`.
+   - Mitigação: comentário de tabela/colunas dizendo que publicação DTO não cria LeadFinder/LFG operational rows.
+
+2. Aceitar qualquer Matrix artifact como fonte.
+   - Mitigação: check via trigger/função para `artifact_kind = &#x27;field_mapping_set&#x27;` e `artifact_gate_status` adequado.
+
+3. Divergência entre dictionary version do DTO e do artifact Matrix.
+   - Mitigação: trigger ou função de publicação valida `transformation_artifacts.dictionary_version_id = leadfinder_dictionary_version_id`.
+
+4. Vazamento de payload/PII em proof/docs.
+   - Mitigação: proofs mostram counts, UUID/public_ref, artifact_key, dictionary_version_key, hash e status; não mostram `raw_payload` nem dumps completos de `translated_dto`.
+
+5. Gateway acoplado por conveniência de proof.
+   - Mitigação: prova primária via SQL/lab. Browser/PostgREST proof, se existir, é consumidor opcional.
+
+6. Publicação automática cedo demais.
+   - Mitigação: diferenciar `candidate/ready_for_review` de `published`; permitir publicação somente quando raw review + Matrix field_mapping_set + dictionary version estiverem coerentes.
+
+7. Perder reprodutibilidade.
+   - Mitigação: registrar `raw_payload_sha256` quando disponível, `translated_dto_sha256`, artifact id/key e dictionary version id/key no proof.
+
+## Next step recomendado
+
+Implementar `database/ddl/projects/prop4you/sourcehub/0002_translated_dto_publications.sql` como DDL idempotente e não destrutiva, com:
+
+1. tabela `prop4you_sourcehub.translated_dto_publications`;
+2. prefixo público `p4yshd` registrado em `base.register_public_id_prefix`;
+3. FKs para raw record, Matrix transformation artifact e LeadFinder dictionary version;
+4. trigger/função de validação de artifact/dictionary/status;
+5. lifecycle triggers base;
+6. view de revisão que omita payload raw e evite dump integral de DTO;
+7. helper SQL opcional para criar publicação candidate a partir de IDs explícitos;
+8. prova PG18 lab com pelo menos 10 DTO publications e 0 LFG materializations.
+
+## Acceptance wording proposto
+
+Use esta wording para a aceitação da Slice 09:
+
+```text
+ACCEPTED when PG18 lab applies SourceHub 0002 after Matrix 0005 and LeadFinder 0003; creates at least 10 SourceHub translated DTO publication rows linked to raw_records, Matrix field_mapping_set artifacts, and LeadFinder dictionary versions; proves reproducible DTO hashes/lineage without printing raw payload values; remains gateway/runtime agnostic with no Django/PostgREST/ORM dependency; and proves LeadFinder/LFG materialization count remains 0.
+```
+
+Acceptance negativa obrigatória:
+
+```text
+REJECT if SourceHub 0002 creates LeadFinder/LFG operational tables, materialized views, runtime filters, provider calls, framework-specific code, automatic dictionary promotion, or docs/proofs that dump raw provider payload values/PII.
+```
+</pre></section><section><h2>11-executive-synthesis.md</h2><pre># Executive synthesis — Slice 09
+
+Status: delivered
+Updated: 2026-06-17T20:49:02
+
+SourceHub now has a T4 publication layer for translated DTOs. The publication depends on Matrix field_mapping_set artifacts and LeadFinder dictionary versions. It remains a database contract callable by any gateway/runtime and does not materialize LFG.
+
+Key result:
+
+```text
+97 REIQ raws -&gt; 10 bridge rows -&gt; 1 field_mapping_set -&gt; 10 SourceHub translated DTO publications -&gt; 0 LFG materializations
+```
+
+This gives us the first concrete `Matrix -&gt; SourceHub -&gt; LFG later` bridge without prematurely creating dozens of highly-coupled LFG tables.
+</pre></section><section><h2>lab-proof-report</h2><pre># Prop4You Provider + SourceHub + Matrix + LeadFinder DDL Lab Proof
+
+Status: PASS
+LAB_DB: pg18_prop4you_ddl_lab
+PGHOST: 127.0.0.1
+PGPORT: 54318
+
+## Scope
+
+Applied base DDL and experimental Prop4You provider/sourcehub/matrix/leadfinder DDL into a clean lab DB.
+
+No provider calls were made.
+No raw/fake/redacted fixtures were created.
+
+## Apply order
+
+- `database/ddl/base/0001_install_tracking.sql`
+- `database/ddl/base/0002_extensions.sql`
+- `database/ddl/base/0003_base_schemas_roles_context.sql`
+- `database/ddl/base/0004_public_id.sql`
+- `database/ddl/base/0005_lifecycle_columns_triggers.sql`
+- `database/ddl/base/0006_jsonb_contract_helpers.sql`
+- `database/ddl/base/0007_search_normalization.sql`
+- `database/ddl/base/0008_audit_log.sql`
+- `database/ddl/base/0009_realtime_base.sql`
+- `database/ddl/base/0010_api_base.sql`
+- `database/ddl/projects/prop4you/0001_schemas.sql`
+- `database/ddl/projects/prop4you/providers/0001_provider_registry.sql`
+- `database/ddl/projects/prop4you/sourcehub/0001_sourcehub_corpus.sql`
+- `database/ddl/projects/prop4you/matrix/0001_semantic_dictionary.sql`
+- `database/ddl/projects/prop4you/leadfinder/0001_canonical_dictionary.sql`
+- `database/ddl/projects/prop4you/matrix/0002_mapping_sessions.sql`
+- `database/ddl/projects/prop4you/matrix/0003_raw_path_extractors.sql`
+- `database/ddl/projects/prop4you/leadfinder/0002_raw_evidence_gap_bridge.sql`
+- `database/ddl/projects/prop4you/matrix/0004_quality_report_artifacts.sql`
+- `database/ddl/projects/prop4you/matrix/0005_field_mapping_set_artifacts.sql`
+- `database/ddl/projects/prop4you/leadfinder/0003_prepare_dictionary_promotions.sql`
+- `database/ddl/projects/prop4you/sourcehub/0002_translated_dto_publications.sql`
+
+## Validation JSON
+
+```json
+{&quot;counts&quot;: {&quot;provider_count&quot;: 4, &quot;payload_class_count&quot;: 5, &quot;mapping_version_count&quot;: 4, &quot;leadfinder_field_count&quot;: 36, &quot;leadfinder_family_count&quot;: 15, &quot;matrix_mirror_family_count&quot;: 7, &quot;matrix_raw_path_view_count&quot;: 4, &quot;matrix_artifact_table_count&quot;: 3, &quot;matrix_raw_path_table_count&quot;: 2, &quot;matrix_raw_path_function_count&quot;: 3, &quot;leadfinder_gap_bridge_table_count&quot;: 1, &quot;leadfinder_dictionary_version_count&quot;: 1, &quot;matrix_field_mapping_function_count&quot;: 1, &quot;sourcehub_translated_dto_view_count&quot;: 1, &quot;leadfinder_gap_bridge_function_count&quot;: 2, &quot;matrix_quality_report_function_count&quot;: 1, &quot;sourcehub_translated_dto_table_count&quot;: 1, &quot;sourcehub_translated_dto_function_count&quot;: 2, &quot;leadfinder_promotion_prepare_table_count&quot;: 1, &quot;leadfinder_promotion_prepare_function_count&quot;: 1}, &quot;missing_tables&quot;: [], &quot;missing_schemas&quot;: [], &quot;uncommented_tables&quot;: [], &quot;jsonb_path_type_smoke&quot;: &quot;number&quot;, &quot;jsonb_leaf_paths_smoke_count&quot;: 2}
+```
+
+## Boundary
+
+This proves DDL apply/comment/object smoke for experimental Provider + SourceHub + Matrix mirror/candidate + LeadFinder dictionary gate.
+It does not prove final Prop4You property/owner tables, provider runtime calls, production deployment, real raw ingestion, or LeadFinder materialization.
+
+## Slice 09 SourceHub translated DTO proof
+
+Status: PASS
+
+```json
+{
+  &quot;bridge_count&quot;: 10,
+  &quot;dictionary_match_count&quot;: 10,
+  &quot;field_mapping_artifact_kind_count&quot;: 10,
+  &quot;field_mapping_set_count&quot;: 1,
+  &quot;gateway_agnostic&quot;: true,
+  &quot;lfg_materialization_created&quot;: 0,
+  &quot;no_raw_values_printed&quot;: true,
+  &quot;promotion_preparation_count&quot;: 10,
+  &quot;quality_report_count&quot;: 1,
+  &quot;raw_record_count&quot;: 97,
+  &quot;run_distinct_path_count&quot;: 9650,
+  &quot;run_extracted_path_count&quot;: 172700,
+  &quot;run_source_record_count&quot;: 97,
+  &quot;sourcehub_t4_statuses&quot;: [
+    &quot;ready_for_review&quot;
+  ],
+  &quot;translated_dto_contract&quot;: &quot;sourcehub.translated_dto.v0&quot;,
+  &quot;translated_dto_hash_count&quot;: 10,
+  &quot;translated_dto_publication_count&quot;: 10
+}
+```
+
+This proof created SourceHub T4 translated DTO publications from Matrix field_mapping_set artifacts and verified LFG materialization remained zero.
+
+</pre></section></body></html>
