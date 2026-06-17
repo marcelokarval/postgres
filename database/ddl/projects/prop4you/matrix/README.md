@@ -10,11 +10,15 @@ Status: experimental / non-final / mirror-candidate-review
 
 [LEADFINDER_DICTIONARY_FK] `0002_mapping_sessions.sql` links Matrix mapping sessions, transformation artifacts, and artifact field mappings to `prop4you_leadfinder.canonical_dictionary_versions`.
 
+[MATRIX_QUALITY_REPORT_SEPARATE] `0004_quality_report_artifacts.sql` keeps `quality_report` as a separate Matrix `transformation_artifacts` contract/helper over raw path extraction evidence. It does not embed LeadFinder bridge rows, publish SourceHub DTOs, or materialize LeadFinder entities.
+
 Current DDL:
 
 ```text
 0001_semantic_dictionary.sql
 0002_mapping_sessions.sql
+0003_raw_path_extractors.sql
+0004_quality_report_artifacts.sql
 ```
 
 Rules:

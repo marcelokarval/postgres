@@ -641,3 +641,7 @@ The LeadFinder Group owns the canonical dictionary, but that dictionary is born/
 ## Prop4You raw extractors before SourceHub DTO
 
 `docs/issues/06-prop4you-raw-extractors-leadfinder-modeling/` records the extractor-first decision: raw/provider data generates canonical candidates and LeadFinder Group modeling evidence, while LeadFinder filters provide demand-side pressure for organized/rastreável fields. `database/ddl/projects/prop4you/matrix/0003_raw_path_extractors.sql` and `scripts/extract-prop4you-reiq-path-candidates.py` provide SQL/Python path/type/count extractors before SourceHub translated DTO publication.
+
+## Prop4You gap bridge and quality report phases
+
+`docs/issues/07-prop4you-leadfinder-gap-bridge-quality-report/` records the T2/T3 modeling phase: `leadfinder/0002_raw_evidence_gap_bridge.sql` turns raw path extraction evidence into LeadFinder-owned gap/proposal and growth-pressure records, while `matrix/0004_quality_report_artifacts.sql` keeps quality reporting as a separate Matrix `transformation_artifacts` contract. T4 SourceHub DTO publication and T5 LeadFinder materialization remain later phases.

@@ -180,3 +180,6 @@ Then read the domain-specific doc for the task.
 - `docs/issues/06-prop4you-raw-extractors-leadfinder-modeling/` — PRD/tasks/review stack for SQL/Python raw path extractors feeding LeadFinder Group modeling evidence.
 - `database/ddl/projects/prop4you/matrix/0003_raw_path_extractors.sql` — experimental Matrix SQL extractor gate for SourceHub raw_records JSONB path/type/count evidence.
 - `scripts/extract-prop4you-reiq-path-candidates.py` — safe local Python scanner for REIQ path/type/frequency summaries without raw values.
+- `docs/issues/07-prop4you-leadfinder-gap-bridge-quality-report/` — PRD/tasks/review stack for LeadFinder raw evidence gap bridge and separate Matrix quality report.
+- `database/ddl/projects/prop4you/leadfinder/0002_raw_evidence_gap_bridge.sql` — LeadFinder-owned bridge from raw path evidence to canonical gaps/growth pressure signals.
+- `database/ddl/projects/prop4you/matrix/0004_quality_report_artifacts.sql` — separate Matrix quality_report artifact helper over raw path extraction evidence.

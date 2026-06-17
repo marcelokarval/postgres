@@ -1,0 +1,639 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Prop4You LeadFinder Gap Bridge + Matrix Quality Report — Browser Proof</title><style>body{font-family:system-ui;margin:32px;background:#f8fafc;color:#111827}header{background:#111827;color:white;padding:24px;border-radius:16px}.ok{background:#dcfce7;color:#14532d;border:1px solid #86efac;border-radius:10px;padding:10px 14px;font-weight:700}.badges span{display:inline-block;background:#dbeafe;color:#1e3a8a;border:1px solid #93c5fd;border-radius:999px;padding:4px 10px;margin:4px;font-weight:700}section{background:white;border:1px solid #e5e7eb;border-radius:14px;padding:18px;margin:18px 0}pre{white-space:pre-wrap;background:#0b1020;color:#e5e7eb;padding:14px;border-radius:10px;font:13px ui-monospace,monospace;max-height:760px;overflow:auto}</style></head><body><header><h1>Prop4You LeadFinder Gap Bridge + Matrix Quality Report</h1><p class="ok">Browser-proof artifact: T2/T3 modeling gate</p><div class="badges"><span>T0-T5 temporal phases</span><span>LeadFinder 0002</span><span>Matrix 0004</span><span>REIQ 97 raws</span><span>172,700 observations</span><span>9,650 paths</span><span>10 bridge rows</span><span>10 gaps</span><span>10 pressure signals</span><span>1 quality_report</span><span>No raw values</span><span>No provider calls</span><span>PG18 lab PASS</span></div></header><section><h2>01-prd.md</h2><pre># PRD — Prop4You LeadFinder raw evidence gap bridge + Matrix quality report
+
+Status: active
+
+## Problem
+
+The previous extractor slice proved that REIQ raw JSON can generate path/type/count evidence and that LeadFinder filters express demand-side pressure for organized, rastreável data. We now need a bridge that turns extractor evidence into LeadFinder-owned gap/proposal records while keeping Matrix quality reporting as a separate review artifact.
+
+## Goals
+
+- Implement LeadFinder DDL `0002_raw_evidence_gap_bridge.sql`.
+- Support both:
+  - matched gaps against existing `canonical_field_id`;
+  - proposed new family/field keys when no canonical field exists yet.
+- Preserve temporal separation of phases: raw observation, extraction, gap proposal, quality report, DTO, materialization.
+- Implement Matrix quality report support as a separate artifact type/contract using existing `transformation_artifacts` and/or added helper structures/functions.
+- Prove DDL in PG18 lab with REIQ 97 raw_records, SQL path extraction, gap bridge creation, and quality report creation without raw value output.
+- Persist PRD/tasks/reviews/final/browser-proof.
+
+## Non-goals
+
+- No SourceHub translated DTO publication table in this slice.
+- No final LeadFinder materialization tables.
+- No production deployment.
+- No provider/API calls.
+- No raw values/PII committed or printed.
+- No automatic candidate promotion to `in_review`.
+
+## Acceptance criteria
+
+- `database/ddl/projects/prop4you/leadfinder/0002_raw_evidence_gap_bridge.sql` exists and applies after LeadFinder 0001 + Matrix 0003.
+- Bridge tables/functions capture raw path evidence and filter pressure with temporal phase metadata.
+- Bridge supports nullable `canonical_field_id` plus proposed family/field keys.
+- Matrix quality_report artifact remains separate from LeadFinder bridge.
+- Lab proof creates at least one gap/proposal record and one separate Matrix quality_report artifact from extractor evidence.
+- Browser proof shows PRD/task review/final/report and lab evidence with console 0 errors + vision PASS.
+</pre></section><section><h2>05-task-review.md</h2><pre># Task Review — LeadFinder gap bridge + Matrix quality report
+
+Status: delivered
+Updated: 2026-06-17T18:00:28
+Reviewer: Thor/default
+
+| Task | Requested | Delivered | Evidence | Verdict |
+| --- | --- | --- | --- | --- |
+| T1 | Create PRD/tasks/ledger stack 07 | Stack created with temporal framing | `00`..`04` | PASS |
+| T2 | Implement LeadFinder raw evidence gap bridge DDL | `leadfinder/0002_raw_evidence_gap_bridge.sql` with matched/proposed support | `08-leadfinder-gap-bridge-ddl-review.md`; PG18 proof | PASS |
+| T3 | Implement Matrix quality_report separated artifact | `matrix/0004_quality_report_artifacts.sql` using `transformation_artifacts` | `09-matrix-quality-report-review.md`; PG18 proof | PASS |
+| T4 | Produce temporal phase/modeling review | T0–T5 phase review persisted | `10-temporal-phase-modeling-review.md` | PASS |
+| T5 | Integrate proof script apply order | Proof applies LeadFinder 0002 + Matrix 0004 | `scripts/proof-prop4you-ddl-lab.sh` | PASS |
+| T6 | Run PG18 lab proof with REIQ ingest/extractor/gap/quality report | 97 raws, 172,700 observations, 9,650 distinct paths, 10 bridges/gaps/signals, 1 quality report | `/tmp/gap-quality-counts-07b.json` | PASS |
+| T7 | Persist task review/final/synthesis | This review + final + synthesis persisted | `05`, `07`, `11` | PASS |
+| T8 | Browser-proof + vision QA | Pending before browser gate | `06`, `08-browser-render.html` | PENDING |
+| T9 | Commit/push and closeout | Pending final gate | git | PENDING |
+
+## Requested vs delivered
+
+| User request | Delivered |
+| --- | --- |
+| Implement bridge `leadfinder/0002_raw_evidence_gap_bridge.sql` | Delivered |
+| Support both existing canonical field and proposed family/field gaps | Delivered via nullable `canonical_field_id` + `proposed_family_key`/`proposed_field_key` |
+| Keep Matrix quality_report separated | Delivered via `matrix/0004_quality_report_artifacts.sql` and `artifact_kind=&#x27;quality_report&#x27;` |
+| Keep temporal phases explicit | Delivered in PRD, DDL metadata, temporal review, proof report |
+| Do not collapse current modeling phase into runtime LFG | Preserved; DTO/materialization remain non-goals |
+| Use subagents max 3, no unnecessary MCPs | 3 subagents, file+terminal only |
+| Active correction without HITL | Corrected invalid `signal_kind` proof input and same-statement mutation/count validation issue |
+
+## Active corrections
+
+- Initial proof used invalid `signal_kind=&#x27;leadfinder_filter_pressure&#x27;`; corrected to allowed `repeated_raw_path`.
+- Initial proof counted mutating CTE side effects inside the same statement; corrected with separate action/count statements.
+- Initial proof queried `artifact_kind` from a view that filters but does not expose that column; corrected to query base `transformation_artifacts` for kind.
+</pre></section><section><h2>07-final-report.md</h2><pre># Final Report — LeadFinder gap bridge + Matrix quality report
+
+Status: delivered before browser/commit final gate
+Updated: 2026-06-17T18:00:28
+Owner/reviewer: Thor/default
+
+## Verdict
+
+SUPPORTED for modeling/evidence phase.
+
+This slice implemented the T2/T3 bridge after raw extraction:
+
+```text
+T2 LeadFinder gap/proposal bridge
+T3 Matrix quality_report separated artifact
+```
+
+It intentionally does not implement T4 SourceHub DTO publication or T5 LeadFinder materialization.
+
+## Delivered artifacts
+
+```text
+database/ddl/projects/prop4you/leadfinder/0002_raw_evidence_gap_bridge.sql
+database/ddl/projects/prop4you/matrix/0004_quality_report_artifacts.sql
+docs/issues/07-prop4you-leadfinder-gap-bridge-quality-report/
+```
+
+## LeadFinder bridge capabilities
+
+```text
+prop4you_leadfinder.raw_evidence_gap_bridges
+prop4you_leadfinder.v_raw_evidence_gap_bridge_review
+prop4you_leadfinder.propose_raw_evidence_gap_bridge(...)
+prop4you_leadfinder.bridge_raw_evidence_gap_candidates(...)
+```
+
+Supports both:
+
+```text
+canonical_field_id matched path
+proposed_family_key + proposed_field_key for new gaps
+```
+
+## Matrix quality report capabilities
+
+```text
+prop4you_matrix.v_quality_report_artifacts
+prop4you_matrix.create_raw_path_quality_report_artifact(...)
+```
+
+Uses:
+
+```text
+prop4you_matrix.transformation_artifacts.artifact_kind = &#x27;quality_report&#x27;
+contract = matrix.quality_report.raw_path.v0
+```
+
+## Integrated PG18 proof
+
+```json
+{
+  &quot;bridge_table_count&quot;: 10,
+  &quot;canonical_gap_count&quot;: 10,
+  &quot;growth_pressure_signal_count&quot;: 10,
+  &quot;no_raw_values_printed&quot;: true,
+  &quot;quality_report_contract&quot;: &quot;matrix.quality_report.raw_path.v0&quot;,
+  &quot;quality_report_count&quot;: 1,
+  &quot;quality_report_gate&quot;: &quot;ready_for_review&quot;,
+  &quot;quality_report_kind&quot;: &quot;quality_report&quot;,
+  &quot;quality_report_status&quot;: &quot;generated&quot;,
+  &quot;raw_record_count&quot;: 97,
+  &quot;run_count&quot;: 1,
+  &quot;run_distinct_path_count&quot;: 9650,
+  &quot;run_extracted_path_count&quot;: 172700,
+  &quot;run_source_record_count&quot;: 97,
+  &quot;temporal_phases&quot;: [
+    &quot;T0 raw capture&quot;,
+    &quot;T1 extraction/modeling evidence&quot;,
+    &quot;T2 gap/proposal bridge&quot;,
+    &quot;T3 Matrix quality_report&quot;,
+    &quot;T4 SourceHub DTO later&quot;,
+    &quot;T5 LeadFinder materialization later&quot;
+  ]
+}
+```
+
+## Boundaries
+
+Not claimed:
+
+- SourceHub translated DTO implemented;
+- final LeadFinder Group materialization implemented;
+- runtime LeadFinder filters/indexes implemented;
+- provider/API calls;
+- raw values/PII printed or committed;
+- automatic candidate promotion to `in_review`.
+
+## Next steps
+
+1. Implement SourceHub `translated_dto_publications` after quality_report review.
+2. Generate first `field_mapping_set` artifact from accepted gap/quality evidence.
+3. Define promotion policy from bridge/gap candidate to LeadFinder dictionary `in_review`.
+4. Extend from REIQ FL 97 to additional REIQ/provider corpora after this path remains stable.
+</pre></section><section><h2>08-leadfinder-gap-bridge-ddl-review.md</h2><pre># Review — Worker A LeadFinder raw evidence gap bridge DDL
+
+## Resultado
+
+Implementado `database/ddl/projects/prop4you/leadfinder/0002_raw_evidence_gap_bridge.sql` como DDL idempotente e não-destrutivo para ligar evidência agregada da Matrix (`raw_path_extraction_runs` / `raw_path_summary_evidence`) ao backlog LeadFinder (`canonical_gaps` e `growth_pressure_signals`).
+
+O desenho mantém as fases temporais explícitas e separadas via `temporal_phase`:
+
+- `raw_observation`
+- `path_extraction`
+- `gap_proposal`
+- `quality_report`
+- `dto_candidate`
+- `materialization_candidate`
+
+O bridge suporta os dois caminhos exigidos:
+
+1. match contra campo LeadFinder existente via `canonical_field_id` nullable;
+2. gap novo via par obrigatório `proposed_family_key` + `proposed_field_key` quando `canonical_field_id` é nulo.
+
+## Estruturas criadas
+
+- Tabela `prop4you_leadfinder.raw_evidence_gap_bridges`
+  - guarda refs Matrix/LeadFinder, path label, tipo JSON, contagens, pressão de filtro, fase temporal e links para gap/sinal;
+  - não guarda raw values;
+  - possui unique constraint `NULLS NOT DISTINCT` para idempotência também nos casos propostos com `canonical_field_id` nulo.
+- View `prop4you_leadfinder.v_raw_evidence_gap_bridge_review`
+  - projeção segura para revisão, sem payload bruto.
+- Função `prop4you_leadfinder.propose_raw_evidence_gap_bridge(...)`
+  - cria/atualiza de forma idempotente `canonical_gaps`, `growth_pressure_signals` e bridge row para uma evidência Matrix.
+- Função `prop4you_leadfinder.bridge_raw_evidence_gap_candidates(...)`
+  - helper batch para propor gaps a partir de evidência agregada acima de um threshold, derivando chaves seguras de componentes de path.
+- Registro de public ref prefix `p4ylfgb`.
+
+## Validação executada
+
+Executado lab local em database descartável `pg18_lfgb_worker_a_lab`, sem imprimir secrets:
+
+1. recriação do database lab;
+2. aplicação de `database/ddl/base` via installer;
+3. aplicação na ordem:
+   - `projects/prop4you/0001_schemas.sql`
+   - `providers/0001_provider_registry.sql`
+   - `sourcehub/0001_sourcehub_corpus.sql`
+   - `leadfinder/0001_canonical_dictionary.sql`
+   - `matrix/0001_semantic_dictionary.sql`
+   - `matrix/0002_mapping_sessions.sql`
+   - `matrix/0003_raw_path_extractors.sql`
+   - `leadfinder/0002_raw_evidence_gap_bridge.sql`
+   - reapply de `leadfinder/0002_raw_evidence_gap_bridge.sql`
+4. checks finais retornaram:
+   - `bridge_table=prop4you_leadfinder.raw_evidence_gap_bridges`
+   - `bridge_function=prop4you_leadfinder.propose_raw_evidence_gap_bridge(uuid,uuid,text,uuid,text,text,text,text,text,text,jsonb,text,jsonb)`
+   - `unique_nulls_not_distinct=true`
+
+Também executado dry-run do pacote LeadFinder:
+
+- `scripts/apply-ddl-package.sh --package database/ddl/projects/prop4you/leadfinder --dry-run`
+- hash de `0002_raw_evidence_gap_bridge.sql`: `e90afae49961f4aa8c59b88be85f49c60e01477a11b09584e8edd178ef930449`
+
+## Bloqueios
+
+Nenhum bloqueio para a entrega da DDL.
+
+## Riscos residuais
+
+- A função batch deriva `proposed_field_key` de componentes do path; revisão humana ainda deve ajustar família/campo antes de qualquer promoção semântica.
+- Não foi criado fixture nem payload sintético para provar criação de registro funcional, por aderência à restrição de não criar fixtures nesta task. A prova de criação com corpus REIQ real deve ficar para a task de integração/lab end-to-end.
+- A reexecução sobre ambientes onde uma versão anterior experimental desta mesma DDL já tenha criado a tabela sem `NULLS NOT DISTINCT` não altera constraints existentes automaticamente; no fluxo normal, este arquivo é novo e foi validado em database limpo.
+
+## Próxima task sugerida
+
+Integrar no proof script de ordem de aplicação e executar a prova end-to-end com corpus REIQ real, criando pelo menos um bridge row e validando que nenhum raw value aparece em outputs/logs.
+</pre></section><section><h2>09-matrix-quality-report-review.md</h2><pre># Review — Matrix quality_report artifact helper/contract
+
+Status: delivered for Worker B local slice
+
+## Resultado
+
+Implementado `database/ddl/projects/prop4you/matrix/0004_quality_report_artifacts.sql` como contrato/helper separado de Matrix para `artifact_kind = &#x27;quality_report&#x27;`, reutilizando `prop4you_matrix.transformation_artifacts`.
+
+O helper principal é:
+
+```sql
+prop4you_matrix.create_raw_path_quality_report_artifact(
+  p_raw_path_extraction_run_id uuid,
+  p_dictionary_version_id uuid,
+  p_artifact_key text default null,
+  p_actor_id text default null,
+  p_metadata jsonb default &#x27;{}&#x27;::jsonb
+)
+```
+
+Ele cria/atualiza de forma idempotente:
+
+- uma `mapping_sessions` de propósito `artifact_generation` para a execução de extração;
+- um `transformation_artifacts` com `artifact_kind = &#x27;quality_report&#x27;`;
+- `artifact_payload` no contrato `matrix.quality_report.raw_path.v0`;
+- `quality_summary` com métricas agregadas de paths/tipos/contagens;
+- gate `ready_for_review` quando a extração está `completed` e tem evidência, ou `blocked` quando não há evidência pronta.
+
+Também foi criada a view:
+
+```sql
+prop4you_matrix.v_quality_report_artifacts
+```
+
+para consultar apenas quality reports sem misturar com o bridge LeadFinder.
+
+## Arquivos alterados
+
+- `database/ddl/projects/prop4you/matrix/0004_quality_report_artifacts.sql` — novo DDL Matrix quality_report.
+- `database/ddl/projects/prop4you/matrix/README.md` — documenta `0004_quality_report_artifacts.sql` e a separação do quality report.
+- `docs/issues/07-prop4you-leadfinder-gap-bridge-quality-report/09-matrix-quality-report-review.md` — este review.
+- `.tmp/prop4you-gap-bridge-quality/subagents/B-status.md` — status do subagente B.
+
+## Validação
+
+Executado:
+
+```bash
+python3 -m venv .tmp/pglast-venv
+.tmp/pglast-venv/bin/pip install pglast
+.tmp/pglast-venv/bin/python - &lt;&lt;&#x27;PY&#x27;
+from pathlib import Path
+from pglast import parse_sql
+sql = Path(&#x27;database/ddl/projects/prop4you/matrix/0004_quality_report_artifacts.sql&#x27;).read_text()
+stmts = parse_sql(sql)
+print(&#x27;pglast_parse_ok statements=&#x27;, len(stmts))
+PY
+```
+
+Resultado real:
+
+```text
+pglast_parse_ok statements= 8
+```
+
+Também executado smoke estático de contrato/guardrails:
+
+```text
+has_quality_report_kind=True
+has_no_raw_values_guardrail=True
+has_no_provider_calls_guardrail=True
+uses_transformation_artifacts=True
+has_helper_signature=True
+no_insert_fixture_values=True
+session_status_not_generated=True
+```
+
+Também executei apply real em lab temporário via `docker exec` no container PG18 local, incluindo:
+
+- base DDL `database/ddl/base/*.sql`;
+- Prop4You schemas/providers/sourcehub/matrix/leadfinder até `matrix/0004_quality_report_artifacts.sql`.
+
+Runtime smoke criou uma `raw_path_extraction_runs` agregada, uma `raw_path_summary_evidence` sem raw values e chamou `create_raw_path_quality_report_artifact(...)`.
+
+Resultado real do smoke:
+
+```json
+{&quot;contract&quot;: &quot;matrix.quality_report.raw_path.v0&quot;, &quot;view_count&quot;: 0, &quot;artifact_kind&quot;: &quot;quality_report&quot;, &quot;schema_version&quot;: &quot;matrix.quality_report.raw_path.v0&quot;, &quot;top_path_count&quot;: 1, &quot;artifact_status&quot;: &quot;generated&quot;, &quot;raw_values_flag&quot;: &quot;false&quot;, &quot;artifact_gate_status&quot;: &quot;ready_for_review&quot;, &quot;leadfinder_bridge_embedded&quot;: &quot;false&quot;}
+```
+
+Observação: `view_count` ficou `0` porque foi lido no mesmo SQL statement que chamou a função mutante; o artifact retornado pela função foi criado com sucesso e trouxe `top_path_count = 1`. O lab temporário `pg18_worker_b_quality_lab` foi removido ao final.
+
+`DRY_RUN=1 scripts/proof-prop4you-ddl-lab.sh` confirmou a ordem atual do proof existente. Observação: esse proof ainda não inclui `matrix/0004_quality_report_artifacts.sql`; a integração do proof order está listada como T5/Thor.
+
+## Bloqueios
+
+- Nenhum bloqueio para a entrega do Worker B após validação via `docker exec` no PG18 local.
+- Ainda falta integrar o novo DDL ao proof script oficial da slice, o que parece pertencer à T5/Thor.
+
+## Riscos residuais
+
+- O proof runtime foi smoke controlado com evidência agregada mínima; ainda falta o lab completo com ingest/extractor REIQ e bridge LeadFinder da stack 07.
+- O helper limita `top_path_evidence` a 200 linhas agregadas para manter o artifact payload revisável; se o relatório precisar de paginação completa, uma próxima slice deve adicionar projeção paginada em view/tabela auxiliar.
+- A criação idempotente usa `artifact_key` único global. Se o consumidor fornecer uma chave já usada por artifact não-`quality_report`, a função bloqueia com exceção para evitar sobrescrever outro contrato.
+
+## Próxima task sugerida
+
+Integrar `database/ddl/projects/prop4you/matrix/0004_quality_report_artifacts.sql` no proof/apply order Thor T5 e rodar PG18 lab com:
+
+1. ingest/extractor REIQ;
+2. bridge LeadFinder T2;
+3. `create_raw_path_quality_report_artifact(...)` T3;
+4. validação de que nenhum raw value/PII aparece no `artifact_payload` ou `quality_summary`.
+</pre></section><section><h2>10-temporal-phase-modeling-review.md</h2><pre># Review — temporalidade e modelagem do gap bridge + quality report
+
+Status: delivered for Thor review.
+
+## Escopo deste review
+
+Este documento registra a separação temporal do slice `07-prop4you-leadfinder-gap-bridge-quality-report` e o limite de modelagem atual.
+
+A decisão central é: neste momento estamos modelando evidência, lacunas e contratos de revisão. Os filtros LeadFinder entram como pressão de demanda para orientar quais campos/sinais precisam existir de forma canônica, mas não estamos implementando runtime LeadFinder Group/LFG, materialização final de leads, nem DTO público de SourceHub.
+
+Guardrails mantidos neste review:
+
+- sem código de aplicação;
+- sem chamadas a provider/API;
+- sem payloads ou valores raw;
+- sem promoção automática para runtime operacional;
+- sem colapsar Matrix, SourceHub e LeadFinder em uma única fase.
+
+## Linha temporal canônica
+
+```text
+T0 Raw capture / observação bruta
+  -&gt; T1 Extraction / modeling evidence
+    -&gt; T2 LeadFinder gap/proposal bridge
+      -&gt; T3 Matrix quality_report separado
+        -&gt; T4 SourceHub DTO publication later
+          -&gt; T5 LeadFinder materialization later
+```
+
+Cada fase pode referenciar evidência da anterior, mas não deve assumir responsabilidades da próxima.
+
+## T0 — Raw capture / observação bruta
+
+T0 é a fase em que SourceHub/ingress preserva o fato bruto recebido/observado, sua origem e sua linhagem.
+
+Responsabilidade:
+
+- guardar o corpus raw e metadados de origem;
+- preservar lineage, provider, classe de payload e janela de captura;
+- manter payload bruto fora da superfície semântica/operacional;
+- permitir auditoria posterior sem transformar observação em verdade canônica.
+
+O que T0 não faz neste slice:
+
+- não define campos canônicos LeadFinder;
+- não decide se um path vira campo novo;
+- não gera relatório de qualidade Matrix;
+- não materializa leads ou grupos de leads;
+- não publica DTO SourceHub traduzido.
+
+## T1 — Extraction / modeling evidence
+
+T1 transforma raw observado em evidência segura para modelagem: paths, tipos, contagens, frequência, presença por record e metadados agregados.
+
+Responsabilidade:
+
+- extrair evidência path/type/count sem expor valores escalares brutos;
+- fornecer insumo de revisão para Matrix e LeadFinder;
+- apoiar análise de cobertura, ausência e estabilidade estrutural;
+- permitir comparação entre pressão de filtros e disponibilidade real de caminhos observados.
+
+T1 é evidência, não semântica final. Um path frequente ainda não é campo canônico. Um path ausente ainda não é necessariamente gap de produto. A interpretação vem depois, em T2/T3.
+
+## T2 — LeadFinder gap/proposal bridge
+
+T2 é a ponte LeadFinder-owned entre evidência extraída e necessidade de modelagem.
+
+Responsabilidade:
+
+- registrar lacunas, candidatos e propostas a partir da evidência T1;
+- suportar tanto match com `canonical_field_id` existente quanto proposta de novas chaves de família/campo quando não houver campo canônico;
+- registrar a pressão vinda dos filtros LeadFinder como motivação de modelagem;
+- manter fase, status e rastreabilidade explícitos para revisão humana/posterior.
+
+Importante: T2 ainda não é runtime LeadFinder. Ele não deve criar tabela final de busca, ranking, listas operacionais, enriquecimento de proprietário, filas ou materializações de LFG. Ele só organiza a lacuna/proposta que pode levar a esses artefatos em uma fase posterior.
+
+## T3 — Matrix quality_report separado
+
+T3 é artifact/review da Matrix, não coluna embutida no bridge LeadFinder.
+
+Responsabilidade:
+
+- avaliar qualidade de evidência, cobertura, riscos semânticos e readiness de mapeamento;
+- produzir um artifact separado `quality_report` ligado a evidência/revisão;
+- preservar a Matrix como fronteira de significado, mapeamento e qualidade;
+- evitar que o bridge LeadFinder vire o dono do julgamento semântico completo.
+
+A separação T2/T3 é intencional:
+
+- LeadFinder declara demanda e lacuna para o produto de busca/leads;
+- Matrix avalia qualidade semântica e confiabilidade do mapeamento;
+- SourceHub continua dono de ingress/linhagem/raw;
+- nenhuma fase precisa copiar payload bruto para provar sua decisão.
+
+## T4 — SourceHub DTO publication later
+
+T4 é uma fase posterior, fora do escopo atual.
+
+Responsabilidade futura:
+
+- publicar DTO traduzido/normalizado a partir de raw + mapeamentos aprovados;
+- expor contratos de integração derivados de decisões revisadas;
+- servir consumidores sem forçá-los a conhecer payload raw de provider.
+
+Neste slice, T4 deve permanecer como destino futuro. A existência de gap/proposal ou quality_report não autoriza publicação automática de DTO.
+
+## T5 — LeadFinder materialization later
+
+T5 é a materialização operacional LeadFinder: estruturas finais para busca, filtros, mapa, score, listas, presets, owner/contact views e fluxos de uso.
+
+Responsabilidade futura:
+
+- materializar dados canônicos e índices para filtros LeadFinder;
+- sustentar consultas de mapa/list/detail e estados operacionais;
+- aplicar ranking/classificação/score quando o modelo estiver aprovado;
+- conectar workspace/listas/tags/presets sem misturar raw provider payload.
+
+Neste slice, T5 é explicitamente não-goal. O bridge não deve ser usado como tabela final de runtime, e o quality_report não deve ser confundido com DTO ou materialização.
+
+## Como os filtros LeadFinder entram agora
+
+Os filtros LeadFinder funcionam como pressão de modelagem, não como runtime a implementar.
+
+Eles indicam que o modelo precisará responder a famílias de necessidade como:
+
+- geografia e área;
+- tipo e atributos físicos de imóvel;
+- situações/lead types ativos;
+- occupancy e ownership;
+- valuation/equity/listing/mortgage ranges;
+- owner/contact availability/status;
+- score, classificação e estados operacionais;
+- busca de mapa, detalhe, listas e presets.
+
+No slice atual, essa pressão deve ser registrada como razão para investigar gaps e propostas. Ela não implica:
+
+- criar endpoints LeadFinder;
+- reproduzir querysets do app legado;
+- implementar cluster/map runtime;
+- criar materialized views finais;
+- enriquecer contatos;
+- publicar dados sensíveis;
+- promover campos automaticamente.
+
+## Regras de passagem entre fases
+
+1. T0 -&gt; T1: raw pode gerar evidência estrutural segura, sem expor valores.
+2. T1 -&gt; T2: evidência pode alimentar gap/proposal LeadFinder quando houver pressão de demanda ou ausência/match de campo canônico.
+3. T2 -&gt; T3: gap/proposal pode ser avaliado por Matrix em `quality_report`, separado do bridge.
+4. T3 -&gt; T4: publicação DTO requer decisão posterior; quality_report não publica DTO sozinho.
+5. T4 -&gt; T5: LeadFinder materialization depende de DTO/modelo aprovado e continua fora do escopo deste slice.
+
+## Riscos se a temporalidade for colapsada
+
+- Tratar path raw como campo canônico antes de revisão semântica.
+- Transformar filtro LeadFinder em schema final sem checar evidência/cobertura.
+- Embutir qualidade Matrix no bridge e perder fronteira de responsabilidade.
+- Publicar DTO SourceHub antes de aprovar mapeamento.
+- Criar runtime LeadFinder sobre dados ainda em fase de modeling.
+- Vazar valores raw ao tentar provar gap ou qualidade.
+
+## Conclusão
+
+A modelagem correta para este slice é uma ponte temporal e rastreável:
+
+- T0 observa;
+- T1 extrai evidência segura;
+- T2 registra lacunas/propostas LeadFinder;
+- T3 avalia qualidade via Matrix artifact separado;
+- T4 publica DTO depois;
+- T5 materializa LeadFinder depois.
+
+Portanto, o trabalho atual deve permanecer no plano de evidence/modeling/review. Os filtros LeadFinder são a base de pressão para priorizar campos e gaps, mas LFG runtime, SourceHub DTO e LeadFinder materialization ficam deliberadamente para fases posteriores.
+</pre></section><section><h2>11-executive-synthesis.md</h2><pre># Executive synthesis — LeadFinder gap bridge + Matrix quality report
+
+Status: delivered
+Updated: 2026-06-17T18:00:28
+Reviewer: Thor/default
+
+## Decision
+
+Implemented the next recommended slice:
+
+```text
+LeadFinder raw evidence gap bridge first, with both matched and proposed paths;
+Matrix quality_report as a separate artifact;
+SourceHub DTO and LeadFinder materialization remain later phases.
+```
+
+## Temporal framing
+
+```text
+T0 Raw capture / observação bruta
+  -&gt; T1 Extraction / modeling evidence
+    -&gt; T2 LeadFinder gap/proposal bridge
+      -&gt; T3 Matrix quality_report separado
+        -&gt; T4 SourceHub DTO publication later
+          -&gt; T5 LeadFinder materialization later
+```
+
+## Proof evidence
+
+```json
+{
+  &quot;bridge_table_count&quot;: 10,
+  &quot;canonical_gap_count&quot;: 10,
+  &quot;growth_pressure_signal_count&quot;: 10,
+  &quot;no_raw_values_printed&quot;: true,
+  &quot;quality_report_contract&quot;: &quot;matrix.quality_report.raw_path.v0&quot;,
+  &quot;quality_report_count&quot;: 1,
+  &quot;quality_report_gate&quot;: &quot;ready_for_review&quot;,
+  &quot;quality_report_kind&quot;: &quot;quality_report&quot;,
+  &quot;quality_report_status&quot;: &quot;generated&quot;,
+  &quot;raw_record_count&quot;: 97,
+  &quot;run_count&quot;: 1,
+  &quot;run_distinct_path_count&quot;: 9650,
+  &quot;run_extracted_path_count&quot;: 172700,
+  &quot;run_source_record_count&quot;: 97,
+  &quot;temporal_phases&quot;: [
+    &quot;T0 raw capture&quot;,
+    &quot;T1 extraction/modeling evidence&quot;,
+    &quot;T2 gap/proposal bridge&quot;,
+    &quot;T3 Matrix quality_report&quot;,
+    &quot;T4 SourceHub DTO later&quot;,
+    &quot;T5 LeadFinder materialization later&quot;
+  ]
+}
+```
+
+## Meaning
+
+This slice converts extractor evidence into a LeadFinder-owned modeling backlog while keeping Matrix quality review separate. It does not publish DTOs and does not materialize runtime LeadFinder Group tables.
+</pre></section><section><h2>lab-proof-report</h2><pre># Prop4You Provider + SourceHub + Matrix + LeadFinder DDL Lab Proof
+
+Status: PASS
+LAB_DB: pg18_prop4you_ddl_lab
+PGHOST: 127.0.0.1
+PGPORT: 54318
+
+## Scope
+
+Applied base DDL and experimental Prop4You provider/sourcehub/matrix/leadfinder DDL into a clean lab DB.
+
+No provider calls were made.
+No raw/fake/redacted fixtures were created.
+
+## Apply order
+
+- `database/ddl/base/0001_install_tracking.sql`
+- `database/ddl/base/0002_extensions.sql`
+- `database/ddl/base/0003_base_schemas_roles_context.sql`
+- `database/ddl/base/0004_public_id.sql`
+- `database/ddl/base/0005_lifecycle_columns_triggers.sql`
+- `database/ddl/base/0006_jsonb_contract_helpers.sql`
+- `database/ddl/base/0007_search_normalization.sql`
+- `database/ddl/base/0008_audit_log.sql`
+- `database/ddl/base/0009_realtime_base.sql`
+- `database/ddl/base/0010_api_base.sql`
+- `database/ddl/projects/prop4you/0001_schemas.sql`
+- `database/ddl/projects/prop4you/providers/0001_provider_registry.sql`
+- `database/ddl/projects/prop4you/sourcehub/0001_sourcehub_corpus.sql`
+- `database/ddl/projects/prop4you/matrix/0001_semantic_dictionary.sql`
+- `database/ddl/projects/prop4you/leadfinder/0001_canonical_dictionary.sql`
+- `database/ddl/projects/prop4you/matrix/0002_mapping_sessions.sql`
+- `database/ddl/projects/prop4you/matrix/0003_raw_path_extractors.sql`
+- `database/ddl/projects/prop4you/leadfinder/0002_raw_evidence_gap_bridge.sql`
+- `database/ddl/projects/prop4you/matrix/0004_quality_report_artifacts.sql`
+
+## Validation JSON
+
+```json
+{&quot;counts&quot;: {&quot;provider_count&quot;: 4, &quot;payload_class_count&quot;: 5, &quot;mapping_version_count&quot;: 4, &quot;leadfinder_field_count&quot;: 36, &quot;leadfinder_family_count&quot;: 15, &quot;matrix_mirror_family_count&quot;: 7, &quot;matrix_raw_path_view_count&quot;: 3, &quot;matrix_artifact_table_count&quot;: 3, &quot;matrix_raw_path_table_count&quot;: 2, &quot;matrix_raw_path_function_count&quot;: 3, &quot;leadfinder_gap_bridge_table_count&quot;: 1, &quot;leadfinder_dictionary_version_count&quot;: 1, &quot;leadfinder_gap_bridge_function_count&quot;: 2, &quot;matrix_quality_report_function_count&quot;: 1}, &quot;missing_tables&quot;: [], &quot;missing_schemas&quot;: [], &quot;uncommented_tables&quot;: [], &quot;jsonb_path_type_smoke&quot;: &quot;number&quot;, &quot;jsonb_leaf_paths_smoke_count&quot;: 2}
+```
+
+## Boundary
+
+This proves DDL apply/comment/object smoke for experimental Provider + SourceHub + Matrix mirror/candidate + LeadFinder dictionary gate.
+It does not prove final Prop4You property/owner tables, provider runtime calls, production deployment, real raw ingestion, or LeadFinder materialization.
+</pre></section></body></html>
