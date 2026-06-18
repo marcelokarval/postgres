@@ -1,0 +1,1626 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Prop4You JSON Curation PG18 JSONB Strategy</title><style>body{font-family:Inter,Arial,sans-serif;margin:32px;background:#0b1020;color:#edf2ff}.badges span{display:inline-block;margin:4px;padding:6px 10px;background:#24385f;border:1px solid #8cc8ff;border-radius:999px}section{background:#121a33;border:1px solid #26365f;margin:18px 0;padding:18px;border-radius:12px}pre{white-space:pre-wrap;line-height:1.35}h1{color:#8cc8ff}</style></head><body><h1>Prop4You JSON Curation PG18 JSONB Strategy</h1><div class="badges"><span>JSONB-first</span><span>JSONSchema-governed</span><span>DirectSkip 213 JSONs</span><span>Realtor corpus/backups</span><span>Legacy tags inventory</span><span>No raw values</span><span>No PII</span><span>No provider calls</span><span>Table-vs-JSONB ADR</span><span>Canonical envelopes next</span><span>Auto-apply threshold 3 users/2 workspaces</span><span>No workspace tables</span><span>Browser proof</span></div><section><h2>01-prd.md</h2><pre># PRD — Prop4You JSON curation and PG18 JSONB canonical strategy
+
+Status: active
+
+## Problem
+
+The previous readiness audit showed LFG is `ready-with-gaps`. A direct translation of the legacy Django table model into PG18 tables risks over-materializing the model before analyzing all provider/native JSON shapes. With Realtor, DirectSkip, REIQ and many future county/provider sources, the better next step is to curate JSON corpora and define how canonical JSON/JSONSchema, JSONB, projected fields, generated columns, indexes and final relational tables should cooperate.
+
+## Goal
+
+Produce a persisted, evidence-based strategy for:
+
+1. DirectSkip response corpus and contact satellite modeling.
+2. Realtor JSON/docs/backups and property/geography/market/comparable payload modeling.
+3. Legacy tags/labels vocabulary inventory before designing tag groups.
+4. PG18 JSONB-first canonical JSONSchema strategy.
+5. Table-vs-JSONB decision policy for LFG graph/taxonomy next slice.
+
+## Required outputs
+
+- DirectSkip redacted corpus/path inventory.
+- Realtor/backups redacted corpus/path/source inventory.
+- Legacy tags/labels inventory.
+- ADR: PG18 table-vs-jsonb modeling policy.
+- Canonical JSONSchema strategy for multi-source LFG.
+- Next-slice recommendation.
+
+## Acceptance criteria
+
+- PRD/tasks/ledger persisted.
+- At most 3 simultaneous subagents because runtime cap is 3 despite user allowing 6.
+- No raw payload values or PII in artifacts.
+- Orchestrator reads/reviews worker artifacts.
+- Browser-proof + vision QA pass.
+- Final report compares requested vs delivered.
+</pre></section><section><h2>02-tasks.md</h2><pre># Tasks — JSON curation + PG18 JSONB strategy
+
+| ID | Task | Owner | Status |
+| --- | --- | --- | --- |
+| T1 | Persist PRD/tasks/ledger | Thor | done |
+| T2 | Worker A: DirectSkip corpus inventory | Subagent A | done |
+| T3 | Worker B: Realtor/backups corpus inventory | Subagent B | done |
+| T4 | Worker C: legacy tags/labels inventory | Subagent C | done |
+| T5 | Consolidate multi-corpus curation | Thor | done |
+| T6 | Persist table-vs-jsonb ADR and canonical JSONSchema strategy | Thor | done |
+| T7 | Persist next-slice gate | Thor | done |
+| T8 | Browser-proof + vision QA | Thor | pending |
+| T9 | Commit/push + final report | Thor | pending |
+</pre></section><section><h2>05-task-review.md</h2><pre># 05 — Task Review
+
+Status: pass
+Generated: 2026-06-18T15:05:46
+
+| Task | Requested | Delivered | Evidence | Status |
+| --- | --- | --- | --- | --- |
+| T1 | Persist PRD/tasks/ledger | Created executive stack | 00/01/02/03/04 | pass |
+| T2 | DirectSkip corpus inventory | 213 JSONs parsed/inventoried, no values/PII | 08-directskip-corpus-inventory.md | pass |
+| T3 | Realtor/backups inventory | Realtor surfaces/docs/backups inventoried, no provider calls | 09-realtor-corpus-inventory.md | pass |
+| T4 | Legacy tags/labels inventory | Tags/status/list/system taxonomy inventoried | 10-legacy-tags-labels-inventory.md | pass |
+| T5 | Consolidate multi-corpus curation | Matrix persisted | 11-multi-corpus-json-curation-matrix.md | pass |
+| T6 | Table-vs-JSONB ADR | ADR persisted | 12-adr-pg18-jsonb-first-canonical-modeling.md | pass |
+| T7 | Next-slice gate | Gate persisted | 13-next-slice-gate-jsonschema-envelope-minimum.md | pass |
+| T8 | Browser-proof + vision | Pending before browser pass | 06-browser-proof.md | pending-before-browser |
+| T9 | Commit/push + final report | Pending before commit | git + final report | pending-before-commit |
+
+## Orchestrator review
+
+Thor read and consolidated the worker artifacts. Subagent reports were treated as evidence, not closure.
+
+## Main correction
+
+The next slice changed from table-oriented LFG graph/taxonomy to canonical JSONSchema envelope minimum, because the multi-corpus evidence supports JSONB-first governance before table expansion.
+</pre></section><section><h2>07-final-report.md</h2><pre># 07 — Final Report: JSON curation + PG18 JSONB strategy
+
+Status: browser pending at generation; final chat report updates after browser QA.
+Generated: 2026-06-18T15:05:46
+
+## Executive verdict
+
+```text
+Do not table-expand LFG yet.
+Adopt JSONB-first / JSONSchema-governed canonical envelopes.
+Next slice: LFG canonical JSONSchema envelope minimum.
+```
+
+## Evidence produced
+
+```text
+08-directskip-corpus-inventory.md
+09-realtor-corpus-inventory.md
+10-legacy-tags-labels-inventory.md
+11-multi-corpus-json-curation-matrix.md
+12-adr-pg18-jsonb-first-canonical-modeling.md
+13-next-slice-gate-jsonschema-envelope-minimum.md
+```
+
+## DirectSkip findings
+
+```text
+213 JSON files parsed
+210 Matrix registry artifacts
+3 external real/sample raw responses
+raw envelope: input, status, contacts, result_code
+external totals: 3 contacts, 17 contact phones, 6 emails, 3 confirmed addresses, 12 relatives, 32 relative phones
+```
+
+Decision:
+
+```text
+DirectSkip is contact enrichment evidence, not owner/property truth.
+Use JSONB raw + narrow contact satellite projections when needed.
+```
+
+## Realtor findings
+
+Surfaces:
+
+```text
+autocomplete
+property details
+property estimates
+property history/tax/permits
+spot offer
+nearby homes/map/recently sold/similar homes
+market details
+area boundary/geography
+```
+
+Decision:
+
+```text
+Realtor enriches canonical property/area.
+Use tables for anchors, provider refs, PostGIS geometry, sanctioned snapshots.
+Use JSONB for rich provider residue, arrays, media, comparables, market hotness, histories and advertiser/contact blocks.
+```
+
+## Tags/labels findings
+
+System taxonomy and workspace tags are separate.
+
+System side:
+
+```text
+PropertySituation.situation_type/status
+LeadFinderMaterializedTaxonomyBlock
+system_property_tag_slugs derived from active situations
+Lead Finder genome systemic_taxonomy fields
+```
+
+Workspace side:
+
+```text
+PropertyTagRegistry
+PropertyStatusRegistry
+PropertyListRegistry
+PropertyTag
+PropertyList
+SavedProperty.tags/lists
+```
+
+Examples observed:
+
+```text
+foreclosure, pre_foreclosure, probate, tax_lien, tax_delinquent, high_equity, absentee_owner, vacant
+hot_lead, cold_lead, contacted, follow_up, qualified, not_interested
+Available, Under Contract, Sold, Archived
+Hot Leads, Follow Up, Archive, All Properties
+```
+
+Decision:
+
+```text
+Do not design/seed tag groups yet.
+First define taxonomy/tag JSONSchema envelope and promotion boundary.
+```
+
+## Requested vs delivered
+
+| Requested | Delivered |
+| --- | --- |
+| Use DirectSkip response payloads | DirectSkip real/sample + registry corpus inventoried |
+| Experimental auto-apply threshold acceptable | Persisted default: low risk, 3 users, 2 workspaces, no disputes |
+| Analyze legacy tag group candidates before design | Legacy tags/status/lists/system taxonomy inventory persisted |
+| Analyze JSONB/table context with PG18 | ADR persisted with JSONB-first policy |
+| Include Realtor JSON/context/backups | Realtor docs/code/snapshots/backups inventoried |
+| Broader curation for many future sources/counties | Canonical JSONSchema-first strategy persisted |
+| Orchestrator with subagents | 3 bounded workers used; runtime cap 3 noted |
+| Browser-proof + vision | Pending in this file; final chat updates after QA |
+
+## Correct next slice
+
+```text
+Slice 15 — LFG canonical JSONSchema envelope minimum
+```
+
+Scope:
+
+1. property canonical envelope;
+2. owner canonical envelope;
+3. contact_satellites envelope informed by DirectSkip;
+4. valuation/market/comparable evidence envelopes informed by Realtor;
+5. taxonomy/tag/label vocabulary envelope;
+6. projection policy for generated columns/tables;
+7. marker auto-apply policy default.
+
+## Non-goals preserved
+
+```text
+no DDL graph expansion yet
+no workspace tables
+no provider calls
+no raw JSON values
+no PII in artifacts
+no final tag-group seed
+```
+</pre></section><section><h2>08-directskip-corpus-inventory.md</h2><pre># Worker A — DirectSkip corpus/path inventory
+
+Status: complete
+Scope: DirectSkip real/sample responses + Matrix registry snapshot for `skip_trace_contact_discovery`.
+PII policy: this inventory intentionally records only file names, counts, root types, key names, path families, and modeling implications. No raw payload values, names, phone numbers, e-mails, addresses, or session IDs are printed.
+
+## Sources inspected
+
+| Source | Files | Notes |
+| --- | ---: | --- |
+| `prop4you-inertia/backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery` | 210 JSON | Matrix registry artifacts for DirectSkip contact discovery. |
+| `prop4you-inertia/backend/src/apps/system/matrix/tests/fixtures/directskip_real_response.json` | 1 JSON | Real fixture response shape. |
+| `full-stack-prop4you/backend/src/data/directskip_sample_response.json` | 1 JSON | Sample response shape. |
+| `full-stack-prop4you/backend/src/data/directskip_charlotte_basham_response.json` | 1 JSON | Sample/person-specific response shape; values not copied. |
+
+Total inspected JSON files: 213. All parsed successfully as JSON objects.
+
+Registry JSON distribution by immediate folder:
+
+| Registry folder | JSON files |
+| --- | ---: |
+| `analysis` | 108 |
+| `contracts` | 43 |
+| `data` | 36 |
+| `schema` | 7 |
+| `tx` | 16 |
+| Total | 210 |
+
+One registry file is a copied raw DirectSkip fixture shape: `tx/data/undated/directskip_real_response.json`. It matches the same top-level response family as the real fixture and was counted in the registry total, but values were not inspected or copied into this document.
+
+## Root types and top-level keys
+
+All 213 files have JSON root type `object`.
+
+Raw response top-level keys observed in all 3 external response files and in the registry raw copy:
+
+- `input`
+- `status`
+- `contacts`
+- `result_code`
+
+Common Matrix registry top-level key families observed:
+
+- Artifact identity/scope: `artifact_kind`, `artifact_version`, `provider_slug`, `list_type_slug`, `state_slug`, `session_public_id`, `genome_public_id`, `mapping_version`, `baseline_version`.
+- Contract/schema references: `published_contract_ref`, `contract_refs`, `effective_contract_snapshots`, `compiled_schema`.
+- Corpus and source lineage: `corpus_stats`, `source_manifest`, `source_surface`, `source_dataset_dir`, `context_lineage`, `workspace_snapshot`, `matrix_context_snapshot`.
+- Analysis outputs: `alias_evidence_snapshot`, `canonical_dictionary_snapshot`, `coverage_snapshot`, `multi_provider_snapshot`, `provider_drift_snapshot`, `dataset_discrepancy_snapshot`, `field_analysis`, `cross_field_patterns`, `dataset_profile`, `field_discrepancies`.
+- Embedded raw response shape in selected registry artifacts: `input`, `status`, `contacts`, `result_code`.
+
+## Raw DirectSkip response path inventory
+
+The external response files are structurally consistent. Each has one `contacts` element in the current corpus, but the model is array-based and must not assume cardinality one.
+
+Per-file structural counts, without payload values:
+
+| File | Root | Contacts | Contact phones | Contact emails | Confirmed addresses | Relatives | Relative phones |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `directskip_real_response.json` | object | 1 | 3 | 2 | 1 | 2 | 2 |
+| `directskip_sample_response.json` | object | 1 | 7 | 2 | 1 | 5 | 16 |
+| `directskip_charlotte_basham_response.json` | object | 1 | 7 | 2 | 1 | 5 | 14 |
+| External raw total | object | 3 | 17 | 6 | 3 | 12 | 32 |
+
+Raw response union paths and types:
+
+| Path | Type/cardinality observed |
+| --- | --- |
+| `$` | object |
+| `$.status` | object |
+| `$.status.error` | string |
+| `$.result_code` | object |
+| `$.result_code.result_code` | string |
+| `$.input` | object |
+| `$.input.firstname` | string |
+| `$.input.lastname` | string |
+| `$.input.address` | string |
+| `$.input.city` | string |
+| `$.input.state` | string |
+| `$.input.zip` | string |
+| `$.input.property_address` | string |
+| `$.input.property_city` | string |
+| `$.input.property_state` | string |
+| `$.input.property_zip` | string |
+| `$.input.custom_field1` | string |
+| `$.input.custom_field2` | string |
+| `$.input.custom_field3` | string |
+| `$.contacts` | array |
+| `$.contacts[]` | object |
+| `$.contacts[].names` | array |
+| `$.contacts[].names[]` | object |
+| `$.contacts[].names[].firstname` | string |
+| `$.contacts[].names[].lastname` | string |
+| `$.contacts[].names[].age` | string |
+| `$.contacts[].names[].deceased` | string |
+| `$.contacts[].phones` | array |
+| `$.contacts[].phones[]` | object |
+| `$.contacts[].phones[].phonenumber` | string |
+| `$.contacts[].phones[].phonetype` | string |
+| `$.contacts[].emails` | array |
+| `$.contacts[].emails[]` | object |
+| `$.contacts[].emails[].email` | string |
+| `$.contacts[].confirmed_address` | array |
+| `$.contacts[].confirmed_address[]` | object |
+| `$.contacts[].confirmed_address[].street` | string |
+| `$.contacts[].confirmed_address[].city` | string |
+| `$.contacts[].confirmed_address[].state` | string |
+| `$.contacts[].confirmed_address[].zip` | string |
+| `$.contacts[].relatives` | array |
+| `$.contacts[].relatives[]` | object |
+| `$.contacts[].relatives[].name` | string |
+| `$.contacts[].relatives[].age` | string |
+| `$.contacts[].relatives[].phones` | array |
+| `$.contacts[].relatives[].phones[]` | object |
+| `$.contacts[].relatives[].phones[].phonenumber` | string |
+| `$.contacts[].relatives[].phones[].phonetype` | string |
+
+## Matrix registry path families
+
+The registry is not just raw DirectSkip output. It is a Matrix semantic registry around that output. Important path families:
+
+1. Raw response families embedded or referenced by registry artifacts
+   - `input.*`
+   - `status.*`
+   - `result_code.*`
+   - `contacts[].names[]`
+   - `contacts[].phones[]`
+   - `contacts[].emails[]`
+   - `contacts[].confirmed_address[]`
+   - `contacts[].relatives[]`
+   - `contacts[].relatives[].phones[]`
+
+2. Schema genome / canonical mapping families
+   - `schema_genome.contacts[].names.*`
+   - `schema_genome.contacts[].phones.*`
+   - `schema_genome.contacts[].emails.*`
+   - `schema_genome.contacts[].confirmed_address.*`
+   - `schema_genome.contacts[].relatives.*`
+   - Field-level review metadata under `review_payload`, `route_classification`, `semantic_context`, `source_context`, `suggestion_bundle`, `transforms`, and `validation`.
+
+3. Dictionary and alias families
+   - `alias_evidence_snapshot.entries[]`
+   - `canonical_dictionary_snapshot.alias_entries[]`
+   - `canonical_dictionary_snapshot.families.*`
+   - `canonical_dictionary_snapshot.canonical_fields.*.aliases[]`
+   - These show DirectSkip fields are curated through semantic aliases rather than treated as final domain columns.
+
+4. Corpus quality and drift families
+   - `coverage_snapshot.namespace_coverage.*`
+   - `provider_drift_snapshot.new_fields[]`
+   - `dataset_discrepancy_snapshot.field_discrepancies[]`
+   - `field_analysis.*`
+   - `workspace_snapshot.corpus.*`
+
+5. Contract families
+   - `contracts.*.required_keys[]`
+   - `compiled_schema.*`
+   - `effective_contract_snapshots.*`
+   - `published_contract_ref` and `contract_refs`.
+
+## Contact satellite implications
+
+DirectSkip enrichment is contact-satellite heavy. The payload structure argues against flattening everything into the lead/property/owner core tables.
+
+Implications by satellite:
+
+- Phones:
+  - Contact phones and relative phones are separate nested arrays.
+  - Both include a phone value field and type/classification field.
+  - Repeated phones and provider-specific phone type labels should be expected.
+  - Recommended durable projection: a contact phone satellite table or view materialized from JSONB, with source path, source role (`contact` vs `relative`), normalized phone, type label, and lineage back to raw response.
+
+- Emails:
+  - E-mails are an array under each contact.
+  - Current corpus has e-mail value only, without explicit verified/primary flags.
+  - Recommended durable projection only if e-mail search/deduplication is needed; otherwise keep as JSONB with optional generated/search index later.
+
+- Addresses:
+  - `confirmed_address[]` is a contact address satellite, not the same thing as the input property address.
+  - The input contains both person/location fields and property address fields.
+  - Recommended: keep provider raw address objects in JSONB; project canonical address components only through SourceHub/Lead Finder address canonicalization, not from DirectSkip alone.
+
+- Relatives:
+  - Relatives are nested below contacts and have their own phones.
+  - Relatives are enrichment evidence, not canonical owner/property truth.
+  - Recommended: preserve relatives as JSONB and optionally project to a relative/contact-edge satellite if product workflows need relationship search, scoring, or outreach expansion.
+
+- Names/person hints:
+  - `contacts[].names[]` can contain age/deceased hints.
+  - These are person-enrichment facts and should not overwrite canonical owner identity without confidence/lineage rules.
+
+## Table-vs-JSONB recommendation
+
+Recommended strategy for DirectSkip in PG18:
+
+1. Store every provider response as immutable raw JSONB with metadata.
+   - Keep the exact response envelope (`input`, `status`, `result_code`, `contacts`) in a lineage table owned by SourceHub/Skip Trace ingestion.
+   - Validate with a DirectSkip JSONSchema family generated/curated from the path inventory.
+   - Include provider slug, request identity, response timestamp, source file/request lineage, parser/version, and redaction/audit metadata outside the raw JSONB.
+
+2. Promote only stable query-critical facts to relational projections.
+   - Good candidates: response status/result code, contact count, phone/email/address/relative counts, normalized phones/emails if dedupe/search is a product requirement, and linkage to lead/person/property candidate.
+   - Do not promote provider-specific nested values directly into canonical Lead Finder owner/property tables.
+
+3. Treat phones/e-mails/addresses/relatives as contact satellites.
+   - Use narrow satellite tables or materialized views for operational search, dedupe, scoring, and audit.
+   - Retain `source_json_path` and source response id for every projected satellite row.
+
+4. Keep Matrix registry artifacts JSONB-first.
+   - Registry artifacts are higher-order curation/contract state: alias evidence, dictionary snapshots, coverage, drift, discrepancies, compiled schemas, and review payloads.
+   - These are better stored as versioned JSONB documents with a small relational envelope, not decomposed into many first-class tables at this stage.
+
+5. Canonical graph boundary.
+   - Lead Finder defines canonical owner/property/lead graph.
+   - Matrix defines semantic meaning and mapping contracts.
+   - SourceHub owns ingress, lineage, and canonical DTO publication.
+   - DirectSkip enriches contact reachability and relationship evidence; it must not define canonical owner/property truth by itself.
+
+## Suggested JSONSchema anchors
+
+The DirectSkip response JSONSchema should cover at least:
+
+- Required top-level envelope keys: `input`, `status`, `contacts`, `result_code`.
+- Array/object shapes for `contacts`, `names`, `phones`, `emails`, `confirmed_address`, `relatives`, and relative `phones`.
+- String-typed leaf fields observed in this corpus.
+- Lenient unknown-field handling at provider boundaries to support drift detection, with Matrix drift artifacts recording newly observed paths.
+- Separate canonical DTO schema for normalized contact satellites, rather than forcing DirectSkip raw shape to become the domain DTO.
+
+## Verification performed
+
+- Parsed 213 JSON files with Python `json.load` successfully.
+- Counted registry files by subdirectory.
+- Counted raw response arrays and union paths without printing values.
+- Confirmed all inspected JSON roots are objects.
+- Confirmed one raw DirectSkip response copy exists inside the registry under `tx/data/undated`.
+
+No DDL was edited.
+</pre></section><section><h2>09-realtor-corpus-inventory.md</h2><pre># Worker B — Inventário Realtor/docs/backups/source para estratégia PG18 JSONB
+
+[NO_PROVIDER_CALLS]
+
+Escopo executado por inspeção estática local. Não foram feitas chamadas a Realtor.com, APIs externas, banco runtime, Docker ou provedores. O inventário abaixo usa apenas documentação, código, contratos, testes e snapshots/backups já presentes em disco.
+
+[NO_RAW_VALUES_OR_PII]
+
+Este documento não reproduz endereços, nomes, e-mails, telefones, coordenadas específicas, URLs completas, IDs reais de propriedades/áreas/listings, hashes de queries ou payloads brutos. Campos e famílias JSON são descritos por nomes de chaves, padrões semânticos e implicações de modelagem.
+
+## 1. Evidência inspecionada
+
+### 1.1 Prop4You inertia — documentação de arquitetura
+
+Base:
+
+- `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/docs/architecture/realtor-enrichment-boundary.md`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/docs/architecture/realtor-runtime-coverage-matrix.md`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/docs/architecture/realtor-property-enrichment-pre-sourcehub-dto.md`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/docs/architecture/realtor-property-comparables-pre-sourcehub-dto.md`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/docs/architecture/realtor-market-enrichment-pre-sourcehub-dto.md`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/docs/architecture/realtor-area-boundary-pre-sourcehub-dto.md`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/docs/architecture/realtor-autocomplete-resolution-boundary.md`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/docs/architecture/realtor-property-enrichment-pilot-gap-analysis.md`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/docs/architecture/realtor-property-comparables-pilot-gap-analysis.md`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/docs/architecture/realtor-market-enrichment-pilot-gap-analysis.md`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/docs/architecture/realtor-area-boundary-pilot-gap-analysis.md`
+
+Leitura principal: Realtor é provedor de enriquecimento, não fonte ontológica de existência de propriedade. A aquisição canônica vem primeiro por endereço/Lead Finder/SystemAddress/PropertyLocation/Property; Realtor entra depois como referência e evidência de enriquecimento.
+
+### 1.2 Prop4You inertia — integração/provider client
+
+Base:
+
+- `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/backend/src/infrastructure/integrations/realtor/client.py`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/backend/src/infrastructure/integrations/realtor/config.py`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/backend/src/infrastructure/integrations/realtor/queries.py`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/backend/src/infrastructure/integrations/realtor/property.py`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/backend/src/infrastructure/integrations/realtor/search.py`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/backend/src/infrastructure/integrations/realtor/market.py`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/backend/src/infrastructure/integrations/realtor/maps.py`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/backend/src/infrastructure/integrations/realtor/geo.py`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/backend/src/infrastructure/integrations/realtor/autocomplete.py`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/backend/src/infrastructure/integrations/realtor/autocomplete_resolution.py`
+
+Superfícies de client observadas:
+
+- `autocomplete.search(...)`
+- `property.fetch_details(...)`
+- `property.fetch_history(...)`
+- `property.fetch_estimates(...)`
+- `property.fetch_spot_offer_evaluation(...)`
+- `search.nearby_homes_by_coordinates(...)`
+- `search.nearby_homes_for_map(...)`
+- `search.recently_sold(...)`
+- `search.similar_homes(...)`
+- `market.fetch_details(...)`
+- `maps.fetch_area_boundary(...)`
+- `geo.fetch_boundary(...)`
+
+### 1.3 Prop4You inertia — Matrix DTOs, contratos e testes
+
+Base:
+
+- `backend/src/apps/system/matrix/realtor_property_enrichment_pre_sourcehub_dto.py`
+- `backend/src/apps/system/matrix/realtor_property_enrichment_pre_sourcehub_contracts.py`
+- `backend/src/apps/system/matrix/tests/test_realtor_property_enrichment_pre_sourcehub_dto.py`
+- `backend/src/apps/system/matrix/tests/test_realtor_property_enrichment_pre_sourcehub_contracts.py`
+- `backend/src/apps/system/matrix/realtor_property_comparables_pre_sourcehub_dto.py`
+- `backend/src/apps/system/matrix/realtor_property_comparables_pre_sourcehub_contracts.py`
+- `backend/src/apps/system/matrix/tests/test_realtor_property_comparables_pre_sourcehub_dto.py`
+- `backend/src/apps/system/matrix/realtor_market_enrichment_pre_sourcehub_dto.py`
+- `backend/src/apps/system/matrix/realtor_market_enrichment_pre_sourcehub_contracts.py`
+- `backend/src/apps/system/matrix/tests/test_realtor_market_enrichment_pre_sourcehub_dto.py`
+- `backend/src/apps/system/matrix/realtor_area_boundary_pre_sourcehub_dto.py`
+- `backend/src/apps/system/matrix/realtor_area_boundary_pre_sourcehub_contracts.py`
+- `backend/src/apps/system/matrix/tests/test_realtor_area_boundary_pre_sourcehub_dto.py`
+
+DTO families confirmadas:
+
+- `realtor_property_enrichment_pre_sourcehub_dto.v1`
+- `realtor_property_comparables_pre_sourcehub_dto.v1`
+- `realtor_market_enrichment_pre_sourcehub_dto.v1`
+- `realtor_area_boundary_pre_sourcehub_dto.v1`
+
+### 1.4 full-stack-prop4you — docs, resultados e snapshots/backups
+
+Base:
+
+- `/home/marcelo-karval/Backup/Projetos/prop4you/full-stack-prop4you/docs/api-reference/realtor-api.md`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/full-stack-prop4you/docs/analysis/api/realtor-api-schema.md`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/full-stack-prop4you/docs/analysis/api/realtor-api-legacy.md`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/full-stack-prop4you/docs/analysis/api/realtor-maps-area-types.md`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/full-stack-prop4you/docs/analysis/api/realtor-maps-area-payload.md`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/full-stack-prop4you/docs/realtor-api-test-results.jsonl`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/full-stack-prop4you/docs/realtor-legacy-api-test-results.json`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/full-stack-prop4you/backend/src/lib/clients/realtor/tests/snapshots/*.json`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/full-stack-prop4you/backend/src/modules/data/integrations/services/realtor_api_client.py`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/full-stack-prop4you/backend/src/system/area/services/realtor_area_populator.py`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/full-stack-prop4you/backend/src/system/lead_finder/_archive/address/services/realtor_enrichment_service.py`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/full-stack-prop4you/backend/src/_archived/system_address_backup_20251108_221012/address/services/realtor_property_service.py`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/full-stack-prop4you/backend/src/_archived/system_address_backup_20251108_221012/address/services/realtor_address_populator.py`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/full-stack-prop4you/backend/src/_archived/system_address_backup_20251108_221012/address/tasks/realtor_api_tasks.py`
+
+Snapshots locais identificados, sem dump de conteúdo:
+
+- `autocomplete_search.json`
+- `connection_test.json`
+- `fetch_property_details.json`
+- `fetch_property_estimates.json`
+- `fetch_property_history.json`
+- `fetch_market_details.json`
+- `fetch_area_boundary.json`
+- `nearby_homes_by_coordinates.json`
+- `nearby_homes_for_map.json`
+- `recently_sold.json`
+
+## 2. Endpoints/superfícies e famílias funcionais
+
+| Superfície | Transporte observado | Família semântica | Observação de estratégia |
+| --- | --- | --- | --- |
+| Autocomplete/suggest | REST JSON | `autocomplete_resolution` / address+area suggestion | Entrada de descoberta/resolução. Pode sugerir endereço, cidade, condado, postal code, bairro, rua etc. Não cria propriedade canônica sozinha. |
+| Property details | GraphQL persisted query | `property_enrichment` | Detalhes estruturais, listing, mídia, flags, localização provider, anunciantes/contatos e resíduo rico. |
+| Property estimates | GraphQL persisted/full query | `property_enrichment` / valuation | Séries ou blocos de AVM/current/historical/forecast; promover apenas estimativa sancionada, preservar séries em JSONB. |
+| Property history/tax/permits | GraphQL full query | listing/history/tax/building-permit evidence | Histórico é multivalorado e temporal; não deve substituir identidade canônica. |
+| Spot offer evaluation | GraphQL full query | valuation/status evidence | Bloco reduzido para status provider, last-sold evidence e home-estimate source. |
+| Nearby homes by coordinates | GraphQL persisted query | `property_comparables` / discovery | Lista de candidatos ancorada por geografia. Evidência de comparáveis, não criação automática de propriedade. |
+| Nearby homes for map | GraphQL persisted query | `property_comparables` / map candidates | Candidatos com localização, flags, descrição compacta, foto primária e listing. |
+| Recently sold | GraphQL persisted query | `property_comparables` / sold evidence | Candidatos vendidos/recentes; útil para mercado/comparáveis, não truth central. |
+| Similar homes | GraphQL persisted query | `property_comparables` | Candidatos relacionados a uma propriedade âncora. |
+| Market details | GraphQL persisted query | `market_enrichment` | Métricas territoriais: mediana, DOM, preço por sqft, hotness, temperaturas, ratios. Requer âncora territorial explícita. |
+| Area boundary | REST maps ou GraphQL GeoBoundary | `area_boundary` | Geometria GeoJSON/boundary, centro, radius/breakpoints. Deve gravar com âncora de SystemArea. |
+| Legacy area populator | serviços Django antigos | geography/source evidence | Confirma pressão para `SystemArea.data`/boundary, mas código é legado/deprecated. |
+
+## 3. Famílias de shape JSON observadas
+
+### 3.1 Envelope/provider context
+
+Padrões de envelope:
+
+- raiz direta ou `data` como raiz normalizada por `_coerce_root(payload)`;
+- `endpoint`, `timestamp`, `status` como contexto operacional;
+- `operationName`, `variables`, `extensions.persistedQuery` no cliente GraphQL, mas hashes/valores não devem entrar em corpus público;
+- `meta` em autocomplete com estatísticas de busca;
+- blocos de resultado sob `autocomplete`, `home`, `home_search`, `geo`, `geo_statistics`, `result`, `boundary` conforme endpoint.
+
+Recomendação PG18:
+
+- tabela de ingestão/provider event com colunas: `provider_slug`, `surface_slug`, `captured_at`, `source_ref`, `request_fingerprint`, `response_status`, `payload jsonb`, `payload_schema_version`, `pii_classification`;
+- `payload` deve ser JSONB bruto/sanitizado de evidência, não tabela canônica;
+- chaves de envelope frequentemente filtradas devem ser colunas ou generated columns: `provider_slug`, `surface_slug`, `source_ref`, `captured_at`, `status`.
+
+### 3.2 Autocomplete/address-area suggestions
+
+Shape families:
+
+- base comum: `_id`, `_score`, `area_type`, `centroid.lat/lon`, `state_code`;
+- area suggestions: `city`, `county`, `postal_code`, `neighborhood`, `street`, `university`, `state`, `slug_id`, `geo_id`, `counties[]`, `county_needed_for_uniq`;
+- address suggestions: `line`, `full_address[]`, `postal_code`, `mpr_id`, `prop_status[]`, `validation_code[]`;
+- normalização inertia separa `RealtorAutocompleteAddressSuggestion` de `RealtorAutocompleteAreaSuggestion`.
+
+Implicações:
+
+- `_id`, `mpr_id`, `geo_id` e `slug_id` são provider references, não chaves canônicas universais;
+- `centroid` é útil como hint geográfico, mas não substitui geocodificação/normalização canônica;
+- `prop_status[]` em autocomplete é evidência de mercado/provider, não status canônico final.
+
+PG18:
+
+- normalizar `SystemArea` canônico em tabelas/geometry quando há âncora suficiente;
+- manter cada suggestion bruto em JSONB de evidência/cache com TTL/audit;
+- promover para colunas apenas: `area_type`, `state_code`, `slug_id`, `geo_id/provider_ref`, `centroid geography/geometry`, `city/postal_code` quando a família for territorial;
+- para address suggestion, não criar propriedade; usar como entrada de resolução de endereço e referência provider.
+
+### 3.3 Property enrichment/details
+
+Shape families:
+
+- identidade provider/listing: `property_id`, `listing_id`, `permalink`, `href`, `source.*`;
+- localização provider: `location.address.*`, `coordinate`, componentes de rua/unidade, cidade/estado/zip;
+- descrição física: `description.type/sub_type`, beds, baths, sqft, year, lot, garage, stories, construction/features;
+- listing/status: `status`, `list_price`, `price_per_sqft`, `list_date`, `last_sold_date`, `last_sold_price`, `last_price_change_amount`, `flags.*`;
+- mídia: `primary_photo`, `photos[]`, `augmented_gallery[]`, tours;
+- anunciantes/contatos: `advertisers[]`, `consumer_advertisers[]`, lead attributes, broker/office/agent style blocks;
+- resíduo rico: features, rooms, amenities, presentation metadata, legal/showing/open-house/deep listing copy.
+
+Implicações:
+
+- alto risco de PII/comercial em advertisers/consumer_advertisers/phones/emails/names; estes blocos devem ficar classificados e redigidos quando saem do cofre de ingestão;
+- dados físicos básicos podem alimentar overlay de detalhes, mas com provenance e anchor explícito;
+- provider location não pode reidentificar ou criar propriedade sem `canonical_property_public_id` ou fluxo canônico prévio.
+
+PG18:
+
+- tabelas para fatos canônicos/semicanônicos estáveis: `property_details`, `property_provider_reference`, `property_enrichment_overlay`, `property_media_evidence` se necessário;
+- JSONB para blocos ricos e instáveis: gallery completa, feature lists, advertiser/contact blocks, lead attributes, room copy, raw details;
+- generated columns/indexes apenas para caminhos usados em filtros/auditoria: provider property ref, listing id, status provider, list price, beds/baths/sqft/year/lot, primary photo presence.
+
+### 3.4 Valuation/estimates/spot offer
+
+Shape families:
+
+- `estimates.current_values[]`, `historical_values[]`, `forecast_values[]`;
+- itens com `estimate`, `estimate_high`, `estimate_low`, `date`, `source.*`, `isbest_homevalue`;
+- fallback/alternative: `home_estimate.value`, `home_estimate.source`, `avm.amount/high/low/confidence`;
+- last-sale evidence: `last_sold_price`, `last_sold_date`.
+
+Implicações:
+
+- há diferença entre valor canônico atual e série provider; misturar ambos em uma coluna única perde auditoria;
+- histórico/forecast é naturalmente temporal/multivalorado e muda conforme provider;
+- source de valuation precisa ser preservado para explainability.
+
+PG18:
+
+- tabela temporal para snapshots de valuation sancionados quando usados em decisão (`property_valuation_snapshot` com `provider_slug`, `observed_at`, `value`, `low`, `high`, `source`, `confidence`);
+- JSONB para série completa provider e resíduo AVM;
+- índices B-tree/BRIN em `observed_at`, `provider_slug`, `canonical_property_id`; GIN JSONB apenas para auditorias ad hoc.
+
+### 3.5 Listing/history/tax/permits
+
+Shape families:
+
+- `property_history[]` com evento, datas, preço, price change, price sqft, listing nested, source listing/name;
+- `tax_history[]` com assessment/market/tax/year;
+- `building_permits_history[]` com projeto, tipo de trabalho/projeto, data efetiva e status.
+
+Implicações:
+
+- são eventos/evidência temporais, não colunas únicas no registro de propriedade;
+- tax e permits têm granularidades próprias e podem exigir modelos dedicados se virarem produto;
+- por enquanto, funcionam melhor como residue/evidence com uma pequena projeção de last/current status.
+
+PG18:
+
+- JSONB preservar arrays completos;
+- materializar tabela de eventos somente para casos de uso explícitos: valuation trend, flip/deal analysis, permit risk, tax history product;
+- se materializar, usar `provider_event_id`/hash estável, `event_date`, `event_type`, `amount`, `source_listing_id` e `payload jsonb` para resto.
+
+### 3.6 Property comparables/search candidates
+
+Shape families:
+
+- raízes possíveis: `related_homes.results[]`, `properties[]`, `homes[]`, `home_search.results[]`;
+- candidate identity: `property_id`, `listing_id`, `permalink`, `href`, `source.*`;
+- candidate location: address line/city/state/postal, coordinate, county;
+- candidate facts: status, list price, estimated/current estimates, sold price/date, beds/baths/sqft/lot/year/garage/type;
+- flags: new construction, price reduced, new listing, pending/contingent/foreclosure/rent/plan/subdivision etc.;
+- media: primary photo, photos, open houses;
+- request context: coordinates/radius, address/buffer, query/status/limit.
+
+Implicações:
+
+- comparáveis são candidatos relativos a uma âncora ou consulta; não equivalem a criação de imóveis canônicos;
+- request context é parte essencial da semântica: o mesmo candidato em outro raio/status tem meaning diferente;
+- precisam preservar ranking/source/ref para explicabilidade.
+
+PG18:
+
+- tabela/evento de `comparable_candidate_evidence` se houver produto de comp analysis: `anchor_property_id`, `candidate_provider_ref`, `surface_slug`, `observed_at`, `rank`, `distance/context`, `payload jsonb`;
+- sem contrato downstream dedicado, manter como JSONB evidence-only conforme DTO atual;
+- promover para canonical property apenas por fluxo separado de aquisição/deduplicação.
+
+### 3.7 Market enrichment
+
+Shape families:
+
+- `market` ou `geo.geo_statistics` com `housing_market` ou payload achatado;
+- medianas: listing price, sold price, rent price, days on market, price per sqft;
+- hotness: local/national scores, local/national temperature, badge/rank;
+- ratios: DOM/views vs county and US typical property;
+- inventory/change em queries legadas.
+
+Implicações:
+
+- fatos são territoriais, não de propriedade;
+- raw payload geralmente não carrega identidade territorial forte o bastante sozinho;
+- precisa de `area_anchor_ref` explícito e validação contra `SystemArea`.
+
+PG18:
+
+- tabelas para `system_area_market_snapshot` com campos sancionados: median DOM, median listing price, observed_at, provider;
+- JSONB em `SystemArea.data.market_enrichment` ou tabela evidence para métricas não sancionadas;
+- não inferir/criar SystemArea apenas pelo payload de market.
+
+### 3.8 Area boundary/geography
+
+Shape families:
+
+- REST maps: `result.areas[]`, `result.boundary`;
+- GraphQL: `geo.boundary`;
+- geometry: GeoJSON `Polygon`/`MultiPolygon`, coordinates;
+- ancillary: provider area id, center lat/lon, radius, breakpoints/zoom/width/height;
+- area anchor: `area_type`, `slug_id`, `area_name`, `state`, `area_public_id`.
+
+Implicações:
+
+- boundary é fato territorial de alto valor, mas precisa de âncora canônica;
+- geometry pode ser grande; JSONB preserva payload, PostGIS guarda geometria consultável;
+- breakpoints/tiles são apresentação/provider residue.
+
+PG18:
+
+- `SystemArea.boundary_geom`/PostGIS para geometria consultável;
+- `SystemArea.data.area_boundary` ou evidence JSONB para payload bruto, provider ids, center/radius/breakpoints;
+- validar incompatibilidade entre anchor e DB truth antes de atualizar geometria.
+
+## 4. Implicações por domínio
+
+### 4.1 Property
+
+- Realtor não deve ser owner de existência de propriedade.
+- `mpr_id/property_id/listing_id/permalink` são provider references e replay keys.
+- Campos físicos básicos são bons candidatos a colunas/projeções quando ancorados a propriedade canônica existente.
+- Listing/media/advertiser blocks devem ser evidence/residue; advertiser/contact é sensível e não deve aparecer em artefatos públicos.
+- Enrichment deve escrever por `canonical_property_public_id` ou FK canônica já resolvida, não por address string isolado.
+
+### 4.2 Geography
+
+- Autocomplete e maps pressionam `SystemArea` para cidade/condado/postal/neighborhood/street/university/school/park/state.
+- `slug_id`, `geo_id`, `_id` são bons provider refs; `state_code`, `area_type`, `centroid` são úteis para lookup.
+- Boundary deve ser PostGIS + JSONB evidence.
+- City-to-counties é multivalorado; se virar consulta operacional, separar relação em tabela ao invés de enterrar apenas em JSONB.
+
+### 4.3 Market
+
+- Market enrichment pertence a area/system geography.
+- Métricas sancionadas podem virar snapshots temporais tabulares.
+- Hotness/ratios/badges ainda parecem provider-specific e devem ficar em JSONB até existir produto/semântica canônica.
+- Nunca anexar market payload a propriedade individual só por proximidade/zip implícito.
+
+### 4.4 Comparable/search
+
+- Comparables são evidência relativa a âncora/consulta; não são propriedades canônicas por si.
+- O contexto da consulta deve acompanhar os candidatos em JSONB ou colunas de evidence (`anchor`, `radius`, `status`, `surface`, `observed_at`).
+- Candidate facts podem alimentar UI/analytics, mas promoção para propriedade exige fluxo de canonical acquisition/dedupe.
+
+## 5. Recomendação table-vs-JSONB para PG18
+
+### 5.1 Manter como tabelas/colunas canônicas ou semicanônicas
+
+- Provider reference: provider slug, surface/list type, provider property ref, provider listing id, provider area id, geo id/slug id.
+- Anchor FKs: canonical property, system area, sourcehub ingress/session, observed_at/captured_at.
+- Property details sancionados: beds, baths, sqft, lot sqft, year built, garage, property type, normalized provider status quando explicitamente permitido.
+- Valuation snapshot sancionado: estimate value/bands/source/date/confidence quando usado operacionalmente.
+- Geography: area type, state, slug, centroid, PostGIS `boundary_geom`.
+- Market snapshot sancionado: median DOM e median listing price agora; expandir só por ADR/contrato.
+- Operational metadata: status, endpoint/surface slug, schema version, payload hash/fingerprint, PII class.
+
+### 5.2 Manter em JSONB evidence/residue
+
+- Payload bruto/sanitizado por endpoint.
+- Full autocomplete results, including alternative suggestions.
+- Media gallery completa, feature/amenity/room/deep listing details.
+- Advertiser/consumer contact/lead blocks, com classificação sensível e redaction em artefatos.
+- Estimate series completas, forecast/historical arrays, AVM internals.
+- Property history/tax/permit arrays enquanto não houver produto dedicado.
+- Comparable candidate arrays enquanto downstream contract não materializar tabela específica.
+- Market hotness/ratios/badges não sancionados.
+- Boundary ancillary provider presentation fields: breakpoints, radius, raw areas.
+
+### 5.3 Índices e PG18 JSONB strategy
+
+- Usar `jsonb` para evidence immutable/auditável; não transformar cada chave provider em coluna.
+- Preferir colunas geradas/extraídas para caminhos consultados frequentemente e estáveis por família.
+- GIN `jsonb_path_ops` ou equivalente somente em tabelas de evidence onde busca ad hoc em payload seja requisito real.
+- Para séries temporais, priorizar tabelas append-only com `observed_at` e FK; JSONB carrega o resto do item.
+- Para PostGIS, nunca consultar geometria apenas via JSONB: extrair para geometry/geography canônica com provenance.
+- Separar raw lineage de canonical truth: `sourcehub`/provider evidence guarda payload; domínio canônico guarda projeções aprovadas.
+
+## 6. Gates para consolidação Thor/ADR
+
+1. Congelar quatro DTO families Realtor como unidades separadas: property enrichment, property comparables, market enrichment, area boundary.
+2. Reafirmar boundary: Realtor enriches; Lead Finder/SystemAddress/SystemArea governam truth.
+3. Definir PII classes por subárvore JSON antes de qualquer corpus fixture público:
+   - alto risco: advertisers, consumer_advertisers, phones, emails, names, full address values, photos URLs completas;
+   - médio: exact coordinates, provider IDs/listing IDs/permalinks, raw query strings;
+   - baixo: field names, enum categories, boolean flags, numeric schema types sem valores.
+4. Criar fixtures sintéticas/schema-only para documentação e testes de contrato; não usar snapshots reais com valores.
+5. Abrir materialização de comparables somente quando houver contrato downstream dedicado; até lá evidence-only.
+6. Expandir market materialization por campos sancionados em ADR, não por simples disponibilidade provider.
+
+## 7. Resumo executivo
+
+O corpus Realtor é amplo, heterogêneo e fortemente provider-specific. A melhor estratégia PG18 é híbrida: tabelas para âncoras, provenance, geometrias, snapshots e projeções sancionadas; JSONB para raw/residue, séries, arrays e blocos de alto churn. Realtor não deve virar fonte de verdade para criação de propriedade; sua força está em enriquecimento de propriedade já canônica, inteligência territorial, boundary, market snapshots e comparables evidence.
+</pre></section><section><h2>10-legacy-tags-labels-inventory.md</h2><pre># Worker C — Inventário legado de tags/labels/status/list registries
+
+Status: concluído
+Escopo: inventariar vocabulários e registries legados antes do desenho de tag-groups.
+Regra de segurança: sem DDL, sem seed novo, sem dados PII. Este arquivo registra apenas nomes estruturais, slugs/taxonomias de produto e referências de código/teste.
+
+## Fontes analisadas
+
+Raiz principal do legado:
+
+- `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/backend/src/domains/real_estate`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/backend/src/apps/system/lead_finder`
+- `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/backend/src/apps/public/lead_finder`
+
+Arquivos-chave lidos:
+
+- `domains/real_estate/models/workspace_registry.py`
+- `domains/real_estate/models/workspace_crm.py`
+- `domains/real_estate/models/workspace_tag_base.py`
+- `domains/real_estate/models/situation_models.py`
+- `domains/real_estate/models/canonical_graph_overlays.py`
+- `domains/real_estate/models/lead_score_models.py`
+- `domains/real_estate/models/lead_intelligence_models.py`
+- `domains/real_estate/models/legacy_simple_property.py`
+- `domains/real_estate/models/canonical_party_graph.py`
+- `domains/real_estate/models/owner_resolution_case.py`
+- `domains/real_estate/models/owner_resolution_decision.py`
+- `domains/real_estate/models/owner_resolution_evidence.py`
+- `domains/real_estate/services/tag_registry_service.py`
+- `domains/real_estate/services/property_status_service.py`
+- `domains/real_estate/services/property_list_service.py`
+- `domains/real_estate/management/commands/seed_registry_data.py`
+- `domains/real_estate/tests/test_tag_registry_service.py`
+- `apps/system/lead_finder/contracts.py`
+- `apps/system/lead_finder/operator_search.py`
+- `apps/system/lead_finder/artifacts/lead_finder_default_genome.lf_default.v1.json`
+- `apps/system/lead_finder/tests/test_baseline.py`
+- `apps/system/lead_finder/tests/test_operator_search_boundary.py`
+- `apps/public/lead_finder/contracts.py`
+- `apps/public/lead_finder/presenters.py`
+- `apps/public/lead_finder/api_queries.py`
+- `apps/public/lead_finder/tests/test_presenters.py`
+- `apps/public/lead_finder/tests/test_map_payload_contract.py`
+
+## Conclusão curta
+
+Há duas famílias que o desenho futuro de tag-groups não deve misturar:
+
+1. System taxonomy / Lead Finder inventory semantics:
+   - fatos e taxonomias canônicas vindos de Lead Finder/Matrix/SourceHub;
+   - `PropertySituation.situation_type` e `situation_status`;
+   - materialização operacional `system_property_tag_slugs` derivada de situações ativas;
+   - `source_list_type_slug` como linhagem de origem, não automaticamente como lead taxonomy;
+   - genome/baseline com campos `source_list_type`, `lead_situation_type`, `system_property_tag`, `system_property_label`, `owner_tag`, `phone_tag`, `email_tag`.
+
+2. Workspace tags/lists/statuses:
+   - tags, listas e status pertencentes ao usuário/workspace;
+   - registries `PropertyTagRegistry`, `PropertyStatusRegistry`, `PropertyListRegistry`;
+   - CRM local `PropertyTag`, `PropertyList`, `SavedProperty.tags/lists`;
+   - seeds de desenvolvimento como `Hot Lead`, `Follow Up`, `Available`, etc.
+
+O legado já contém guardrails recentes contra promover workspace tags para taxonomia sistêmica. O risco principal é reintroduzir esse acoplamento por seed prematuro ou por usar nomes de tags do workspace como se fossem grupos canônicos.
+
+## Inventário — workspace-facing registries
+
+### `PropertyTagRegistry` (`real_estate_tag_registry`)
+
+Modelo: `domains/real_estate/models/workspace_registry.py`.
+
+Natureza: registry subscriber-facing de tags, não fonte de verdade da taxonomia sistêmica.
+
+Campos relevantes:
+
+- `user`: dono do workspace.
+- `name`, `slug`, `description`, `color`, `icon`.
+- `origin`: enum `TagOriginChoices`.
+- `category`: enum `TagCategoryChoices`.
+- `lf_tag_type`: ponte de compatibilidade para slug sistêmico; o próprio help text diz que não torna o registry source of truth.
+- `usage_count`, `last_used_at`.
+
+Vocabulários estruturais:
+
+- `TagOriginChoices`: `lead_finder`, `user`, `system`.
+- `TagCategoryChoices`: `property`, `contact`, `phone`, `email`, `activity`, `custom`.
+
+Serviço: `TagRegistryService`.
+
+Regras observadas:
+
+- Máximo de 100 tags customizadas por usuário.
+- Usuário só cria diretamente origem `user`.
+- Tags `system`/`lead_finder`, quando existentes, são read-only/reference tags.
+- `get_user_registry()` ainda retorna bloco chamado `system_tags`, mas o comentário indica resíduo de compatibilidade, não ownership semântico.
+- `get_or_create_from_lead_finder()` e `PropertyTagRegistry.get_or_create_from_lf()` criam/adaptam reference tags por usuário; isto é bridge, não authoring.
+
+Cores default legadas em `TagRegistryService.DEFAULT_TAG_COLORS`:
+
+- `foreclosure`, `pre_foreclosure`, `probate`, `tax_lien`, `tax_delinquent`, `high_equity`, `absentee_owner`, `vacant`.
+- `hot_lead`, `cold_lead`, `contacted`, `follow_up`, `qualified`, `not_interested`.
+
+Observação: esses slugs misturam situações sistêmicas, heurísticas de lead score e status/atividades de workspace. Não devem ser transformados automaticamente em grupos finais.
+
+### `PropertyStatusRegistry` (`real_estate_status_registry`)
+
+Modelo: `domains/real_estate/models/workspace_registry.py`.
+
+Natureza: pipeline/status customizável por usuário.
+
+Campos relevantes:
+
+- `user`, `name`, `description`, `color`.
+- `ordering`.
+- `is_default`.
+- `is_closed`.
+
+Defaults em `PropertyStatusService.DEFAULT_STATUSES`:
+
+- `Available` (`is_default=true`, `ordering=100`).
+- `Under Contract` (`ordering=200`).
+- `Sold` (`is_closed=true`, `ordering=300`).
+- `Archived` (`is_closed=true`, `ordering=400`).
+
+Separação: isto é CRM/workspace lifecycle. Não é situação legal/canônica do imóvel.
+
+### `PropertyListRegistry` (`real_estate_list_registry`)
+
+Modelo: `domains/real_estate/models/workspace_registry.py`.
+
+Natureza: listas salvas/workspace, incluindo listas smart e hot lists.
+
+Campos relevantes:
+
+- `user`, `name`, `description`, `color`, `icon`.
+- `list_type`, `is_hot_list`, `is_default`.
+- `smart_filter_criteria`, `auto_refresh`, `last_refreshed_at`.
+- `property_count`, `sort_order`.
+
+Vocabulário `ListTypeChoices`:
+
+- `standard`
+- `smart`
+- `hot`
+- `archive`
+
+Default criado por `PropertyListRegistry.get_or_create_default()` / `PropertyListService.ensure_default_list()`:
+
+- `All Properties`.
+
+Seed dev em `seed_registry_data.py`:
+
+- `Hot Leads` (`is_hot_list=true`).
+- `Follow Up`.
+- `Archive` (`list_type=archive`).
+
+Separação: listas são organização workspace, não source list taxonomy de SourceHub/Lead Finder.
+
+## Inventário — workspace CRM direto
+
+### `PropertyList` (`real_estate_property_list`)
+
+Modelo: `domains/real_estate/models/workspace_crm.py`.
+
+Campos relevantes:
+
+- `owner`, `name`, `description`, `color`, `icon`.
+- `is_default`.
+- `list_type`: enum `standard`, `smart`.
+- `smart_filter_criteria`, `last_refreshed_at`, `auto_refresh`.
+
+Docstring cita exemplos de nomes de lista: `Hot Leads`, `Follow Up`, `Cash Buyers`. São exemplos de organização do usuário; não vocabulário canônico.
+
+### `PropertyTag` (`real_estate_property_tag`)
+
+Modelo: `domains/real_estate/models/workspace_crm.py`, herdando `WorkspaceOwnedTag`.
+
+Campos herdados/relevantes:
+
+- `owner`.
+- campos de `BaseTagModel` via herança, usados como `name`, `slug`, `category` etc.
+- `default_category = property`.
+
+Docstring cita exemplos de tags: `Priority`, `Contacted`, `Needs Follow-up`. São labels workspace.
+
+### `SavedProperty` (`real_estate_saved_property`)
+
+Modelo: `domains/real_estate/models/workspace_crm.py`.
+
+Campos relevantes:
+
+- `user`, `property`.
+- M2M `lists` para `PropertyList`.
+- M2M `tags` para `PropertyTag`.
+- `notes`, `save_cost_usd`.
+
+Separação: `SavedProperty.tags` e `SavedProperty.lists` são overlays do usuário sobre propriedade canônica.
+
+## Inventário — system taxonomy / Lead Finder
+
+### `PropertySituation` (`real_estate_property_situation`)
+
+Modelo: `domains/real_estate/models/situation_models.py`.
+
+Natureza: situação temporal/legal/financeira; não é tag livre.
+
+Campos relevantes:
+
+- `situation_type`: enum `SituationType`.
+- `situation_status`: enum `SituationStatus`.
+- `date_added`, `date_filed`, `date_scheduled`, `date_resolved`.
+- `document_id`, `case_number`.
+- `situation_data` JSON.
+- `data_source`, `source_reference`, `confidence_score`.
+
+Vocabulário `SituationType`:
+
+- `appt_of_sub_trustee`
+- `foreclosure`
+- `pre_foreclosure`
+- `tax_lien`
+- `tax_sale`
+- `probate`
+- `heirship`
+- `divorce`
+- `bankruptcy`
+- `code_violation`
+- `vacant`
+- `other`
+
+Vocabulário `SituationStatus`:
+
+- `active`
+- `resolved`
+- `cancelled`
+
+Uso observado em `apps/system/lead_finder/operator_search.py`:
+
+- Busca situações não deletadas e `situation_status=active`.
+- `active_situation_types` é coletado de `situation_type`.
+- `system_property_tag_slugs` é materializado como cópia dos `active_situation_types`.
+- `system_property_label_slugs`, `owner_tag_slugs`, `phone_tag_slugs`, `email_tag_slugs` ainda aparecem como listas vazias no bloco materializado.
+
+### Lead Finder materialized taxonomy contract
+
+Arquivo: `apps/system/lead_finder/contracts.py`.
+
+`LeadFinderMaterializedTaxonomyBlock` expõe:
+
+- `property_type`
+- `active_situation_types`
+- `active_situation_statuses`
+- `source_list_type_slug`
+- `system_property_tag_slugs`
+- `system_property_label_slugs`
+- `owner_tag_slugs`
+- `phone_tag_slugs`
+- `email_tag_slugs`
+
+Regras documentadas no próprio contrato:
+
+- Valores no bloco são inventory/search semantics, não CRM overlays.
+- `source_list_type_slug` é útil para linhagem/search, mas não vira automaticamente lead taxonomy sem materializer sancionado.
+- `system_property_tag_slugs` é a primeira família derivada sancionada além das situações raw, materializada de situações sistêmicas ativas.
+
+### Lead Finder default genome / Matrix baseline
+
+Arquivo: `apps/system/lead_finder/artifacts/lead_finder_default_genome.lf_default.v1.json`.
+
+Família `systemic_taxonomy` observada:
+
+- `property_type`
+- `source_list_type`
+- `lead_situation_type`
+- `system_property_tag`
+- `system_property_label`
+- `owner_tag`
+- `phone_tag`
+- `email_tag`
+
+Aliases estruturais relevantes:
+
+- `list_type` -&gt; `source_list_type`.
+- `list_type_slug` -&gt; `source_list_type_slug` no alias catalog, e alias de `source_list_type`.
+- `lead_type` -&gt; `lead_situation_type`.
+- `situation_type` -&gt; `lead_situation_type`.
+- `property_tag` -&gt; `system_property_tag`.
+- `property_label` -&gt; `system_property_label`.
+- `ownership_tag` -&gt; `owner_tag`.
+- `contact_phone_tag` -&gt; `phone_tag`.
+- `contact_email_tag` -&gt; `email_tag`.
+
+Transformações do genome:
+
+- A maioria dos campos de taxonomy usa `strip` + `slugify`.
+- `system_property_label` usa `strip` + `titlecase`.
+- `property_type` usa `strip` + `titlecase` no field catalog, embora exista também enum em modelos.
+
+### Source/list slugs estruturais encontrados em testes/código
+
+Busca local em real_estate + apps/system/public lead_finder encontrou estes `list_type_slug` não-PII:
+
+- `pre_foreclosure`
+- `skip_trace_contact_discovery`
+- `loan_modification`
+- `probates`
+- `divorce`
+- `property_comparables`
+- `manual_property`
+- `eviction`
+- `tax_sale`
+- `appt_of_sub_trustee`
+- `heirship`
+- `foreclosure`
+- `tax_lien`
+- `address_discovery`
+- `absentee_owner`
+- `property_enrichment`
+
+Interpretação cautelosa:
+
+- Alguns coincidem com `SituationType` (`pre_foreclosure`, `tax_sale`, etc.).
+- Alguns são produtos/processos de ingestão/enrichment (`skip_trace_contact_discovery`, `property_comparables`, `manual_property`, `address_discovery`, `property_enrichment`).
+- `probates` aparece plural em list source, enquanto `SituationType` usa `probate` singular. Isto é um risco de normalização prematura.
+
+## Inventário — labels/status derivados na API pública Lead Finder
+
+Arquivos: `apps/public/lead_finder/contracts.py`, `api_queries.py`, `presenters.py`, testes.
+
+Vocabulários/contratos relevantes:
+
+- `LeadFinderLeadTypeContract`: `id`, `label`, `variant`, `color` opcional.
+- `primary_lead`: string renderizada no contrato público.
+- `lead_types`: lista de lead types sistêmicos no contrato público.
+- `saved_to_lists`: listas do workspace.
+- `saved_to_tags`: tags do workspace.
+- `crm_status`: status CRM/workspace opcional.
+- `skip_status`: status de skip/enrichment opcional.
+- Query state pública: `idle_no_query`, `user_query_applied`, `preset_applied`.
+- Activation reason: `none`, `user_query`, `default_preset`, `explicit_preset`.
+
+Map marker status em `api_queries.py`:
+
+- score &gt;= 70 -&gt; `HOT`.
+- score &gt;= 40 -&gt; `WARM`.
+- abaixo disso -&gt; `COLD`.
+
+Teste importante: `apps/public/lead_finder/tests/test_presenters.py` garante que `tags: [pre_foreclosure, vacant]` sem `situations` não viram `lead_types`. Isto protege a separação entre workspace tags e lead taxonomy.
+
+## Inventário — outros enums/status/taxonomias relacionados
+
+Estes vocabulários podem tocar o desenho futuro, mas não são todos “tags”. Devem ser tratados como facts/statuses específicos.
+
+### Property/details
+
+- `detail_models.PropertyType`: `single_family`, `multi_family`, `condo`, `townhouse`, `manufactured`, `land`, `commercial`, `industrial`, `mixed_use`, `other`.
+- `detail_models.PropertyDetails.listing_status`: campo string livre/externo, sem enum observado.
+- `detail_models.PropertyDetails.features`: array de strings; não inventariado como taxonomia canônica.
+
+### Lead score / lead intelligence
+
+- `LeadClassification`: `hot`, `warm`, `cold`.
+- `LeadIntelligence.QualificationStatus`: `new`, `contacted`, `qualified`, `disqualified`.
+- `LeadIntelligence.QueueStatus`: `ready`, `follow_up`, `qualified`, `dead`.
+- `LeadContactAttempt.ContactMethod`: `phone`, `sms`, `email`, `other`.
+- `LeadContactAttempt.ContactOutcome`: `no_answer`, `left_voicemail`, `connected`, `interested`, `qualified`, `appointment`, `not_interested`, `wrong_number`, `do_not_call`, `other`.
+
+Observação: nomes como `contacted`, `follow_up`, `qualified`, `not_interested` reaparecem em tags default do workspace. Não assumir identidade semântica entre status operacional e tag do usuário.
+
+### Party/owner/contact canonical graph
+
+- `EntityType`: `person`, `company`.
+- `OwnershipType`: `owner`, `co_owner`, `investor`, `trust`, `llc_member`.
+- `RoleType`: `owner`, `mortgagor`, `grantee`, `applicant`, `heir`, `decedent`, `tenant`, `landlord`, `petitioner`, `respondent`, `attorney`, `trustee`, `other`.
+- `RepresentativeRole`: `officer`, `director`, `partner`, `manager`, `member`, `agent`, `other`.
+- `AddressType`: `residential`, `commercial`, `po_box`, `mailing`.
+- `PhoneType`: `mobile`, `landline`, `voip`, `unknown`.
+- `PhoneSubtype`: `residential`, `business`, `unknown`.
+- `PhoneStatus`: `correct`, `wrong`, `no_answer`, `dnc`, `dead_line`.
+- `EmailType`: `personal`, `work`, `other`, `unknown`.
+- `EmailStatus`: `active`, `inactive`, `bounced`, `invalid`.
+- `BounceType`: `hard_bounce`, `soft_bounce`, `complaint`, `unknown`.
+
+### Owner resolution
+
+- `OwnerResolutionCase.TriggerKind`: `county_ingestion`, `skiptrace_result`, `my_property_submission`, `fresh_provider_refresh`, `timeline_conflict`, `manual_reprocess`, `ai_reassessment`.
+- `OwnerResolutionCase.Status`: `open`, `candidate_generated`, `decided`, `materialized`, `needs_ai`, `needs_human`, `superseded`, `closed`.
+- `ResolutionScope`: `identity`, `contact`, `relationship`, `ownership`, `mixed`.
+- `EvidenceRole`: `subject`, `positive_signal`, `negative_signal`, `conflict_signal`, `context`, `raw_residue`.
+- `CandidateKind`: `existing_entity`, `new_entity`, `related_person`, `conflicting_identity`, `insufficient_identity`.
+- `DecisionHint` / `Decision`: `same_entity`, `possible_match`, `related_but_distinct`, `distinct_entity`, `conflicted`, `insufficient_evidence`.
+- `MaterializationAction`: `none`, `attach_evidence_only`, `create_entity`, `merge_entity`, `link_relationship`, `attach_contact`, `update_canonical_fields`, `defer`.
+- `Adjudicator`: `deterministic_rules`, `score_engine`, `ai_high_capacity`, `human_review`.
+- `Action`: `created`, `updated`, `linked`, `skipped`, `superseded`, `rolled_back`.
+- `EvidenceKind`: `identity`, `phone`, `email`, `address`, `relationship`, `ownership`, `party_role`, `provider_outcome`, `timeline`.
+- `SourceKind`: `county`, `sourcehub`, `skiptrace`, `my_property`, `manual`, `ai`, `system_refresh`.
+
+### Legacy/manual simple property residue
+
+Arquivo: `domains/real_estate/models/legacy_simple_property.py`.
+
+- `PropertyType`: `single_family`, `condo`, `townhouse`, `apartment`, `mobile_home`, `commercial`, `industrial`, `office`, `retail`, `multi_family`, `duplex`, `triplex`, `fourplex`, `vacant_land`, `other`.
+- `PropertyStatus`: `active`, `pending`, `sold`, `archived`, `draft`.
+
+Este modelo é resíduo manual/simple. Deve informar migração/compatibilidade, não substituir a taxonomia canônica do Lead Finder.
+
+## Testes e guardrails existentes
+
+### `test_tag_registry_service.py`
+
+Cobertura observada:
+
+- `test_allowed_origins_only_expose_user_created_tags`: `TagRegistryService.get_allowed_origins()` retorna somente `user`, com label `User Created` e `readonly=false`.
+- `test_seed_registry_data_does_not_create_systemic_tags`: mesmo com `seed_registry_data --system-tags`, não cria registros com origem `system` ou `lead_finder`; saída inclui `Skipping systemic tag seed`.
+
+Importância: estes testes são guardrails diretos contra seed prematuro de taxonomia sistêmica no registry de workspace.
+
+### `test_presenters.py`
+
+Cobertura observada:
+
+- `test_build_lead_finder_property_contract_does_not_promote_tags_to_lead_types`: tags em payload (`pre_foreclosure`, `vacant`) não são promovidas para `lead_types` quando `situations` está vazio.
+
+Importância: evita que tags/workspace labels mascarem lead taxonomy sistêmica.
+
+### `test_operator_search_boundary.py`
+
+Cobertura observada:
+
+- Quando há situação ativa `pre_foreclosure`, `taxonomy_materialization.active_situation_types` e `system_property_tag_slugs` contêm `pre_foreclosure`.
+- `source_list_type_slug` é preservado como linhagem (`pre_foreclosure` ou `address_discovery`).
+- Caso de `address_discovery` mostra `system_property_tag_slugs=[]` mesmo com source list type presente, reforçando que source list não vira tag sistêmica automaticamente.
+
+## Riscos antes do desenho de tag-groups
+
+1. Seed prematuro de system tags no workspace registry:
+   - O comando legado ainda aceita `--system-tags`, mas hoje deve apenas emitir skip.
+   - Reverter isso recriaria a mistura entre taxonomia sistêmica e tags do usuário.
+
+2. Confundir `source_list_type_slug` com tag canônica:
+   - O contrato diz que source list é linhagem/search, não lead taxonomy automática.
+   - Exemplo `address_discovery` comprova source list sem `system_property_tag_slugs`.
+
+3. Normalizar slugs por aparência:
+   - `probates` vs `probate` mostra plural/singular divergente.
+   - `tax_delinquent` aparece em cores default, mas não em `SituationType` lido.
+   - `high_equity` e `absentee_owner` aparecem como tags default/heurísticas, não situações legais.
+
+4. Reusar labels de CRM como status sistêmico:
+   - `Hot Lead`, `Cold Lead`, `Contacted`, `Follow Up`, `Not Interested` são seed/workspace tags.
+   - `hot/warm/cold` também são score classifications.
+   - `contacted/follow_up/qualified/not_interested` também aparecem em lead ops/status/outcomes.
+   - Mesmo nome não implica mesmo domínio.
+
+5. Promover `PropertyDetails.features` ou `listing_status` sem governança:
+   - São arrays/string de enrichment/listing, não registry consolidado.
+
+6. Manter dois registries de lista/tag em paralelo sem decidir ownership:
+   - `workspace_crm.PropertyList/PropertyTag` e `workspace_registry.PropertyListRegistry/PropertyTagRegistry` coexistem.
+   - O desenho futuro deve decidir pontes/compatibilidade, mas esta etapa não deve projetar grupos finais.
+
+## Recomendação de boundary para próxima etapa
+
+Sem projetar tag-groups finais ainda, a fronteira que o inventário sugere preservar é:
+
+- System taxonomy: derivada de Matrix/Lead Finder/situações/source lineage e exposta read-only para busca/inventário.
+- Workspace tags: usuário cria, edita, ordena, colore e aplica a propriedades salvas.
+- Workspace status/list: pipeline e organização CRM por usuário.
+- Bridges: permitidos apenas como referência read-only/adaptação (`lf_tag_type`, handoff contracts), nunca como fonte de verdade da taxonomia sistêmica.
+
+## Comandos de verificação executados
+
+- Busca recursiva de termos `tag|label|status|registry|taxonomy|list|choice|choices` nas fontes solicitadas.
+- Leitura direta dos modelos/serviços/testes listados acima.
+- Script Python local para extrair `models.TextChoices` dos modelos `real_estate`.
+- Script Python local para listar campos da família `systemic_taxonomy` do genome Lead Finder.
+- Script Python local para amostrar slugs estruturais `list_type_slug` em código/testes.
+
+Nenhuma alteração de DDL foi feita.
+</pre></section><section><h2>11-multi-corpus-json-curation-matrix.md</h2><pre># 11 — Multi-corpus JSON curation matrix
+
+Status: consolidated
+
+## Verdict
+
+```text
+Do not implement table-heavy LFG graph yet.
+Adopt JSONB-first, JSONSchema-governed canonical envelopes.
+Promote relational tables/columns only for stable anchors, indexed/query-critical fields, constraints, graph edges, geography geometry, and sanctioned facts.
+```
+
+## Corpus coverage
+
+| Corpus/source | Evidence inspected | Key result | Modeling decision |
+| --- | --- | --- | --- |
+| REIQ loan modification | 97 JSONs from Matrix registry and raw payload path inventory | flat provider payload with property, owner, filing, physical, financial fields | raw JSONB + SourceHub/Matrix DTO; promote property/owner/valuation only after canonical schema approval |
+| DirectSkip contact discovery | 213 JSONs parsed; 3 external raw/sample responses; 210 registry artifacts | nested contact satellite payload: contacts, names, phones, emails, confirmed addresses, relatives, relative phones | JSONB-first; narrow satellite projections for normalized phone/email/address/relative only when operationally needed |
+| Realtor | docs, code, DTOs, tests, snapshots/backups | broad heterogeneous shapes: autocomplete, details, valuation, history, comparables, market, boundaries | hybrid: JSONB evidence/residue + tables for anchors/provider refs/PostGIS/sanctioned snapshots |
+| Legacy tags/labels | real_estate models/services/tests + LF contracts/genome | system taxonomy and workspace tags are separate; legacy has default colors/status/list names and guardrail tests | do not seed tag groups yet; inventory first; preserve system-vs-workspace boundary |
+
+## DirectSkip implications
+
+```text
+Top envelope: input, status, contacts, result_code
+External raw total: 3 contacts, 17 contact phones, 6 emails, 3 confirmed addresses, 12 relatives, 32 relative phones
+```
+
+Decision:
+
+```text
+DirectSkip is contact enrichment evidence.
+It must not define canonical owner/property truth by itself.
+```
+
+Promote later only:
+
+```text
+normalized phone/email/address for dedupe/search
+contact/relative edge evidence if product needs it
+status/result code/counts for operational audit
+```
+
+Keep as JSONB:
+
+```text
+raw envelope
+provider-specific nested arrays
+relatives until relationship product contract exists
+unknown/new provider paths
+```
+
+## Realtor implications
+
+Realtor surfaces:
+
+```text
+autocomplete/property details/property estimates/property history/spot offer/nearby homes/map/recently sold/similar homes/market details/area boundary/geography
+```
+
+Decision:
+
+```text
+Realtor enriches an already canonical property/area.
+Realtor does not create canonical property truth by itself.
+```
+
+Promote later:
+
+```text
+provider references
+canonical anchor refs
+PostGIS boundary geometry
+selected property details
+valuation snapshots
+system area market snapshots
+comparable candidate evidence if product contract exists
+```
+
+Keep as JSONB:
+
+```text
+full gallery/features/advertiser blocks
+AVM series and forecast arrays
+history/tax/permit arrays until productized
+comparables arrays until materialization contract exists
+market hotness/ratios/provider-specific residue
+raw boundary ancillary presentation data
+```
+
+## Legacy tags/labels implications
+
+System taxonomy candidates:
+
+```text
+PropertySituation.situation_type/status
+LeadFinderMaterializedTaxonomyBlock
+system_property_tag_slugs derived from active situations
+systemic_taxonomy fields in Lead Finder genome
+```
+
+Workspace-facing vocabularies:
+
+```text
+PropertyTagRegistry
+PropertyStatusRegistry
+PropertyListRegistry
+PropertyTag
+PropertyList
+SavedProperty.tags/lists
+```
+
+Legacy/default examples observed:
+
+```text
+foreclosure, pre_foreclosure, probate, tax_lien, tax_delinquent, high_equity, absentee_owner, vacant
+hot_lead, cold_lead, contacted, follow_up, qualified, not_interested
+Available, Under Contract, Sold, Archived
+Hot Leads, Follow Up, Archive, All Properties
+```
+
+Do not treat same string as same domain meaning.
+
+## Canonical JSONSchema-first strategy
+
+Each provider/source family should have:
+
+```text
+raw schema: provider-native shape, lenient unknown fields, strict enough for envelope/family sanity
+normalized schema: SourceHub/Matrix interpreted DTO, provider-aware but canonical-facing
+canonical schema: LeadFinder-owned stable JSONSchema for property/owner/contact/taxonomy graph envelopes
+projection schema: query/index/read-model shape for API/search/materialized views
+```
+
+This allows:
+
+```text
+500-600+ future sources
+3,200+ county variations
+provider drift tracking
+canonical growth without table explosion
+selective relational promotion
+```
+
+## PG18 JSONB usage policy
+
+Use JSONB for:
+
+```text
+raw payload/evidence
+provider-specific residue
+variable arrays
+nested contact/media/history/comparable structures
+Matrix artifacts and review payloads
+canonical JSON envelopes before table promotion
+```
+
+Use relational tables/columns for:
+
+```text
+identity anchors and refs
+provider/source lineage
+hashes/versions/status
+FK graph edges
+tenant/workspace auth boundaries later
+stable constraints
+search/filter/sort fields
+PostGIS geometry
+snapshots with temporal semantics
+```
+
+Use generated/projected columns when:
+
+```text
+path is representative and stable
+meaning is approved
+cast is safe
+field is frequently queried
+lineage remains intact
+```
+
+## Recommended next slice
+
+```text
+Slice 15 — LFG canonical JSONSchema envelope minimum
+```
+
+Scope:
+
+1. define canonical JSONSchema envelope families for property, owner, contact_satellites, valuation, taxonomy;
+2. include DirectSkip contact satellite schema family;
+3. include Realtor enrichment evidence schema families;
+4. define promotion rules from JSONB evidence to relational projections;
+5. add marker auto-apply threshold policy as configuration/ADR or DDL only after schema policy is fixed;
+6. do not build workspace tables.
+</pre></section><section><h2>12-adr-pg18-jsonb-first-canonical-modeling.md</h2><pre># 12 — ADR: PG18 JSONB-first canonical modeling policy
+
+Status: accepted-for-next-slice
+
+## Context
+
+Legacy Django modeling used many tables because Django ORM and app-service boundaries made that practical. In PG18 database-centric architecture, provider evidence arrives as heterogeneous JSON from REIQ, DirectSkip, Realtor and future county/provider sources. PostgreSQL 18 improves JSON/JSONB ergonomics enough that LFG should not blindly translate every Django table or provider key into relational DDL.
+
+## Decision
+
+Adopt a hybrid model:
+
+```text
+JSONB-first for evidence, provider-native payloads, canonical envelopes, and review artifacts.
+Relational-first for durable identity, graph edges, constraints, auth boundaries, PostGIS geometry, temporal snapshots, and high-value indexed projections.
+```
+
+## Do not
+
+- turn every provider key into a table column;
+- make Realtor/DirectSkip provider shapes canonical truth;
+- use workspace tags to fill system taxonomy gaps;
+- expose raw JSONB via public API;
+- index large JSONB blindly;
+- store PII-bearing raw payloads in docs/proofs.
+
+## Model layers
+
+```text
+bronze/raw JSONB
+  exact provider/internal payload, hash, source, privacy class
+
+silver/normalized JSONB
+  SourceHub/Matrix interpreted DTOs and curation artifacts
+
+gold/canonical JSONSchema envelope
+  LeadFinder-owned stable canonical shape, still JSON-capable
+
+relational projections
+  extracted anchors/edges/fields used for constraints/search/joins/PostGIS/API
+```
+
+## Promotion gates
+
+A JSON path can become relational only when all are true:
+
+1. observed in representative corpora;
+2. semantic meaning is approved by Matrix/LeadFinder;
+3. stable enough across source families or intentionally provider-specific;
+4. needed for query, join, filtering, sorting, uniqueness, FK, RLS, PostGIS, or operational constraint;
+5. safe cast/coercion exists;
+6. lineage to raw JSON remains durable;
+7. privacy/PII exposure is classified.
+
+## Provider-specific stance
+
+### DirectSkip
+
+Contact enrichment provider. It provides evidence for phones, emails, addresses, relatives and reachability. It does not define owner/property truth alone.
+
+### Realtor
+
+Property/geography/market enrichment provider. It provides evidence for details, media, valuation, comparables, market and boundaries. It does not create canonical property truth alone.
+
+### REIQ/county-like sources
+
+Often source-of-record or filing-oriented. Still enters as raw JSONB through SourceHub and is promoted through Matrix/LeadFinder contracts, not by table name alone.
+
+## PG18 mechanics
+
+Use:
+
+```text
+jsonb for raw/envelope/residue
+JSONSchema validation where available via extension/app function policy
+generated columns or expression indexes for stable paths
+GIN JSONB selectively for ad hoc/review tables only
+PostGIS for geometry extracted from JSONB
+append-only temporal tables for sanctioned snapshots
+```
+
+## Consequence
+
+The next LFG slice should define canonical JSONSchema envelopes before final table expansion. Tables will still exist, but as projections/anchors/edges over governed JSON evidence, not as blind replicas of Django models.
+</pre></section><section><h2>13-next-slice-gate-jsonschema-envelope-minimum.md</h2><pre># 13 — Next-slice gate: LFG canonical JSONSchema envelope minimum
+
+Status: recommended next slice
+
+## Why this gate exists
+
+The previous readiness audit said LFG is ready-with-gaps. This JSON curation slice adds that the next step should not be a table-heavy graph implementation yet. The immediate next step should define canonical JSONSchema envelopes and promotion rules.
+
+## Required next outputs
+
+1. `property` canonical JSONSchema envelope.
+2. `owner` canonical JSONSchema envelope.
+3. `contact_satellites` canonical JSONSchema envelope, informed by DirectSkip.
+4. `valuation` / `market` / `comparable_evidence` envelopes, informed by Realtor.
+5. `taxonomy/tag/label` vocabulary envelope, without final tag-group seed yet.
+6. Projection policy: which envelope paths may become generated columns/tables now.
+7. Auto-apply marker policy default:
+
+```text
+marker_risk_class = low
+min_distinct_users = 3
+min_distinct_workspaces = 2
+no_active_disputes = true
+audit_event_required = true
+```
+
+## Non-goals
+
+- no rich workspace tables;
+- no provider calls;
+- no production deploy;
+- no raw JSON values in docs;
+- no tag group final design;
+- no public API/RLS until envelopes stabilize.
+</pre></section></body></html>

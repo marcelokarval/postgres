@@ -685,3 +685,15 @@ correct next slice = LFG canonical graph/taxonomy minimum
 ```
 
 Reason: the PG18 pipeline is proven through SourceHub, Matrix, LeadFinder, LFG staging/materialization/operational minimum and feedback gates, but the legacy system and JSON evidence still require first-class graph/taxonomy closure for property/address/details, owner/ownership, contact addresses, phone/email satellite contracts, reusable tag/label vocabulary, and marker auto-apply policy.
+
+## Slice 14 — JSON curation and PG18 JSONB strategy
+
+Verdict:
+
+```text
+Do not table-expand LFG yet.
+Adopt JSONB-first / JSONSchema-governed canonical envelopes.
+Next slice = LFG canonical JSONSchema envelope minimum.
+```
+
+DirectSkip, Realtor, REIQ, and legacy tag inventories show that provider payloads are heterogeneous and should be curated into canonical JSONSchema envelopes before final relational graph/table expansion. Relational tables remain necessary for anchors, graph edges, constraints, PostGIS geometry, temporal snapshots, and query-critical projections; JSONB remains the correct home for raw evidence, provider residue, variable arrays, Matrix artifacts, and canonical envelopes before promotion.
