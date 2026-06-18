@@ -39,6 +39,8 @@ No raw/fake/redacted fixtures were created.
 - `database/ddl/projects/prop4you/leadfinder_group/0001_staging_candidates.sql`
 - `database/ddl/projects/prop4you/leadfinder_group/0002_materialization_runs.sql`
 - `database/ddl/projects/prop4you/leadfinder_group/0003_operational_minimum.sql`
+- `database/ddl/projects/prop4you/leadfinder_group/0004_user_feedback_markers.sql`
+- `database/ddl/projects/prop4you/leadfinder/0004_dictionary_promotion_review_apply.sql`
 
 ## Validation JSON
 
@@ -50,38 +52,3 @@ No raw/fake/redacted fixtures were created.
 
 This proves DDL apply/comment/object smoke for experimental Provider + SourceHub + Matrix mirror/candidate + LeadFinder dictionary gate.
 It does not prove final Prop4You property/owner tables, provider runtime calls, production deployment, real raw ingestion, or LeadFinder materialization.
-
-## Slice 10 LFG T5 proof
-
-Status: PASS
-
-```json
-{
-  "bridge_count": 10,
-  "field_mapping_set_count": 1,
-  "gateway_agnostic": true,
-  "lfg_run_statuses": [
-    "completed"
-  ],
-  "materialization_result_count": 10,
-  "materialization_run_count": 1,
-  "no_provider_calls": true,
-  "no_raw_values_printed": true,
-  "operational_event_count": 10,
-  "operational_facet_count": 30,
-  "operational_group_count": 10,
-  "promotion_preparation_count": 10,
-  "quality_report_count": 1,
-  "raw_record_count": 97,
-  "run_distinct_path_count": 9650,
-  "run_extracted_path_count": 172700,
-  "run_source_record_count": 97,
-  "sourcehub_t4_statuses": [
-    "ready_for_review"
-  ],
-  "staging_candidate_count": 10,
-  "translated_dto_publication_count": 10
-}
-```
-
-This proof created LFG staging candidates, materialization runs/results, and minimal operational groups/events/facets from SourceHub translated DTO publications, without provider calls or raw payload dumps.

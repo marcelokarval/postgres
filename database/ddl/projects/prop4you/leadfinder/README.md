@@ -7,6 +7,9 @@ LeadFinder owns the canonical graph and the canonical dictionary boundary. Matri
 Implemented DDL:
 
 - `0001_canonical_dictionary.sql` — creates `prop4you_leadfinder.canonical_dictionary_versions`, `canonical_families`, `canonical_fields`, `canonical_gaps`, and `growth_pressure_signals`; seeds the initial `leadfinder.raw_candidate.v0` dictionary version plus candidate families/fields from the approved family list.
+- `0002_raw_evidence_gap_bridge.sql` — bridges Matrix raw path evidence into LeadFinder-owned gap candidates.
+- `0003_prepare_dictionary_promotions.sql` — prepares dictionary promotion proposals from approved field mapping artifacts without mutating canonical dictionary rows.
+- `0004_dictionary_promotion_review_apply.sql` — explicit review/apply gate for prepared dictionary promotions, creating/linking canonical family/field rows only after accepted review.
 
 Boundaries:
 

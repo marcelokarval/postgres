@@ -9,6 +9,7 @@ Implemented DDL:
 - `0001_staging_candidates.sql` — T5.0 staging candidates from SourceHub translated DTO publications.
 - `0002_materialization_runs.sql` — T5.1 materialization runs/results review gate.
 - `0003_operational_minimum.sql` — T5.2 minimal operational groups/events/facets from accepted materialization results.
+- `0004_user_feedback_markers.sql` — user/workspace feedback votes, aggregate marker review, and global LFG marker apply gate with weak refs to `prop4you_user_workspace`.
 
 Boundaries:
 

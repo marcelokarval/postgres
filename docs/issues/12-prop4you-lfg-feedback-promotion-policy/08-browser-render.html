@@ -1,0 +1,1637 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Prop4You LFG Feedback Promotion Policy</title><style>body{font-family:Inter,Arial,sans-serif;margin:32px;background:#0b1020;color:#edf2ff}.badges span{display:inline-block;margin:4px;padding:6px 10px;background:#173b2f;border:1px solid #38d996;border-radius:999px}section{background:#121a33;border:1px solid #26365f;margin:18px 0;padding:18px;border-radius:12px}pre{white-space:pre-wrap;line-height:1.35}h1{color:#8cc8ff}</style></head><body><h1>Prop4You LFG Feedback Promotion Policy</h1><div class="badges"><span>Gateway agnostic</span><span>Database-centric PG18</span><span>prop4you_user_workspace</span><span>prop4you_leadfinder_group</span><span>Weak relationships</span><span>User feedback votes</span><span>Aggregate review</span><span>Global marker apply</span><span>DNC/wrong scoped markers</span><span>Dictionary promotion review/apply</span><span>No provider calls</span><span>No Thor HTTP endpoint</span><span>No full workspace tables</span><span>PG18 lab PASS</span><span>Browser proof</span></div><section><h2>01-prd.md</h2><pre># PRD — LFG user feedback votes and promotion policy
+
+Status: active
+
+## Problem
+
+We have T0-T5 database-centric flow and the system/LFG vs workspace boundary. The next risk is allowing user feedback like DNC, wrong phone, wrong email, or wrong mailing address to influence global LFG truth without a safe voting/review/apply policy.
+
+## Goals
+
+- Declare `prop4you_user_workspace` as the canonical logged-in workspace schema name.
+- Store user feedback/votes in `prop4you_leadfinder_group` using weak relationships.
+- Support item kinds: phone, email, mailing_address, owner, property, contact, group, facet, unknown.
+- Support marker kinds: dnc, wrong, invalid, stale, corrected, verified, unreachable, deliverable, undeliverable, other.
+- Aggregate votes into review rows with policy recommendation.
+- Apply reviewed/global markers into LFG-owned marker table, not directly from a single user vote.
+- Add LeadFinder dictionary promotion review/apply policy for prepared proposals.
+- Keep gateway/runtime agnostic.
+- Prove everything in PG18 lab.
+
+## Non-goals
+
+- No Thor/agent HTTP endpoint yet; roadmap only.
+- No real provider calls.
+- No real user identities; use weak text refs in lab.
+- No full `prop4you_user_workspace` table model yet.
+- No production mutation.
+
+## Acceptance
+
+- PRD/tasks/ledger persisted.
+- 3 worker reviews persisted and independently reviewed.
+- DDL applies cleanly in PG18 lab.
+- Lab creates feedback votes, aggregate review, global marker apply, dictionary promotion apply.
+- Browser-proof + vision confirms evidence.
+- Final report compares requested vs delivered and lists next steps/questions.
+</pre></section><section><h2>02-tasks.md</h2><pre># Tasks — LFG feedback votes and promotion policy
+
+| ID | Task | Owner | Status |
+| --- | --- | --- | --- |
+| T1 | Persist PRD/tasks/ledger | Thor | pending |
+| T2 | Worker A: feedback/vote weak relationship contract | Subagent A | pending |
+| T3 | Worker B: dictionary promotion review/apply policy | Subagent B | pending |
+| T4 | Worker C: workspace schema + Thor endpoint roadmap boundary | Subagent C | pending |
+| T5 | Implement schema/docs for `prop4you_user_workspace` | Thor | pending |
+| T6 | Implement LFG feedback votes/marker review/apply DDL | Thor | pending |
+| T7 | Implement LeadFinder promotion review/apply DDL | Thor | pending |
+| T8 | PG18 integrated proof | Thor | pending |
+| T9 | Browser-proof + vision | Thor | pending |
+| T10 | Final review/commit/push/report | Thor | pending |
+</pre></section><section><h2>05-task-review.md</h2><pre># Task Review — Slice 12
+
+Status: pass
+Generated: 2026-06-18T11:46:09
+
+| Task | Requested | Delivered | Evidence | Status |
+| --- | --- | --- | --- | --- |
+| T1 | PRD/tasks/ledger persisted | 00/01/02/03/04 files created | docs/issues/12... | pass |
+| T2 | Worker A feedback/vote contract | Review persisted | 08-feedback-votes-review.md | pass |
+| T3 | Worker B dictionary promotion policy | Review persisted | 09-dictionary-promotion-policy-review.md | pass |
+| T4 | Worker C workspace/Thor roadmap boundary | Review persisted | 10-workspace-roadmap-boundary-review.md | pass |
+| T5 | `prop4you_user_workspace` schema/docs | Schema declared in 0001_schemas; README added | database/ddl/projects/prop4you/user_workspace/README.md | pass |
+| T6 | LFG feedback votes + marker review/apply DDL | Implemented `0004_user_feedback_markers.sql` | lab proof feedback_vote_count=2, global_marker_count=1 | pass |
+| T7 | LeadFinder dictionary promotion review/apply DDL | Implemented `0004_dictionary_promotion_review_apply.sql` | lab proof dictionary_promotion_application_count=1 | pass |
+| T8 | PG18 integrated proof | Ran full T0→T5.2 plus feedback/review/apply/promotion apply | `/tmp/slice12-counts.json` | pass |
+| T9 | Browser-proof + vision | Pending at time of this review file; must be completed before final report | 06-browser-proof.md | pending-before-browser |
+| T10 | Final review/commit/push/report | Pending at time of this review file | final report + commit | pending-before-commit |
+
+## Proof summary
+
+```json
+{
+  &quot;aggregate_recommendations&quot;: [
+    &quot;auto_apply_candidate&quot;
+  ],
+  &quot;canonical_family_count&quot;: 15,
+  &quot;canonical_field_count&quot;: 37,
+  &quot;dictionary_promotion_application_count&quot;: 1,
+  &quot;dictionary_promotion_review_count&quot;: 1,
+  &quot;feedback_aggregate_count&quot;: 1,
+  &quot;feedback_review_count&quot;: 1,
+  &quot;feedback_vote_count&quot;: 2,
+  &quot;global_marker_count&quot;: 1,
+  &quot;global_marker_statuses&quot;: [
+    &quot;asserted&quot;
+  ],
+  &quot;no_provider_calls&quot;: true,
+  &quot;no_thor_http_endpoint_created&quot;: true,
+  &quot;operational_group_count&quot;: 10,
+  &quot;prepared_promotion_count&quot;: 10,
+  &quot;weak_relationships&quot;: true,
+  &quot;workspace_schema_exists&quot;: 1
+}
+```
+
+## Corrections applied
+
+- Initial runner used base proof wrapper without `KEEP_DB=1`, which dropped lab DB before extended assertions.
+- Corrected runner to preserve lab DB through slice-12 assertions, then drop it explicitly after counts.
+- Re-ran proof successfully.
+</pre></section><section><h2>07-final-report.md</h2><pre># Final Report — Slice 12 LFG feedback votes and promotion policy
+
+Status: browser pending at file generation; final chat/report will update browser evidence after QA.
+Generated: 2026-06-18T11:46:09
+
+## Executive summary
+
+Implemented the next recommended slice after system/LFG topology:
+
+```text
+Slice 12 — LFG feedback votes + marker review/apply + LeadFinder dictionary promotion review/apply
+```
+
+The key decision is now enforced by DDL and proof:
+
+```text
+A user/workspace vote is signal.
+Aggregate is recommendation.
+Review is authority.
+Apply creates global marker or dictionary mutation.
+```
+
+## Delivered objects
+
+### Workspace boundary
+
+```text
+database/ddl/projects/prop4you/0001_schemas.sql
+database/ddl/projects/prop4you/user_workspace/README.md
+```
+
+Canonical workspace schema:
+
+```text
+prop4you_user_workspace
+```
+
+### LFG feedback markers
+
+```text
+database/ddl/projects/prop4you/leadfinder_group/0004_user_feedback_markers.sql
+```
+
+Creates:
+
+```text
+prop4you_leadfinder_group.user_feedback_votes
+prop4you_leadfinder_group.feedback_marker_aggregates
+prop4you_leadfinder_group.feedback_marker_reviews
+prop4you_leadfinder_group.global_item_markers
+prop4you_leadfinder_group.v_feedback_marker_review_queue
+```
+
+Functions:
+
+```text
+record_user_feedback_vote(...)
+refresh_feedback_marker_aggregate(...)
+open_feedback_marker_review(...)
+apply_feedback_marker_review(...)
+```
+
+### Dictionary promotion apply gate
+
+```text
+database/ddl/projects/prop4you/leadfinder/0004_dictionary_promotion_review_apply.sql
+```
+
+Creates:
+
+```text
+prop4you_leadfinder.dictionary_promotion_reviews
+prop4you_leadfinder.dictionary_promotion_applications
+prop4you_leadfinder.v_dictionary_promotion_apply_review
+```
+
+Functions:
+
+```text
+review_dictionary_promotion(...)
+apply_dictionary_promotion_review(...)
+```
+
+## PG18 lab proof
+
+Proof result:
+
+```json
+{
+  &quot;aggregate_recommendations&quot;: [
+    &quot;auto_apply_candidate&quot;
+  ],
+  &quot;canonical_family_count&quot;: 15,
+  &quot;canonical_field_count&quot;: 37,
+  &quot;dictionary_promotion_application_count&quot;: 1,
+  &quot;dictionary_promotion_review_count&quot;: 1,
+  &quot;feedback_aggregate_count&quot;: 1,
+  &quot;feedback_review_count&quot;: 1,
+  &quot;feedback_vote_count&quot;: 2,
+  &quot;global_marker_count&quot;: 1,
+  &quot;global_marker_statuses&quot;: [
+    &quot;asserted&quot;
+  ],
+  &quot;no_provider_calls&quot;: true,
+  &quot;no_thor_http_endpoint_created&quot;: true,
+  &quot;operational_group_count&quot;: 10,
+  &quot;prepared_promotion_count&quot;: 10,
+  &quot;weak_relationships&quot;: true,
+  &quot;workspace_schema_exists&quot;: 1
+}
+```
+
+Acceptance highlights:
+
+```text
+workspace_schema_exists = 1
+feedback_vote_count = 2
+feedback_aggregate_count = 1
+aggregate_recommendations = [auto_apply_candidate]
+feedback_review_count = 1
+global_marker_count = 1
+global_marker_statuses = [asserted]
+dictionary_promotion_review_count = 1
+dictionary_promotion_application_count = 1
+prepared_promotion_count = 10
+operational_group_count = 10
+no_provider_calls = true
+no_thor_http_endpoint_created = true
+weak_relationships = true
+```
+
+## Thor HTTP endpoint roadmap
+
+Recorded as future discussion only. No endpoint, pg_net call, trigger, cron, or secret was implemented.
+
+## Requested vs delivered
+
+| Requested | Delivered |
+| --- | --- |
+| proceed to next recommended slices | Implemented feedback/promotion policy slice |
+| workspace schema name `prop4you_user_workspace` | Added schema/comment + README boundary |
+| LFG schema `prop4you_leadfinder_group` | Feedback marker system implemented there |
+| feedback table with weak item/user relationships | `user_feedback_votes` with weak refs and no strong workspace FK |
+| voting/policies/human review | aggregate/review/apply flow implemented |
+| dictionary promotion apply gate | review/application tables and functions implemented |
+| Thor endpoint as roadmap future | documented non-goal; no endpoint created |
+| PRD/tasks/reviews/final/browser proof | PRD/tasks/reviews/final persisted; browser proof follows |
+
+## Non-goals preserved
+
+- no production deploy;
+- no real PII;
+- no provider calls;
+- no Thor HTTP endpoint;
+- no full workspace tables;
+- no final graph/table explosion;
+- no user feedback auto-mutating global canonical truth.
+
+## Next steps
+
+1. Slice 13 — `prop4you_user_workspace` snapshot contract:
+   - selected LFG refs;
+   - snapshot hash/version;
+   - refresh decision;
+   - local notes/tags/markers separated from LFG global markers.
+
+2. Slice 14 — LFG feedback anti-abuse and reviewer workflow:
+   - vote credibility;
+   - tenant/user throttling;
+   - conflict review;
+   - reviewer queues.
+
+3. Slice 15 — Thor/agent HTTP ADR only:
+   - auth;
+   - idempotency;
+   - safe payload schema;
+   - cron/outbox policy;
+   - no hot transaction blocking.
+
+## Questions for next step
+
+- Should workspace snapshots store only `lfg_group_id/public_ref + dto_hash`, or also a compact redacted DTO envelope?
+- Should local user tags be completely independent tables, or share marker vocabulary with LFG while keeping owner scope separate?
+- Should global marker application require human actor always, or allow auto-apply after N trusted users/workspaces for low-risk markers?
+</pre></section><section><h2>08-feedback-votes-review.md</h2><pre># Worker A — LFG feedback/vote weak relationship contract
+
+Status: entregue
+Escopo: T2 / revisão-proposta conceitual repo-only
+Repo: `/home/marcelo-karval/Backup/Projetos/supabase-postgres-18-fork/postgres`
+Gerado em: 2026-06-18T10:31:29-04:00
+
+## Veredito executivo
+
+O feedback de usuário sobre DNC, telefone errado, e-mail errado, endereço postal errado, contato inválido, stale, corrected, verified etc. deve ser modelado como sinal fraco dentro de `prop4you_leadfinder_group`, não como mutação direta no workspace nem como alteração imediata da verdade global LFG.
+
+Contrato recomendado:
+
+```text
+prop4you_user_workspace
+  - owner de usuário/workspace/ações locais/snapshots/anotações locais
+  - pode emitir feedback por gateway/RPC/evento
+  - não possui FK forte exigida pelo LFG
+
+prop4you_leadfinder_group
+  - owner da fila de feedback recebida
+  - guarda votos com refs fracas para workspace/user/snapshot/item
+  - agrega votos em buckets de revisão
+  - calcula recomendação automática de política
+  - exige review/aprovação para aplicar marker global/canonical
+```
+
+Regra central: um voto isolado de usuário nunca aplica marker global. Votos alimentam agregação; agregação recomenda; revisão humana ou policy-gate autorizada decide; somente a decisão aprovada cria/atualiza marker global LFG-owned.
+
+## Decisões de boundary usadas
+
+Decisão do Karval registrada nesta issue:
+
+```text
+workspace schema = prop4you_user_workspace
+LFG/system schema = prop4you_leadfinder_group
+feedback do usuário fica em tabela no prop4you_leadfinder_group
+relacionamento fraco para item e usuário/workspace
+votos/agregação recomendam marker global/canonical
+review humano aplica
+```
+
+Isso está alinhado com a arquitetura anterior:
+
+- LFG/system owns global markers, contactability, qualidade, evidence, lineage e versões.
+- Workspace owns decisões locais, snapshots, listas, tags, labels, notas e preferências tenant/user.
+- Feedback bridge é explícito; não se reaproveita tabela de marker local como marker global.
+- Topologia futura pode separar bancos; portanto refs fracas são preferíveis a FKs cross-boundary.
+
+## Vocabulário contratual
+
+### Item kinds suportados
+
+Usar enum/check conceitual compatível com o PRD:
+
+```text
+phone
+email
+mailing_address
+owner
+property
+contact
+group
+facet
+unknown
+```
+
+### Marker kinds suportados
+
+Usar enum/check conceitual compatível com o PRD:
+
+```text
+dnc
+wrong
+invalid
+stale
+corrected
+verified
+unreachable
+deliverable
+undeliverable
+other
+```
+
+### Weak relationship
+
+Neste contrato, relacionamento fraco significa:
+
+1. Guardar identificadores textuais/versionados suficientes para reconciliar depois.
+2. Não exigir FK forte para `prop4you_user_workspace`.
+3. Não exigir FK forte para item LFG final, porque o item pode ser snapshot, facet, operational_group, contato futuro, item externo/materializado ou estar em outro banco.
+4. Preservar hash/versão/refs no momento do voto para audit e replay.
+5. Aceitar que resolução posterior pode falhar ou encontrar item superseded/stale.
+
+Campos fracos recomendados:
+
+```text
+workspace_schema_name       -- esperado: prop4you_user_workspace
+workspace_ref               -- public_ref/text/uuid-as-text; sem FK
+workspace_account_ref       -- opcional; sem FK
+workspace_user_ref          -- opcional; sem FK
+workspace_snapshot_ref      -- opcional; sem FK
+workspace_campaign_ref      -- opcional; sem FK
+
+lfg_item_kind               -- phone/email/mailing_address/etc.
+lfg_item_ref                -- public_ref/id/hash/path conhecido pelo consumidor; sem FK obrigatória
+lfg_item_version            -- versão do snapshot/facet/grupo visto pelo usuário
+lfg_item_hash               -- content/facet/snapshot hash visto pelo usuário
+lfg_group_ref               -- opcional, weak ref para operational group ou group public_ref
+lfg_facet_ref               -- opcional, weak ref para operational_group_facets ou path
+source_publication_ref      -- opcional, para lineage SourceHub quando conhecido
+matrix_artifact_ref         -- opcional, para lineage Matrix quando conhecido
+```
+
+## Tabela conceitual 1: feedback votes
+
+Nome recomendado:
+
+```text
+prop4you_leadfinder_group.feedback_votes
+```
+
+Responsabilidade: registrar, de forma append-friendly, cada feedback/voto enviado por workspace/user sobre um item LFG observado em um snapshot/version/hash específico.
+
+DDL conceitual, não implementação final:
+
+```sql
+create table prop4you_leadfinder_group.feedback_votes (
+  id uuid primary key default uuidv7(),
+  public_ref text generated always as (base.make_public_ref(&#x27;p4ylfgfv&#x27;, id)) stored,
+
+  -- weak workspace/user refs; no FK cross-boundary
+  workspace_schema_name text not null default &#x27;prop4you_user_workspace&#x27;,
+  workspace_ref text not null,
+  workspace_account_ref text,
+  workspace_user_ref text,
+  workspace_snapshot_ref text,
+  workspace_campaign_ref text,
+
+  -- weak LFG item refs; no mandatory FK
+  lfg_item_kind text not null,
+  lfg_item_ref text not null,
+  lfg_item_version text,
+  lfg_item_hash text,
+  lfg_group_ref text,
+  lfg_facet_ref text,
+  source_publication_ref text,
+  matrix_artifact_ref text,
+
+  -- vote semantics
+  marker_kind text not null,
+  marker_value jsonb not null default &#x27;true&#x27;::jsonb,
+  vote_signal text not null default &#x27;assert&#x27;,
+  reason_code text,
+  user_comment text,
+  evidence_payload jsonb not null default &#x27;{}&#x27;::jsonb,
+  confidence numeric(5,4) not null default 0.5000,
+  vote_weight numeric(8,4) not null default 1.0000,
+
+  -- lifecycle/review bridge
+  vote_status text not null default &#x27;submitted&#x27;,
+  supersedes_vote_ref text,
+  aggregate_bucket_key text,
+  observed_at timestamptz not null default now(),
+  submitted_at timestamptz not null default now(),
+
+  -- privacy/audit/gateway agnostic metadata
+  source_channel text not null default &#x27;workspace_feedback&#x27;,
+  privacy_class text not null default &#x27;workspace_feedback_no_raw_payload&#x27;,
+  metadata jsonb not null default &#x27;{}&#x27;::jsonb,
+
+  active boolean not null default true,
+  deleted boolean not null default false,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  last_modified_by_actor_id text,
+  version integer not null default 1
+);
+```
+
+Checks recomendados:
+
+```text
+workspace_schema_name = &#x27;prop4you_user_workspace&#x27;
+lfg_item_kind in (phone,email,mailing_address,owner,property,contact,group,facet,unknown)
+marker_kind in (dnc,wrong,invalid,stale,corrected,verified,unreachable,deliverable,undeliverable,other)
+vote_signal in (assert,retract,confirm,dispute,correct,verify)
+vote_status in (submitted,accepted_for_aggregation,ignored_duplicate,invalid,withdrawn,aggregated,archived)
+confidence between 0 and 1
+vote_weight &gt; 0 and vote_weight &lt;= configured max
+jsonb_typeof(marker_value) is not null
+evidence_payload and metadata are json objects
+```
+
+Índices recomendados:
+
+```text
+(lfg_item_kind, lfg_item_ref, marker_kind, submitted_at desc) where deleted=false
+(workspace_ref, workspace_user_ref, submitted_at desc) where deleted=false
+(aggregate_bucket_key, submitted_at desc) where deleted=false
+(marker_kind, vote_status, submitted_at desc) where deleted=false
+GIN(evidence_payload jsonb_path_ops)
+```
+
+Unicidade parcial recomendada para reduzir spam sem bloquear correções legítimas:
+
+```text
+unique active latest assertion per:
+  workspace_ref + workspace_user_ref + lfg_item_kind + lfg_item_ref + marker_kind + normalized(marker_value) + lfg_item_hash
+```
+
+Se o usuário muda de opinião, preferir novo voto `retract/dispute/correct` ou `supersedes_vote_ref`, não update destrutivo do voto antigo.
+
+## Bucket de agregação
+
+`aggregate_bucket_key` deve ser determinístico e calculável a partir de uma normalização estável:
+
+```text
+bucket = sha256(
+  lfg_item_kind || &#x27;|&#x27; || normalized_lfg_item_ref || &#x27;|&#x27; ||
+  marker_kind || &#x27;|&#x27; || normalized_marker_value
+)
+```
+
+Para itens versionados, a política deve decidir se o bucket agrupa por item canonical ou por snapshot/hash:
+
+- Para `wrong phone`, `dnc`, `invalid`, `unreachable`: preferir bucket por item canonical quando resolvido; fallback por weak ref/hash.
+- Para `stale`: incluir versão/hash no bucket porque stale é relativo à versão observada.
+- Para `corrected`: bucket deve incluir um `proposed_correction_hash`, nunca expor PII crua em chave pública.
+- Para `mailing_address wrong`: incluir normalização geográfica/endereço se houver canonical parser; se não houver, manter bucket weak e exigir review.
+
+## Tabela conceitual 2: aggregate review queue
+
+Nome recomendado:
+
+```text
+prop4you_leadfinder_group.feedback_marker_aggregates
+```
+
+Responsabilidade: materializar o estado agregado por bucket de item+marker, com estatísticas, conflito, evidência resumida e recomendação de política. Esta tabela não aplica marker global; ela apenas prepara a revisão.
+
+DDL conceitual:
+
+```sql
+create table prop4you_leadfinder_group.feedback_marker_aggregates (
+  id uuid primary key default uuidv7(),
+  public_ref text generated always as (base.make_public_ref(&#x27;p4ylfgfa&#x27;, id)) stored,
+
+  aggregate_bucket_key text not null unique,
+  lfg_item_kind text not null,
+  normalized_lfg_item_ref text not null,
+  marker_kind text not null,
+  normalized_marker_value jsonb not null default &#x27;true&#x27;::jsonb,
+
+  vote_count integer not null default 0,
+  weighted_vote_score numeric(12,4) not null default 0,
+  distinct_workspace_count integer not null default 0,
+  distinct_user_count integer not null default 0,
+  dispute_count integer not null default 0,
+  retract_count integer not null default 0,
+  latest_vote_at timestamptz,
+  first_vote_at timestamptz,
+
+  confidence_score numeric(5,4) not null default 0,
+  conflict_score numeric(5,4) not null default 0,
+  freshness_score numeric(5,4) not null default 0,
+
+  recommendation text not null default &#x27;no_action&#x27;,
+  recommendation_reason text,
+  review_status text not null default &#x27;not_opened&#x27;,
+  policy_version text not null,
+  policy_snapshot jsonb not null default &#x27;{}&#x27;::jsonb,
+  evidence_summary jsonb not null default &#x27;{}&#x27;::jsonb,
+  sample_vote_refs jsonb not null default &#x27;[]&#x27;::jsonb,
+
+  opened_for_review_at timestamptz,
+  closed_at timestamptz,
+  active boolean not null default true,
+  deleted boolean not null default false,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  last_modified_by_actor_id text,
+  version integer not null default 1
+);
+```
+
+Checks recomendados:
+
+```text
+recommendation in (
+  no_action,
+  collect_more_votes,
+  open_human_review,
+  recommend_global_marker,
+  recommend_reject,
+  recommend_workspace_only,
+  blocked_conflict
+)
+review_status in (
+  not_opened,
+  queued,
+  in_review,
+  accepted_for_global_marker,
+  rejected,
+  needs_more_evidence,
+  blocked,
+  applied,
+  superseded
+)
+```
+
+Índices recomendados:
+
+```text
+(recommendation, review_status, updated_at desc) where deleted=false
+(marker_kind, review_status, confidence_score desc) where deleted=false
+(lfg_item_kind, normalized_lfg_item_ref, marker_kind) where deleted=false
+GIN(evidence_summary jsonb_path_ops)
+```
+
+## Tabela conceitual 3: review decisions
+
+Nome recomendado:
+
+```text
+prop4you_leadfinder_group.feedback_marker_reviews
+```
+
+Responsabilidade: registrar a decisão humana/sistêmica sobre um aggregate. Esta é a autorização para aplicação posterior, não o marker em si.
+
+DDL conceitual:
+
+```sql
+create table prop4you_leadfinder_group.feedback_marker_reviews (
+  id uuid primary key default uuidv7(),
+  public_ref text generated always as (base.make_public_ref(&#x27;p4ylfgfr&#x27;, id)) stored,
+
+  aggregate_id uuid not null,              -- FK forte aceitável dentro do schema LFG
+  aggregate_public_ref text not null,
+  review_decision text not null,
+  review_reason text,
+  reviewer_actor_id text not null,
+  reviewed_at timestamptz not null default now(),
+
+  proposed_global_marker_kind text not null,
+  proposed_global_marker_value jsonb not null default &#x27;true&#x27;::jsonb,
+  proposed_scope text not null default &#x27;lfg_global&#x27;,
+  proposed_confidence numeric(5,4) not null default 0,
+  proposed_effective_at timestamptz,
+  proposed_expires_at timestamptz,
+  proposed_lineage jsonb not null default &#x27;{}&#x27;::jsonb,
+
+  apply_status text not null default &#x27;not_applied&#x27;,
+  applied_marker_ref text,
+  applied_at timestamptz,
+  apply_actor_id text,
+  apply_error text,
+
+  metadata jsonb not null default &#x27;{}&#x27;::jsonb,
+  active boolean not null default true,
+  deleted boolean not null default false,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  last_modified_by_actor_id text,
+  version integer not null default 1
+);
+```
+
+Checks recomendados:
+
+```text
+review_decision in (accept_global_marker,reject,needs_more_evidence,workspace_only,duplicate,blocked,not_applicable)
+apply_status in (not_applied,ready_to_apply,applied,failed,voided,superseded)
+proposed_scope in (lfg_global,lfg_group,lfg_contact,lfg_phone,lfg_email,lfg_address,lfg_facet)
+```
+
+Observação: `aggregate_id` pode ter FK forte para `feedback_marker_aggregates` porque ambos são LFG-owned. As refs para workspace/user/item continuam fracas.
+
+## Tabela conceitual 4: global/canonical marker apply
+
+Nome recomendado para estado atual:
+
+```text
+prop4you_leadfinder_group.global_markers
+```
+
+Nome recomendado para trilha append-only:
+
+```text
+prop4you_leadfinder_group.global_marker_events
+```
+
+Responsabilidade: armazenar markers LFG-owned aplicados após review. Este é o único local da verdade global/canonical gerada por feedback agregado.
+
+DDL conceitual do estado atual:
+
+```sql
+create table prop4you_leadfinder_group.global_markers (
+  id uuid primary key default uuidv7(),
+  public_ref text generated always as (base.make_public_ref(&#x27;p4ylfggm&#x27;, id)) stored,
+
+  lfg_item_kind text not null,
+  normalized_lfg_item_ref text not null,
+  marker_kind text not null,
+  marker_value jsonb not null default &#x27;true&#x27;::jsonb,
+  marker_status text not null default &#x27;active&#x27;,
+  marker_scope text not null default &#x27;lfg_global&#x27;,
+
+  confidence numeric(5,4) not null default 0,
+  source_kind text not null default &#x27;feedback_review&#x27;,
+  source_review_ref text not null,
+  source_aggregate_ref text not null,
+  lineage jsonb not null default &#x27;{}&#x27;::jsonb,
+
+  effective_at timestamptz not null default now(),
+  expires_at timestamptz,
+  superseded_by_marker_ref text,
+  active boolean not null default true,
+  deleted boolean not null default false,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  last_modified_by_actor_id text,
+  version integer not null default 1
+);
+```
+
+Unicidade recomendada:
+
+```text
+unique active canonical marker per:
+  lfg_item_kind + normalized_lfg_item_ref + marker_kind + normalized(marker_value) + marker_scope
+where active=true and deleted=false and marker_status=&#x27;active&#x27;
+```
+
+Eventos recomendados:
+
+```text
+global_marker_applied
+global_marker_superseded
+global_marker_voided
+global_marker_expired
+global_marker_conflict_opened
+```
+
+## Funções conceituais / use cases
+
+### 1. Submit vote
+
+```text
+prop4you_leadfinder_group.submit_feedback_vote(...)
+```
+
+Contrato:
+
+- Entrada por gateway/RPC/worker, sem depender de HTTP específico.
+- Valida item_kind/marker_kind/vote_signal.
+- Normaliza refs fracas.
+- Calcula `aggregate_bucket_key`.
+- Insere voto append-friendly.
+- Não aplica marker global.
+- Retorna `feedback_vote_ref` e status.
+
+### 2. Recompute aggregate
+
+```text
+prop4you_leadfinder_group.recompute_feedback_marker_aggregate(p_bucket_key text, p_policy_version text)
+```
+
+Contrato:
+
+- Recalcula contagens, votos ponderados, distinct workspace/user, disputes/retractions.
+- Atualiza `feedback_marker_aggregates`.
+- Produz recommendation conforme policy snapshot.
+- Pode abrir review queue quando threshold alcançado.
+- Não aplica marker global.
+
+### 3. Review aggregate
+
+```text
+prop4you_leadfinder_group.review_feedback_marker_aggregate(p_aggregate_ref text, p_decision text, ...)
+```
+
+Contrato:
+
+- Exige reviewer actor/system actor autorizado.
+- Cria row em `feedback_marker_reviews`.
+- Se `accept_global_marker`, marca `apply_status = ready_to_apply`.
+- Não deve apagar votos nem aggregate history.
+
+### 4. Apply reviewed marker
+
+```text
+prop4you_leadfinder_group.apply_reviewed_feedback_marker(p_review_ref text, p_actor_id text)
+```
+
+Contrato:
+
+- Só aceita review com `review_decision = accept_global_marker` e `apply_status = ready_to_apply`.
+- Insere/atualiza `global_markers`.
+- Insere `global_marker_events`.
+- Atualiza review para `applied`.
+- Atualiza aggregate para `applied`.
+- É idempotente por `source_review_ref`.
+
+## Política de recomendação automática
+
+A recomendação automática deve ser conservadora. Ela recomenda review; não aplica sozinha.
+
+Política inicial sugerida, parametrizável por `policy_version`:
+
+```text
+base_min_votes = 5
+base_min_distinct_workspaces = 3
+base_min_confidence_score = 0.7000
+max_conflict_score_for_recommendation = 0.2500
+max_retract_ratio = 0.2000
+freshness_window_days = 180
+```
+
+Ajustes por marker:
+
+| Marker | Política recomendada |
+| --- | --- |
+| dnc | Abrir review com prioridade alta; exigir evidência/compliance; não auto-aplicar sem review humano/política formal. |
+| wrong | Exigir múltiplos workspaces ou evidência forte; conflito alto bloqueia. |
+| invalid | Pode recomendar com provider/system evidence adicional; votos sozinhos abrem review. |
+| stale | Recomendação deve focar refresh/revalidation, não marker global definitivo. |
+| corrected | Exigir proposed correction hash/lineage; review obrigatório para evitar PII falsa. |
+| verified | Exigir fonte confiável e anti-abuse; votos positivos podem desfazer ou superseder wrong apenas com review. |
+| unreachable | Pode ser temporário; preferir expires_at/recheck. |
+| deliverable/undeliverable | Exigir evidência de canal e data; validade temporal curta. |
+| other | Sempre human review/manual classification antes de global marker. |
+
+Estados de recomendação:
+
+```text
+no_action
+collect_more_votes
+open_human_review
+recommend_global_marker
+recommend_reject
+recommend_workspace_only
+blocked_conflict
+```
+
+## Anti-abuse e privacidade
+
+Requisitos mínimos:
+
+1. Rate limit por workspace/user/item/marker via gateway ou função.
+2. Deduplicação por snapshot/hash para evitar vote stuffing.
+3. Ponderação por trust tier do workspace, quando existir, mas armazenada como snapshot de peso para audit.
+4. Não gravar raw phone/email completo em comentário/evidence sem redaction policy.
+5. `user_comment` deve ser opcional e potencialmente redigível; não participar da chave agregada.
+6. `evidence_payload` deve carregar referências/resumos, não dumps de provider/PII.
+7. Review deve registrar actor e motivo.
+8. Aplicação deve ser idempotente e auditável.
+9. Conflito entre `wrong` e `verified`, ou `dnc` e `deliverable`, deve bloquear/requerer review explícito.
+
+## RLS/exposição/API futura
+
+Como as tabelas vivem em `prop4you_leadfinder_group`, não expor raw tables diretamente ao usuário final. Expor apenas use cases/facades:
+
+```text
+api.submit_lfg_feedback_vote(...)       -- futuro facade PostgREST/API
+api.get_my_feedback_status(...)         -- escopado por workspace/user
+admin/review views                      -- apenas operadores LFG
+```
+
+Regras:
+
+- Workspace user pode inserir feedback via função com `workspace_ref/user_ref` validado pelo gateway/RLS do workspace.
+- Workspace user pode ler status do próprio feedback, não votos de outros workspaces.
+- Operador LFG pode ver aggregate/review com redaction adequada.
+- Aplicação de global marker exige role/service/reviewer LFG, nunca user workspace direto.
+
+## Regras de integração com operational_groups/facets atuais
+
+O DDL atual de `prop4you_leadfinder_group` possui `operational_groups`, `operational_group_events` e `operational_group_facets` como mínimo operacional. Este contrato não exige alterar essas tabelas agora.
+
+Compatibilidade recomendada:
+
+- Se feedback aponta para `group`, usar `lfg_item_kind = &#x27;group&#x27;` e `lfg_item_ref = operational_group.public_ref` quando disponível.
+- Se aponta para `facet`, usar `lfg_item_kind = &#x27;facet&#x27;`, `lfg_facet_ref` e `lfg_item_hash`/path.
+- Se aponta para phone/email/address ainda não finalizados como tabela própria, usar `lfg_item_kind = phone/email/mailing_address` com weak ref normalizada derivada do snapshot/facet.
+- Quando futuros contacts/phones/emails canônicos existirem, criar resolver que mapeia weak refs antigas para canonical refs sem reescrever o histórico de votos.
+
+## Fluxo ponta a ponta recomendado
+
+```text
+1. Usuário no workspace vê snapshot LFG versionado.
+2. Usuário marca: phone wrong / DNC / email undeliverable / address wrong.
+3. Gateway chama submit_feedback_vote com refs fracas:
+   workspace_ref, user_ref, snapshot_ref, item_kind, item_ref, item_hash, marker_kind.
+4. LFG grava feedback_votes.
+5. Job/função recomputa aggregate bucket.
+6. Aggregate calcula recommendation:
+   collect_more_votes / open_human_review / recommend_global_marker / blocked_conflict.
+7. Revisor LFG decide em feedback_marker_reviews.
+8. Só review accepted cria global_markers/global_marker_events.
+9. Workspace recebe depois sinal de refresh/staleness/marker global atualizado, sem perder annotation local.
+```
+
+## Critérios de aceite para implementação posterior
+
+Para T6, considerar completo quando o lab demonstrar:
+
+1. Criação de votos para `phone wrong`, `email wrong`, `mailing_address wrong` e `dnc` com workspace/user weak refs.
+2. Agregação de múltiplos votos em bucket único.
+3. Recomendação automática sem aplicação direta.
+4. Review humano/sistêmico aceitando um aggregate.
+5. Apply idempotente criando marker global LFG-owned.
+6. Tentativa de apply sem review falha.
+7. Voto conflitante muda conflict_score ou bloqueia recomendação.
+8. Views/admin read model mostram aggregate/review sem expor PII crua.
+
+## Guardrails finais
+
+- Não criar FK forte para `prop4you_user_workspace` neste contrato.
+- Não deixar `feedback_votes` virar tabela de annotation local do workspace.
+- Não aplicar `global_markers` a partir de voto unitário.
+- Não misturar marker workspace-owned com marker LFG-owned só porque têm o mesmo nome humano.
+- Não armazenar provider raw payload nem segredos em evidence/comment.
+- Não modelar `dnc` como simples boolean universal sem lineage/effective_at/review.
+- Não fazer refresh sobrescrever nota local do workspace; feedback bridge e global marker são camadas distintas.
+
+## Recomendação para Thor/T6
+
+Implementar a fatia em quatro blocos idempotentes, se possível no mesmo pacote LFG:
+
+```text
+1. feedback_votes
+2. feedback_marker_aggregates + recompute function/view
+3. feedback_marker_reviews + review function
+4. global_markers/global_marker_events + apply function idempotente
+```
+
+Manter a nomenclatura explícita `feedback_*` para bridge/review e `global_marker*` para verdade LFG aplicada. Isso preserva o relacionamento fraco, suporta topologia multi-DB futura e deixa claro que workspace feedback é evidência candidata, não autoridade global.
+</pre></section><section><h2>09-dictionary-promotion-policy-review.md</h2><pre># Worker B — LeadFinder dictionary promotion review/apply policy
+
+Status: entregue
+Escopo: T3 / revisão conceitual repo-only
+Repo: `/home/marcelo-karval/Backup/Projetos/supabase-postgres-18-fork/postgres`
+
+## Veredito
+
+A fatia atual já tem uma base correta para preparação segura em `database/ddl/projects/prop4you/leadfinder/0003_prepare_dictionary_promotions.sql`: a tabela `prop4you_leadfinder.dictionary_promotion_preparations` e a função `prepare_dictionary_promotions_from_field_mapping_set(...)` são explicitamente `prepare-only` e não inserem/atualizam `canonical_families` ou `canonical_fields`.
+
+A lacuna é política explícita de review/apply. Recomendo implementar uma próxima DDL separada, por exemplo `leadfinder/0004_dictionary_promotion_review_apply.sql`, com duas fronteiras transacionais:
+
+```text
+prepared
+  -&gt; in_review
+  -&gt; accepted
+  -&gt; applied
+```
+
+O apply deve criar/linkar apenas estruturas de dicionário (`canonical_families`, `canonical_fields`) a partir de propostas já aceitas, com auditoria e idempotência. Feedback de usuário/workspace nunca deve acionar esse apply diretamente; no máximo vira evidência/recomendação em fila de review, com decisão humana/sistêmica explícita antes da promoção.
+
+## Evidência local usada
+
+Revisão feita apenas com arquivos locais, sem browser, web/MCP, provider calls ou alteração de DDL:
+
+- `docs/issues/12-prop4you-lfg-feedback-promotion-policy/01-prd.md`: exige política para `prepared -&gt; review -&gt; apply`, sem permitir que feedback como DNC/wrong influencie global truth sem gate.
+- `docs/issues/12-prop4you-lfg-feedback-promotion-policy/00-detection-and-analysis.md`: escopo inclui review/apply gate para dictionary promotion a partir de prepared proposals.
+- `database/ddl/projects/prop4you/leadfinder/0003_prepare_dictionary_promotions.sql`: já cria `dictionary_promotion_preparations`, status inicial `prepared`, view de review e função prepare-only; comentários dizem que não muta `canonical_families/canonical_fields`.
+- `database/ddl/projects/prop4you/leadfinder/0001_canonical_dictionary.sql`: LeadFinder é owner de `canonical_dictionary_versions`, `canonical_families`, `canonical_fields`, com campos de status, evidence origin e metadados sem raw payload values.
+
+## Estado atual relevante
+
+`dictionary_promotion_preparations` já possui:
+
+- `proposal_status` com check atual: `prepared`, `in_review`, `accepted_for_manual_apply`, `deferred`, `rejected`, `superseded`.
+- `proposal_kind`: `create_family`, `create_field`, `link_existing_field`, `review_only`.
+- ponte para `canonical_dictionary_versions`, `transformation_artifacts`, `raw_evidence_gap_bridges`.
+- chaves alvo: `target_family_key`, `target_field_key`.
+- links opcionais existentes: `existing_family_id`, `existing_field_id`.
+- hints para modelagem/app dictionary: `lfg_app_modeling_hint`, `canonical_dictionary_hint`, `review_payload`, `metadata`.
+- garantias importantes: no raw values, prepare-only, gateway-agnostic.
+
+O ponto forte é que o preparador classifica o tipo da proposta sem aplicar nada:
+
+```text
+existing field -&gt; link_existing_field
+existing family sem field -&gt; create_field
+sem family -&gt; create_family
+```
+
+O ponto fraco é que `accepted_for_manual_apply` é um estado intermediário ambíguo: ele diz que alguém aceitou para aplicar manualmente, mas não registra decisão estruturada, reviewer, razão, payload congelado, resultado de apply nem idempotência de execução.
+
+## Política recomendada
+
+### 1. Separar preparação, revisão e aplicação
+
+A tabela atual deve continuar sendo fonte das propostas preparadas. A política futura deve adicionar duas estruturas conceituais:
+
+```text
+dictionary_promotion_reviews
+  - decisão humana/sistêmica explícita sobre uma preparation
+  - reviewer, razão, riscos, snapshot do payload aceito
+  - não cria família/campo
+
+ dictionary_promotion_applications
+  - resultado transacional de aplicar uma review aceita
+  - links finais para canonical_family_id/canonical_field_id
+  - status applied/failed/rolled_back ou equivalente
+  - idempotência por review aceita
+```
+
+Motivo: status inline em `dictionary_promotion_preparations` não é suficiente para auditoria nem para repetir apply com segurança.
+
+### 2. Status canônico sugerido
+
+Preferir nomes simples alinhados ao PRD:
+
+```text
+prepared        -- gerado automaticamente por Matrix artifact; sem decisão
+in_review       -- alguém/processo assumiu a análise
+accepted        -- autorizado para apply explícito
+rejected        -- não promover
+ deferred        -- manter backlog
+superseded      -- substituído por proposta/review mais nova
+applied         -- resultado final quando o apply concluiu
+```
+
+Compatibilidade com o DDL existente:
+
+- curto prazo: mapear `accepted_for_manual_apply` como alias operacional de `accepted`.
+- longo prazo: migrar o check constraint para incluir `accepted` e `applied`, ou manter `accepted_for_manual_apply` apenas como legado e registrar o estado real em tabelas de review/apply.
+
+### 3. Regras por `proposal_kind`
+
+#### `create_family`
+
+Apply permitido somente quando:
+
+- preparation está aceita;
+- `target_family_key` não existe na mesma `dictionary_version_id`, ou existe com semântica compatível;
+- reviewer informou `display_name`, `description`, `family_role`, `evidence_origin` e `metadata` seguros;
+- nenhum raw payload value foi copiado para `description/evidence_origin/metadata`.
+
+Resultado esperado:
+
+```text
+upsert canonical_families(dictionary_version_id, family_key)
+status inicial: candidate ou in_review, nunca approved automático
+link application.canonical_family_id
+opcionalmente manter preparation.existing_family_id atualizado
+```
+
+#### `create_field`
+
+Apply permitido somente quando:
+
+- família alvo existe ou foi criada no mesmo apply;
+- `target_field_key` é não nulo;
+- `field_key` não existe nessa família/versão, ou existe com semântica compatível;
+- reviewer validou `value_kind`, `cardinality`, `materialization_intent`, `pii_classification`.
+
+Resultado esperado:
+
+```text
+upsert canonical_fields(dictionary_version_id, family_id, field_key)
+status inicial: candidate ou in_review, nunca approved automático
+link application.canonical_field_id
+opcionalmente manter preparation.existing_field_id atualizado
+```
+
+#### `link_existing_field`
+
+Apply não deve criar campo novo. Deve apenas registrar que a proposta foi resolvida por um campo existente:
+
+```text
+validate existing_field_id pertence a dictionary_version_id e target family
+application.canonical_field_id = existing_field_id
+status preparation -&gt; applied/resolved
+```
+
+Se o campo existente divergir do target, a review deve rejeitar/supersede, não forçar link.
+
+#### `review_only`
+
+Apply não deve criar nem linkar canonical dictionary. Deve produzir apenas decisão/review e talvez backlog/gap/signal, se uma DDL futura modelar isso. Esse tipo é útil para paths ambíguos, privacy boundary ou evidência insuficiente.
+
+### 4. Não auto-aplicar feedback do usuário
+
+Feedback/votos de usuário devem entrar em outra fila de review, não no apply do dicionário. Mesmo se houver muitos votos `wrong`, `invalid`, `dnc`, `corrected`, `verified` ou similares, isso não autoriza criar family/field global diretamente.
+
+Regra explícita:
+
+```text
+workspace/user feedback can recommend review;
+review can accept/reject/defer;
+only accepted dictionary review can call apply;
+apply mutates only dictionary metadata rows, not user feedback rows and not raw values.
+```
+
+Motivo: `dnc`, `wrong`, `invalid`, `corrected` são markers/qualidade/contactability ou decisões contextuais. Eles podem indicar pressão para revisar `owner_phone.phone_quality` ou `owner_contact_address.address_deliverability`, mas não provam sozinhos semântica global nova.
+
+## Proposta DDL conceitual
+
+Não editar DDL nesta fatia. Abaixo é contrato conceitual para a futura implementação.
+
+### Tabela de reviews
+
+```sql
+create table prop4you_leadfinder.dictionary_promotion_reviews (
+  id uuid primary key default uuidv7(),
+  preparation_id uuid not null references prop4you_leadfinder.dictionary_promotion_preparations(id) on delete restrict,
+  review_status text not null default &#x27;in_review&#x27;,
+  review_decision text,
+  reviewer_actor_id text,
+  review_reason text not null,
+  accepted_payload jsonb not null default &#x27;{}&#x27;::jsonb,
+  risk_assessment jsonb not null default &#x27;{}&#x27;::jsonb,
+  source_evidence_summary jsonb not null default &#x27;{}&#x27;::jsonb,
+  decided_at timestamptz,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique (preparation_id, review_status) where review_status in (&#x27;accepted&#x27;)
+);
+```
+
+Checks conceituais:
+
+```text
+review_status in (&#x27;in_review&#x27;,&#x27;accepted&#x27;,&#x27;rejected&#x27;,&#x27;deferred&#x27;,&#x27;superseded&#x27;)
+review_decision in (&#x27;accept_create_family&#x27;,&#x27;accept_create_field&#x27;,&#x27;accept_link_existing_field&#x27;,&#x27;reject&#x27;,&#x27;defer&#x27;,&#x27;supersede&#x27;,&#x27;review_only&#x27;)
+accepted_payload/risk_assessment/source_evidence_summary são objetos JSONB
+accepted exige reviewer_actor_id, decided_at e accepted_payload mínimo
+```
+
+Payload aceito deve congelar os valores que serão usados pelo apply, em vez de depender do preparador mudar depois:
+
+```json
+{
+  &quot;target_family_key&quot;: &quot;owner_phone&quot;,
+  &quot;target_field_key&quot;: &quot;phone_quality&quot;,
+  &quot;display_name&quot;: &quot;Phone quality&quot;,
+  &quot;description&quot;: &quot;Candidate phone quality/reachability meaning.&quot;,
+  &quot;family_role&quot;: &quot;contact&quot;,
+  &quot;value_kind&quot;: &quot;enum&quot;,
+  &quot;cardinality&quot;: &quot;optional&quot;,
+  &quot;materialization_intent&quot;: &quot;dictionary_candidate&quot;,
+  &quot;pii_classification&quot;: &quot;contact&quot;,
+  &quot;no_raw_values&quot;: true
+}
+```
+
+### Tabela de applications
+
+```sql
+create table prop4you_leadfinder.dictionary_promotion_applications (
+  id uuid primary key default uuidv7(),
+  review_id uuid not null references prop4you_leadfinder.dictionary_promotion_reviews(id) on delete restrict,
+  preparation_id uuid not null references prop4you_leadfinder.dictionary_promotion_preparations(id) on delete restrict,
+  application_status text not null default &#x27;applied&#x27;,
+  applied_action text not null,
+  canonical_family_id uuid references prop4you_leadfinder.canonical_families(id) on delete restrict,
+  canonical_field_id uuid references prop4you_leadfinder.canonical_fields(id) on delete restrict,
+  applied_by_actor_id text,
+  applied_at timestamptz not null default now(),
+  apply_payload jsonb not null default &#x27;{}&#x27;::jsonb,
+  result_payload jsonb not null default &#x27;{}&#x27;::jsonb,
+  unique (review_id)
+);
+```
+
+Checks conceituais:
+
+```text
+application_status in (&#x27;applied&#x27;,&#x27;failed&#x27;,&#x27;rolled_back&#x27;)
+applied_action in (&#x27;created_family&#x27;,&#x27;created_field&#x27;,&#x27;linked_existing_field&#x27;,&#x27;review_only_noop&#x27;)
+created_family exige canonical_family_id
+created_field exige canonical_family_id + canonical_field_id
+linked_existing_field exige canonical_field_id
+review_only_noop não pode criar/linkar campo novo
+```
+
+### Funções/RPCs gateway-agnostic
+
+#### `start_dictionary_promotion_review(...)`
+
+Responsável por:
+
+```text
+prepared -&gt; in_review
+registrar reviewer/metadata inicial
+não aplicar nada
+```
+
+Validações:
+
+- preparation existe;
+- status atual em `prepared` ou `in_review` compatível;
+- não está `rejected/deferred/superseded/applied`;
+- ator/reason não secretos.
+
+#### `accept_dictionary_promotion_review(...)`
+
+Responsável por:
+
+```text
+in_review -&gt; accepted
+congelar accepted_payload
+registrar risk_assessment e source_evidence_summary
+não aplicar nada
+```
+
+Validações mínimas:
+
+- preparation está `in_review`;
+- `proposal_kind` combina com `review_decision`;
+- target keys seguem constraints existentes;
+- payload não contém raw provider values nem PII concreta;
+- se `pii_classification in (&#x27;contact&#x27;,&#x27;person&#x27;,&#x27;sensitive&#x27;)`, exigir razão/privacy boundary explícito;
+- se decisão é `link_existing_field`, validar FK e versão.
+
+#### `reject/defer/supersede_dictionary_promotion_review(...)`
+
+Responsável por encerrar a fila sem apply. Deve registrar razão e, se superseded, referência para proposta/review substituta quando houver.
+
+#### `apply_accepted_dictionary_promotion(...)`
+
+Responsável por mutar `canonical_families/canonical_fields` em uma única transação.
+
+Validações antes de mutar:
+
+- review está `accepted`;
+- nenhuma application `applied` existe para a review;
+- preparation ainda não está `applied/superseded/rejected`;
+- dictionary version ainda aceita alteração (`draft`/`in_review`, ou política explícita para `approved/active`);
+- accepted_payload bate com preparation ou declara override revisado;
+- no raw values em `accepted_payload`, `evidence_origin`, `metadata`.
+
+Ordem transacional recomendada:
+
+```text
+begin
+  lock preparation row for update
+  lock accepted review row for update
+  validate status/idempotency
+  create/link canonical_family as needed
+  create/link canonical_field as needed
+  insert dictionary_promotion_applications
+  update preparation proposal_status = &#x27;applied&#x27; ou metadata.applied=true
+  commit
+```
+
+Se o DDL atual ainda não permitir `proposal_status = &#x27;applied&#x27;`, o apply pode registrar `application_status=&#x27;applied&#x27;` e deixar a preparation como `accepted_for_manual_apply`, mas isso é menos claro. A evolução ideal é permitir `applied`.
+
+## Regras de idempotência e concorrência
+
+- `dictionary_promotion_applications.review_id unique` impede apply duplicado para a mesma decisão.
+- `canonical_families(dictionary_version_id, family_key)` já é unique e suporta upsert seguro.
+- `canonical_fields(dictionary_version_id, family_id, field_key)` já é unique e suporta upsert seguro.
+- Apply deve usar `for update` em preparation/review para evitar duas execuções simultâneas.
+- Em conflito de upsert, não sobrescrever descrição/status/PII/materialization de campo existente sem decisão explícita de merge.
+- Atualização de `existing_family_id/existing_field_id` na preparation deve ser resultado do apply, não condição única de verdade.
+
+## Guardrails de segurança/semântica
+
+1. Não promover feedback de usuário diretamente para canonical dictionary.
+2. Não gravar valores raw/provider, telefones, emails, nomes ou endereços reais em dictionary metadata.
+3. Não deixar Matrix aplicar canonical truth; Matrix propõe/revisa artifacts, LeadFinder aplica dictionary.
+4. Não aprovar automaticamente candidate_status como `approved`; apply deve criar `candidate` ou `in_review` salvo decisão explícita posterior.
+5. Não permitir apply em dictionary version `active` sem política de versioning/branching; preferir nova versão ou draft.
+6. Não tratar `review_payload.mapping_item` como fonte livre para descrição final; accepted_payload deve ser sanitizado.
+7. Não confundir `materialization_intent=&#x27;canonical_graph_candidate&#x27;` com materialização de owner/property/contact final.
+8. Não executar provider calls, enrichments ou HTTP durante review/apply.
+9. Não usar broad JSONB como única garantia; checks e FKs devem validar o caminho crítico.
+10. Não apagar/sobrescrever proposta preparada; preservar lineage para auditoria.
+
+## Riscos
+
+| Risco | Impacto | Mitigação recomendada |
+| --- | --- | --- |
+| Auto-promoção a partir de feedback de usuário | Corrupção de truth global por voto contextual/local | Separar feedback review de dictionary review; apply só para reviews aceitas |
+| `accepted_for_manual_apply` ambíguo | Não dá para saber se foi aplicado, por quem, ou com qual payload | Criar tabelas de review/application e estado `applied` |
+| Raw/PII em `review_payload` ou metadata | Vazamento e mistura de lineage com payload | Checks/validações `no_raw_values`, accepted_payload sanitizado, comentários claros |
+| Upsert sobrescrever semântica existente | Mudança silenciosa de campo/família já revisado | Em conflito, linkar ou abrir merge review; não overwrite automático |
+| Concorrência no apply | Família/campo duplicado ou application duplicada | Unique constraints existentes + `for update` + unique review application |
+| Active dictionary mutation | Quebra consumidores/versionamento | Limitar apply a draft/in_review ou exigir branch/nova versão |
+| Matrix virar owner semântico | Inversão de ownership | Funções e tabelas ficam em `prop4you_leadfinder`; Matrix artifact é evidência |
+| `review_only` aplicar por engano | Criação indevida de canonical rows | Action `review_only_noop` e check que não cria/linka |
+| Feedback DNC/wrong criar campo errado | Mistura marker operacional com dicionário | Usar feedback apenas como signal para reviewer; não como acceptance |
+
+## Critérios de aceite para T7 futuro
+
+A implementação futura da DDL/RPC deve ser aceita quando provar em PG18 lab:
+
+1. `prepare_dictionary_promotions_from_field_mapping_set(...)` continua prepare-only e não muta canonical dictionary.
+2. Uma proposal `prepared` pode entrar em `in_review` com reviewer/reason auditável.
+3. Uma review pode ser `accepted` sem aplicar nada.
+4. `apply_accepted_dictionary_promotion(...)` cria uma `canonical_family` quando `proposal_kind=&#x27;create_family&#x27;` e registra application.
+5. `apply_accepted_dictionary_promotion(...)` cria uma `canonical_field` quando `proposal_kind=&#x27;create_field&#x27;` e registra application.
+6. `apply_accepted_dictionary_promotion(...)` linka campo existente quando `proposal_kind=&#x27;link_existing_field&#x27;` sem criar duplicata.
+7. `review_only` gera noop auditável e não cria/linka canonical rows.
+8. Segunda chamada de apply para a mesma review é idempotente ou rejeitada com erro controlado, sem duplicar rows.
+9. Proposal `rejected/deferred/superseded` não pode ser aplicada.
+10. Feedback/votos de usuário agregados não chamam apply diretamente e não alteram `canonical_families/canonical_fields`.
+11. Metadata/evidence/result payloads não contêm raw provider values nem PII concreta.
+12. Todos os objetos novos têm comments objetivos e seguem a separação LeadFinder owner / Matrix artifact / workspace feedback.
+
+## Recomendação final
+
+Implementar a política como DDL incremental, não como alteração do preparador existente. A sequência mais segura é:
+
+```text
+0003_prepare_dictionary_promotions.sql
+  -&gt; continua preparando propostas e revisão visual
+
+0004_dictionary_promotion_review_apply.sql
+  -&gt; adiciona review decisions + applications + RPCs de lifecycle
+  -&gt; prepared/in_review/accepted/apply explícito
+  -&gt; cria/linka canonical_families/canonical_fields somente após aceite
+  -&gt; bloqueia auto-apply a partir de feedback de usuário
+```
+
+Essa abordagem preserva o valor do trabalho atual, fecha a lacuna de governança pedida no PRD e mantém o contrato database-centric/gateway-agnostic sem provider calls, sem raw values e sem promoção automática de feedback local para verdade global.
+</pre></section><section><h2>10-workspace-roadmap-boundary-review.md</h2><pre># Review — boundary do schema workspace e roadmap Thor endpoint
+
+Status: delivered
+Worker: C — workspace schema + Thor endpoint roadmap boundary
+Escopo: revisão/proposta repo-only; sem DDL, sem browser/web/MCP, sem provider calls, sem segredos.
+
+## 1. Veredito curto
+
+A decisão `prop4you_user_workspace` deve entrar nesta slice como nome canônico e boundary documentado do workspace do usuário logado, não como modelo completo de tabelas.
+
+O endpoint HTTP do banco para chamar o agent Thor deve permanecer roadmap-only nesta slice. A recomendação é abrir uma ADR futura, bloqueada por critérios explícitos de segurança, autorização, idempotência, auditoria, rate limit, segredos e isolamento transacional. Não implementar `pg_net`, cron, trigger, função HTTP ou gateway para Thor agora.
+
+## 2. Evidência revisada
+
+Arquivos consultados:
+
+- `docs/issues/12-prop4you-lfg-feedback-promotion-policy/00-detection-and-analysis.md`
+- `docs/issues/12-prop4you-lfg-feedback-promotion-policy/01-prd.md`
+- `docs/issues/12-prop4you-lfg-feedback-promotion-policy/02-tasks.md`
+- `docs/issues/12-prop4you-lfg-feedback-promotion-policy/03-execution-ledger.md`
+- `docs/issues/12-prop4you-lfg-feedback-promotion-policy/04-subagent-manifest.md`
+- `docs/issues/11-prop4you-system-schema-lfg-topology/09-postgres-topology-fdw-review.md`
+
+Pontos já definidos pela slice:
+
+```text
+workspace schema: prop4you_user_workspace
+LFG/system schema: prop4you_leadfinder_group
+feedback: fica no LFG usando relações fracas para user/workspace/item
+Thor/agent HTTP endpoint: roadmap futuro, não implementado agora
+```
+
+## 3. Boundary proposto para `prop4you_user_workspace`
+
+### 3.1 O que entra nesta slice
+
+Nesta slice, `prop4you_user_workspace` deve ser apenas:
+
+1. nome canônico do bounded context do workspace logado;
+2. fronteira conceitual entre experiência do usuário e verdade operacional LFG;
+3. alvo futuro para seleções, snapshots, anotações, listas, ações e preferências do usuário;
+4. referência textual/weak ref consumida pelo LFG feedback, sem FK forte obrigatória;
+5. documento de intenção para evitar que feedback/votos sejam modelados como tabelas de UI dentro do schema LFG ou, inversamente, que verdade LFG seja movida para workspace.
+
+Aceitável nesta slice:
+
+```text
+- declarar o schema em documentação;
+- mencionar o nome `prop4you_user_workspace` em comentários/PRD/tarefas;
+- usar `workspace_ref`, `workspace_public_ref` ou equivalente textual em DDL LFG, se Thor implementar votos;
+- manter relações fracas para laboratório, sem identidade real de usuário.
+```
+
+### 3.2 O que NÃO deve entrar nesta slice
+
+Não recomendo implementar agora:
+
+```text
+- create schema/table completo para workspace;
+- tabelas de contas, usuários, memberships ou permissões reais;
+- RLS final de workspace;
+- snapshots completos de property/owner/contact;
+- listas/campanhas/notas/workflows do usuário;
+- dependência forte/FK do LFG para workspace;
+- leitura viva pesada do workspace sobre tabelas LFG;
+- provider calls ou enriquecimento a partir do workspace.
+```
+
+Motivo: o PRD explicitamente diz `No full prop4you_user_workspace table model yet` e `No real user identities; use weak text refs in lab`. Implementar o workspace completo agora ampliaria o escopo e misturaria a política de feedback/promoção com produto/UI, autenticação e autorização.
+
+### 3.3 Contrato mínimo recomendado para interação LFG ↔ workspace
+
+Para a DDL de feedback desta slice, o LFG deve aceitar referências fracas, por exemplo:
+
+```text
+actor_ref             text -- usuário/operador/test actor weak ref
+workspace_ref         text -- workspace weak ref
+workspace_public_ref  text -- opcional, se houver public ref conhecido
+item_kind             text -- phone/email/mailing_address/etc.
+item_ref              text -- weak ref ou public ref do item votado
+```
+
+Regra de ownership:
+
+```text
+prop4you_leadfinder_group
+  owns feedback vote, aggregation, review, global marker apply
+
+prop4you_user_workspace
+  future owner of user-visible selections, snapshots, notes and actions
+```
+
+O feedback pode vir de uma tela do workspace, mas a decisão de promover marcador global pertence ao LFG, via agregação/review/apply. Um voto individual do usuário não deve alterar verdade global diretamente.
+
+## 4. Boundary recomendado para o endpoint Thor/agent HTTP
+
+### 4.1 Decisão desta slice
+
+O endpoint HTTP do banco para chamar Thor deve permanecer somente roadmap. A slice deve registrar a intenção, mas não deve criar:
+
+```text
+- função SQL/plpgsql que chame Thor;
+- uso de pg_net apontando para Thor;
+- pg_cron que dispare análise crítica via HTTP;
+- tabela de secrets/tokens/URLs;
+- trigger que chame agente;
+- endpoint PostgREST/API para executar agente;
+- worker/gateway mock que pareça produção.
+```
+
+### 4.2 Forma correta: ADR futura com security gate
+
+Proposta: criar no futuro uma ADR específica, por exemplo:
+
+```text
+ADR: database-to-agent critical analysis endpoint for Thor
+Status inicial: proposed/blocked-by-security-review
+```
+
+A ADR deve decidir, antes de qualquer implementação:
+
+1. quais análises são críticas o suficiente para pedir Thor;
+2. se a chamada parte de cron, worker, queue, gateway ou função controlada;
+3. se o banco chama HTTP diretamente ou apenas grava intenção/outbox;
+4. como segredos são armazenados fora do DDL e fora de docs;
+5. qual identidade/role pode solicitar análise;
+6. como a resposta é validada, versionada, auditada e aplicada;
+7. como impedir prompt injection/dados sensíveis indevidos;
+8. quais payloads são permitidos e quais devem ser redigidos;
+9. qual timeout, retry, DLQ, idempotency key e rate limit;
+10. como evitar side effect dentro de transação crítica.
+
+### 4.3 Gate mínimo de segurança antes de implementação
+
+Nenhuma implementação deve começar antes de existir resposta documentada para:
+
+```text
+AuthN/AuthZ
+  - Quem pode pedir Thor?
+  - Qual role SQL/gateway executa?
+  - Como impedir uso por usuário final sem autorização?
+
+Secrets
+  - Onde ficam URL/token/chave?
+  - Como rotaciona?
+  - Como garantir que DDL, fixtures e logs não vazem segredo?
+
+Data minimization
+  - Qual contrato JSON mínimo?
+  - PII/sensíveis são redigidos?
+  - Raw provider payload é proibido por default?
+
+Transaction boundary
+  - A chamada é pós-commit/async?
+  - O banco nunca bloqueia update crítico esperando LLM?
+  - Existe outbox/queue para retry?
+
+Idempotency and replay
+  - Como deduplicar chamadas?
+  - Como versionar prompt/policy/modelo?
+  - Como auditar resposta e decisão humana?
+
+Operational safety
+  - rate limit, timeout, retry, DLQ;
+  - circuit breaker/manual disable;
+  - observability e alertas;
+  - ambiente lab/staging/prod separado.
+```
+
+### 4.4 Padrão futuro preferido
+
+Para análises críticas, o padrão mais seguro é assíncrono e revisável:
+
+```text
+domain event/review row committed
+  -&gt; outbox/queue records intent for Thor analysis
+  -&gt; worker/gateway outside critical transaction calls Thor
+  -&gt; response stored as advisory proposal with hash/version
+  -&gt; human/policy review applies or rejects
+  -&gt; final apply function mutates canonical state
+```
+
+`pg_cron` pode futuramente agendar varreduras/ticks, mas deve disparar funções estáveis que selecionam work items e não devem embutir segredo nem prompt completo na DDL. `pg_net` pode ser avaliado, mas somente depois da ADR e preferencialmente para side effects pós-commit com payload mínimo e idempotente.
+
+## 5. Relação com feedback votes e dictionary promotion
+
+Este boundary protege as duas lanes principais da slice:
+
+1. Feedback/votes: voto do usuário é evidência fraca. A agregação/review do LFG decide recomendação. O apply global é função/gate LFG.
+2. Dictionary promotion: proposta preparada é revisada/aplicada por política LeadFinder. Thor pode ser assistente futuro, mas não autoridade automática nesta slice.
+
+Regra recomendada:
+
+```text
+human/user feedback != global truth
+Thor analysis != automatic canonical mutation
+review/apply policy owns promotion
+```
+
+## 6. Recomendações para Thor implementar nesta slice
+
+Ao implementar as próximas tarefas desta issue:
+
+1. Declarar `prop4you_user_workspace` em docs e, se necessário, em comentário/skeleton estritamente mínimo.
+2. Não criar tabelas completas de workspace.
+3. Manter DDL de feedback em `prop4you_leadfinder_group`, com weak refs para user/workspace/item.
+4. Não criar endpoint Thor, chamada HTTP, cron, `pg_net`, segredo ou provider call.
+5. Registrar endpoint Thor como roadmap/ADR futura, com status bloqueado por security review.
+6. Se houver campo de metadata para análise futura, nomear como intenção neutra (`analysis_context`, `review_metadata`) sem URLs, tokens ou payload sensível.
+
+## 7. Riscos se o boundary for violado
+
+- Escopo da slice explode para autenticação, workspace product model e RLS final.
+- Voto de usuário pode ser confundido com verdade global LFG.
+- Endpoint Thor sem gate pode vazar PII, segredos ou raw payload.
+- HTTP em trigger/transação crítica pode causar latência, retry duplicado e mutação não determinística.
+- Cron/agent sem idempotência pode reprocessar ou aplicar recomendações automaticamente.
+- DDL com URL/token/prompt sensível dificultaria auditoria e rotação.
+
+## 8. Acceptance local desta review
+
+- `prop4you_user_workspace` confirmado como nome canônico de schema de workspace.
+- Boundary recomendado: declarado/docs only nesta slice; sem full tables.
+- Thor endpoint recomendado como future ADR, gated by security; sem implementação.
+- Nenhum DDL foi editado por este worker.
+</pre></section><section><h2>11-feedback-promotion-architecture.md</h2><pre># Architecture — LFG feedback votes and dictionary promotion apply policy
+
+Status: implemented / lab-proven
+Generated: 2026-06-18T11:46:09
+
+## Canonical names
+
+```text
+user workspace schema: prop4you_user_workspace
+LFG/system schema: prop4you_leadfinder_group
+LeadFinder dictionary schema: prop4you_leadfinder
+```
+
+## Contract
+
+User feedback is a weak signal stored inside `prop4you_leadfinder_group`, not a direct mutation of global truth.
+
+```text
+prop4you_user_workspace
+  -&gt; emits feedback with weak refs
+  -&gt; user/workspace/account/snapshot/campaign refs remain textual/non-FK in this slice
+
+prop4you_leadfinder_group.user_feedback_votes
+  -&gt; records votes like dnc, wrong, invalid, stale, corrected, verified
+  -&gt; item kinds include phone, email, mailing_address, owner, property, contact, group, facet
+
+prop4you_leadfinder_group.feedback_marker_aggregates
+  -&gt; aggregates votes by item_kind + item_ref + marker_kind
+  -&gt; computes recommendation: insufficient_signal, human_review_candidate, auto_apply_candidate, reject_candidate, conflict_review
+
+prop4you_leadfinder_group.feedback_marker_reviews
+  -&gt; review gate
+  -&gt; accepted review can be applied
+
+prop4you_leadfinder_group.global_item_markers
+  -&gt; LFG-owned global marker after review/apply
+```
+
+## Dictionary promotion policy
+
+Existing prepare-only proposals now have a review/apply gate:
+
+```text
+prop4you_leadfinder.dictionary_promotion_preparations
+  -&gt; prop4you_leadfinder.dictionary_promotion_reviews
+    -&gt; prop4you_leadfinder.dictionary_promotion_applications
+      -&gt; canonical_families / canonical_fields links
+```
+
+Rules:
+
+- prepared proposals do not auto-mutate dictionary rows;
+- user/workspace feedback cannot bypass dictionary review;
+- apply is idempotent by review;
+- apply creates/links canonical family/field rows only after accepted review.
+
+## Thor HTTP endpoint roadmap
+
+The database-to-Thor/agent HTTP endpoint remains roadmap-only.
+
+Not implemented in this slice:
+
+```text
+pg_net call to Thor
+cron calling Thor
+trigger calling Thor
+agent endpoint auth/secret storage
+provider calls
+```
+
+Future ADR must cover:
+
+- auth and allowlist;
+- idempotency key;
+- request/response audit;
+- rate limits;
+- secret isolation;
+- no hot user transaction waiting on agent latency;
+- replay safety;
+- human review for critical mutations.
+
+## Lab proof counts
+
+```json
+{
+  &quot;aggregate_recommendations&quot;: [
+    &quot;auto_apply_candidate&quot;
+  ],
+  &quot;canonical_family_count&quot;: 15,
+  &quot;canonical_field_count&quot;: 37,
+  &quot;dictionary_promotion_application_count&quot;: 1,
+  &quot;dictionary_promotion_review_count&quot;: 1,
+  &quot;feedback_aggregate_count&quot;: 1,
+  &quot;feedback_review_count&quot;: 1,
+  &quot;feedback_vote_count&quot;: 2,
+  &quot;global_marker_count&quot;: 1,
+  &quot;global_marker_statuses&quot;: [
+    &quot;asserted&quot;
+  ],
+  &quot;no_provider_calls&quot;: true,
+  &quot;no_thor_http_endpoint_created&quot;: true,
+  &quot;operational_group_count&quot;: 10,
+  &quot;prepared_promotion_count&quot;: 10,
+  &quot;weak_relationships&quot;: true,
+  &quot;workspace_schema_exists&quot;: 1
+}
+```
+</pre></section></body></html>

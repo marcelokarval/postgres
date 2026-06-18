@@ -22,3 +22,7 @@ comment on schema prop4you_leadfinder is
 create schema if not exists prop4you_provider;
 comment on schema prop4you_provider is
 'Prop4You provider corpus schema. Shared contracts for REIQ, DirectSkip, Realtor.com and internal/product-originated payload analysis. Skeleton only.';
+
+create schema if not exists prop4you_user_workspace;
+comment on schema prop4you_user_workspace is
+'Prop4You logged-in user workspace boundary. Owns future user/account/workspace selections, snapshots, annotations, lists, actions, local markers, refresh decisions, and tenant-visible workflow state. LFG references this boundary by weak refs unless a future workspace package defines stable contracts.';

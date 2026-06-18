@@ -661,3 +661,14 @@ The LeadFinder Group owns the canonical dictionary, but that dictionary is born/
 ## Prop4You system/LFG vs user workspace boundary
 
 `docs/issues/11-prop4you-system-schema-lfg-topology/` defines the operational boundary between legacy Django `system`/LFG and the logged-in user's workspace. LFG is treated as an internal external-like system with its own ingestion/materialization/load profile; the user workspace consumes LFG via refs, snapshots, versions, and hashes. Tags/labels/markers with the same visible names are not duplicates when scope/owner/version/audit differ. FDW is permitted for point lookups, snapshot transactions, and version/hash checks, but not for heavy cross-node joins or live dashboards over foreign tables.
+
+## Slice 12 — LFG feedback votes and promotion apply gate
+
+Canonical additions:
+
+```text
+prop4you_user_workspace = logged-in user workspace boundary
+prop4you_leadfinder_group = LFG/system global evidence and marker authority
+```
+
+User feedback is stored in LFG as weak signal, aggregated into review candidates, and applied as global markers only through review/apply gates. LeadFinder dictionary promotions now have explicit review/application records after prepare-only proposals.
