@@ -1,0 +1,76 @@
+{
+  "$id": "https://schemas.prop4you.local/lfg/lfg-canonical-envelope-index.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "envelopes": {
+      "default": [
+        {
+          "envelope_key": "property-envelope",
+          "envelope_kind": "property",
+          "schema_id": "https://schemas.prop4you.local/lfg/property-envelope.v1.schema.json",
+          "schema_path": "docs/schemas/prop4you/lfg/property-envelope.v1.schema.json"
+        },
+        {
+          "envelope_key": "owner-envelope",
+          "envelope_kind": "owner",
+          "schema_id": "https://schemas.prop4you.local/lfg/owner-envelope.v1.schema.json",
+          "schema_path": "docs/schemas/prop4you/lfg/owner-envelope.v1.schema.json"
+        },
+        {
+          "envelope_key": "contact-satellites-envelope",
+          "envelope_kind": "contact_satellites",
+          "schema_id": "https://schemas.prop4you.local/lfg/contact-satellites-envelope.v1.schema.json",
+          "schema_path": "docs/schemas/prop4you/lfg/contact-satellites-envelope.v1.schema.json"
+        },
+        {
+          "envelope_key": "realtor-evidence-envelope",
+          "envelope_kind": "realtor_evidence",
+          "schema_id": "https://schemas.prop4you.local/lfg/realtor-evidence-envelope.v1.schema.json",
+          "schema_path": "docs/schemas/prop4you/lfg/realtor-evidence-envelope.v1.schema.json"
+        },
+        {
+          "envelope_key": "taxonomy-envelope",
+          "envelope_kind": "taxonomy",
+          "schema_id": "https://schemas.prop4you.local/lfg/taxonomy-envelope.v1.schema.json",
+          "schema_path": "docs/schemas/prop4you/lfg/taxonomy-envelope.v1.schema.json"
+        }
+      ],
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "envelope_key": {
+            "type": "string"
+          },
+          "envelope_kind": {
+            "type": "string"
+          },
+          "schema_id": {
+            "type": "string"
+          },
+          "schema_path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "envelope_key",
+          "schema_path",
+          "schema_id",
+          "envelope_kind"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "v1",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "envelopes"
+  ],
+  "title": "Prop4You LFG canonical envelope index v1",
+  "type": "object"
+}

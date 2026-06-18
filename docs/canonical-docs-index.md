@@ -194,3 +194,6 @@ Then read the domain-specific doc for the task.
 - `docs/issues/12-prop4you-lfg-feedback-promotion-policy/11-feedback-promotion-architecture.md` — LFG feedback votes, marker review/apply, and dictionary promotion apply policy.
 - `docs/issues/13-prop4you-lfg-system-ddl-json-readiness/11-system-ddl-json-readiness-matrix.md` — LFG readiness audit comparing legacy system, PG18 DDL, and REIQ JSON path evidence.
 - `docs/issues/14-prop4you-json-curation-pg18-jsonb-strategy/12-adr-pg18-jsonb-first-canonical-modeling.md` — ADR for JSONB-first/JSONSchema-governed LFG modeling before table expansion.
+- `docs/schemas/prop4you/lfg/` — machine-readable LFG canonical JSONSchema envelopes and projection policy.
+- `database/ddl/projects/prop4you/leadfinder_group/0005_canonical_jsonschema_registry.sql` — queryable PG18 registry for LFG JSONSchema envelopes and JSONB-to-relational projection gates.
+- `docs/reports/prop4you-lfg-jsonschema-registry-proof.md` — proof that JSONSchema artifacts and PG18 registry apply/query assertions pass.

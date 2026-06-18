@@ -1,0 +1,74 @@
+{
+  "jsonb_default": [
+    "raw_payload",
+    "provider_residue",
+    "variable_arrays",
+    "matrix_artifacts",
+    "review_payloads",
+    "canonical_envelopes_before_projection"
+  ],
+  "low_risk_marker_auto_apply_default": {
+    "audit_event_required": true,
+    "marker_risk_class": "low",
+    "min_distinct_users": 3,
+    "min_distinct_workspaces": 2,
+    "no_active_disputes": true
+  },
+  "non_goals": [
+    "no_final_graph_table_explosion",
+    "no_workspace_tables",
+    "no_provider_calls",
+    "no_raw_values_in_docs",
+    "no_public_api_rls_until_envelopes_stabilize"
+  ],
+  "policy_key": "lfg_projection_policy.v1",
+  "policy_version": "v1",
+  "promotion_gates": [
+    {
+      "gate_key": "representative_corpus_observed",
+      "gate_number": 1,
+      "required": true
+    },
+    {
+      "gate_key": "matrix_leadfinder_semantic_approval",
+      "gate_number": 2,
+      "required": true
+    },
+    {
+      "gate_key": "stable_or_intentionally_provider_specific",
+      "gate_number": 3,
+      "required": true
+    },
+    {
+      "gate_key": "query_join_filter_sort_unique_fk_rls_postgis_or_constraint_need",
+      "gate_number": 4,
+      "required": true
+    },
+    {
+      "gate_key": "safe_cast_or_coercion_exists",
+      "gate_number": 5,
+      "required": true
+    },
+    {
+      "gate_key": "durable_lineage_to_raw_json",
+      "gate_number": 6,
+      "required": true
+    },
+    {
+      "gate_key": "privacy_pii_classified",
+      "gate_number": 7,
+      "required": true
+    }
+  ],
+  "relational_default": [
+    "identity_anchors",
+    "graph_edges",
+    "constraints",
+    "auth_boundaries",
+    "postgis_geometry",
+    "temporal_snapshots",
+    "high_value_indexed_projections"
+  ],
+  "rule_summary": "JSONB-first for evidence/envelopes; relational-first for anchors, edges, constraints, PostGIS, temporal snapshots, and high-value indexed projections.",
+  "title": "Prop4You LFG JSONB-to-relational projection policy v1"
+}

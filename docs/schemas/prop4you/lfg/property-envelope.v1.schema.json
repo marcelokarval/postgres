@@ -1,0 +1,287 @@
+{
+  "$defs": {
+    "projectionHints": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_paths": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "candidate_reason": {
+          "type": "string"
+        },
+        "eligible_after_gates": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "quality": {
+      "additionalProperties": false,
+      "properties": {
+        "completeness": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        "confidence": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        "conflict_status": {
+          "enum": [
+            "none",
+            "possible_duplicate",
+            "conflicting_evidence",
+            "needs_review",
+            "unknown"
+          ],
+          "type": "string"
+        },
+        "review_status": {
+          "enum": [
+            "not_required",
+            "needs_matrix_review",
+            "needs_human_review",
+            "approved",
+            "rejected"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "sourceLineage": {
+      "additionalProperties": false,
+      "properties": {
+        "matrix_mapping_refs": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "payload_hash_refs": {
+          "items": {
+            "pattern": "^[a-z0-9:_-]+$",
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "provider_families": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "sourcehub_record_refs": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "sourcehub_record_refs"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://schemas.prop4you.local/lfg/property-envelope.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "address": {
+      "additionalProperties": false,
+      "properties": {
+        "city": {
+          "type": "string"
+        },
+        "county": {
+          "type": "string"
+        },
+        "line1_normalized": {
+          "type": "string"
+        },
+        "normalization_status": {
+          "type": "string"
+        },
+        "postal_code": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "canonical_property_ref": {
+      "type": "string"
+    },
+    "details": {
+      "additionalProperties": false,
+      "properties": {
+        "baths": {
+          "type": "number"
+        },
+        "beds": {
+          "type": "number"
+        },
+        "lot_sqft": {
+          "type": "number"
+        },
+        "property_type": {
+          "type": "string"
+        },
+        "sqft": {
+          "type": "number"
+        },
+        "year_built": {
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "envelope_kind": {
+      "const": "property",
+      "type": "string"
+    },
+    "geography": {
+      "additionalProperties": false,
+      "properties": {
+        "boundary_ref": {
+          "type": "string"
+        },
+        "centroid_ref": {
+          "type": "string"
+        },
+        "postgis_projection_candidate": {
+          "type": "boolean"
+        },
+        "system_area_refs": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "identity": {
+      "additionalProperties": false,
+      "properties": {
+        "apn_ref": {
+          "type": "string"
+        },
+        "conflict_status": {
+          "enum": [
+            "none",
+            "possible_duplicate",
+            "conflicting_evidence",
+            "needs_review"
+          ],
+          "type": "string"
+        },
+        "external_record_refs": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "identity_confidence": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        "parcel_ref": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "legal": {
+      "additionalProperties": false,
+      "properties": {
+        "document_refs": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "legal_description_ref": {
+          "type": "string"
+        },
+        "subdivision": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "privacy_class": {
+      "default": "restricted",
+      "enum": [
+        "public_safe",
+        "restricted",
+        "pii_sensitive",
+        "provider_sensitive",
+        "mixed_review_required"
+      ],
+      "type": "string"
+    },
+    "projection_hints": {
+      "$ref": "#/$defs/projectionHints"
+    },
+    "quality": {
+      "$ref": "#/$defs/quality"
+    },
+    "residue": {
+      "additionalProperties": true,
+      "description": "Sanitized JSONB residue only; no raw payload values in docs or public API.",
+      "type": "object"
+    },
+    "schema_version": {
+      "const": "v1",
+      "type": "string"
+    },
+    "situations": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "observed_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "situation_status": {
+            "type": "string"
+          },
+          "situation_type": {
+            "type": "string"
+          },
+          "source_ref": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "situation_type"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "source_lineage": {
+      "$ref": "#/$defs/sourceLineage"
+    }
+  },
+  "required": [
+    "schema_version",
+    "envelope_kind",
+    "privacy_class",
+    "identity",
+    "address",
+    "source_lineage"
+  ],
+  "title": "Prop4You LFG property canonical envelope v1",
+  "type": "object"
+}

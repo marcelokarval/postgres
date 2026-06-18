@@ -1,0 +1,208 @@
+{
+  "$defs": {
+    "projectionHints": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_paths": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "candidate_reason": {
+          "type": "string"
+        },
+        "eligible_after_gates": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "quality": {
+      "additionalProperties": false,
+      "properties": {
+        "completeness": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        "confidence": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        "conflict_status": {
+          "enum": [
+            "none",
+            "possible_duplicate",
+            "conflicting_evidence",
+            "needs_review",
+            "unknown"
+          ],
+          "type": "string"
+        },
+        "review_status": {
+          "enum": [
+            "not_required",
+            "needs_matrix_review",
+            "needs_human_review",
+            "approved",
+            "rejected"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "sourceLineage": {
+      "additionalProperties": false,
+      "properties": {
+        "matrix_mapping_refs": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "payload_hash_refs": {
+          "items": {
+            "pattern": "^[a-z0-9:_-]+$",
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "provider_families": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "sourcehub_record_refs": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "sourcehub_record_refs"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://schemas.prop4you.local/lfg/realtor-evidence-envelope.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "anchor": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_property_ref": {
+          "type": "string"
+        },
+        "query_context_ref": {
+          "type": "string"
+        },
+        "system_area_ref": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "area_boundary_evidence": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "comparable_evidence": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "envelope_kind": {
+      "const": "realtor_evidence",
+      "type": "string"
+    },
+    "market_evidence": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "privacy_class": {
+      "default": "provider_sensitive",
+      "enum": [
+        "public_safe",
+        "restricted",
+        "pii_sensitive",
+        "provider_sensitive",
+        "mixed_review_required"
+      ],
+      "type": "string"
+    },
+    "projection_hints": {
+      "$ref": "#/$defs/projectionHints"
+    },
+    "property_detail_evidence": {
+      "additionalProperties": true,
+      "description": "Sanitized property detail evidence; rich provider residue stays JSONB.",
+      "type": "object"
+    },
+    "provider_references": {
+      "additionalProperties": false,
+      "properties": {
+        "geo_ref": {
+          "type": "string"
+        },
+        "provider_area_ref": {
+          "type": "string"
+        },
+        "provider_listing_ref": {
+          "type": "string"
+        },
+        "provider_property_ref": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "quality": {
+      "$ref": "#/$defs/quality"
+    },
+    "residue": {
+      "additionalProperties": true,
+      "description": "Sanitized JSONB residue only; no raw payload values in docs or public API.",
+      "type": "object"
+    },
+    "schema_version": {
+      "const": "v1",
+      "type": "string"
+    },
+    "sensitive_blocks_present": {
+      "items": {
+        "enum": [
+          "advertisers",
+          "consumer_contacts",
+          "media_urls",
+          "exact_coordinates",
+          "full_addresses",
+          "unknown"
+        ],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "source_lineage": {
+      "$ref": "#/$defs/sourceLineage"
+    },
+    "valuation_evidence": {
+      "additionalProperties": true,
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "envelope_kind",
+    "privacy_class",
+    "anchor",
+    "provider_references",
+    "source_lineage"
+  ],
+  "title": "Prop4You Realtor evidence envelope v1",
+  "type": "object"
+}

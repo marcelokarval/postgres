@@ -697,3 +697,17 @@ Next slice = LFG canonical JSONSchema envelope minimum.
 ```
 
 DirectSkip, Realtor, REIQ, and legacy tag inventories show that provider payloads are heterogeneous and should be curated into canonical JSONSchema envelopes before final relational graph/table expansion. Relational tables remain necessary for anchors, graph edges, constraints, PostGIS geometry, temporal snapshots, and query-critical projections; JSONB remains the correct home for raw evidence, provider residue, variable arrays, Matrix artifacts, and canonical envelopes before promotion.
+
+## Slice 15 — LFG canonical JSONSchema envelope registry
+
+The JSONB-first rules are now more than prose. They exist as:
+
+```text
+docs/schemas/prop4you/lfg/*.schema.json
+docs/schemas/prop4you/lfg/projection-policy.v1.json
+prop4you_leadfinder_group.canonical_jsonschema_envelopes
+prop4you_leadfinder_group.projection_policies
+prop4you_leadfinder_group.v_active_projection_policy_gates
+```
+
+Before promoting any provider/internal JSON path to generated column, index, table, FK, PostGIS geometry or product-facing projection, query/review the seven gates from the projection policy registry.

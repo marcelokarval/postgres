@@ -1,0 +1,2735 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Prop4You LFG JSONSchema Registry</title><style>body{font-family:Inter,Arial,sans-serif;margin:32px;background:#07111f;color:#edf6ff}.badges span{display:inline-block;margin:4px;padding:6px 10px;background:#173451;border:1px solid #79d6ff;border-radius:999px}section{background:#0e1b2f;border:1px solid #284a6d;margin:18px 0;padding:18px;border-radius:12px}pre{white-space:pre-wrap;line-height:1.35}h1{color:#79d6ff}</style></head><body><h1>Prop4You LFG JSONSchema Registry</h1><div class="badges"><span>Automatic rules</span><span>JSONSchema files</span><span>Queryable PG18 registry</span><span>6 envelopes</span><span>7 projection gates</span><span>JSONB-first</span><span>Relational projection only after gates</span><span>Auto-apply 3 users/2 workspaces</span><span>No raw values</span><span>No PII</span><span>No provider calls</span><span>No workspace tables</span><span>PG18 proof PASS</span><span>Browser proof</span></div><section><h2>01-prd.md</h2><pre># PRD — LFG canonical JSONSchema envelopes + projection policy registry
+
+Status: active
+
+## Problem
+
+The JSONB-first rules are documented in prose, but future DDL work needs a stronger automatic contract: files and registry rows that define canonical JSON envelopes, projection decisions, and the rule set for when JSON remains JSONB versus when it becomes relational projection.
+
+## Goal
+
+Implement a repo-local, PG18-friendly minimum registry for LFG canonical JSONSchema envelopes and projection policy.
+
+## Deliverables
+
+1. JSONSchema files under `docs/schemas/prop4you/lfg/`:
+   - `property-envelope.v1.schema.json`
+   - `owner-envelope.v1.schema.json`
+   - `contact-satellites-envelope.v1.schema.json`
+   - `realtor-evidence-envelope.v1.schema.json`
+   - `taxonomy-envelope.v1.schema.json`
+   - `lfg-canonical-envelope-index.v1.schema.json`
+2. Projection policy artifact:
+   - `projection-policy.v1.json`
+3. DDL registry:
+   - `database/ddl/projects/prop4you/leadfinder_group/0005_canonical_jsonschema_registry.sql`
+4. Proof script:
+   - `scripts/proof-prop4you-lfg-jsonschema-registry.sh`
+5. Persisted PRD/tasks/reviews/browser-proof/final report.
+6. Skill update so future tasks automatically know this gate exists.
+
+## Acceptance criteria
+
+- JSON files parse with Python stdlib.
+- JSONSchema files have `$schema`, `$id`, `title`, `type`, `additionalProperties` policy.
+- Projection policy contains the 7 promotion gates and default low-risk marker auto-apply policy.
+- DDL applies in PG18 lab proof.
+- Registry rows are queryable after DDL apply.
+- No raw payload values or PII.
+- Browser-proof + vision pass.
+</pre></section><section><h2>02-tasks.md</h2><pre># Tasks — LFG canonical JSONSchema envelope registry
+
+| ID | Task | Owner | Status |
+| --- | --- | --- | --- |
+| T1 | Persist PRD/tasks/ledger | Thor | done |
+| T2 | Worker A: property/owner/taxonomy envelope recommendations | Subagent A | done |
+| T3 | Worker B: DirectSkip/Realtor evidence envelope recommendations | Subagent B | done |
+| T4 | Worker C: DDL registry/proof review recommendations | Subagent C | done |
+| T5 | Create JSONSchema + projection policy artifacts | Thor | done |
+| T6 | Create DDL registry + proof script | Thor | done |
+| T7 | Run static validation + PG18 lab proof | Thor | done |
+| T8 | Browser-proof + vision QA | Thor | pending |
+| T9 | Update docs/skill, commit/push, final report | Thor | pending |
+</pre></section><section><h2>05-task-review.md</h2><pre># 05 — Task Review
+
+Status: pass
+Generated: 2026-06-18T16:33:27
+
+| Task | Requested | Delivered | Evidence | Status |
+| --- | --- | --- | --- | --- |
+| T1 | Persist PRD/tasks/ledger | Created stack before execution | 00/01/02/03/04 | PASS |
+| T2 | Core property/owner/taxonomy recommendations | Worker A artifact reviewed | 08-core-envelope-review.md | PASS |
+| T3 | DirectSkip/Realtor evidence recommendations | Worker B artifact reviewed | 09-provider-evidence-envelope-review.md | PASS |
+| T4 | DDL registry/proof recommendations | Worker C artifact reviewed | 10-ddl-registry-proof-review.md | PASS |
+| T5 | Create JSONSchema + projection policy artifacts | 6 schema files + projection policy created | docs/schemas/prop4you/lfg | PASS |
+| T6 | Create DDL registry + proof script | 0005 registry + proof script implemented | database/ddl/.../0005 + scripts/proof... | PASS |
+| T7 | Static validation + PG18 lab proof | JSON parse/gates + DDL lab proof passed | docs/reports/prop4you-lfg-jsonschema-registry-proof.md | PASS |
+| T8 | Browser-proof + vision | Pending at this point; executed after render | 06-browser-proof.md | PENDING_BEFORE_BROWSER |
+| T9 | Docs/skill/commit/final report | Pending at this point; completed after checks | git + skill | PENDING_BEFORE_COMMIT |
+
+## Corrections performed without HITL
+
+1. The first PG proof failed because `PGPASSWORD` was not in the shell environment. The proof was rerun using the Docker Swarm service password injected only into the process, without printing the secret.
+2. The proof report initially used Markdown backtick fences inside a shell heredoc and attempted command substitution (`json: command not found`). The script was corrected to use `~~~json` fences and proof was rerun cleanly.
+
+## Orchestrator verdict
+
+PASS. Rules are now both documented and queryable/versioned through repo artifacts + PG18 registry rows.
+</pre></section><section><h2>07-final-report.md</h2><pre># 07 — Final Report: LFG canonical JSONSchema envelope registry
+
+Status: completed / PG18 proof pass / browser pending at generation
+Generated: 2026-06-18T16:33:27
+
+## Direct answer
+
+Before this slice:
+
+```text
+Rules were documented in docs + skill references, but not sufficiently automatic/queryable inside the repo/runtime contract.
+```
+
+After this slice:
+
+```text
+Rules are now documented, versioned as repo JSON artifacts, seeded into a PG18 queryable registry, and referenced by the database-centric skill.
+```
+
+## Main deliverables
+
+```text
+docs/schemas/prop4you/lfg/property-envelope.v1.schema.json
+docs/schemas/prop4you/lfg/owner-envelope.v1.schema.json
+docs/schemas/prop4you/lfg/contact-satellites-envelope.v1.schema.json
+docs/schemas/prop4you/lfg/realtor-evidence-envelope.v1.schema.json
+docs/schemas/prop4you/lfg/taxonomy-envelope.v1.schema.json
+docs/schemas/prop4you/lfg/lfg-canonical-envelope-index.v1.schema.json
+docs/schemas/prop4you/lfg/projection-policy.v1.json
+database/ddl/projects/prop4you/leadfinder_group/0005_canonical_jsonschema_registry.sql
+scripts/proof-prop4you-lfg-jsonschema-registry.sh
+docs/reports/prop4you-lfg-jsonschema-registry-proof.md
+```
+
+## PG18 proof result
+
+```json
+{&quot;gate_count&quot;: 7, &quot;policy_count&quot;: 1, &quot;envelope_count&quot;: 6, &quot;auto_apply_users&quot;: 3, &quot;raw_policy_count&quot;: 6, &quot;required_gate_count&quot;: 7, &quot;auto_apply_workspaces&quot;: 2, &quot;top_level_closed_count&quot;: 6, &quot;expected_envelopes_present&quot;: 6}
+```
+
+## What is automatically accessible now
+
+Through files:
+
+```text
+docs/schemas/prop4you/lfg/*.schema.json
+docs/schemas/prop4you/lfg/projection-policy.v1.json
+```
+
+Through PG18 registry:
+
+```text
+prop4you_leadfinder_group.canonical_jsonschema_envelopes
+prop4you_leadfinder_group.projection_policies
+prop4you_leadfinder_group.v_active_canonical_jsonschema_envelopes
+prop4you_leadfinder_group.v_active_projection_policy_gates
+```
+
+Through skill:
+
+```text
+database-centric-app-modeling -&gt; references/prop4you-lfg-jsonschema-envelope-registry.md
+```
+
+## Seven promotion gates now queryable
+
+```text
+representative_corpus_observed
+matrix_leadfinder_semantic_approval
+stable_or_intentionally_provider_specific
+query_join_filter_sort_unique_fk_rls_postgis_or_constraint_need
+safe_cast_or_coercion_exists
+durable_lineage_to_raw_json
+privacy_pii_classified
+```
+
+## Auto-apply default preserved
+
+```text
+marker_risk_class = low
+min_distinct_users = 3
+min_distinct_workspaces = 2
+no_active_disputes = true
+audit_event_required = true
+```
+
+## Non-goals preserved
+
+```text
+no final property/owner/contact tables
+no workspace tables
+no provider calls
+no raw JSON values or PII
+no public API/RLS yet
+no final tag-group seed
+```
+
+## Correct next slice
+
+```text
+Slice 16 — LFG projection candidates and first generated-column/table decision set
+```
+
+Goal: use the registry to decide the first tiny set of projections that may become generated columns, indexes, PostGIS extraction, or narrow tables — without broad graph table explosion.
+</pre></section><section><h2>08-core-envelope-review.md</h2><pre># 08 — Worker A: revisão dos envelopes core LFG property/owner/taxonomy
+
+Status: concluído
+Escopo: recomendações para JSONSchema envelopes canônicos de `property`, `owner` e `taxonomy/tag/label` no slice 15.
+Restrições cumpridas: sem DDL final, sem PII, sem web/MCP, sem valores raw de payloads.
+
+## Fontes de contexto lidas
+
+- `docs/issues/14-prop4you-json-curation-pg18-jsonb-strategy/12-adr-pg18-jsonb-first-canonical-modeling.md`
+- `docs/issues/14-prop4you-json-curation-pg18-jsonb-strategy/10-legacy-tags-labels-inventory.md`
+- `docs/issues/14-prop4you-json-curation-pg18-jsonb-strategy/13-next-slice-gate-jsonschema-envelope-minimum.md`
+- `docs/issues/13-prop4you-lfg-system-ddl-json-readiness/11-system-ddl-json-readiness-matrix.md`
+- `docs/issues/15-prop4you-lfg-canonical-jsonschema-envelope-registry/01-prd.md`
+- `docs/issues/15-prop4you-lfg-canonical-jsonschema-envelope-registry/02-tasks.md`
+
+## Síntese executiva
+
+O envelope core deve preservar a decisão JSONB-first do ADR:
+
+```text
+JSONB para evidência, resíduos e envelope canônico governado.
+Relacional para identidade durável, edges, constraints, PostGIS, temporalidade e projeções de alto valor.
+```
+
+A recomendação é criar envelopes pequenos, estáveis e explícitos, com campos mínimos de identidade/linhagem/classificação e objetos JSONB permitidos para payload canônico controlado. O schema não deve tentar reproduzir todos os campos legados ou de providers; deve organizar o mínimo canônico que habilita a próxima etapa de projeções.
+
+Separação obrigatória:
+
+- Property/owner truth pertence ao Lead Finder canonical graph, não a Realtor/DirectSkip isoladamente.
+- SourceHub publica DTO/linhagem; Matrix governa significado/mapeamento; LeadFinder materializa o grafo canônico.
+- Taxonomia sistêmica é read-only/governada; workspace tags/list/status são overlays futuros e não entram como verdade sistêmica.
+- Situações são fatos estruturados, não tags livres.
+
+## Regras globais recomendadas para os envelopes
+
+### Metadados mínimos comuns
+
+Todos os envelopes devem aceitar um bloco comum de controle:
+
+| Campo | Tipo recomendado | Obrigatório | Observação |
+| --- | --- | --- | --- |
+| `schema_version` | string const/pattern, ex. `v1` | sim | Versão do envelope, não versão do provider. |
+| `envelope_kind` | enum | sim | `property`, `owner`, `taxonomy`. |
+| `canonical_id` | string uuid/ref interna | recomendado | Pointer canônico quando já materializado; pode ser ausente em staging. |
+| `sourcehub_record_refs` | array de refs/hashes não-PII | sim | Linhagem para raw restrito sem publicar payload. |
+| `matrix_mapping_refs` | array de refs | recomendado | Conecta significado aprovado/candidato. |
+| `quality` | object | recomendado | Confiança, completude e flags de revisão sem PII. |
+| `privacy_class` | enum | sim | Ao menos `public_safe`, `restricted`, `pii_sensitive`. |
+| `observed_at` / `updated_at` | string date-time | recomendado | Temporalidade do envelope/candidato, não necessariamente do fato real. |
+| `residue` | object | opcional | JSONB controlado para campos não promovidos. |
+
+### Política de `additionalProperties`
+
+Recomendação padrão:
+
+```text
+additionalProperties: false no topo de cada envelope e nos objetos canônicos principais.
+additionalProperties: true somente em objetos explicitamente designados como residue/evidence/debug_review, com limites de privacidade e sem exposição pública.
+```
+
+Justificativa:
+
+- Top-level fechado evita drift silencioso de contrato.
+- Objetos canônicos fechados permitem validação e documentação de caminho JSON.
+- Resíduo controlado preserva JSONB-first sem transformar provider shape em verdade canônica.
+- Qualquer caminho em `residue` só vira projeção após os 7 gates do ADR.
+
+### Objetos JSONB permitidos globalmente
+
+Estes objetos podem existir como JSONB dentro das futuras tabelas/staging, mas não devem ser expostos raw em API pública:
+
+| Objeto | Uso | additionalProperties |
+| --- | --- | --- |
+| `lineage` | refs para raw/source/DTO/mapping, hashes, source family, sem payload raw | false para chaves conhecidas; arrays de refs fechados |
+| `quality` | score, confidence, completeness, conflict flags, review status | false |
+| `evidence_summary` | resumo não-PII de evidência observada e contagens por source family | false |
+| `residue` | paths ainda não promovidos, sanitizados | true, restrito |
+| `review` | motivo de necessidade humana/Matrix, warnings, gap codes | false |
+| `projection_hints` | candidatos declarativos a generated column/index/table, sem virar DDL ainda | false |
+
+## Envelope `property-envelope.v1.schema.json`
+
+### Responsabilidade
+
+Representar a propriedade canônica mínima do Lead Finder: identidade de imóvel/endereço/localização/detalhes essenciais, com linhagem e resíduos. Não deve ser um espelho de Realtor, county ou legacy Django.
+
+### Campos mínimos recomendados
+
+| Campo | Tipo | Obrigatório | Política |
+| --- | --- | --- | --- |
+| `schema_version` | string | sim | `v1`. |
+| `envelope_kind` | const | sim | `property`. |
+| `canonical_property_ref` | string | recomendado | Ref interna estável quando já existe; não precisa codificar regra final de ID. |
+| `identity` | object | sim | Âncoras de identidade de imóvel. |
+| `address` | object | sim | Endereço canônico normalizado mínimo. |
+| `geography` | object | opcional | Coordenadas/geom refs/parcel boundary refs quando aprovados. |
+| `details` | object | opcional | Características físicas estáveis. |
+| `legal` | object | opcional | APN/parcel/legal/subdivision/document refs quando seguros. |
+| `situations` | array | opcional | Fatos estruturados ativos/históricos resumidos; tags derivadas ficam em taxonomy. |
+| `source_lineage` | object | sim | SourceHub/Matrix refs, source families, hashes. |
+| `quality` | object | recomendado | Confiança e revisão. |
+| `privacy_class` | enum | sim | Em geral `restricted` quando combina dados sensíveis. |
+| `residue` | object | opcional | Campos sanitizados não promovidos. |
+
+### Estrutura sugerida por objeto
+
+`identity`:
+
+- `canonical_key_parts`: array de nomes de componentes, não valores raw em docs.
+- `parcel_ref`: string opcional.
+- `apn_ref`: string opcional.
+- `external_record_refs`: array de refs/hashes.
+- `identity_confidence`: number 0..1.
+- `conflict_status`: enum `none`, `possible_duplicate`, `conflicting_evidence`, `needs_review`.
+
+`address`:
+
+- `line1_normalized`: string opcional.
+- `city`: string opcional.
+- `state`: string opcional, pattern de estado quando aplicável.
+- `postal_code`: string opcional.
+- `county`: string opcional.
+- `country`: string opcional default lógico `US` apenas se o corpus confirmar.
+- `address_hash`: string opcional para comparação sem expor valor em docs/proofs.
+- `normalization_status`: enum `raw_only`, `normalized`, `verified`, `conflict`.
+
+`geography`:
+
+- `point`: object opcional com `longitude`, `latitude` numéricos; candidato forte a PostGIS.
+- `parcel_boundary_ref`: string opcional para geometria armazenada/projetada fora do envelope.
+- `geocode_precision`: enum `parcel`, `rooftop`, `street`, `zip`, `unknown`.
+
+`details`:
+
+- `property_type`: string/enum futura, governada por taxonomy.
+- `year_built`, `bedrooms`, `bathrooms`, `living_area_sqft`, `lot_area_sqft`: opcionais e tipados.
+- `features`: array opcional de strings normalizadas, mas não promover como taxonomy sem governança.
+- `listing_status`: string opcional em residue/details, não canonical status ainda.
+
+`legal`:
+
+- `legal_description_ref`: string opcional, preferir ref/hash se sensível/longo.
+- `subdivision`: string opcional.
+- `document_refs`: array de refs não-PII.
+
+`situations`:
+
+- `situation_type`: enum derivado de vocabulário governado, ex. `foreclosure`, `pre_foreclosure`, `tax_lien`, etc.
+- `situation_status`: enum `active`, `resolved`, `cancelled`.
+- `source_ref`: string.
+- `date_refs`/datas opcionais conforme segurança.
+- `confidence`: number.
+
+### Objetos JSONB permitidos no property envelope
+
+- `identity`, `address`, `geography`, `details`, `legal`, `situations`, `source_lineage`, `quality`, `residue`, `projection_hints`.
+- Não permitir objetos provider-native como `realtor_payload`, `county_payload`, `directskip_payload` dentro do envelope core; esses pertencem a evidence envelopes/raw restritos.
+
+### Projection candidates — property
+
+Candidatos de projeção inicial, ainda sem DDL final:
+
+| Caminho | Motivo |
+| --- | --- |
+| `canonical_property_ref` | join/lookup/edge. |
+| `identity.parcel_ref` / `identity.apn_ref` | dedupe, uniqueness candidata, source matching. |
+| `address.city`, `address.state`, `address.postal_code`, `address.county` | filtros/search comuns, API futura. |
+| `address.address_hash` | dedupe sem depender de string raw. |
+| `geography.point` | PostGIS, mapa, distância. |
+| `details.property_type` | filtro semântico, taxonomy. |
+| `details.year_built`, `bedrooms`, `bathrooms`, `living_area_sqft`, `lot_area_sqft` | filtros/ordenamento de alto valor se estáveis. |
+| `situations[].situation_type/status` | busca Lead Finder e materialização de tags sistêmicas derivadas. |
+| `quality.confidence`, `quality.conflict_status` | filas de revisão/materialização. |
+
+## Envelope `owner-envelope.v1.schema.json`
+
+### Responsabilidade
+
+Representar owner/party canônico mínimo e sua relação com propriedade. DirectSkip/contact enrichment pode contribuir evidência, mas não define sozinho a verdade de owner. O envelope deve evitar expor PII em docs/proofs e permitir classificação/linhagem/revisão.
+
+### Campos mínimos recomendados
+
+| Campo | Tipo | Obrigatório | Política |
+| --- | --- | --- | --- |
+| `schema_version` | string | sim | `v1`. |
+| `envelope_kind` | const | sim | `owner`. |
+| `canonical_owner_ref` | string | recomendado | Ref interna de entity/party. |
+| `entity` | object | sim | Identidade canônica mínima. |
+| `ownership_edges` | array | recomendado | Relações owner-property. |
+| `mailing_address` | object | opcional | Pode ser PII/restricted; docs sem valores. |
+| `contact_summary` | object | opcional | Apenas contagens/status agregados; contato detalhado fica no envelope contact-satellites. |
+| `resolution` | object | recomendado | Estado de owner resolution/adjudicação. |
+| `source_lineage` | object | sim | SourceHub/Matrix/skiptrace refs sem payload. |
+| `quality` | object | recomendado | Confiança, conflitos, review. |
+| `privacy_class` | enum | sim | Normalmente `pii_sensitive` para owner. |
+| `residue` | object | opcional | Campos não promovidos e sanitizados. |
+
+### Estrutura sugerida por objeto
+
+`entity`:
+
+- `entity_type`: enum `person`, `company`, `trust`, `unknown`.
+- `display_name_hash`: string opcional para dedupe/proof sem revelar nome.
+- `name_components_present`: object booleano (`first`, `last`, `company`, etc.) sem valores em docs.
+- `normalized_name_ref`: string opcional se houver armazenamento restrito.
+- `entity_confidence`: number.
+- `conflict_status`: enum `none`, `possible_match`, `conflicting_identity`, `insufficient_evidence`, `needs_review`.
+
+`ownership_edges`:
+
+- `property_ref`: string.
+- `ownership_type`: enum compatível com inventário (`owner`, `co_owner`, `investor`, `trust`, `llc_member`, `unknown`).
+- `role_type`: enum governado (`owner`, `mortgagor`, `grantee`, etc.) quando aplicável.
+- `percent_interest`: number opcional.
+- `effective_date_ref` ou datas seguras opcionais.
+- `source_ref`: string.
+- `confidence`: number.
+
+`mailing_address`:
+
+- Mesmo shape básico de address, com `address_type`: `mailing`, `residential`, `commercial`, `po_box`, `unknown`.
+- `address_hash` recomendado.
+- Marcar `privacy_class` local como `pii_sensitive` quando presente.
+
+`contact_summary`:
+
+- `phone_count`, `email_count`, `mailing_address_count`.
+- `has_reachable_phone`, `has_deliverable_email`: boolean opcional, só se derivado por política.
+- `best_contact_ref`: string opcional, sem número/email.
+- `dnc_or_suppression_present`: boolean opcional.
+
+`resolution`:
+
+- `case_ref`: string opcional.
+- `status`: enum inspirado no inventário (`open`, `candidate_generated`, `decided`, `materialized`, `needs_ai`, `needs_human`, `superseded`, `closed`).
+- `decision`: enum (`same_entity`, `possible_match`, `related_but_distinct`, `distinct_entity`, `conflicted`, `insufficient_evidence`).
+- `adjudicator`: enum (`deterministic_rules`, `score_engine`, `ai_high_capacity`, `human_review`) quando houver.
+
+### Objetos JSONB permitidos no owner envelope
+
+- `entity`, `ownership_edges`, `mailing_address`, `contact_summary`, `resolution`, `source_lineage`, `quality`, `residue`, `projection_hints`.
+- Não embutir telefone/email completos; isso pertence a `contact-satellites-envelope` e/ou tabelas restritas futuras.
+- Não embutir provider raw skiptrace payload.
+
+### Projection candidates — owner
+
+| Caminho | Motivo |
+| --- | --- |
+| `canonical_owner_ref` | join/identity. |
+| `entity.entity_type` | filtro e resolução. |
+| `entity.display_name_hash` | dedupe sem publicar nome. |
+| `entity.conflict_status` | filas de revisão. |
+| `ownership_edges[].property_ref` | edge owner-property. |
+| `ownership_edges[].ownership_type` | busca/segmentação. |
+| `ownership_edges[].role_type` | análise legal/party graph. |
+| `mailing_address.address_hash`, `state`, `postal_code` | matching e filtros restritos. |
+| `contact_summary.phone_count/email_count` | readiness operacional sem PII. |
+| `resolution.status/decision/adjudicator` | workflow e auditoria. |
+| `quality.confidence` | gate de materialização. |
+
+## Envelope `taxonomy-envelope.v1.schema.json`
+
+### Responsabilidade
+
+Representar vocabulário sistêmico governado para Lead Finder: property type, source list lineage, situation types/statuses, system property tags/labels derivados e owner/phone/email tag families. O envelope não é workspace registry nem design final de tag-groups.
+
+### Separação semântica obrigatória
+
+| Família | Owner semântico | Política |
+| --- | --- | --- |
+| `lead_situation_type` | Lead Finder/Matrix | Fato estruturado; pode materializar tag sistêmica derivada quando ativo e sancionado. |
+| `source_list_type` | SourceHub lineage/search | Não vira tag sistêmica automaticamente. |
+| `system_property_tag` | Lead Finder materializer | Read-only; derivado/sancionado, não criado pelo workspace. |
+| `system_property_label` | Lead Finder/Matrix | Label sistêmica controlada, não CRM status. |
+| `owner_tag`, `phone_tag`, `email_tag` | Lead Finder/contact policy | Só após contrato de semântica; evitar seeds prematuros. |
+| `workspace_tag/list/status` | Futuro workspace | Fora do envelope core sistêmico. |
+
+### Campos mínimos recomendados
+
+| Campo | Tipo | Obrigatório | Política |
+| --- | --- | --- | --- |
+| `schema_version` | string | sim | `v1`. |
+| `envelope_kind` | const | sim | `taxonomy`. |
+| `vocabulary_version` | string | sim | Versão governada do vocabulário. |
+| `families` | array | sim | Famílias taxonômicas aceitas. |
+| `terms` | array | sim | Termos/slugs governados ou candidatos. |
+| `aliases` | array | recomendado | Alias catalog Matrix/Lead Finder. |
+| `derivation_rules` | array | recomendado | Ex.: active situation -&gt; system_property_tag quando sancionado. |
+| `workspace_bridge_policy` | object | sim | Read-only bridge, não ownership. |
+| `source_lineage` | object | recomendado | Genome/baseline/matrix refs. |
+| `quality` | object | recomendado | Status de aprovação, conflitos. |
+| `residue` | object | opcional | Candidatos não aprovados. |
+
+### Estrutura sugerida
+
+`families[]`:
+
+- `family_slug`: enum inicial `property_type`, `source_list_type`, `lead_situation_type`, `situation_status`, `system_property_tag`, `system_property_label`, `owner_tag`, `phone_tag`, `email_tag`.
+- `semantic_owner`: enum `leadfinder`, `matrix`, `sourcehub`, `contact_policy`.
+- `is_workspace_owned`: boolean sempre `false` neste envelope.
+- `is_public_api_safe`: boolean, default `false` até API/RLS futura.
+- `additionalProperties`: false.
+
+`terms[]`:
+
+- `family_slug`.
+- `term_slug`.
+- `display_label` opcional.
+- `status`: enum `candidate`, `approved`, `deprecated`, `rejected`, `legacy_compat`.
+- `risk_class`: enum `low`, `medium`, `high`, `unknown`.
+- `source_kind`: enum `situation`, `source_lineage`, `matrix_mapping`, `legacy_compat`, `provider_evidence`, `manual_governance`.
+- `canonicalizes_to`: string opcional para plural/synonym handling, ex. manter risco `probates` vs `probate` sem auto-normalizar.
+- `notes_code`: string opcional, sem dados raw.
+
+`aliases[]`:
+
+- `alias`.
+- `canonical_family_slug`.
+- `canonical_term_slug` opcional.
+- `transform`: enum `strip`, `slugify`, `titlecase`, `none` ou array controlado.
+- `approval_status`.
+
+`derivation_rules[]`:
+
+- `rule_slug`.
+- `from_family`.
+- `to_family`.
+- `condition`: string controlada, ex. `situation_status=active`.
+- `requires_matrix_approval`: boolean.
+- `auto_materialize`: boolean default `false` salvo regra sancionada.
+
+`workspace_bridge_policy`:
+
+- `workspace_can_reference_system_terms`: true.
+- `workspace_can_create_system_terms`: false.
+- `workspace_tags_are_overlays`: true.
+- `lf_tag_type_is_bridge_only`: true.
+- `do_not_seed_system_terms_into_workspace_registry`: true.
+
+### Vocabulários iniciais observados, com cautela
+
+Não são seeds finais. São candidatos/compatibilidade a serem validados no schema/policy:
+
+- `lead_situation_type`: `appt_of_sub_trustee`, `foreclosure`, `pre_foreclosure`, `tax_lien`, `tax_sale`, `probate`, `heirship`, `divorce`, `bankruptcy`, `code_violation`, `vacant`, `other`.
+- `situation_status`: `active`, `resolved`, `cancelled`.
+- `property_type`: exemplos de inventário incluem `single_family`, `multi_family`, `condo`, `townhouse`, `manufactured`, `land`, `commercial`, `industrial`, `mixed_use`, `other`; há divergências legadas como `apartment`, `mobile_home`, `vacant_land` que devem entrar como compat/candidate, não substituir o vocabulário final.
+- `source_list_type`: exemplos estruturais incluem `pre_foreclosure`, `skip_trace_contact_discovery`, `loan_modification`, `probates`, `divorce`, `property_comparables`, `manual_property`, `eviction`, `tax_sale`, `address_discovery`, `property_enrichment`; manter como lineage/search e não tag automática.
+
+### Objetos JSONB permitidos no taxonomy envelope
+
+- `families`, `terms`, `aliases`, `derivation_rules`, `workspace_bridge_policy`, `source_lineage`, `quality`, `residue`, `projection_hints`.
+- Não incluir workspace CRM registries (`PropertyTagRegistry`, `PropertyListRegistry`, `PropertyStatusRegistry`) como termos sistêmicos.
+
+### Projection candidates — taxonomy
+
+| Caminho | Motivo |
+| --- | --- |
+| `vocabulary_version` | auditoria/replay. |
+| `families[].family_slug` | lookup/constraint futura. |
+| `families[].semantic_owner` | boundary enforcement. |
+| `terms[].family_slug`, `terms[].term_slug` | unicidade/lookup. |
+| `terms[].status` | promoção/revisão. |
+| `terms[].risk_class` | auto-apply marker policy. |
+| `terms[].canonicalizes_to` | normalização controlada sem apagar alias. |
+| `aliases[].alias` -&gt; canonical | Matrix/search compatibility. |
+| `derivation_rules[].rule_slug` | materializer/auditoria. |
+| `workspace_bridge_policy.*` | guardrails contra mistura workspace/system. |
+
+## Política de projeção transversal
+
+Aplicar os 7 gates do ADR antes de qualquer caminho virar coluna/tabela/index:
+
+1. observado em corpus representativo;
+2. significado aprovado por Matrix/LeadFinder;
+3. estável entre sources ou explicitamente provider-specific;
+4. necessário para query, join, filtro, ordenação, unicidade, FK, RLS, PostGIS ou constraint operacional;
+5. cast/coerção segura;
+6. linhagem raw durável;
+7. classificação de privacidade/PII concluída.
+
+### Candidatos fortes imediatos
+
+- Property identity/address/geography anchors.
+- Owner/property edge refs e owner entity type/conflict status.
+- Situation type/status como fatos e materialização de system property tags sancionadas.
+- Taxonomy family/term/status/risk class.
+- Quality/conflict/review status para filas de materialização.
+
+### Candidatos fracos/deferidos
+
+- `features` de property details como taxonomy.
+- `listing_status` provider/native como status canônico.
+- `source_list_type` virando system tag automaticamente.
+- Workspace labels como lead types.
+- Phone/email tags antes do envelope contact-satellites e DirectSkip review.
+- Provider-native evidence paths sem envelope próprio.
+
+## Non-goals desta revisão
+
+- Não criar DDL final, tabelas, constraints ou registry rows.
+- Não definir design final de tag-groups ou seeds de vocabulário sistêmico.
+- Não implementar workspace tags/lists/status/snapshots.
+- Não expor raw JSONB, payloads provider-native ou PII.
+- Não criar API pública/RLS facade.
+- Não decidir IDs finais (`uuid7`, ref prefix, etc.) além de recomendar refs estáveis.
+- Não modelar DirectSkip/Realtor evidence envelopes detalhados; isso pertence aos outros workers.
+- Não transformar nomes iguais em semântica igual entre CRM, score, situação e source lineage.
+
+## Riscos e guardrails
+
+1. `source_list_type_slug` deve permanecer linhagem/search, não tag canônica automática.
+2. Workspace tags/lists/status são overlays do usuário; não podem preencher lacunas da taxonomia sistêmica.
+3. Situações ativas podem derivar `system_property_tag_slugs`, mas apenas por materializer sancionado.
+4. `probates` vs `probate`, `tax_delinquent` vs `tax_lien/tax_sale`, `high_equity` e `absentee_owner` mostram risco de normalização por aparência.
+5. Owner envelope é PII-sensitive por padrão; docs/proofs devem usar refs/hashes/contagens, não valores.
+6. `additionalProperties: true` fora de `residue` cria drift e deve ser evitado.
+
+## Recomendação final para Thor/T5
+
+Para os três schemas core, usar top-level fechado com blocos comuns (`schema_version`, `envelope_kind`, `source_lineage`, `quality`, `privacy_class`, `residue`) e reservar extensibilidade apenas em `residue` restrito. O `projection-policy.v1.json` deve registrar os candidatos acima como `candidate` ou `deferred`, nunca como DDL implícita.
+
+A ordem segura de implementação dos arquivos JSONSchema é:
+
+1. `taxonomy-envelope.v1.schema.json`, porque governa enums/famílias usadas por property/owner.
+2. `property-envelope.v1.schema.json`, com situações estruturadas e refs para taxonomy.
+3. `owner-envelope.v1.schema.json`, com owner/property edges e contato apenas resumido.
+
+Nenhum desses envelopes deve publicar PII ou provider raw; todo caminho sensível deve apontar para refs/hashes e lineage restrita.
+</pre></section><section><h2>09-provider-evidence-envelope-review.md</h2><pre># Worker B — Revisão de envelopes de evidência DirectSkip/Realtor
+
+Status: complete
+Escopo: recomendações para envelopes JSONSchema/evidence derivados dos inventários DirectSkip/Realtor e da ADR PG18 JSONB-first.
+Fontes: `docs/issues/14-prop4you-json-curation-pg18-jsonb-strategy/08-directskip-corpus-inventory.md`, `09-realtor-corpus-inventory.md`, `12-adr-pg18-jsonb-first-canonical-modeling.md`.
+
+[NO_PROVIDER_CALLS]
+
+Esta revisão foi feita apenas por leitura estática dos artefatos locais acima. Não houve chamadas a DirectSkip, Realtor, APIs externas, banco runtime, Docker ou provedores.
+
+[NO_RAW_VALUES_OR_PII]
+
+Este documento registra apenas famílias de schema, classes semânticas, candidatos de projeção e políticas. Não reproduz nomes, telefones, e-mails, endereços, coordenadas, IDs reais, URLs completas, hashes de queries, payloads brutos ou outros valores sensíveis.
+
+## 1. Decisão-base
+
+Aplicar a política aceita da ADR PG18 JSONB-first:
+
+```text
+JSONB-first para evidence, payloads provider-native, envelopes e resíduos.
+Relational-first para identidade durável, âncoras, FKs, constraints, PostGIS, snapshots temporais e projeções de alto valor.
+```
+
+Consequência para esta slice:
+
+- DirectSkip deve informar o envelope `contact-satellites-envelope.v1`, mas não deve escrever verdade canônica de owner/property.
+- Realtor deve informar o envelope `realtor-evidence-envelope.v1`, mas não deve criar property, SystemArea ou market truth sem âncora canônica.
+- Valuation, market e comparable evidence devem ficar como subfamílias explícitas, com snapshots/projeções somente quando sancionados por contrato downstream.
+
+## 2. Famílias de schema recomendadas
+
+### 2.1 `contact-satellites-envelope.v1` informado por DirectSkip
+
+Finalidade: representar evidência de contato/reachability associada a uma âncora de lead/person/property já resolvida por Lead Finder/SourceHub, preservando lineage até a resposta provider.
+
+Famílias mínimas:
+
+| Família | Shape esperado | Política |
+| --- | --- | --- |
+| `envelope` | metadados de provider, surface, captured_at, schema version, source ref, privacy class | colunas/projeções para filtro/auditoria; payload permanece JSONB |
+| `request_input_evidence` | dados de entrada provider por nomes de campos, sem valores em docs | JSONB; não promover para truth canônica |
+| `provider_status` | status/result code/error class | projeção operacional de baixo risco se redigida |
+| `contact_candidates[]` | candidatos de contato do provider | JSONB-first; projetar contagens e linkage |
+| `contact_candidates[].names[]` | hints de nome/idade/deceased flag | sensível; não sobrescrever owner identity |
+| `contact_candidates[].phones[]` | telefones e tipos provider | candidato forte a satellite/projeção para dedupe/outreach com normalização e lineage |
+| `contact_candidates[].emails[]` | e-mails | candidato condicional a satellite/projeção; alto PII |
+| `contact_candidates[].addresses[]` | endereços confirmados ou históricos provider | JSONB-first; projetar só via fluxo canônico de endereço |
+| `contact_candidates[].relatives[]` | relações e telefones de relativos | JSONB-first; satellite opcional se houver produto de relationship search |
+| `quality_and_counts` | contagens por subarray, parse status, drift flags | projeção operacional não sensível quando sem valores |
+| `jsonb_residue` | campos provider não mapeados, drift, blocos desconhecidos | obrigatório para forward compatibility |
+
+Regras de `additionalProperties` sugeridas:
+
+- Envelope externo: `additionalProperties: false` para campos governados do wrapper.
+- Blocos provider/raw/residue: `additionalProperties: true` com classificação `provider_residue` e drift auditável.
+- Satellites normalizados: `additionalProperties: false` para DTOs publicados, mantendo `source_json_path` e `provider_event_ref`.
+
+### 2.2 `realtor-evidence-envelope.v1` informado por Realtor
+
+Finalidade: representar evidência de property/geography/market/comparables/valuation de Realtor sem torná-la fonte ontológica de propriedade ou área.
+
+Famílias mínimas:
+
+| Família | Shape esperado | Política |
+| --- | --- | --- |
+| `envelope` | provider slug, surface slug, captured_at/observed_at, source ref, request fingerprint redigido, schema version, pii class | colunas/projeções para filtro/auditoria |
+| `anchor` | `canonical_property_ref`, `system_area_ref`, `sourcehub_session_ref` ou consulta/coordinate anchor redigida | obrigatório para interpretar evidence; não inferir truth só do payload |
+| `provider_references` | property/listing/area/geo refs provider, permalink/href class sem valor | projetar refs estáveis quando usadas para replay/dedupe |
+| `property_detail_evidence` | fatos físicos/listing/media/features/status | JSONB-first com projeções sancionadas para beds/baths/sqft/year/type/status/list price quando ancorado |
+| `valuation_evidence` | current/historical/forecast/AVM/spot-offer/last-sale evidence | séries em JSONB; snapshot temporal sancionado em tabela quando usado em decisão |
+| `comparable_evidence` | candidatos de busca/similares/recently-sold/map/nearby | JSONB-first; tabela de candidate evidence só com contrato downstream |
+| `market_evidence` | métricas territoriais, hotness, DOM, medianas, ratios | ancorar em SystemArea; snapshots sancionados para métricas mínimas |
+| `area_boundary_evidence` | boundary GeoJSON, center/radius, breakpoints, provider area refs | PostGIS para geometria aprovada; resíduo de apresentação em JSONB |
+| `autocomplete_resolution_evidence` | sugestões de endereço/área | cache/evidence; não cria property/area sozinha |
+| `media_and_contact_residue` | photos/galleries/advertisers/consumer contacts/lead blocks | JSONB classificado; alto PII/comercial; redaction fora do cofre |
+| `jsonb_residue` | campos não mapeados, blocos instáveis, provider drift | obrigatório |
+
+Regras de `additionalProperties` sugeridas:
+
+- Wrapper canônico do envelope: `additionalProperties: false`.
+- Subdocumentos de provider evidence/residue: `additionalProperties: true` com `schema_family`, `source_surface_slug`, `source_json_path` e drift tracking.
+- DTOs normalizados publicados a SourceHub/Lead Finder: `additionalProperties: false` e campos opcionais explícitos por versão.
+
+## 3. Candidatos de projeção
+
+### 3.1 Projeções comuns a DirectSkip e Realtor
+
+Promover para colunas/tabelas apenas quando passarem pelos sete gates da ADR: corpus observado, semântica aprovada por Matrix/LeadFinder, estabilidade, necessidade de query/join/FK/RLS/PostGIS/constraint, coerção segura, lineage durável e classificação privacy/PII.
+
+Candidatos comuns:
+
+- `provider_slug`.
+- `surface_slug` / endpoint/list type.
+- `captured_at` / `observed_at`.
+- `payload_schema_version`.
+- `provider_event_ref` / sourcehub ingress/session ref.
+- `payload_hash` ou fingerprint redigido.
+- `response_status` / parse status / result class.
+- `pii_classification`.
+- `canonical_property_ref`, `owner_ref`, `person_ref`, `system_area_ref` quando já resolvidos.
+- contagens não sensíveis: número de contacts, phones, emails, relatives, candidates, comparables, media items, history events.
+
+### 3.2 DirectSkip/contact satellites
+
+Bons candidatos, sob cofre/controle de PII:
+
+- contact satellite table/view para phones: normalized phone hash/token, phone type label, role (`contact` vs `relative`), rank/order, `source_json_path`, `provider_event_ref`, confidence/status se houver.
+- email satellite table/view somente se houver dedupe/search/outreach: normalized email hash/token, source path, provider event.
+- response result/status e counts para auditoria operacional.
+- relação relative/contact-edge somente se produto exigir relationship search; caso contrário manter JSONB.
+
+Não promover diretamente:
+
+- nomes provider como owner truth;
+- idade/deceased hints como fatos canônicos sem validação;
+- confirmed addresses como property/address truth;
+- relatives como household/ownership truth;
+- labels provider de phone/email como enum canônico sem Matrix mapping.
+
+### 3.3 Realtor/property detail evidence
+
+Bons candidatos quando há `canonical_property_ref`:
+
+- provider property/listing refs e surface.
+- status provider normalizado como evidence, não status canônico final.
+- facts físicos sancionados: beds, baths, sqft, lot sqft, year built, garage, property type/subtype.
+- preço/list date/last sold date/last sold price como evidence temporal quando usados em filtros.
+- primary media presence/counts, não URLs completas em artefatos públicos.
+
+Não promover diretamente:
+
+- advertiser/consumer contact blocks;
+- full media/gallery/deep listing copy;
+- permalink/href/URLs completas em docs ou projections públicas;
+- provider location como criação automática de property.
+
+### 3.4 Valuation evidence
+
+Família recomendada: `valuation_evidence` dentro de Realtor envelope, com possível tabela `property_valuation_snapshot` quando sancionada.
+
+Projeções candidatas:
+
+- `canonical_property_ref`.
+- `provider_slug` e valuation source class.
+- `observed_at` e valuation effective date.
+- value/low/high/confidence somente se aprovados e tipados.
+- `valuation_kind`: current, historical, forecast, avm, spot_offer, last_sale_evidence.
+- `provider_event_ref` e `source_json_path`.
+
+Manter em JSONB:
+
+- séries completas current/historical/forecast;
+- múltiplas fontes/bandas internas;
+- modelos AVM internos e campos instáveis;
+- spot-offer residue.
+
+### 3.5 Market evidence
+
+Família recomendada: `market_evidence`, sempre ancorada a `system_area_ref` ou area anchor resolvido.
+
+Projeções candidatas:
+
+- `system_area_ref`.
+- `provider_slug`.
+- `observed_at`.
+- median listing price, median sold price, median DOM, price per sqft quando sancionados.
+- inventory/change metrics somente após contrato específico.
+
+Manter em JSONB:
+
+- hotness/badges/ranks provider-specific;
+- ratios contra county/US typical property;
+- payload achatado ou nested não sancionado;
+- contexto de query/resolution quando não for âncora canônica.
+
+Não anexar market evidence a property individual por zip/proximidade implícita.
+
+### 3.6 Comparable evidence
+
+Família recomendada: `comparable_evidence`, sem promoção automática a property.
+
+Projeções candidatas se houver contrato de comp analysis:
+
+- `anchor_property_ref` ou query anchor ref.
+- `candidate_provider_ref` e listing ref.
+- `surface_slug`: nearby, map, recently_sold, similar.
+- `observed_at`.
+- rank/order, distance/context bucket, status class.
+- facts básicos do candidato para UI/analytics, sempre como evidence.
+- `source_json_path` e `provider_event_ref`.
+
+Manter em JSONB:
+
+- arrays completos de candidatos;
+- full candidate payloads;
+- media/open-house/flags instáveis;
+- request context detalhado e provider residue.
+
+Promoção para property canônica exige fluxo separado de acquisition/dedupe.
+
+### 3.7 Area boundary evidence
+
+Projeções candidatas:
+
+- `system_area_ref` obrigatório para update canônico.
+- provider area/geo/slug refs.
+- area type/state/centroid quando sancionados.
+- `boundary_geom` em PostGIS após validação contra anchor.
+- observed_at/provider/source lineage.
+
+Manter em JSONB:
+
+- GeoJSON bruto completo como evidence;
+- breakpoints, zoom, radius, presentation fields;
+- raw areas list e provider response envelope.
+
+## 4. Classes sensíveis/PII
+
+### 4.1 Classe P0/Pública segura
+
+Pode aparecer em docs/schema sem valores reais:
+
+- nomes de campos e famílias JSON;
+- tipos JSON e cardinalidades;
+- enum categories genéricas sem exemplos reais;
+- contagens agregadas sem identificação;
+- políticas de projection/residue.
+
+### 4.2 Classe P1/Operacional baixa
+
+Pode virar coluna interna se necessário, mas deve evitar exposição pública irrestrita:
+
+- provider slug e surface slug;
+- status/result class;
+- schema version;
+- captured_at/observed_at;
+- counts por subarray;
+- flags booleanas genéricas quando não reidentificantes.
+
+### 4.3 Classe P2/Identificadores e localização sensíveis
+
+Exige controle de acesso, redaction em docs e cautela em índices:
+
+- provider property/listing/area IDs;
+- permalinks/hrefs/URLs completas;
+- request fingerprints/hashes de query;
+- coordenadas exatas e centroids;
+- endereço completo ou componentes com alta reidentificação;
+- source refs correlacionáveis.
+
+### 4.4 Classe P3/PII direta e comercial sensível
+
+Não imprimir em artefatos; só cofre de ingestão/evidence com RLS/auditoria:
+
+- nomes de pessoas/contatos/relatives/advertisers/agents;
+- telefones;
+- e-mails;
+- full address values;
+- idade, deceased hints e relationship hints;
+- advertiser/consumer_advertiser/lead contact blocks;
+- fotos/URLs completas quando correlacionáveis;
+- payload bruto provider com combinações reidentificantes.
+
+## 5. Política de JSONB residue
+
+1. Todo provider event deve preservar payload/residue em JSONB imutável ou append-only, com hash/fingerprint, source ref, schema version e privacy class.
+2. Nenhum path provider deve ser descartado apenas por não estar no DTO atual; campos desconhecidos entram em `jsonb_residue` e drift tracking.
+3. Resíduo é lineage/evidence, não API pública. Publicação para clientes deve passar por DTO canônico redigido.
+4. JSONB provider pode ter `additionalProperties: true`; envelopes/DTOs canônicos publicados devem ser fechados (`additionalProperties: false`) salvo extensão explicitamente versionada.
+5. Projeções relacionais devem armazenar `provider_event_ref` e `source_json_path` para auditabilidade e replay.
+6. GIN em JSONB só quando houver requisito real de busca ad hoc/review; não indexar payload grande cegamente.
+7. Para geometry, extrair para PostGIS após validação; não depender de consultas geográficas sobre JSONB bruto.
+8. Para séries temporais, usar tabela append-only de snapshots sancionados; JSONB carrega a série completa e campos provider-specific.
+9. Para PII direta, preferir token/hash normalizado em projection e valor claro somente no cofre adequado, se permitido pela política do produto.
+10. Docs, fixtures públicas e provas devem ser schema-only/sintéticas; nunca payloads reais com valores.
+
+## 6. Recomendações para o registry desta issue
+
+### 6.1 Schema families a criar/validar
+
+- `contact-satellites-envelope.v1.schema.json`
+  - wrapper fechado;
+  - `provider_event_ref`, `anchor`, `contacts`, `satellites`, `quality`, `jsonb_residue`;
+  - subfamilies para phone/email/address/relative/name hints;
+  - classification obrigatória por subtree.
+
+- `realtor-evidence-envelope.v1.schema.json`
+  - wrapper fechado;
+  - `anchor`, `provider_references`, `property_detail_evidence`, `valuation_evidence`, `market_evidence`, `comparable_evidence`, `area_boundary_evidence`, `autocomplete_resolution_evidence`, `jsonb_residue`;
+  - exigir `surface_slug` para interpretar subshape;
+  - permitir residue por surface.
+
+- `projection-policy.v1.json`
+  - incluir os sete gates da ADR;
+  - registrar defaults: DirectSkip contact values são P3; Realtor advertiser/contact/media URLs são P3/P2; market metrics sancionadas podem ser P1/P2 conforme anchor; geometry é P2.
+
+### 6.2 Projection defaults por família
+
+| Família | Default | Exceção de promoção |
+| --- | --- | --- |
+| DirectSkip status/counts | projetar | desde que sem PII |
+| DirectSkip phone/email values | JSONB/cofre | token/hash/projeção interna se dedupe/outreach exigir |
+| DirectSkip relatives | JSONB | edge satellite se houver contrato de relationship search |
+| Realtor provider refs | projetar internamente | redigir em docs/API pública |
+| Realtor property facts básicos | projetar quando ancorado | apenas campos sancionados por Matrix/LeadFinder |
+| Realtor valuation séries | JSONB | snapshot temporal sancionado |
+| Realtor market | JSONB | snapshot territorial sancionado com SystemArea anchor |
+| Realtor comparables | JSONB | candidate evidence table com contrato downstream |
+| Realtor boundary | JSONB + PostGIS | PostGIS só com SystemArea anchor validado |
+| Advertiser/contact/media deep blocks | JSONB classificado | não publicar; projeções só redigidas/tokenizadas |
+
+## 7. Riscos e gates
+
+- Risco: transformar provider IDs em chaves canônicas. Gate: sempre distinguir provider ref de public_id/FK canônica.
+- Risco: vazar PII em fixtures. Gate: fixtures schema-only/sintéticas e revisão de PII antes de commit.
+- Risco: perder auditabilidade ao materializar projections. Gate: `provider_event_ref` + `source_json_path` obrigatório.
+- Risco: JSONB sem governança virar dump opaco. Gate: envelope versionado, schema family, privacy class, drift/residue policy.
+- Risco: comparables criarem properties automaticamente. Gate: promotion separada por acquisition/dedupe.
+- Risco: market ser anexado a property sem território. Gate: `system_area_ref` ou area anchor resolvido.
+
+## 8. Resultado executivo
+
+DirectSkip e Realtor devem informar envelopes de evidence separados, não tabelas canônicas provider-shaped. O envelope DirectSkip é uma família de contact satellites com PII forte e projeções internas restritas para reachability/dedupe. O envelope Realtor é uma família ampla de property/geography/valuation/market/comparable evidence, com projeções apenas para âncoras, refs, snapshots e fatos sancionados. Em ambos os casos, JSONB residue é obrigatório, versionado, classificado por sensibilidade e sempre conectado às projeções por lineage.
+</pre></section><section><h2>10-ddl-registry-proof-review.md</h2><pre># Worker C — Revisão DDL registry e prova
+
+Status: complete
+Data: 2026-06-18T15:20:41-04:00
+Escopo: recomendação/revisão apenas. Não altera DDL existente.
+
+## Leituras feitas
+
+- `database/ddl/projects/prop4you/leadfinder_group/0001_staging_candidates.sql`
+- `database/ddl/projects/prop4you/leadfinder_group/0002_materialization_runs.sql`
+- `database/ddl/projects/prop4you/leadfinder_group/0003_operational_minimum.sql`
+- `database/ddl/projects/prop4you/leadfinder_group/0004_user_feedback_markers.sql`
+- `database/ddl/projects/prop4you/sourcehub/0002_translated_dto_publications.sql`
+- `database/ddl/projects/prop4you/leadfinder/0004_dictionary_promotion_review_apply.sql`
+- `scripts/proof-prop4you-ddl-lab.sh`
+- `docs/issues/15-prop4you-lfg-canonical-jsonschema-envelope-registry/{00,01,02,04-subagent-manifest}.md`
+
+Também rodei `DRY_RUN=1 scripts/proof-prop4you-ddl-lab.sh` e confirmei a ordem atual de aplicação: base DDL, Prop4You provider/sourcehub/matrix/leadfinder, SourceHub T4, LFG `0001..0004`, e por fim `leadfinder/0004_dictionary_promotion_review_apply.sql`.
+
+## Diagnóstico do DDL atual
+
+O pacote LFG já tem uma boa fundação para encaixar um registry leve:
+
+- Usa schema próprio: `prop4you_leadfinder_group`.
+- Mantém boundary explícito: gateway-agnostic, sem provider calls, sem cópia de raw payload.
+- Fluxo temporal já está claro:
+  - T4 SourceHub `translated_dto_publications`;
+  - T5.0 `staging_candidates`;
+  - T5.1 `materialization_runs/results`;
+  - T5.2 `operational_groups/events/facets`;
+  - feedback marker review/apply gate.
+- Já usa padrões consistentes que o registry deve repetir:
+  - `id uuid default uuidv7()`;
+  - `public_ref` gerado via `base.make_public_ref(...)`;
+  - `*_key` único e com regex `^[a-z][a-z0-9_.:-]{1,191}$`;
+  - status/gate/review enums por `check` simples;
+  - JSONB objeto validado por `jsonb_typeof(...)`;
+  - lifecycle columns + triggers `base.set_lifecycle_defaults`, `base.touch_updated_at`, `base.increment_version` quando há colunas compatíveis.
+
+Lacuna: os JSONB contracts atuais aparecem como strings em `*_schema_version`, `contract`, `artifact_schema_version` e comentários. Falta uma fonte queryable/canonical para:
+
+- quais envelopes existem;
+- qual `$id`/schema version é canônico;
+- qual artefato repo-local originou a row;
+- como promover JSONB para projeção relacional;
+- quais gates são obrigatórios antes de materialização ou auto-apply de markers.
+
+## Recomendação de arquivo DDL
+
+Criar:
+
+`database/ddl/projects/prop4you/leadfinder_group/0005_canonical_jsonschema_registry.sql`
+
+Cabeçalho sugerido:
+
+```sql
+-- package: prop4you/leadfinder_group
+-- file: 0005_canonical_jsonschema_registry.sql
+-- status: experimental / non-final
+-- purpose: Queryable registry for LFG canonical JSONSchema envelopes and projection policy.
+-- depends-on: leadfinder_group/0004_user_feedback_markers.sql
+-- idempotency: idempotent
+-- destructive: false
+-- [GATEWAY_AGNOSTIC]
+-- [REGISTRY_ONLY]
+-- [NO_PROVIDER_CALLS]
+-- [NO_RAW_PAYLOAD_VALUES]
+-- [NO_FINAL_PRODUCT_TABLE_EXPLOSION]
+```
+
+## Tabelas mínimas
+
+### 1. `prop4you_leadfinder_group.canonical_jsonschema_envelopes`
+
+Tabela mínima para registrar cada envelope/version e o JSONSchema em JSONB.
+
+Colunas recomendadas:
+
+```sql
+id uuid primary key default uuidv7(),
+public_ref text generated always as (base.make_public_ref(&#x27;p4ylfgjs&#x27;, id)) stored,
+envelope_key text not null,
+envelope_status text not null default &#x27;active&#x27;,
+envelope_kind text not null,
+schema_version text not null default &#x27;v1&#x27;,
+schema_id text not null,
+schema_title text not null,
+schema_path text not null,
+schema_sha256 text,
+json_schema jsonb not null,
+projection_policy_key text,
+pii_classification text not null default &#x27;mixed_review_required&#x27;,
+raw_value_policy text not null default &#x27;no_raw_payload_values&#x27;,
+notes text,
+metadata jsonb not null default &#x27;{}&#x27;::jsonb,
+active boolean not null default true,
+activated_at timestamptz,
+deactivated_at timestamptz,
+deleted boolean not null default false,
+deleted_at timestamptz,
+deleted_by_actor_id text,
+created_at timestamptz not null default now(),
+updated_at timestamptz not null default now(),
+last_modified_by_actor_id text,
+version integer not null default 1
+```
+
+Constraints recomendadas:
+
+```sql
+constraint canonical_jsonschema_envelopes_public_ref_key unique (public_ref),
+constraint canonical_jsonschema_envelopes_key_version_key unique (envelope_key, schema_version),
+constraint canonical_jsonschema_envelopes_schema_id_key unique (schema_id),
+constraint canonical_jsonschema_envelopes_key_format_chk check (envelope_key ~ &#x27;^[a-z][a-z0-9_.:-]{1,191}$&#x27;),
+constraint canonical_jsonschema_envelopes_version_format_chk check (schema_version ~ &#x27;^v[0-9]+([.][0-9]+)?$&#x27;),
+constraint canonical_jsonschema_envelopes_status_chk check (envelope_status in (&#x27;draft&#x27;,&#x27;active&#x27;,&#x27;deprecated&#x27;,&#x27;superseded&#x27;,&#x27;archived&#x27;)),
+constraint canonical_jsonschema_envelopes_kind_chk check (envelope_kind in (&#x27;property&#x27;,&#x27;owner&#x27;,&#x27;contact_satellites&#x27;,&#x27;realtor_evidence&#x27;,&#x27;taxonomy&#x27;,&#x27;canonical_index&#x27;,&#x27;unknown&#x27;)),
+constraint canonical_jsonschema_envelopes_schema_object_chk check (jsonb_typeof(json_schema)=&#x27;object&#x27;),
+constraint canonical_jsonschema_envelopes_schema_required_keys_chk check (json_schema ? &#x27;$schema&#x27; and json_schema ? &#x27;$id&#x27; and json_schema ? &#x27;title&#x27; and json_schema ? &#x27;type&#x27;),
+constraint canonical_jsonschema_envelopes_schema_type_object_chk check (json_schema-&gt;&gt;&#x27;type&#x27; = &#x27;object&#x27;),
+constraint canonical_jsonschema_envelopes_additional_props_present_chk check (json_schema ? &#x27;additionalProperties&#x27;),
+constraint canonical_jsonschema_envelopes_sha_chk check (schema_sha256 is null or schema_sha256 ~ &#x27;^[0-9a-f]{64}$&#x27;),
+constraint canonical_jsonschema_envelopes_pii_chk check (pii_classification in (&#x27;none&#x27;,&#x27;public&#x27;,&#x27;internal&#x27;,&#x27;pii&#x27;,&#x27;mixed_review_required&#x27;,&#x27;unknown&#x27;)),
+constraint canonical_jsonschema_envelopes_raw_policy_chk check (raw_value_policy in (&#x27;no_raw_payload_values&#x27;,&#x27;hashes_and_refs_only&#x27;,&#x27;normalized_values_allowed_internal&#x27;,&#x27;unknown&#x27;)),
+constraint canonical_jsonschema_envelopes_metadata_chk check (jsonb_typeof(metadata)=&#x27;object&#x27;),
+constraint canonical_jsonschema_envelopes_version_positive_chk check (version &gt; 0)
+```
+
+Índices:
+
+```sql
+create index if not exists canonical_jsonschema_envelopes_status_idx
+  on prop4you_leadfinder_group.canonical_jsonschema_envelopes (envelope_status, envelope_kind, created_at desc)
+  where deleted=false;
+
+create index if not exists canonical_jsonschema_envelopes_schema_gin_idx
+  on prop4you_leadfinder_group.canonical_jsonschema_envelopes using gin (json_schema jsonb_path_ops);
+```
+
+### 2. `prop4you_leadfinder_group.projection_policies`
+
+Tabela mínima para registrar a política inteira de projeção/promotional gates como JSONB versionado.
+
+Colunas recomendadas:
+
+```sql
+id uuid primary key default uuidv7(),
+public_ref text generated always as (base.make_public_ref(&#x27;p4ylfgpp&#x27;, id)) stored,
+policy_key text not null,
+policy_status text not null default &#x27;active&#x27;,
+policy_version text not null default &#x27;v1&#x27;,
+policy_path text not null,
+policy_sha256 text,
+policy_payload jsonb not null,
+default_jsonb_decision text not null default &#x27;keep_jsonb_until_gate_passed&#x27;,
+marker_auto_apply_policy text not null default &#x27;low_risk_requires_registry_policy_and_review_gate&#x27;,
+metadata jsonb not null default &#x27;{}&#x27;::jsonb,
+active boolean not null default true,
+activated_at timestamptz,
+deactivated_at timestamptz,
+deleted boolean not null default false,
+deleted_at timestamptz,
+deleted_by_actor_id text,
+created_at timestamptz not null default now(),
+updated_at timestamptz not null default now(),
+last_modified_by_actor_id text,
+version integer not null default 1
+```
+
+Constraints recomendadas:
+
+```sql
+constraint projection_policies_public_ref_key unique (public_ref),
+constraint projection_policies_key_version_key unique (policy_key, policy_version),
+constraint projection_policies_key_format_chk check (policy_key ~ &#x27;^[a-z][a-z0-9_.:-]{1,191}$&#x27;),
+constraint projection_policies_version_format_chk check (policy_version ~ &#x27;^v[0-9]+([.][0-9]+)?$&#x27;),
+constraint projection_policies_status_chk check (policy_status in (&#x27;draft&#x27;,&#x27;active&#x27;,&#x27;deprecated&#x27;,&#x27;superseded&#x27;,&#x27;archived&#x27;)),
+constraint projection_policies_sha_chk check (policy_sha256 is null or policy_sha256 ~ &#x27;^[0-9a-f]{64}$&#x27;),
+constraint projection_policies_payload_object_chk check (jsonb_typeof(policy_payload)=&#x27;object&#x27;),
+constraint projection_policies_required_keys_chk check (policy_payload ? &#x27;promotion_gates&#x27; and policy_payload ? &#x27;default_decision&#x27; and policy_payload ? &#x27;marker_auto_apply&#x27;),
+constraint projection_policies_gate_count_chk check (jsonb_array_length(coalesce(policy_payload-&gt;&#x27;promotion_gates&#x27;,&#x27;[]&#x27;::jsonb)) &gt;= 7),
+constraint projection_policies_default_decision_chk check (default_jsonb_decision in (&#x27;keep_jsonb_until_gate_passed&#x27;,&#x27;project_when_all_gates_pass&#x27;,&#x27;never_project_without_review&#x27;,&#x27;unknown&#x27;)),
+constraint projection_policies_marker_policy_chk check (marker_auto_apply_policy in (&#x27;disabled&#x27;,&#x27;low_risk_requires_registry_policy_and_review_gate&#x27;,&#x27;review_only&#x27;,&#x27;unknown&#x27;)),
+constraint projection_policies_metadata_chk check (jsonb_typeof(metadata)=&#x27;object&#x27;),
+constraint projection_policies_version_positive_chk check (version &gt; 0)
+```
+
+Índices:
+
+```sql
+create index if not exists projection_policies_status_idx
+  on prop4you_leadfinder_group.projection_policies (policy_status, policy_version, created_at desc)
+  where deleted=false;
+
+create index if not exists projection_policies_payload_gin_idx
+  on prop4you_leadfinder_group.projection_policies using gin (policy_payload jsonb_path_ops);
+```
+
+### 3. Opcional, mas útil: `prop4you_leadfinder_group.projection_policy_gate_requirements`
+
+Se quiser provar cada gate sem JSONPath complexo no proof script, adicionar uma tabela derivada/seedada com uma row por gate. Se quiser manter o registry mais leve possível, não crie agora; valide o array `promotion_gates` em SQL/Python no proof.
+
+Caso criada, colunas mínimas:
+
+```sql
+id uuid primary key default uuidv7(),
+policy_id uuid not null references prop4you_leadfinder_group.projection_policies(id) on delete restrict,
+gate_key text not null,
+gate_order integer not null,
+gate_status text not null default &#x27;required&#x27;,
+required boolean not null default true,
+description text not null,
+metadata jsonb not null default &#x27;{}&#x27;::jsonb,
+created_at timestamptz not null default now(),
+updated_at timestamptz not null default now(),
+constraint projection_policy_gate_requirements_policy_gate_key unique (policy_id, gate_key),
+constraint projection_policy_gate_requirements_order_key unique (policy_id, gate_order),
+constraint projection_policy_gate_requirements_gate_key_format_chk check (gate_key ~ &#x27;^[a-z][a-z0-9_.:-]{1,191}$&#x27;),
+constraint projection_policy_gate_requirements_order_chk check (gate_order between 1 and 99),
+constraint projection_policy_gate_requirements_status_chk check (gate_status in (&#x27;required&#x27;,&#x27;optional&#x27;,&#x27;deprecated&#x27;,&#x27;archived&#x27;)),
+constraint projection_policy_gate_requirements_metadata_chk check (jsonb_typeof(metadata)=&#x27;object&#x27;)
+```
+
+Minha recomendação para esta slice: começar com 2 tabelas somente. A terceira pode ser adiada porque o PRD pede registry leve e o policy JSON já é o artefato canônico.
+
+## Seed rows recomendadas
+
+Inserir por `on conflict do update`, sem raw payload e sem PII.
+
+### `canonical_jsonschema_envelopes`
+
+Uma row ativa para cada arquivo do PRD:
+
+1. `lfg.property_envelope`:
+   - `envelope_kind=&#x27;property&#x27;`
+   - `schema_version=&#x27;v1&#x27;`
+   - `schema_path=&#x27;docs/schemas/prop4you/lfg/property-envelope.v1.schema.json&#x27;`
+2. `lfg.owner_envelope`:
+   - `envelope_kind=&#x27;owner&#x27;`
+   - `schema_path=&#x27;docs/schemas/prop4you/lfg/owner-envelope.v1.schema.json&#x27;`
+3. `lfg.contact_satellites_envelope`:
+   - `envelope_kind=&#x27;contact_satellites&#x27;`
+   - `schema_path=&#x27;docs/schemas/prop4you/lfg/contact-satellites-envelope.v1.schema.json&#x27;`
+4. `lfg.realtor_evidence_envelope`:
+   - `envelope_kind=&#x27;realtor_evidence&#x27;`
+   - `schema_path=&#x27;docs/schemas/prop4you/lfg/realtor-evidence-envelope.v1.schema.json&#x27;`
+5. `lfg.taxonomy_envelope`:
+   - `envelope_kind=&#x27;taxonomy&#x27;`
+   - `schema_path=&#x27;docs/schemas/prop4you/lfg/taxonomy-envelope.v1.schema.json&#x27;`
+6. `lfg.canonical_envelope_index`:
+   - `envelope_kind=&#x27;canonical_index&#x27;`
+   - `schema_path=&#x27;docs/schemas/prop4you/lfg/lfg-canonical-envelope-index.v1.schema.json&#x27;`
+
+Para cada seed, registrar:
+
+- `schema_id = json_schema-&gt;&gt;&#x27;$id&#x27;`;
+- `schema_title = json_schema-&gt;&gt;&#x27;title&#x27;`;
+- `schema_sha256` calculado pelo proof antes de montar a DDL ou mantido como literal gerado no arquivo `0005`;
+- `projection_policy_key=&#x27;lfg.projection_policy&#x27;`;
+- `raw_value_policy` de acordo com o envelope, preferindo `no_raw_payload_values` ou `normalized_values_allowed_internal` quando o envelope representa valores normalizados internos.
+
+### `projection_policies`
+
+Uma row ativa:
+
+- `policy_key=&#x27;lfg.projection_policy&#x27;`
+- `policy_version=&#x27;v1&#x27;`
+- `policy_path=&#x27;docs/schemas/prop4you/lfg/projection-policy.v1.json&#x27;`
+- `default_jsonb_decision=&#x27;keep_jsonb_until_gate_passed&#x27;`
+- `marker_auto_apply_policy=&#x27;low_risk_requires_registry_policy_and_review_gate&#x27;`
+
+O `policy_payload` deve conter pelo menos estes 7 gates, em ordem estável:
+
+1. `canonical_semantics_known`
+2. `source_lineage_hashes_present`
+3. `pii_redaction_policy_passed`
+4. `quality_threshold_passed`
+5. `review_gate_passed`
+6. `query_access_pattern_proven`
+7. `relational_owner_boundary_known`
+
+Para marker auto-apply, manter o padrão conservador:
+
+- nunca aplicar marker global a partir de um único voto;
+- low-risk marker precisa de policy row ativa;
+- precisa de aggregate/review gate, compatível com `0004_user_feedback_markers.sql`;
+- DNC/wrong/invalid/stale devem continuar review-gated, a menos que policy futura especifique exceção e prova.
+
+## Views/funções leves recomendadas
+
+Não são obrigatórias para o mínimo, mas ajudam o proof e operadores:
+
+```sql
+create or replace view prop4you_leadfinder_group.v_canonical_jsonschema_registry as
+select e.envelope_key,
+       e.envelope_kind,
+       e.schema_version,
+       e.schema_id,
+       e.schema_title,
+       e.schema_path,
+       e.schema_sha256,
+       e.envelope_status,
+       p.policy_key,
+       p.policy_version,
+       p.default_jsonb_decision,
+       p.marker_auto_apply_policy,
+       e.updated_at
+  from prop4you_leadfinder_group.canonical_jsonschema_envelopes e
+  left join prop4you_leadfinder_group.projection_policies p
+    on p.policy_key = e.projection_policy_key
+   and p.deleted=false
+   and p.policy_status=&#x27;active&#x27;
+ where e.deleted=false;
+```
+
+Função opcional de lookup sem validar JSONSchema completo dentro do PG:
+
+```sql
+create or replace function prop4you_leadfinder_group.active_jsonschema_envelope(p_envelope_key text)
+returns prop4you_leadfinder_group.canonical_jsonschema_envelopes
+language sql stable
+as $$
+  select *
+    from prop4you_leadfinder_group.canonical_jsonschema_envelopes
+   where envelope_key = p_envelope_key
+     and envelope_status = &#x27;active&#x27;
+     and active = true
+     and deleted = false
+   order by created_at desc
+   limit 1
+$$;
+```
+
+Não recomendo implementar validação JSONSchema completa em PL/pgSQL nesta slice. A prova pode validar sintaxe/requisitos com Python stdlib e o DB deve registrar/consultar os contratos.
+
+## Proof assertions recomendadas
+
+Criar `scripts/proof-prop4you-lfg-jsonschema-registry.sh` como wrapper seguro, não como substituto destrutivo do proof atual.
+
+Assertivas estáticas antes do DB:
+
+1. Todos os arquivos esperados existem em `docs/schemas/prop4you/lfg/`.
+2. Todos parseiam com Python stdlib `json`.
+3. Cada schema contém `$schema`, `$id`, `title`, `type`, `additionalProperties`.
+4. Cada schema tem `type=&#x27;object&#x27;`.
+5. O index referencia todos os cinco envelopes principais.
+6. `projection-policy.v1.json` contém `promotion_gates` com pelo menos os 7 gates canônicos.
+7. `projection-policy.v1.json` contém `marker_auto_apply` e seu default conservador.
+8. Nenhum artefato/schema contém chaves proibidas óbvias para fixtures/raw dumps, como `raw_payload`, `secret`, `password`, `api_key`, `token` como valor exemplar. O teste deve ser heurístico e não bloquear termos em descrições legítimas como `no_raw_payload_values` se forem explicitamente política.
+
+Assertivas DB após aplicar DDL em lab:
+
+1. Schema `prop4you_leadfinder_group` existe.
+2. Tabelas novas existem:
+   - `canonical_jsonschema_envelopes`
+   - `projection_policies`
+3. View existe, se criada:
+   - `v_canonical_jsonschema_registry`
+4. Contagens mínimas:
+   - `canonical_jsonschema_envelopes` = 6 rows ativas e não deletadas.
+   - `projection_policies` = 1 row ativa e não deletada.
+5. Todos os `schema_sha256` são lowercase 64 hex ou nulos somente se a política deliberadamente permitir; recomendo exigir não nulo no proof.
+6. Todos os `json_schema` têm `$schema`, `$id`, `title`, `type`, `additionalProperties`.
+7. Todos os `json_schema-&gt;&gt;&#x27;type&#x27; = &#x27;object&#x27;`.
+8. Nenhum `schema_path` aponta para fora de `docs/schemas/prop4you/lfg/`.
+9. `policy_payload-&gt;&#x27;promotion_gates&#x27;` contém os 7 gates canônicos.
+10. `marker_auto_apply_policy=&#x27;low_risk_requires_registry_policy_and_review_gate&#x27;`.
+11. `default_jsonb_decision=&#x27;keep_jsonb_until_gate_passed&#x27;`.
+12. `projection_policy_key` dos envelopes resolve uma policy ativa.
+13. O DDL antigo continua intacto: pelo menos uma smoke count para `staging_candidates`, `materialization_runs`, `materialization_results`, `operational_groups`, `user_feedback_votes`, `global_item_markers` em `information_schema.tables`.
+14. Sem provider calls: o wrapper não deve executar HTTP/curl/wget nem scripts externos; só `psql` e Python stdlib.
+15. Sem impressão de payloads: relatório deve imprimir contagens, paths, ids, hashes e status, não `json_schema` completo se houver risco de over-dump. Para schemas repo-local sem PII, pode imprimir lista de `$id` e hashes.
+
+## Integração segura com o proof wrapper
+
+Recomendação de desenho:
+
+1. O novo wrapper deve rodar a prova existente como etapa base:
+
+```bash
+KEEP_DB=1 LAB_DB=&quot;${LAB_DB:-pg18_prop4you_lfg_jsonschema_registry_lab}&quot; scripts/proof-prop4you-ddl-lab.sh
+```
+
+2. O wrapper deve usar um `LAB_DB` próprio por padrão para não conflitar com `pg18_prop4you_ddl_lab`.
+
+3. Após a prova base com `KEEP_DB=1`, aplicar somente:
+
+```text
+database/ddl/projects/prop4you/leadfinder_group/0005_canonical_jsonschema_registry.sql
+```
+
+4. Em caso de falha, o wrapper deve:
+
+- preservar mensagens de erro reais;
+- não esconder falha de `proof-prop4you-ddl-lab.sh`;
+- dropar o lab DB apenas se `KEEP_DB` externo não for `1`.
+
+5. Evitar editar o script existente agora, a menos que a tarefa T6 decida adicionar `0005` ao apply order canônico. Para esta issue, o wrapper novo pode chamar o script antigo com `KEEP_DB=1` e depois aplicar o `0005`; isso reduz risco de regressão no proof atual.
+
+6. Ao gerar relatório, usar um caminho novo:
+
+```text
+docs/reports/prop4you-lfg-jsonschema-registry-proof.md
+```
+
+7. O relatório deve declarar explicitamente limites:
+
+- prova registry/queryability, não valida JSONSchema completo no PG;
+- não cria tabelas finais property/owner/contact;
+- não chama providers;
+- não faz ingestão real;
+- não prova produção/VPS.
+
+## Posição sobre ordem de aplicação
+
+A ordem segura é após LFG `0004_user_feedback_markers.sql`, porque:
+
+- o registry pertence ao boundary LFG;
+- policy de marker auto-apply referencia semanticamente o gate de feedback marker/review/apply já definido em `0004`;
+- evita dependência circular com SourceHub/Matrix/LeadFinder;
+- não precisa alterar tabelas existentes.
+
+No futuro, se `scripts/proof-prop4you-ddl-lab.sh` passar a representar todo o pacote experimental Prop4You, inserir `0005` logo após:
+
+```text
+leadfinder_group/0004_user_feedback_markers.sql
+leadfinder_group/0005_canonical_jsonschema_registry.sql
+leadfinder/0004_dictionary_promotion_review_apply.sql
+```
+
+Mas para o proof dedicado desta issue, prefiro wrapper isolado chamando o proof base e aplicando `0005` em seguida.
+
+## Riscos e mitigação
+
+- Risco: duplicar verdade entre JSON files e DDL seed literals.
+  - Mitigação: proof calcula sha256 dos arquivos e compara com rows; se o DDL embutir JSON, gerar/atualizar literals de forma controlada.
+- Risco: registry virar runtime validator pesado.
+  - Mitigação: nesta slice, registry é queryable contract; validação JSONSchema profunda fica fora do PG.
+- Risco: policy permissiva demais para markers.
+  - Mitigação: default conservador e compatível com `0004`: aggregate recomenda; review/apply decide; single vote nunca aplica global truth.
+- Risco: proof imprimir payload/schema inteiro.
+  - Mitigação: relatório imprime contagens, `$id`, paths e hashes; nada de raw/provider values.
+
+## Conclusão
+
+A estrutura mínima recomendada é de duas tabelas: `canonical_jsonschema_envelopes` e `projection_policies`, com seed rows idempotentes para 6 schemas e 1 projection policy. O proof PG18 deve ser um wrapper dedicado que reutiliza o lab DDL existente com `KEEP_DB=1`, aplica `0005`, valida contagens/constraints/keys/hashes/gates e escreve relatório sem raw payload/PII. Isso entrega automaticidade suficiente para futuras DDL/materializações sem antecipar o grafo final de property/owner/contact.
+</pre></section><section><h2>docs/schemas/prop4you/lfg/contact-satellites-envelope.v1.schema.json</h2><pre>{
+  &quot;$defs&quot;: {
+    &quot;projectionHints&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;candidate_paths&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;candidate_reason&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;eligible_after_gates&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        }
+      },
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;quality&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;completeness&quot;: {
+          &quot;maximum&quot;: 1,
+          &quot;minimum&quot;: 0,
+          &quot;type&quot;: &quot;number&quot;
+        },
+        &quot;confidence&quot;: {
+          &quot;maximum&quot;: 1,
+          &quot;minimum&quot;: 0,
+          &quot;type&quot;: &quot;number&quot;
+        },
+        &quot;conflict_status&quot;: {
+          &quot;enum&quot;: [
+            &quot;none&quot;,
+            &quot;possible_duplicate&quot;,
+            &quot;conflicting_evidence&quot;,
+            &quot;needs_review&quot;,
+            &quot;unknown&quot;
+          ],
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;review_status&quot;: {
+          &quot;enum&quot;: [
+            &quot;not_required&quot;,
+            &quot;needs_matrix_review&quot;,
+            &quot;needs_human_review&quot;,
+            &quot;approved&quot;,
+            &quot;rejected&quot;
+          ],
+          &quot;type&quot;: &quot;string&quot;
+        }
+      },
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;sourceLineage&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;matrix_mapping_refs&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;payload_hash_refs&quot;: {
+          &quot;items&quot;: {
+            &quot;pattern&quot;: &quot;^[a-z0-9:_-]+$&quot;,
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;provider_families&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;sourcehub_record_refs&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        }
+      },
+      &quot;required&quot;: [
+        &quot;sourcehub_record_refs&quot;
+      ],
+      &quot;type&quot;: &quot;object&quot;
+    }
+  },
+  &quot;$id&quot;: &quot;https://schemas.prop4you.local/lfg/contact-satellites-envelope.v1.schema.json&quot;,
+  &quot;$schema&quot;: &quot;https://json-schema.org/draft/2020-12/schema&quot;,
+  &quot;additionalProperties&quot;: false,
+  &quot;properties&quot;: {
+    &quot;anchor&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;canonical_owner_ref&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;canonical_property_ref&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;sourcehub_session_ref&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        }
+      },
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;counts&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;addresses&quot;: {
+          &quot;minimum&quot;: 0,
+          &quot;type&quot;: &quot;integer&quot;
+        },
+        &quot;contacts&quot;: {
+          &quot;minimum&quot;: 0,
+          &quot;type&quot;: &quot;integer&quot;
+        },
+        &quot;emails&quot;: {
+          &quot;minimum&quot;: 0,
+          &quot;type&quot;: &quot;integer&quot;
+        },
+        &quot;phones&quot;: {
+          &quot;minimum&quot;: 0,
+          &quot;type&quot;: &quot;integer&quot;
+        },
+        &quot;relative_phones&quot;: {
+          &quot;minimum&quot;: 0,
+          &quot;type&quot;: &quot;integer&quot;
+        },
+        &quot;relatives&quot;: {
+          &quot;minimum&quot;: 0,
+          &quot;type&quot;: &quot;integer&quot;
+        }
+      },
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;email_satellites&quot;: {
+      &quot;items&quot;: {
+        &quot;additionalProperties&quot;: false,
+        &quot;properties&quot;: {
+          &quot;email_token_ref&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;provider_event_ref&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;source_json_path&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          }
+        },
+        &quot;required&quot;: [
+          &quot;source_json_path&quot;,
+          &quot;provider_event_ref&quot;
+        ],
+        &quot;type&quot;: &quot;object&quot;
+      },
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;envelope_kind&quot;: {
+      &quot;const&quot;: &quot;contact_satellites&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;phone_satellites&quot;: {
+      &quot;items&quot;: {
+        &quot;additionalProperties&quot;: false,
+        &quot;properties&quot;: {
+          &quot;phone_token_ref&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;phone_type_label&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;provider_event_ref&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;source_json_path&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;source_role&quot;: {
+            &quot;enum&quot;: [
+              &quot;contact&quot;,
+              &quot;relative&quot;,
+              &quot;unknown&quot;
+            ],
+            &quot;type&quot;: &quot;string&quot;
+          }
+        },
+        &quot;required&quot;: [
+          &quot;source_json_path&quot;,
+          &quot;provider_event_ref&quot;
+        ],
+        &quot;type&quot;: &quot;object&quot;
+      },
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;privacy_class&quot;: {
+      &quot;default&quot;: &quot;pii_sensitive&quot;,
+      &quot;enum&quot;: [
+        &quot;public_safe&quot;,
+        &quot;restricted&quot;,
+        &quot;pii_sensitive&quot;,
+        &quot;provider_sensitive&quot;,
+        &quot;mixed_review_required&quot;
+      ],
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;projection_hints&quot;: {
+      &quot;$ref&quot;: &quot;#/$defs/projectionHints&quot;
+    },
+    &quot;provider_status&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;parse_status&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;provider_slug&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;result_class&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;surface_slug&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        }
+      },
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;quality&quot;: {
+      &quot;$ref&quot;: &quot;#/$defs/quality&quot;
+    },
+    &quot;residue&quot;: {
+      &quot;additionalProperties&quot;: true,
+      &quot;description&quot;: &quot;Sanitized JSONB residue only; no raw payload values in docs or public API.&quot;,
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;schema_version&quot;: {
+      &quot;const&quot;: &quot;v1&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;source_lineage&quot;: {
+      &quot;$ref&quot;: &quot;#/$defs/sourceLineage&quot;
+    }
+  },
+  &quot;required&quot;: [
+    &quot;schema_version&quot;,
+    &quot;envelope_kind&quot;,
+    &quot;privacy_class&quot;,
+    &quot;anchor&quot;,
+    &quot;provider_status&quot;,
+    &quot;source_lineage&quot;
+  ],
+  &quot;title&quot;: &quot;Prop4You LFG contact satellites evidence envelope v1&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</pre></section><section><h2>docs/schemas/prop4you/lfg/lfg-canonical-envelope-index.v1.schema.json</h2><pre>{
+  &quot;$id&quot;: &quot;https://schemas.prop4you.local/lfg/lfg-canonical-envelope-index.v1.schema.json&quot;,
+  &quot;$schema&quot;: &quot;https://json-schema.org/draft/2020-12/schema&quot;,
+  &quot;additionalProperties&quot;: false,
+  &quot;properties&quot;: {
+    &quot;envelopes&quot;: {
+      &quot;default&quot;: [
+        {
+          &quot;envelope_key&quot;: &quot;property-envelope&quot;,
+          &quot;envelope_kind&quot;: &quot;property&quot;,
+          &quot;schema_id&quot;: &quot;https://schemas.prop4you.local/lfg/property-envelope.v1.schema.json&quot;,
+          &quot;schema_path&quot;: &quot;docs/schemas/prop4you/lfg/property-envelope.v1.schema.json&quot;
+        },
+        {
+          &quot;envelope_key&quot;: &quot;owner-envelope&quot;,
+          &quot;envelope_kind&quot;: &quot;owner&quot;,
+          &quot;schema_id&quot;: &quot;https://schemas.prop4you.local/lfg/owner-envelope.v1.schema.json&quot;,
+          &quot;schema_path&quot;: &quot;docs/schemas/prop4you/lfg/owner-envelope.v1.schema.json&quot;
+        },
+        {
+          &quot;envelope_key&quot;: &quot;contact-satellites-envelope&quot;,
+          &quot;envelope_kind&quot;: &quot;contact_satellites&quot;,
+          &quot;schema_id&quot;: &quot;https://schemas.prop4you.local/lfg/contact-satellites-envelope.v1.schema.json&quot;,
+          &quot;schema_path&quot;: &quot;docs/schemas/prop4you/lfg/contact-satellites-envelope.v1.schema.json&quot;
+        },
+        {
+          &quot;envelope_key&quot;: &quot;realtor-evidence-envelope&quot;,
+          &quot;envelope_kind&quot;: &quot;realtor_evidence&quot;,
+          &quot;schema_id&quot;: &quot;https://schemas.prop4you.local/lfg/realtor-evidence-envelope.v1.schema.json&quot;,
+          &quot;schema_path&quot;: &quot;docs/schemas/prop4you/lfg/realtor-evidence-envelope.v1.schema.json&quot;
+        },
+        {
+          &quot;envelope_key&quot;: &quot;taxonomy-envelope&quot;,
+          &quot;envelope_kind&quot;: &quot;taxonomy&quot;,
+          &quot;schema_id&quot;: &quot;https://schemas.prop4you.local/lfg/taxonomy-envelope.v1.schema.json&quot;,
+          &quot;schema_path&quot;: &quot;docs/schemas/prop4you/lfg/taxonomy-envelope.v1.schema.json&quot;
+        }
+      ],
+      &quot;items&quot;: {
+        &quot;additionalProperties&quot;: false,
+        &quot;properties&quot;: {
+          &quot;envelope_key&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;envelope_kind&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;schema_id&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;schema_path&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          }
+        },
+        &quot;required&quot;: [
+          &quot;envelope_key&quot;,
+          &quot;schema_path&quot;,
+          &quot;schema_id&quot;,
+          &quot;envelope_kind&quot;
+        ],
+        &quot;type&quot;: &quot;object&quot;
+      },
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;schema_version&quot;: {
+      &quot;const&quot;: &quot;v1&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;required&quot;: [
+    &quot;schema_version&quot;,
+    &quot;envelopes&quot;
+  ],
+  &quot;title&quot;: &quot;Prop4You LFG canonical envelope index v1&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</pre></section><section><h2>docs/schemas/prop4you/lfg/owner-envelope.v1.schema.json</h2><pre>{
+  &quot;$defs&quot;: {
+    &quot;projectionHints&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;candidate_paths&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;candidate_reason&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;eligible_after_gates&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        }
+      },
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;quality&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;completeness&quot;: {
+          &quot;maximum&quot;: 1,
+          &quot;minimum&quot;: 0,
+          &quot;type&quot;: &quot;number&quot;
+        },
+        &quot;confidence&quot;: {
+          &quot;maximum&quot;: 1,
+          &quot;minimum&quot;: 0,
+          &quot;type&quot;: &quot;number&quot;
+        },
+        &quot;conflict_status&quot;: {
+          &quot;enum&quot;: [
+            &quot;none&quot;,
+            &quot;possible_duplicate&quot;,
+            &quot;conflicting_evidence&quot;,
+            &quot;needs_review&quot;,
+            &quot;unknown&quot;
+          ],
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;review_status&quot;: {
+          &quot;enum&quot;: [
+            &quot;not_required&quot;,
+            &quot;needs_matrix_review&quot;,
+            &quot;needs_human_review&quot;,
+            &quot;approved&quot;,
+            &quot;rejected&quot;
+          ],
+          &quot;type&quot;: &quot;string&quot;
+        }
+      },
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;sourceLineage&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;matrix_mapping_refs&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;payload_hash_refs&quot;: {
+          &quot;items&quot;: {
+            &quot;pattern&quot;: &quot;^[a-z0-9:_-]+$&quot;,
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;provider_families&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;sourcehub_record_refs&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        }
+      },
+      &quot;required&quot;: [
+        &quot;sourcehub_record_refs&quot;
+      ],
+      &quot;type&quot;: &quot;object&quot;
+    }
+  },
+  &quot;$id&quot;: &quot;https://schemas.prop4you.local/lfg/owner-envelope.v1.schema.json&quot;,
+  &quot;$schema&quot;: &quot;https://json-schema.org/draft/2020-12/schema&quot;,
+  &quot;additionalProperties&quot;: false,
+  &quot;properties&quot;: {
+    &quot;canonical_owner_ref&quot;: {
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;entity&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;deceased_hint&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        },
+        &quot;display_name_ref&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;entity_type&quot;: {
+          &quot;enum&quot;: [
+            &quot;person&quot;,
+            &quot;company&quot;,
+            &quot;trust&quot;,
+            &quot;unknown&quot;
+          ],
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;identity_confidence&quot;: {
+          &quot;maximum&quot;: 1,
+          &quot;minimum&quot;: 0,
+          &quot;type&quot;: &quot;number&quot;
+        }
+      },
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;envelope_kind&quot;: {
+      &quot;const&quot;: &quot;owner&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;identity_evidence&quot;: {
+      &quot;items&quot;: {
+        &quot;additionalProperties&quot;: false,
+        &quot;properties&quot;: {
+          &quot;confidence&quot;: {
+            &quot;maximum&quot;: 1,
+            &quot;minimum&quot;: 0,
+            &quot;type&quot;: &quot;number&quot;
+          },
+          &quot;evidence_kind&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;source_ref&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          }
+        },
+        &quot;required&quot;: [
+          &quot;evidence_kind&quot;,
+          &quot;source_ref&quot;
+        ],
+        &quot;type&quot;: &quot;object&quot;
+      },
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;ownership&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;ownership_type&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;property_refs&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;role_refs&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        }
+      },
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;privacy_class&quot;: {
+      &quot;default&quot;: &quot;pii_sensitive&quot;,
+      &quot;enum&quot;: [
+        &quot;public_safe&quot;,
+        &quot;restricted&quot;,
+        &quot;pii_sensitive&quot;,
+        &quot;provider_sensitive&quot;,
+        &quot;mixed_review_required&quot;
+      ],
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;projection_hints&quot;: {
+      &quot;$ref&quot;: &quot;#/$defs/projectionHints&quot;
+    },
+    &quot;quality&quot;: {
+      &quot;$ref&quot;: &quot;#/$defs/quality&quot;
+    },
+    &quot;residue&quot;: {
+      &quot;additionalProperties&quot;: true,
+      &quot;description&quot;: &quot;Sanitized JSONB residue only; no raw payload values in docs or public API.&quot;,
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;schema_version&quot;: {
+      &quot;const&quot;: &quot;v1&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;source_lineage&quot;: {
+      &quot;$ref&quot;: &quot;#/$defs/sourceLineage&quot;
+    }
+  },
+  &quot;required&quot;: [
+    &quot;schema_version&quot;,
+    &quot;envelope_kind&quot;,
+    &quot;privacy_class&quot;,
+    &quot;entity&quot;,
+    &quot;source_lineage&quot;
+  ],
+  &quot;title&quot;: &quot;Prop4You LFG owner canonical envelope v1&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</pre></section><section><h2>docs/schemas/prop4you/lfg/projection-policy.v1.json</h2><pre>{
+  &quot;jsonb_default&quot;: [
+    &quot;raw_payload&quot;,
+    &quot;provider_residue&quot;,
+    &quot;variable_arrays&quot;,
+    &quot;matrix_artifacts&quot;,
+    &quot;review_payloads&quot;,
+    &quot;canonical_envelopes_before_projection&quot;
+  ],
+  &quot;low_risk_marker_auto_apply_default&quot;: {
+    &quot;audit_event_required&quot;: true,
+    &quot;marker_risk_class&quot;: &quot;low&quot;,
+    &quot;min_distinct_users&quot;: 3,
+    &quot;min_distinct_workspaces&quot;: 2,
+    &quot;no_active_disputes&quot;: true
+  },
+  &quot;non_goals&quot;: [
+    &quot;no_final_graph_table_explosion&quot;,
+    &quot;no_workspace_tables&quot;,
+    &quot;no_provider_calls&quot;,
+    &quot;no_raw_values_in_docs&quot;,
+    &quot;no_public_api_rls_until_envelopes_stabilize&quot;
+  ],
+  &quot;policy_key&quot;: &quot;lfg_projection_policy.v1&quot;,
+  &quot;policy_version&quot;: &quot;v1&quot;,
+  &quot;promotion_gates&quot;: [
+    {
+      &quot;gate_key&quot;: &quot;representative_corpus_observed&quot;,
+      &quot;gate_number&quot;: 1,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;gate_key&quot;: &quot;matrix_leadfinder_semantic_approval&quot;,
+      &quot;gate_number&quot;: 2,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;gate_key&quot;: &quot;stable_or_intentionally_provider_specific&quot;,
+      &quot;gate_number&quot;: 3,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;gate_key&quot;: &quot;query_join_filter_sort_unique_fk_rls_postgis_or_constraint_need&quot;,
+      &quot;gate_number&quot;: 4,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;gate_key&quot;: &quot;safe_cast_or_coercion_exists&quot;,
+      &quot;gate_number&quot;: 5,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;gate_key&quot;: &quot;durable_lineage_to_raw_json&quot;,
+      &quot;gate_number&quot;: 6,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;gate_key&quot;: &quot;privacy_pii_classified&quot;,
+      &quot;gate_number&quot;: 7,
+      &quot;required&quot;: true
+    }
+  ],
+  &quot;relational_default&quot;: [
+    &quot;identity_anchors&quot;,
+    &quot;graph_edges&quot;,
+    &quot;constraints&quot;,
+    &quot;auth_boundaries&quot;,
+    &quot;postgis_geometry&quot;,
+    &quot;temporal_snapshots&quot;,
+    &quot;high_value_indexed_projections&quot;
+  ],
+  &quot;rule_summary&quot;: &quot;JSONB-first for evidence/envelopes; relational-first for anchors, edges, constraints, PostGIS, temporal snapshots, and high-value indexed projections.&quot;,
+  &quot;title&quot;: &quot;Prop4You LFG JSONB-to-relational projection policy v1&quot;
+}
+</pre></section><section><h2>docs/schemas/prop4you/lfg/property-envelope.v1.schema.json</h2><pre>{
+  &quot;$defs&quot;: {
+    &quot;projectionHints&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;candidate_paths&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;candidate_reason&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;eligible_after_gates&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        }
+      },
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;quality&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;completeness&quot;: {
+          &quot;maximum&quot;: 1,
+          &quot;minimum&quot;: 0,
+          &quot;type&quot;: &quot;number&quot;
+        },
+        &quot;confidence&quot;: {
+          &quot;maximum&quot;: 1,
+          &quot;minimum&quot;: 0,
+          &quot;type&quot;: &quot;number&quot;
+        },
+        &quot;conflict_status&quot;: {
+          &quot;enum&quot;: [
+            &quot;none&quot;,
+            &quot;possible_duplicate&quot;,
+            &quot;conflicting_evidence&quot;,
+            &quot;needs_review&quot;,
+            &quot;unknown&quot;
+          ],
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;review_status&quot;: {
+          &quot;enum&quot;: [
+            &quot;not_required&quot;,
+            &quot;needs_matrix_review&quot;,
+            &quot;needs_human_review&quot;,
+            &quot;approved&quot;,
+            &quot;rejected&quot;
+          ],
+          &quot;type&quot;: &quot;string&quot;
+        }
+      },
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;sourceLineage&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;matrix_mapping_refs&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;payload_hash_refs&quot;: {
+          &quot;items&quot;: {
+            &quot;pattern&quot;: &quot;^[a-z0-9:_-]+$&quot;,
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;provider_families&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;sourcehub_record_refs&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        }
+      },
+      &quot;required&quot;: [
+        &quot;sourcehub_record_refs&quot;
+      ],
+      &quot;type&quot;: &quot;object&quot;
+    }
+  },
+  &quot;$id&quot;: &quot;https://schemas.prop4you.local/lfg/property-envelope.v1.schema.json&quot;,
+  &quot;$schema&quot;: &quot;https://json-schema.org/draft/2020-12/schema&quot;,
+  &quot;additionalProperties&quot;: false,
+  &quot;properties&quot;: {
+    &quot;address&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;city&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;county&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;line1_normalized&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;normalization_status&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;postal_code&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;state&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        }
+      },
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;canonical_property_ref&quot;: {
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;details&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;baths&quot;: {
+          &quot;type&quot;: &quot;number&quot;
+        },
+        &quot;beds&quot;: {
+          &quot;type&quot;: &quot;number&quot;
+        },
+        &quot;lot_sqft&quot;: {
+          &quot;type&quot;: &quot;number&quot;
+        },
+        &quot;property_type&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;sqft&quot;: {
+          &quot;type&quot;: &quot;number&quot;
+        },
+        &quot;year_built&quot;: {
+          &quot;type&quot;: &quot;integer&quot;
+        }
+      },
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;envelope_kind&quot;: {
+      &quot;const&quot;: &quot;property&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;geography&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;boundary_ref&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;centroid_ref&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;postgis_projection_candidate&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        },
+        &quot;system_area_refs&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        }
+      },
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;identity&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;apn_ref&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;conflict_status&quot;: {
+          &quot;enum&quot;: [
+            &quot;none&quot;,
+            &quot;possible_duplicate&quot;,
+            &quot;conflicting_evidence&quot;,
+            &quot;needs_review&quot;
+          ],
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;external_record_refs&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;identity_confidence&quot;: {
+          &quot;maximum&quot;: 1,
+          &quot;minimum&quot;: 0,
+          &quot;type&quot;: &quot;number&quot;
+        },
+        &quot;parcel_ref&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        }
+      },
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;legal&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;document_refs&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;legal_description_ref&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;subdivision&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        }
+      },
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;privacy_class&quot;: {
+      &quot;default&quot;: &quot;restricted&quot;,
+      &quot;enum&quot;: [
+        &quot;public_safe&quot;,
+        &quot;restricted&quot;,
+        &quot;pii_sensitive&quot;,
+        &quot;provider_sensitive&quot;,
+        &quot;mixed_review_required&quot;
+      ],
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;projection_hints&quot;: {
+      &quot;$ref&quot;: &quot;#/$defs/projectionHints&quot;
+    },
+    &quot;quality&quot;: {
+      &quot;$ref&quot;: &quot;#/$defs/quality&quot;
+    },
+    &quot;residue&quot;: {
+      &quot;additionalProperties&quot;: true,
+      &quot;description&quot;: &quot;Sanitized JSONB residue only; no raw payload values in docs or public API.&quot;,
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;schema_version&quot;: {
+      &quot;const&quot;: &quot;v1&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;situations&quot;: {
+      &quot;items&quot;: {
+        &quot;additionalProperties&quot;: false,
+        &quot;properties&quot;: {
+          &quot;observed_at&quot;: {
+            &quot;format&quot;: &quot;date-time&quot;,
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;situation_status&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;situation_type&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;source_ref&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          }
+        },
+        &quot;required&quot;: [
+          &quot;situation_type&quot;
+        ],
+        &quot;type&quot;: &quot;object&quot;
+      },
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;source_lineage&quot;: {
+      &quot;$ref&quot;: &quot;#/$defs/sourceLineage&quot;
+    }
+  },
+  &quot;required&quot;: [
+    &quot;schema_version&quot;,
+    &quot;envelope_kind&quot;,
+    &quot;privacy_class&quot;,
+    &quot;identity&quot;,
+    &quot;address&quot;,
+    &quot;source_lineage&quot;
+  ],
+  &quot;title&quot;: &quot;Prop4You LFG property canonical envelope v1&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</pre></section><section><h2>docs/schemas/prop4you/lfg/realtor-evidence-envelope.v1.schema.json</h2><pre>{
+  &quot;$defs&quot;: {
+    &quot;projectionHints&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;candidate_paths&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;candidate_reason&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;eligible_after_gates&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        }
+      },
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;quality&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;completeness&quot;: {
+          &quot;maximum&quot;: 1,
+          &quot;minimum&quot;: 0,
+          &quot;type&quot;: &quot;number&quot;
+        },
+        &quot;confidence&quot;: {
+          &quot;maximum&quot;: 1,
+          &quot;minimum&quot;: 0,
+          &quot;type&quot;: &quot;number&quot;
+        },
+        &quot;conflict_status&quot;: {
+          &quot;enum&quot;: [
+            &quot;none&quot;,
+            &quot;possible_duplicate&quot;,
+            &quot;conflicting_evidence&quot;,
+            &quot;needs_review&quot;,
+            &quot;unknown&quot;
+          ],
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;review_status&quot;: {
+          &quot;enum&quot;: [
+            &quot;not_required&quot;,
+            &quot;needs_matrix_review&quot;,
+            &quot;needs_human_review&quot;,
+            &quot;approved&quot;,
+            &quot;rejected&quot;
+          ],
+          &quot;type&quot;: &quot;string&quot;
+        }
+      },
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;sourceLineage&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;matrix_mapping_refs&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;payload_hash_refs&quot;: {
+          &quot;items&quot;: {
+            &quot;pattern&quot;: &quot;^[a-z0-9:_-]+$&quot;,
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;provider_families&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;sourcehub_record_refs&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        }
+      },
+      &quot;required&quot;: [
+        &quot;sourcehub_record_refs&quot;
+      ],
+      &quot;type&quot;: &quot;object&quot;
+    }
+  },
+  &quot;$id&quot;: &quot;https://schemas.prop4you.local/lfg/realtor-evidence-envelope.v1.schema.json&quot;,
+  &quot;$schema&quot;: &quot;https://json-schema.org/draft/2020-12/schema&quot;,
+  &quot;additionalProperties&quot;: false,
+  &quot;properties&quot;: {
+    &quot;anchor&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;canonical_property_ref&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;query_context_ref&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;system_area_ref&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        }
+      },
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;area_boundary_evidence&quot;: {
+      &quot;additionalProperties&quot;: true,
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;comparable_evidence&quot;: {
+      &quot;additionalProperties&quot;: true,
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;envelope_kind&quot;: {
+      &quot;const&quot;: &quot;realtor_evidence&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;market_evidence&quot;: {
+      &quot;additionalProperties&quot;: true,
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;privacy_class&quot;: {
+      &quot;default&quot;: &quot;provider_sensitive&quot;,
+      &quot;enum&quot;: [
+        &quot;public_safe&quot;,
+        &quot;restricted&quot;,
+        &quot;pii_sensitive&quot;,
+        &quot;provider_sensitive&quot;,
+        &quot;mixed_review_required&quot;
+      ],
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;projection_hints&quot;: {
+      &quot;$ref&quot;: &quot;#/$defs/projectionHints&quot;
+    },
+    &quot;property_detail_evidence&quot;: {
+      &quot;additionalProperties&quot;: true,
+      &quot;description&quot;: &quot;Sanitized property detail evidence; rich provider residue stays JSONB.&quot;,
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;provider_references&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;geo_ref&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;provider_area_ref&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;provider_listing_ref&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;provider_property_ref&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        }
+      },
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;quality&quot;: {
+      &quot;$ref&quot;: &quot;#/$defs/quality&quot;
+    },
+    &quot;residue&quot;: {
+      &quot;additionalProperties&quot;: true,
+      &quot;description&quot;: &quot;Sanitized JSONB residue only; no raw payload values in docs or public API.&quot;,
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;schema_version&quot;: {
+      &quot;const&quot;: &quot;v1&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;sensitive_blocks_present&quot;: {
+      &quot;items&quot;: {
+        &quot;enum&quot;: [
+          &quot;advertisers&quot;,
+          &quot;consumer_contacts&quot;,
+          &quot;media_urls&quot;,
+          &quot;exact_coordinates&quot;,
+          &quot;full_addresses&quot;,
+          &quot;unknown&quot;
+        ],
+        &quot;type&quot;: &quot;string&quot;
+      },
+      &quot;type&quot;: &quot;array&quot;
+    },
+    &quot;source_lineage&quot;: {
+      &quot;$ref&quot;: &quot;#/$defs/sourceLineage&quot;
+    },
+    &quot;valuation_evidence&quot;: {
+      &quot;additionalProperties&quot;: true,
+      &quot;type&quot;: &quot;object&quot;
+    }
+  },
+  &quot;required&quot;: [
+    &quot;schema_version&quot;,
+    &quot;envelope_kind&quot;,
+    &quot;privacy_class&quot;,
+    &quot;anchor&quot;,
+    &quot;provider_references&quot;,
+    &quot;source_lineage&quot;
+  ],
+  &quot;title&quot;: &quot;Prop4You Realtor evidence envelope v1&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</pre></section><section><h2>docs/schemas/prop4you/lfg/taxonomy-envelope.v1.schema.json</h2><pre>{
+  &quot;$defs&quot;: {
+    &quot;projectionHints&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;candidate_paths&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;candidate_reason&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;eligible_after_gates&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        }
+      },
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;quality&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;completeness&quot;: {
+          &quot;maximum&quot;: 1,
+          &quot;minimum&quot;: 0,
+          &quot;type&quot;: &quot;number&quot;
+        },
+        &quot;confidence&quot;: {
+          &quot;maximum&quot;: 1,
+          &quot;minimum&quot;: 0,
+          &quot;type&quot;: &quot;number&quot;
+        },
+        &quot;conflict_status&quot;: {
+          &quot;enum&quot;: [
+            &quot;none&quot;,
+            &quot;possible_duplicate&quot;,
+            &quot;conflicting_evidence&quot;,
+            &quot;needs_review&quot;,
+            &quot;unknown&quot;
+          ],
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;review_status&quot;: {
+          &quot;enum&quot;: [
+            &quot;not_required&quot;,
+            &quot;needs_matrix_review&quot;,
+            &quot;needs_human_review&quot;,
+            &quot;approved&quot;,
+            &quot;rejected&quot;
+          ],
+          &quot;type&quot;: &quot;string&quot;
+        }
+      },
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;sourceLineage&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;matrix_mapping_refs&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;payload_hash_refs&quot;: {
+          &quot;items&quot;: {
+            &quot;pattern&quot;: &quot;^[a-z0-9:_-]+$&quot;,
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;provider_families&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;sourcehub_record_refs&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        }
+      },
+      &quot;required&quot;: [
+        &quot;sourcehub_record_refs&quot;
+      ],
+      &quot;type&quot;: &quot;object&quot;
+    }
+  },
+  &quot;$id&quot;: &quot;https://schemas.prop4you.local/lfg/taxonomy-envelope.v1.schema.json&quot;,
+  &quot;$schema&quot;: &quot;https://json-schema.org/draft/2020-12/schema&quot;,
+  &quot;additionalProperties&quot;: false,
+  &quot;properties&quot;: {
+    &quot;envelope_kind&quot;: {
+      &quot;const&quot;: &quot;taxonomy&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;privacy_class&quot;: {
+      &quot;default&quot;: &quot;restricted&quot;,
+      &quot;enum&quot;: [
+        &quot;public_safe&quot;,
+        &quot;restricted&quot;,
+        &quot;pii_sensitive&quot;,
+        &quot;provider_sensitive&quot;,
+        &quot;mixed_review_required&quot;
+      ],
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;projection_hints&quot;: {
+      &quot;$ref&quot;: &quot;#/$defs/projectionHints&quot;
+    },
+    &quot;quality&quot;: {
+      &quot;$ref&quot;: &quot;#/$defs/quality&quot;
+    },
+    &quot;residue&quot;: {
+      &quot;additionalProperties&quot;: true,
+      &quot;description&quot;: &quot;Sanitized JSONB residue only; no raw payload values in docs or public API.&quot;,
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;schema_version&quot;: {
+      &quot;const&quot;: &quot;v1&quot;,
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;source_lineage&quot;: {
+      &quot;$ref&quot;: &quot;#/$defs/sourceLineage&quot;
+    },
+    &quot;source_lineage_taxonomy&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;provider_payload_class&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;source_list_type_slug&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        }
+      },
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;system_taxonomy&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;email_tag_slugs&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;owner_tag_slugs&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;phone_tag_slugs&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;situation_statuses&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;situation_types&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;system_property_label_slugs&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        },
+        &quot;system_property_tag_slugs&quot;: {
+          &quot;items&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;type&quot;: &quot;array&quot;
+        }
+      },
+      &quot;type&quot;: &quot;object&quot;
+    },
+    &quot;workspace_overlay_boundary&quot;: {
+      &quot;additionalProperties&quot;: false,
+      &quot;properties&quot;: {
+        &quot;notes&quot;: {
+          &quot;type&quot;: &quot;string&quot;
+        },
+        &quot;tag_groups_deferred&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        },
+        &quot;workspace_tags_allowed_later&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;
+        }
+      },
+      &quot;type&quot;: &quot;object&quot;
+    }
+  },
+  &quot;required&quot;: [
+    &quot;schema_version&quot;,
+    &quot;envelope_kind&quot;,
+    &quot;privacy_class&quot;,
+    &quot;system_taxonomy&quot;,
+    &quot;source_lineage&quot;
+  ],
+  &quot;title&quot;: &quot;Prop4You LFG taxonomy/tag vocabulary envelope v1&quot;,
+  &quot;type&quot;: &quot;object&quot;
+}
+</pre></section><section><h2>docs/reports/prop4you-lfg-jsonschema-registry-proof.md</h2><pre># Prop4You LFG JSONSchema Registry Proof
+
+Status: PASS
+LAB_DB: pg18_prop4you_jsonschema_registry_lab
+PGHOST: 127.0.0.1
+PGPORT: 54318
+
+## Scope
+
+Validated repo-local JSONSchema artifacts, projection policy, DDL apply, and queryable registry rows.
+
+No provider calls were made.
+No raw payload values or PII were emitted.
+No final property/owner/contact/workspace tables were created.
+
+## Validation JSON
+
+~~~json
+{&quot;gate_count&quot;: 7, &quot;policy_count&quot;: 1, &quot;envelope_count&quot;: 6, &quot;auto_apply_users&quot;: 3, &quot;raw_policy_count&quot;: 6, &quot;required_gate_count&quot;: 7, &quot;auto_apply_workspaces&quot;: 2, &quot;top_level_closed_count&quot;: 6, &quot;expected_envelopes_present&quot;: 6}
+~~~
+
+## Artifacts
+
+- docs/schemas/prop4you/lfg/*.schema.json
+- docs/schemas/prop4you/lfg/projection-policy.v1.json
+- database/ddl/projects/prop4you/leadfinder_group/0005_canonical_jsonschema_registry.sql
+</pre></section></body></html>
