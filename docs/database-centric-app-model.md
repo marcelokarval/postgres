@@ -653,3 +653,7 @@ The LeadFinder Group owns the canonical dictionary, but that dictionary is born/
 ## SourceHub translated DTO publication T4
 
 `docs/issues/09-prop4you-sourcehub-translated-dto-publications/` records the T4 publication gate. SourceHub `0002_translated_dto_publications.sql` publishes translated DTO records from `raw_record + Matrix field_mapping_set + LeadFinder dictionary_version`, with validation that the Matrix artifact is `artifact_kind='field_mapping_set'` and dictionary versions match. The publication remains gateway-agnostic and does not create LeadFinder/LFG operational materialization; T5 remains a later package.
+
+## LeadFinder Group T5 operational minimum
+
+`docs/issues/10-prop4you-lfg-staging-materialization-operational/` records the T5 proof. `database/ddl/projects/prop4you/leadfinder_group/` implements staging candidates from SourceHub translated DTOs, materialization runs/results, and a minimal operational surface of groups/events/facets. This is intentionally not the final property/owner/contact/scoring graph; it proves the database-centric pipeline while avoiding premature table explosion.

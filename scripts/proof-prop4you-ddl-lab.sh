@@ -59,6 +59,9 @@ apply_files=(
   "$P4Y_DDL_DIR/matrix/0005_field_mapping_set_artifacts.sql"
   "$P4Y_DDL_DIR/leadfinder/0003_prepare_dictionary_promotions.sql"
   "$P4Y_DDL_DIR/sourcehub/0002_translated_dto_publications.sql"
+  "$P4Y_DDL_DIR/leadfinder_group/0001_staging_candidates.sql"
+  "$P4Y_DDL_DIR/leadfinder_group/0002_materialization_runs.sql"
+  "$P4Y_DDL_DIR/leadfinder_group/0003_operational_minimum.sql"
 )
 
 for f in "${apply_files[@]}"; do

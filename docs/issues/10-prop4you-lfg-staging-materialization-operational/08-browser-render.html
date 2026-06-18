@@ -1,0 +1,1196 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Prop4You LFG T5 Operational Minimum</title><style>body{font-family:system-ui;margin:32px;background:#f8fafc;color:#111827}header{background:#111827;color:white;padding:24px;border-radius:16px}.ok{background:#dcfce7;color:#14532d;border:1px solid #86efac;border-radius:10px;padding:10px 14px;font-weight:700}.badges span{display:inline-block;background:#dbeafe;color:#1e3a8a;border:1px solid #93c5fd;border-radius:999px;padding:4px 10px;margin:4px;font-weight:700}section{background:white;border:1px solid #e5e7eb;border-radius:14px;padding:18px;margin:18px 0}pre{white-space:pre-wrap;background:#0b1020;color:#e5e7eb;padding:14px;border-radius:10px;font:13px ui-monospace,monospace;max-height:720px;overflow:auto}</style></head><body><header><h1>Prop4You LFG T5 Operational Minimum</h1><p class="ok">Browser-proof artifact: T0-T5 database-centric pipeline minimum</p><div class="badges"><span>Gateway agnostic</span><span>LeadFinder Group package</span><span>T5.0 staging</span><span>T5.1 materialization runs/results</span><span>T5.2 operational minimum</span><span>REIQ 97 raws</span><span>10 DTO publications</span><span>10 staging candidates</span><span>1 materialization run</span><span>10 materialization results</span><span>10 operational groups</span><span>10 operational events</span><span>30 operational facets</span><span>No provider calls</span><span>No raw values printed</span><span>No table explosion</span><span>PG18 lab PASS</span></div></header><section><h2>01-prd.md</h2><pre># PRD — Prop4You LFG staging/materialization/operational minimum
+
+Status: active
+
+## Problem
+
+We now have SourceHub T4 translated DTO publications. The next discussed task is to move into LFG without prematurely exploding into dozens of highly-coupled tables.
+
+## Goals
+
+- Create `leadfinder_group` package for T5.
+- Implement staging candidates from SourceHub translated DTO publications.
+- Implement materialization runs/results as a reviewable execution gate.
+- Implement minimal operational tables/facets from materialized staging, enough to prove the path without freezing the final LFG product.
+- Keep gateway/runtime agnostic.
+- Prove against 97 REIQ raws and 10 DTO publications.
+
+## Non-goals
+
+- No final full LFG app table explosion.
+- No Django/PostgREST/ORM dependency.
+- No provider calls.
+- No direct raw payload dump in docs/proofs.
+- No public RLS exposure.
+- No scoring/final map/list/detail UI.
+
+## Acceptance
+
+- PG18 lab applies T0-T5 package chain.
+- Creates 10 SourceHub translated DTO publications.
+- Creates 10 LFG staging candidates.
+- Creates 1 materialization run + 10 materialization results.
+- Creates minimal operational groups/events/facets from those results.
+- Browser-proof + vision confirms evidence.
+</pre></section><section><h2>05-task-review.md</h2><pre># Task Review — LFG staging/materialization/operational loop
+
+Status: delivered
+Updated: 2026-06-17T22:04:46
+Reviewer: Thor/default
+
+| Task | Requested | Delivered | Evidence | Verdict |
+| --- | --- | --- | --- | --- |
+| T1 | Persist PRD/tasks/ledger stack | Stack 10 created and maintained | 00-04 docs | PASS |
+| T2 | Worker A staging contract review | Review delivered/read | 08-lfg-staging-review.md | PASS |
+| T3 | Worker B materialization review | Review delivered/read | 09-lfg-materialization-review.md | PASS |
+| T4 | Worker C operational/facet review | Review delivered/read | 10-lfg-operational-facets-review.md | PASS |
+| T5 | Implement LFG staging candidates | `leadfinder_group/0001_staging_candidates.sql` | PG18 proof | PASS |
+| T6 | Implement materialization runs/results | `leadfinder_group/0002_materialization_runs.sql` | PG18 proof | PASS |
+| T7 | Implement operational minimum | `leadfinder_group/0003_operational_minimum.sql` | PG18 proof | PASS |
+| T8 | Integrated T0-T5 proof | 97 raws -&gt; 10 operational groups + 30 facets | `/tmp/slice10-counts.json` | PASS |
+| T9 | Browser-proof + vision | Pending at this document write | 06/08 | PENDING |
+
+## Proof JSON
+
+```json
+{
+  &quot;bridge_count&quot;: 10,
+  &quot;field_mapping_set_count&quot;: 1,
+  &quot;gateway_agnostic&quot;: true,
+  &quot;lfg_run_statuses&quot;: [
+    &quot;completed&quot;
+  ],
+  &quot;materialization_result_count&quot;: 10,
+  &quot;materialization_run_count&quot;: 1,
+  &quot;no_provider_calls&quot;: true,
+  &quot;no_raw_values_printed&quot;: true,
+  &quot;operational_event_count&quot;: 10,
+  &quot;operational_facet_count&quot;: 30,
+  &quot;operational_group_count&quot;: 10,
+  &quot;promotion_preparation_count&quot;: 10,
+  &quot;quality_report_count&quot;: 1,
+  &quot;raw_record_count&quot;: 97,
+  &quot;run_distinct_path_count&quot;: 9650,
+  &quot;run_extracted_path_count&quot;: 172700,
+  &quot;run_source_record_count&quot;: 97,
+  &quot;sourcehub_t4_statuses&quot;: [
+    &quot;ready_for_review&quot;
+  ],
+  &quot;staging_candidate_count&quot;: 10,
+  &quot;translated_dto_publication_count&quot;: 10
+}
+```
+
+## Active corrections
+
+- Used minimal 3-table operational model to avoid table explosion.
+- Used SourceHub DTO publications as input; no raw payload direct consumption.
+- Stored values internally where needed, but proof/docs/browser report only counts/statuses/hashes.
+</pre></section><section><h2>07-final-report.md</h2><pre># Final Report — LFG staging/materialization/operational loop
+
+Status: delivered before browser/commit final gate
+Updated: 2026-06-17T22:04:46
+Reviewer: Thor/default
+
+## Verdict
+
+The discussed loop from Matrix/SourceHub into LFG is now complete through a minimal T5 operational proof.
+
+```text
+T0 SourceHub raw evidence
+  -&gt; T1 Matrix extraction
+    -&gt; T2 LeadFinder gap bridge
+      -&gt; T3 Matrix quality_report
+        -&gt; T3.5 Matrix field_mapping_set
+          -&gt; T3.6 LeadFinder prepare-only promotions
+            -&gt; T4 SourceHub translated DTO publication
+              -&gt; T5.0 LFG staging candidates
+                -&gt; T5.1 materialization runs/results
+                  -&gt; T5.2 operational groups/events/facets minimum
+```
+
+## Delivered
+
+```text
+database/ddl/projects/prop4you/leadfinder_group/README.md
+database/ddl/projects/prop4you/leadfinder_group/0001_staging_candidates.sql
+database/ddl/projects/prop4you/leadfinder_group/0002_materialization_runs.sql
+database/ddl/projects/prop4you/leadfinder_group/0003_operational_minimum.sql
+```
+
+## Proof
+
+```json
+{
+  &quot;bridge_count&quot;: 10,
+  &quot;field_mapping_set_count&quot;: 1,
+  &quot;gateway_agnostic&quot;: true,
+  &quot;lfg_run_statuses&quot;: [
+    &quot;completed&quot;
+  ],
+  &quot;materialization_result_count&quot;: 10,
+  &quot;materialization_run_count&quot;: 1,
+  &quot;no_provider_calls&quot;: true,
+  &quot;no_raw_values_printed&quot;: true,
+  &quot;operational_event_count&quot;: 10,
+  &quot;operational_facet_count&quot;: 30,
+  &quot;operational_group_count&quot;: 10,
+  &quot;promotion_preparation_count&quot;: 10,
+  &quot;quality_report_count&quot;: 1,
+  &quot;raw_record_count&quot;: 97,
+  &quot;run_distinct_path_count&quot;: 9650,
+  &quot;run_extracted_path_count&quot;: 172700,
+  &quot;run_source_record_count&quot;: 97,
+  &quot;sourcehub_t4_statuses&quot;: [
+    &quot;ready_for_review&quot;
+  ],
+  &quot;staging_candidate_count&quot;: 10,
+  &quot;translated_dto_publication_count&quot;: 10
+}
+```
+
+## Non-claims
+
+- No final full LeadFinder product graph.
+- No property/owner/address/contact/scoring table explosion.
+- No Django/PostgREST/ORM dependency.
+- No provider calls.
+- No raw payload dump in docs/proofs.
+- No public RLS/API exposure.
+</pre></section><section><h2>08-lfg-staging-review.md</h2><pre># Review/proposta — LFG staging candidates a partir de SourceHub translated DTOs
+
+Status: proposta/review para T5.0; não é DDL final.
+Worker: A — LFG staging candidates contract review.
+Escopo alvo provável: `database/ddl/projects/prop4you/leadfinder_group/0001_staging_candidates.sql`.
+
+## 1. Conclusão curta
+
+A próxima fatia viável é criar um pacote `leadfinder_group` com uma tabela mínima de staging, `prop4you_leadfinder_group.staging_candidates`, alimentada exclusivamente por `prop4you_sourcehub.translated_dto_publications` T4.
+
+Recomendação principal: o staging deve ser um gate revisável entre SourceHub DTO e materialização LFG, não a materialização operacional final. Ele deve criar 10 candidatos iniciais a partir das 10 publicações DTO já provadas, preservando lineage por FK/hash e mantendo o desenho gateway/runtime agnostic.
+
+O staging não deve chamar provider, não deve ler corpus privado, não deve copiar `raw_payload`, não deve criar owner/property/lead final e não deve depender de Django/PostgREST/worker. A função de staging deve ser SQL/RPC pura e idempotente.
+
+## 2. Evidência lida no repo
+
+Arquivos revisados:
+
+- `docs/issues/10-prop4you-lfg-staging-materialization-operational/00-detection-and-analysis.md`
+- `docs/issues/10-prop4you-lfg-staging-materialization-operational/01-prd.md`
+- `docs/issues/10-prop4you-lfg-staging-materialization-operational/02-tasks.md`
+- `docs/issues/09-prop4you-sourcehub-translated-dto-publications/01-prd.md`
+- `docs/issues/09-prop4you-sourcehub-translated-dto-publications/09-sourcehub-dto-ddl-review.md`
+- `database/ddl/projects/prop4you/sourcehub/0001_sourcehub_corpus.sql`
+- `database/ddl/projects/prop4you/sourcehub/0002_translated_dto_publications.sql`
+- `database/ddl/projects/prop4you/matrix/0005_field_mapping_set_artifacts.sql`
+- `database/ddl/projects/prop4you/leadfinder/0001_canonical_dictionary.sql`
+- `database/ddl/projects/prop4you/leadfinder/0002_raw_evidence_gap_bridge.sql`
+- `docs/database-centric-app-model.md`
+- `docs/prop4you-database-centric-base-extraction.md`
+
+Pontos relevantes:
+
+- T4 já existe em SourceHub: `translated_dto_publications` referencia `raw_record_id`, `matrix_artifact_id` e `leadfinder_dictionary_version_id`.
+- `sourcehub/0002` declara explicitamente `NO_LFG_MATERIALIZATION` e marca T5 como posterior.
+- `matrix/0005` produz `field_mapping_set` sem valores raw e declara T4/T5 later.
+- LeadFinder atual possui dicionário/gaps/bridge, mas ainda não possui bounded context LFG operacional.
+- O PRD do issue 10 pede exatamente: 10 DTO publications -&gt; 10 LFG staging candidates -&gt; materialization runs/results -&gt; operational/facets mínimos.
+
+## 3. Boundary obrigatório para T5.0
+
+A DDL final de T5.0 deve deixar claro no cabeçalho:
+
+```sql
+-- package: prop4you/leadfinder_group
+-- file: 0001_staging_candidates.sql
+-- status: experimental / non-final
+-- purpose: LFG staging candidates derived from SourceHub T4 translated DTO publications.
+-- depends-on: sourcehub/0002_translated_dto_publications.sql, matrix/0005_field_mapping_set_artifacts.sql, leadfinder/0001_canonical_dictionary.sql
+-- idempotency: idempotent
+-- destructive: false
+-- [GATEWAY_AGNOSTIC] Callable by direct SQL, PostgREST RPC, Django/FastAPI passthrough, workers, or any other transport.
+-- [SOURCEHUB_T4_INPUT] Consumes only SourceHub translated DTO publication rows.
+-- [LFG_T5_STAGING_ONLY] Creates staging candidates only; materialization runs/results and operational entities remain later files.
+-- [NO_PROVIDER_CALLS] No HTTP/provider SDK/worker/cron/file reads.
+-- [NO_RAW_DUMPS] Does not copy SourceHub raw_payload and docs/proofs must not print DTO scalar payloads.
+```
+
+## 4. Schema e tabela recomendados
+
+Schema: `prop4you_leadfinder_group`.
+
+Tabela: `prop4you_leadfinder_group.staging_candidates`.
+
+A tabela deve ser durável e auditável, mas estreita. Ela deve apontar para SourceHub DTO e carregar somente o necessário para revisão/materialization-run posterior.
+
+Campos recomendados:
+
+```sql
+create schema if not exists prop4you_leadfinder_group;
+
+create table if not exists prop4you_leadfinder_group.staging_candidates (
+  id uuid primary key default uuidv7(),
+  public_ref text generated always as (base.make_public_ref(&#x27;p4ylfgs&#x27;, id)) stored,
+
+  source_publication_id uuid not null references prop4you_sourcehub.translated_dto_publications(id) on delete restrict,
+  raw_record_id uuid not null references prop4you_sourcehub.raw_records(id) on delete restrict,
+  matrix_artifact_id uuid not null references prop4you_matrix.transformation_artifacts(id) on delete restrict,
+  leadfinder_dictionary_version_id uuid not null references prop4you_leadfinder.canonical_dictionary_versions(id) on delete restrict,
+  provider_id uuid references prop4you_provider.providers(id) on delete restrict,
+  payload_class_id uuid references prop4you_provider.payload_classes(id) on delete restrict,
+
+  candidate_key text not null,
+  candidate_status text not null default &#x27;staged&#x27;,
+  candidate_gate_status text not null default &#x27;ready_for_review&#x27;,
+  review_status text not null default &#x27;unreviewed&#x27;,
+  candidate_kind text not null default &#x27;lfg_staging_candidate&#x27;,
+  candidate_schema_version text not null default &#x27;leadfinder_group.staging_candidate.v0&#x27;,
+
+  source_publication_key text not null,
+  source_publication_status text not null,
+  source_publication_gate_status text not null,
+  source_publication_review_status text not null,
+  source_translated_dto_sha256 text,
+  source_payload_sha256 text,
+  matrix_artifact_sha256 text,
+
+  candidate_facts jsonb not null default &#x27;{}&#x27;::jsonb,
+  candidate_summary jsonb not null default &#x27;{}&#x27;::jsonb,
+  quality_summary jsonb not null default &#x27;{}&#x27;::jsonb,
+  lineage_summary jsonb not null default &#x27;{}&#x27;::jsonb,
+  redaction_summary jsonb not null default &#x27;{}&#x27;::jsonb,
+  temporal_phase jsonb not null default &#x27;{&quot;sourcehub_dto_publication&quot;:&quot;T4&quot;,&quot;lfg_staging_candidate&quot;:&quot;T5_0&quot;,&quot;lfg_materialization_run&quot;:&quot;T5_1_later&quot;,&quot;lfg_operational_minimum&quot;:&quot;T5_2_later&quot;}&#x27;::jsonb,
+  metadata jsonb not null default &#x27;{}&#x27;::jsonb,
+
+  staged_at timestamptz not null default now(),
+  staged_by_actor_id text,
+  reviewed_at timestamptz,
+  reviewed_by_actor_id text,
+  superseded_by_candidate_id uuid references prop4you_leadfinder_group.staging_candidates(id) on delete set null,
+  superseded_at timestamptz,
+
+  active boolean not null default true,
+  activated_at timestamptz,
+  deactivated_at timestamptz,
+  deleted boolean not null default false,
+  deleted_at timestamptz,
+  deleted_by_actor_id text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  last_modified_by_actor_id text,
+  version integer not null default 1,
+
+  constraint staging_candidates_public_ref_key unique (public_ref),
+  constraint staging_candidates_source_publication_key unique (source_publication_id),
+  constraint staging_candidates_candidate_key_key unique (candidate_key),
+  constraint staging_candidates_candidate_key_format_chk check (candidate_key ~ &#x27;^[a-z][a-z0-9_.:-]{1,191}$&#x27;),
+  constraint staging_candidates_status_chk check (candidate_status in (&#x27;staged&#x27;,&#x27;blocked&#x27;,&#x27;ready_for_materialization_review&#x27;,&#x27;materialization_pending&#x27;,&#x27;materialized&#x27;,&#x27;rejected&#x27;,&#x27;superseded&#x27;,&#x27;archived&#x27;)),
+  constraint staging_candidates_gate_status_chk check (candidate_gate_status in (&#x27;not_started&#x27;,&#x27;ready_for_review&#x27;,&#x27;passed&#x27;,&#x27;blocked&#x27;,&#x27;not_applicable&#x27;)),
+  constraint staging_candidates_review_status_chk check (review_status in (&#x27;unreviewed&#x27;,&#x27;in_review&#x27;,&#x27;accepted_for_materialization&#x27;,&#x27;needs_sourcehub_revision&#x27;,&#x27;needs_matrix_revision&#x27;,&#x27;needs_dictionary_revision&#x27;,&#x27;needs_redaction&#x27;,&#x27;rejected&#x27;,&#x27;not_applicable&#x27;)),
+  constraint staging_candidates_kind_chk check (candidate_kind in (&#x27;lfg_staging_candidate&#x27;,&#x27;review_snapshot&#x27;,&#x27;regression_metadata&#x27;,&#x27;unknown&#x27;)),
+  constraint staging_candidates_schema_version_chk check (candidate_schema_version ~ &#x27;^[a-z][a-z0-9_.:-]{1,79}$&#x27;),
+  constraint staging_candidates_hash_chk check (source_translated_dto_sha256 is null or source_translated_dto_sha256 ~ &#x27;^[0-9a-f]{64}$&#x27;),
+  constraint staging_candidates_source_hash_chk check (source_payload_sha256 is null or source_payload_sha256 ~ &#x27;^[0-9a-f]{64}$&#x27;),
+  constraint staging_candidates_matrix_hash_chk check (matrix_artifact_sha256 is null or matrix_artifact_sha256 ~ &#x27;^[0-9a-f]{64}$&#x27;),
+  constraint staging_candidates_facts_object_chk check (jsonb_typeof(candidate_facts) = &#x27;object&#x27;),
+  constraint staging_candidates_summary_object_chk check (jsonb_typeof(candidate_summary) = &#x27;object&#x27;),
+  constraint staging_candidates_quality_object_chk check (jsonb_typeof(quality_summary) = &#x27;object&#x27;),
+  constraint staging_candidates_lineage_object_chk check (jsonb_typeof(lineage_summary) = &#x27;object&#x27;),
+  constraint staging_candidates_redaction_object_chk check (jsonb_typeof(redaction_summary) = &#x27;object&#x27;),
+  constraint staging_candidates_temporal_object_chk check (jsonb_typeof(temporal_phase) = &#x27;object&#x27;),
+  constraint staging_candidates_metadata_object_chk check (jsonb_typeof(metadata) = &#x27;object&#x27;),
+  constraint staging_candidates_version_positive_chk check (version &gt; 0)
+);
+```
+
+### Observação sobre `candidate_facts`
+
+Minha recomendação é não copiar o `translated_dto` inteiro cegamente. O staging deve usar uma destas duas políticas, nesta ordem de preferência:
+
+1. Para a fatia inicial, persistir em `candidate_facts` apenas `translated_dto-&gt;&#x27;fields&#x27;` e metadados de contrato/lineage em colunas separadas.
+2. Se houver risco de PII no proof, manter `candidate_facts = &#x27;{}&#x27;` e usar apenas hashes, contagens e `candidate_summary` até existir review de redaction.
+
+Em ambos os casos, a DDL/proof não deve imprimir valores escalares do DTO. A tabela pode armazenar valores traduzidos para revisão interna, mas a projeção de review deve mostrar contagens, famílias/chaves e hashes, não dumps.
+
+## 5. Índices recomendados
+
+```sql
+create index if not exists staging_candidates_status_gate_idx
+  on prop4you_leadfinder_group.staging_candidates (candidate_status, candidate_gate_status, staged_at desc)
+  where deleted = false;
+
+create index if not exists staging_candidates_source_publication_status_idx
+  on prop4you_leadfinder_group.staging_candidates (source_publication_id, candidate_status)
+  where deleted = false;
+
+create index if not exists staging_candidates_dictionary_status_idx
+  on prop4you_leadfinder_group.staging_candidates (leadfinder_dictionary_version_id, candidate_status)
+  where deleted = false;
+
+create index if not exists staging_candidates_provider_payload_idx
+  on prop4you_leadfinder_group.staging_candidates (provider_id, payload_class_id, candidate_status)
+  where deleted = false;
+
+create index if not exists staging_candidates_facts_gin_idx
+  on prop4you_leadfinder_group.staging_candidates using gin (candidate_facts jsonb_path_ops);
+
+create index if not exists staging_candidates_summary_gin_idx
+  on prop4you_leadfinder_group.staging_candidates using gin (candidate_summary jsonb_path_ops);
+```
+
+## 6. Validação por trigger ou função
+
+A DDL deve validar que o candidato sempre reflete sua publicação SourceHub:
+
+- `source_publication_id` precisa existir, `deleted=false`, `active=true`.
+- `publication_kind` deve ser `leadfinder_candidate` ou outro valor explicitamente aceito para staging.
+- `publication_status` deve estar em `candidate`, `ready_for_review` ou `published`; para `published`, gate precisa ser `passed` por constraint já existente em SourceHub.
+- `publication_gate_status` deve estar em `ready_for_review` ou `passed` para staging normal; `blocked` só deve gerar candidate `blocked`.
+- `raw_record_id`, `matrix_artifact_id`, `leadfinder_dictionary_version_id`, `provider_id`, `payload_class_id` devem ser copiados da publicação e não aceitos como valores divergentes do caller.
+- `matrix_artifact_kind` deve continuar `field_mapping_set` via a validação já existente em SourceHub; T5.0 pode revalidar para defesa em profundidade.
+- `source_translated_dto_sha256`, `source_payload_sha256` e `matrix_artifact_sha256` devem ser copiados da publicação.
+
+A função/trigger não deve consultar provider, arquivos externos ou raw corpus. Se ler `translated_dto`, deve ler somente a coluna T4 já publicada.
+
+## 7. Função recomendada
+
+Nome recomendado: `prop4you_leadfinder_group.stage_candidates_from_translated_dto_publications(...)`.
+
+Assinatura proposta:
+
+```sql
+create or replace function prop4you_leadfinder_group.stage_candidates_from_translated_dto_publications(
+  p_limit integer default 10,
+  p_publication_statuses text[] default array[&#x27;ready_for_review&#x27;,&#x27;published&#x27;,&#x27;candidate&#x27;],
+  p_candidate_status text default &#x27;staged&#x27;,
+  p_candidate_gate_status text default &#x27;ready_for_review&#x27;,
+  p_actor_id text default null,
+  p_metadata jsonb default &#x27;{}&#x27;::jsonb
+)
+returns setof prop4you_leadfinder_group.staging_candidates
+language plpgsql
+volatile;
+```
+
+Regras do corpo:
+
+1. `effective_limit := greatest(1, least(coalesce(p_limit, 10), 1000))`.
+2. Buscar publicações T4 `deleted=false`, `active=true`, `publication_kind=&#x27;leadfinder_candidate&#x27;`.
+3. Aceitar apenas `publication_status` em `p_publication_statuses`, limitado internamente ao vocabulário permitido.
+4. Exigir `publication_gate_status in (&#x27;ready_for_review&#x27;,&#x27;passed&#x27;)` para candidato normal.
+5. Ordenar por `published_at nulls last, created_at, id` para reproduzibilidade.
+6. Gerar `candidate_key` determinístico: `lfg_stage:` + publication uuid sem hífen, ou incluir hash quando disponível.
+7. Inserir com `on conflict (source_publication_id) do update` ou `on conflict (candidate_key) do update`; preferir unique em `source_publication_id` para um candidato ativo por publicação T4.
+8. Copiar somente refs/statuses/hashes/summaries e `translated_dto-&gt;&#x27;fields&#x27;` para `candidate_facts` se a política escolhida permitir.
+9. Atualizar `last_modified_by_actor_id` e `metadata` com flags `gateway_agnostic`, `no_provider_calls`, `no_raw_payload_dump`, `sourcehub_phase=&#x27;T4&#x27;`, `lfg_phase=&#x27;T5_0&#x27;`.
+10. Retornar as linhas criadas/atualizadas.
+
+Pseudocorpo essencial:
+
+```sql
+for pub_row in
+  select p.*
+    from prop4you_sourcehub.translated_dto_publications p
+   where p.deleted = false
+     and p.active = true
+     and p.publication_kind = &#x27;leadfinder_candidate&#x27;
+     and p.publication_status = any(effective_statuses)
+     and p.publication_gate_status in (&#x27;ready_for_review&#x27;,&#x27;passed&#x27;)
+   order by p.published_at nulls last, p.created_at, p.id
+   limit effective_limit
+loop
+  candidate_key_value := &#x27;lfg_stage:&#x27; || replace(pub_row.id::text, &#x27;-&#x27;, &#x27;&#x27;);
+
+  insert into prop4you_leadfinder_group.staging_candidates as sc (...)
+  values (
+    pub_row.id,
+    pub_row.raw_record_id,
+    pub_row.matrix_artifact_id,
+    pub_row.leadfinder_dictionary_version_id,
+    pub_row.provider_id,
+    pub_row.payload_class_id,
+    candidate_key_value,
+    p_candidate_status,
+    p_candidate_gate_status,
+    &#x27;unreviewed&#x27;,
+    pub_row.publication_key,
+    pub_row.publication_status,
+    pub_row.publication_gate_status,
+    pub_row.review_status,
+    pub_row.translated_dto_sha256,
+    pub_row.source_payload_sha256,
+    pub_row.matrix_artifact_sha256,
+    coalesce(pub_row.translated_dto-&gt;&#x27;fields&#x27;, &#x27;{}&#x27;::jsonb),
+    jsonb_build_object(
+      &#x27;source_dto_contract&#x27;, pub_row.dto_schema_version,
+      &#x27;field_count&#x27;, coalesce(jsonb_object_length(pub_row.translated_dto-&gt;&#x27;fields&#x27;), 0),
+      &#x27;value_policy&#x27;, &#x27;values_not_printed_in_docs_or_proofs&#x27;
+    ),
+    pub_row.quality_summary,
+    jsonb_build_object(
+      &#x27;source_publication_id&#x27;, pub_row.id,
+      &#x27;raw_record_id&#x27;, pub_row.raw_record_id,
+      &#x27;matrix_artifact_id&#x27;, pub_row.matrix_artifact_id,
+      &#x27;leadfinder_dictionary_version_id&#x27;, pub_row.leadfinder_dictionary_version_id
+    ),
+    pub_row.redaction_summary,
+    jsonb_build_object(&#x27;gateway_agnostic&#x27;, true, &#x27;no_provider_calls&#x27;, true, &#x27;no_raw_payload_dump&#x27;, true) || coalesce(p_metadata, &#x27;{}&#x27;::jsonb)
+  )
+  on conflict (source_publication_id) do update
+    set candidate_status = excluded.candidate_status,
+        candidate_gate_status = excluded.candidate_gate_status,
+        source_publication_status = excluded.source_publication_status,
+        source_publication_gate_status = excluded.source_publication_gate_status,
+        source_publication_review_status = excluded.source_publication_review_status,
+        source_translated_dto_sha256 = excluded.source_translated_dto_sha256,
+        source_payload_sha256 = excluded.source_payload_sha256,
+        matrix_artifact_sha256 = excluded.matrix_artifact_sha256,
+        candidate_facts = excluded.candidate_facts,
+        candidate_summary = excluded.candidate_summary,
+        quality_summary = excluded.quality_summary,
+        lineage_summary = excluded.lineage_summary,
+        redaction_summary = excluded.redaction_summary,
+        metadata = sc.metadata || excluded.metadata,
+        updated_at = now(),
+        last_modified_by_actor_id = p_actor_id
+  returning * into result_row;
+
+  return next result_row;
+end loop;
+```
+
+## 8. View de revisão segura
+
+Criar uma view sem dumps de valores:
+
+`prop4you_leadfinder_group.v_staging_candidate_review`
+
+Campos recomendados:
+
+- candidate id/public_ref/key/status/gate/review.
+- SourceHub publication public_ref/key/status/gate/review.
+- raw record public_ref, Matrix artifact key, dictionary version key.
+- provider_key, payload_class_key.
+- hashes: translated DTO, source payload, Matrix artifact.
+- contagens: `candidate_field_count`, `quality_summary`, `redaction_summary`.
+- timestamps.
+
+Evitar na view inicial:
+
+- `candidate_facts` completo.
+- `translated_dto` completo.
+- `raw_payload` completo.
+- qualquer valor escalar de endereço, telefone, email, owner name, contact ou provider record.
+
+## 9. Prefixo público e lifecycle
+
+Registrar prefixo:
+
+```sql
+select base.register_public_id_prefix(
+  &#x27;p4ylfgs&#x27;,
+  &#x27;prop4you_leadfinder_group&#x27;,
+  &#x27;staging_candidates&#x27;,
+  &#x27;Prop4You LFG staging candidate&#x27;
+);
+```
+
+Aplicar triggers padrão:
+
+- `base.set_lifecycle_defaults()` em insert.
+- `base.touch_updated_at()` em update.
+- `base.increment_version()` em update.
+
+## 10. Relação com T5.1 e T5.2
+
+T5.0 deve preparar,</pre></section><section><h2>09-lfg-materialization-review.md</h2><pre># Review — LFG materialization runs/results
+
+Status: proposta/review operacional; não é DDL final.
+Worker: B — LFG materialization run/result review gate.
+Escopo alvo futuro: `database/ddl/projects/prop4you/leadfinder_group/0002_materialization_runs.sql`.
+
+## 1. Conclusão curta
+
+A próxima camada após staging deve ser um gate explícito de execução com duas tabelas mínimas:
+
+- `prop4you_leadfinder_group.materialization_runs`: uma execução/revisão em lote, ligada a um escopo de staging e a um `sourcehub.translated_dto`/dictionary/matrix baseline.
+- `prop4you_leadfinder_group.materialization_results`: um resultado por staging candidate/publicação DTO, com status, hash/lineage, payload operacional mínimo e bloqueios revisáveis.
+
+Esse par deve ficar entre LFG staging e qualquer tabela operacional. Ele não deve pular direto para produto final, não deve criar o grafo final LeadFinder, e não deve espalhar owners/properties/leads em dezenas de tabelas. A função de materialização deve transformar somente candidates elegíveis em resultados revisáveis; uma etapa separada pode promover resultados `passed/accepted` para o operacional mínimo.
+
+## 2. Evidência lida no repo
+
+Arquivos revisados:
+
+- `database/ddl/projects/prop4you/sourcehub/0002_translated_dto_publications.sql`
+- `database/ddl/projects/prop4you/sourcehub/0001_sourcehub_corpus.sql`
+- `database/ddl/projects/prop4you/leadfinder/0001_canonical_dictionary.sql`
+- `database/ddl/projects/prop4you/matrix/0002_mapping_sessions.sql`
+- `database/ddl/projects/prop4you/matrix/0005_field_mapping_set_artifacts.sql`
+- `docs/issues/09-prop4you-sourcehub-translated-dto-publications/11-executive-synthesis.md`
+- `docs/issues/10-prop4you-lfg-staging-materialization-operational/00-detection-and-analysis.md`
+- `docs/issues/10-prop4you-lfg-staging-materialization-operational/01-prd.md`
+- `docs/issues/10-prop4you-lfg-staging-materialization-operational/02-tasks.md`
+
+Pontos relevantes:
+
+- Slice 09 provou: `97 REIQ raws -&gt; 10 bridge rows -&gt; 1 field_mapping_set -&gt; 10 SourceHub translated DTO publications -&gt; 0 LFG materializations`.
+- `sourcehub/0002` declara explicitamente `T4` e `leadfinder_materialization = T5_later`; portanto T5 deve consumir publicações, não raw payload direto.
+- `translated_dto_publications` já expõe lineage suficiente: `raw_record_id`, `matrix_artifact_id`, `leadfinder_dictionary_version_id`, provider/payload class, hashes e summaries.
+- `publish_translated_dtos_from_field_mapping_set` pode gerar 10 DTOs `ready_for_review`; LFG não deve reexecutar Matrix nem ler provider.
+- `raw_records.leadfinder_publication_status` já marca `candidate_dto_ready` ou `published`, mas isso ainda é SourceHub readiness, não materialização LFG.
+- `leadfinder/0001` ainda é dictionary/candidates/gaps; não há grafo operacional final para assumir.
+
+## 3. Boundary obrigatório do gate T5.1
+
+Cabeçalho recomendado para a DDL futura:
+
+```sql
+-- package: prop4you/leadfinder_group
+-- file: 0002_materialization_runs.sql
+-- status: experimental / non-final
+-- purpose: reviewable LFG materialization run/result gate from LFG staging candidates into minimal operational candidates.
+-- depends-on: leadfinder_group/0001_staging_candidates.sql, sourcehub/0002_translated_dto_publications.sql, leadfinder/0001_canonical_dictionary.sql, matrix/0002_mapping_sessions.sql
+-- idempotency: idempotent
+-- destructive: false
+-- [GATEWAY_AGNOSTIC] Callable by direct SQL, PostgREST RPC, ORM, workers, or other gateways.
+-- [NO_PROVIDER_CALLS] No HTTP/provider calls, no corpus reads, no secrets.
+-- [NO_RAW_PAYLOAD_DUMP] Results store compact operational candidate JSON/summaries, not raw provider payload dumps.
+-- [REVIEW_GATE] materialization_runs/results are a gate between staging and operational tables.
+-- [NO_FINAL_PRODUCT_TABLE_EXPLOSION] Does not create final LFG product graph/list/detail/scoring model.
+```
+
+## 4. Modelo recomendado: `materialization_runs`
+
+Nome recomendado: `prop4you_leadfinder_group.materialization_runs`.
+
+Responsabilidade: registrar uma tentativa controlada de transformar staging candidates em resultados revisáveis.
+
+Campos mínimos recomendados:
+
+- `id uuid primary key default uuidv7()`
+- `public_ref text generated always as (base.make_public_ref(&#x27;p4ylfgr&#x27;, id)) stored`
+- `run_key text not null unique`
+- `run_status text not null default &#x27;draft&#x27;`
+- `run_gate_status text not null default &#x27;not_started&#x27;`
+- `run_kind text not null default &#x27;staging_to_operational_minimum&#x27;`
+- `staging_scope text not null default &#x27;sourcehub_translated_dto_publications&#x27;`
+- `leadfinder_dictionary_version_id uuid not null references prop4you_leadfinder.canonical_dictionary_versions(id)`
+- `matrix_artifact_id uuid references prop4you_matrix.transformation_artifacts(id)`
+- `provider_id uuid references prop4you_provider.providers(id)`
+- `payload_class_id uuid references prop4you_provider.payload_classes(id)`
+- `input_candidate_count integer not null default 0`
+- `result_count integer not null default 0`
+- `passed_count integer not null default 0`
+- `blocked_count integer not null default 0`
+- `failed_count integer not null default 0`
+- `materialization_plan jsonb not null default &#x27;{}&#x27;::jsonb`
+- `quality_summary jsonb not null default &#x27;{}&#x27;::jsonb`
+- `redaction_summary jsonb not null default &#x27;{}&#x27;::jsonb`
+- `metadata jsonb not null default &#x27;{}&#x27;::jsonb`
+- `started_at timestamptz`
+- `finished_at timestamptz`
+- `reviewed_at timestamptz`
+- `reviewed_by_actor_id text`
+- `approved_at timestamptz`
+- lifecycle padrão: `active`, `deleted`, `created_at`, `updated_at`, `last_modified_by_actor_id`, `version`.
+
+Vocabulário sugerido:
+
+- `run_status`: `draft`, `running`, `completed`, `completed_with_blocks`, `failed`, `cancelled`, `superseded`, `archived`.
+- `run_gate_status`: `not_started`, `ready_for_review`, `passed`, `blocked`, `not_applicable`.
+- `run_kind`: `staging_to_operational_minimum`, `dry_run`, `replay`, `regression_check`, `unknown`.
+
+Checks importantes:
+
+- `run_key ~ &#x27;^[a-z][a-z0-9_.:-]{1,191}$&#x27;`.
+- contadores `&gt;= 0`.
+- `run_gate_status = &#x27;passed&#x27;` somente se `run_status in (&#x27;completed&#x27;,&#x27;completed_with_blocks&#x27;)` e `failed_count = 0`.
+- `finished_at &gt;= started_at`, quando ambos existirem.
+- JSONB columns com `jsonb_typeof(...) = &#x27;object&#x27;`.
+
+Índices:
+
+- `(run_status, run_gate_status, created_at desc)`.
+- `(leadfinder_dictionary_version_id, run_status)`.
+- `(matrix_artifact_id, run_status)` where not null.
+- `(provider_id, payload_class_id, run_status)`.
+
+## 5. Modelo recomendado: `materialization_results`
+
+Nome recomendado: `prop4you_leadfinder_group.materialization_results`.
+
+Responsabilidade: preservar uma linha por staging candidate processado, sem ainda escrever diretamente no operacional final.
+
+Campos mínimos recomendados:
+
+- `id uuid primary key default uuidv7()`
+- `public_ref text generated always as (base.make_public_ref(&#x27;p4ylfgz&#x27;, id)) stored`
+- `run_id uuid not null references prop4you_leadfinder_group.materialization_runs(id) on delete restrict`
+- `staging_candidate_id uuid not null references prop4you_leadfinder_group.staging_candidates(id) on delete restrict`
+- `source_publication_id uuid not null references prop4you_sourcehub.translated_dto_publications(id) on delete restrict`
+- `raw_record_id uuid not null references prop4you_sourcehub.raw_records(id) on delete restrict`
+- `matrix_artifact_id uuid not null references prop4you_matrix.transformation_artifacts(id) on delete restrict`
+- `leadfinder_dictionary_version_id uuid not null references prop4you_leadfinder.canonical_dictionary_versions(id) on delete restrict`
+- `result_key text not null unique`
+- `result_status text not null default &#x27;candidate&#x27;`
+- `result_gate_status text not null default &#x27;ready_for_review&#x27;`
+- `operation_kind text not null default &#x27;upsert_operational_minimum_candidate&#x27;`
+- `dedupe_key text`
+- `source_publication_sha256 text`
+- `materialized_payload jsonb not null default &#x27;{}&#x27;::jsonb`
+- `materialized_payload_sha256 text`
+- `field_coverage_summary jsonb not null default &#x27;{}&#x27;::jsonb`
+- `blocking_summary jsonb not null default &#x27;{}&#x27;::jsonb`
+- `lineage_summary jsonb not null default &#x27;{}&#x27;::jsonb`
+- `target_schema name`
+- `target_table name`
+- `target_id uuid`
+- lifecycle padrão: `active`, `deleted`, `created_at`, `updated_at`, `last_modified_by_actor_id`, `version`.
+
+Vocabulário sugerido:
+
+- `result_status`: `candidate`, `materialized_candidate`, `blocked`, `failed`, `skipped`, `accepted_for_operational`, `promoted_to_operational`, `rejected`, `superseded`, `archived`.
+- `result_gate_status`: `not_started`, `ready_for_review`, `passed`, `blocked`, `not_applicable`.
+- `operation_kind`: `upsert_operational_minimum_candidate`, `dry_run_validate`, `skip_duplicate`, `block_privacy`, `block_mapping_gap`, `unknown`.
+
+Checks importantes:
+
+- `unique (run_id, staging_candidate_id)`.
+- `result_key` determinístico, por exemplo `lfgmat:&lt;run_uuid_sem_hifen&gt;:&lt;staging_uuid_sem_hifen&gt;` ou baseado em `source_publication_id` quando reprocessável.
+- `source_publication_sha256` e `materialized_payload_sha256` com regex `^[0-9a-f]{64}$`, quando não nulos.
+- `materialized_payload`, `field_coverage_summary`, `blocking_summary`, `lineage_summary` devem ser objetos JSONB.
+- `target_schema/table/id` devem ser todos nulos ou todos preenchidos. Antes da promoção operacional, permanecer nulos.
+- `result_status = &#x27;promoted_to_operational&#x27;` exige `target_id is not null` e `result_gate_status = &#x27;passed&#x27;`.
+
+Índices:
+
+- `(run_id, result_status, result_gate_status)`.
+- `(staging_candidate_id, result_status)`.
+- `(source_publication_id, result_status)`.
+- `(raw_record_id)` para auditoria.
+- `(leadfinder_dictionary_version_id, result_status)`.
+- partial unique por `dedupe_key where deleted=false and dedupe_key is not null`, se a dedupe for estabilizada.
+- GIN em `field_coverage_summary`/`blocking_summary` se os reviews filtrarem por motivos.
+
+## 6. Regras de elegibilidade
+
+A função de execução deve aceitar somente staging candidates que atendam ao gate anterior. Como o Worker A ainda definirá `staging_candidates`, recomendo compatibilidade mínima:
+
+- staging candidate ativo e não deletado.
+- staging status em algo equivalente a `ready_for_materialization` ou `accepted_for_materialization`.
+- staging gate em `passed` ou `ready_for_review`, conforme modo `dry_run` vs execução real.
+- `source_publication_id` apontando para `translated_dto_publications` ativa, não deletada, `publication_status in (&#x27;ready_for_review&#x27;,&#x27;published&#x27;)` e `publication_gate_status in (&#x27;ready_for_review&#x27;,&#x27;passed&#x27;)`.
+- `source_publication.review_status` não pode ser `needs_redaction`, `needs_mapping_revision`, `needs_dictionary_revision`, `rejected`.
+- dictionary version consistente entre staging candidate, publication, Matrix artifact e run.
+- Matrix artifact deve continuar `artifact_kind=&#x27;field_mapping_set&#x27;`, não deletado, gate `ready_for_review/passed`.
+- sem leitura direta de `raw_payload` durante materialização, exceto FK/hashes/lineage já publicados.
+
+Para `run_gate_status=&#x27;passed&#x27;`, recomendo exigir entradas com gate anterior `passed`; para `ready_for_review`, aceitar entradas em review, desde que a saída fique `ready_for_review` e não seja promovida.
+
+## 7. Funções recomendadas
+
+### 7.1 Criar execução
+
+Nome sugerido:
+
+```sql
+prop4you_leadfinder_group.create_materialization_run(
+  p_run_key text default null,
+  p_dictionary_version_id uuid,
+  p_matrix_artifact_id uuid default null,
+  p_provider_id uuid default null,
+  p_payload_class_id uuid default null,
+  p_limit integer default 100,
+  p_run_kind text default &#x27;staging_to_operational_minimum&#x27;,
+  p_actor_id text default null,
+  p_metadata jsonb default &#x27;{}&#x27;::jsonb
+)
+```
+
+Deve criar `materialization_runs` em `running` ou `draft`, com `materialization_plan` contendo filtros e fase temporal:
+
+```json
+{
+  &quot;sourcehub_dto_publication&quot;: &quot;T4&quot;,
+  &quot;lfg_staging&quot;: &quot;T5.0&quot;,
+  &quot;lfg_materialization_gate&quot;: &quot;T5.1&quot;,
+  &quot;operational_minimum&quot;: &quot;T5.2_later&quot;,
+  &quot;no_provider_calls&quot;: true,
+  &quot;no_raw_payload_dump&quot;: true
+}
+```
+
+### 7.2 Executar run e gerar results
+
+Nome sugerido:
+
+```sql
+prop4you_leadfinder_group.execute_materialization_run(
+  p_run_id uuid,
+  p_limit integer default 100,
+  p_actor_id text default null
+)
+returns setof prop4you_leadfinder_group.materialization_results
+```
+
+Comportamento:
+
+1. Bloquear run inexistente, deletado, finalizado ou com status incompatível.
+2. Selecionar staging candidates elegíveis e suas publicações SourceHub.
+3. Validar consistência dictionary/matrix/provider/payload class.
+4. Construir `materialized_payload` compacto e versionado a partir do staging candidate/translated DTO, não do raw payload.
+5. Gravar `materialization_results` idempotentes por `(run_id, staging_candidate_id)` ou `result_key`.
+6. Classificar cada linha como `materialized_candidate`, `blocked`, `failed` ou `skipped`, com `blocking_summary` explícito.
+7. Atualizar contadores do run e fechar com `completed`, `completed_with_blocks` ou `failed`.
+8. Não inserir em tabelas operacionais; isso pertence à etapa T5.2.
+
+### 7.3 Marcar gate/review
+
+Nome sugerido:
+
+```sql
+prop4you_leadfinder_group.review_materialization_result(
+  p_result_id uuid,
+  p_result_gate_status text,
+  p_result_status text default null,
+  p_actor_id text default null,
+  p_review_note text default null,
+  p_metadata jsonb default &#x27;{}&#x27;::jsonb
+)
+```
+
+Aprovar/promover deve ser separado:
+
+- `review_materialization_result`: muda gate/status de resultado.
+- T5.2: função operacional consome apenas results `result_gate_status=&#x27;passed&#x27;` e `result_status=&#x27;accepted_for_operational&#x27;`.
+
+## 8. Payload materializado: formato mínimo
+
+`materialized_payload` não deve ser um produto final. Deve ser um envelope auditável:
+
+```json
+{
+  &quot;contract&quot;: &quot;leadfinder_group.materialization_result.v0&quot;,
+  &quot;gateway_agnostic&quot;: true,
+  &quot;source&quot;: {
+    &quot;source_publication_id&quot;: &quot;uuid&quot;,
+    &quot;staging_candidate_id&quot;: &quot;uuid&quot;,
+    &quot;raw_record_id&quot;: &quot;uuid&quot;,
+    &quot;translated_dto_sha256&quot;: &quot;sha256&quot;
+  },
+  &quot;dictionary&quot;: {
+    &quot;dictionary_version_id&quot;: &quot;uuid&quot;
+  },
+  &quot;candidate&quot;: {
+    &quot;entity_key&quot;: &quot;stable key if available&quot;,
+    &quot;facets&quot;: {},
+    &quot;situations&quot;: [],
+    &quot;lineage_refs&quot;: []
+  },
+  &quot;quality&quot;: {
+    &quot;required_field_count&quot;: 0,
+    &quot;present_field_count&quot;: 0,
+    &quot;blocked_reasons&quot;: []
+  },
+  &quot;temporal_phase&quot;: {
+    &quot;sourcehub_dto_publication&quot;: &quot;T4&quot;,
+    &quot;lfg_staging&quot;: &quot;T5.0&quot;,
+    &quot;lfg_materialization_gate&quot;: &quot;T5.1&quot;,
+    &quot;operational_minimum&quot;: &quot;T5.2_later&quot;
+  }
+}
+```
+
+Permitir valores derivados do DTO/staging para provar a jornada no banco, mas documentação/proofs não devem imprimir escalares sensíveis. Para browser-proof, use contagens, refs, hashes, status e timestamps.
+
+## 9. Relação com operacional mínimo T5.2
+
+O gate B deve entregar para o Worker C/Thor somente resultados aceitos, não tabelas finais.
+
+Regra recomendada:
+
+```text
+SourceHub translated DTO publication
+  -&gt; LFG staging candidate
+  -&gt; materialization run/result
+  -&gt; minimal operational group/event/facet only if result_gate_status=&#x27;passed&#x27;
+```
+
+Não recomendo que `execute_materialization_run` preencha `target_schema/table/id`. Esses campos ficam nulos até uma função T5.2 promover resultados aceitos. Isso evita pular o gate e permite revisão antes de qualquer entidade operacional.
+
+## 10. Views de revisão
+
+Criar pelo menos duas views:
+
+- `v_materialization_run_review`: run + contadores + dictionary/matrix/provider + gate/status.
+- `v_materialization_result_review`: result + run_key + staging/publication refs + hashes + status/gate + blocking/coverage summaries.
+
+A view de result deve omitir/raw payload e preferir:
+
+- `public_ref`
+- `run_public_ref`
+- `source_publication_public_ref`
+- `staging_candidate_public_ref`
+- `raw_record_public_ref`
+- `translated_dto_sha256`
+- `materialized_payload_sha256`
+- contagens e statuses
+
+## 11. Idempotência e concorrência
+
+Recomendações:
+
+- `run_key` determinístico por escopo quando for replay/proof; exemplo `lfgmat:reiq:property_search_result:&lt;artifact_short&gt;:&lt;dictionary_short&gt;:proof10`.
+- `materialization_results` unique por `(run_id, staging_candidate_id)` para evitar duplicação dentro da run.
+- Não usar `on conflict` em partial unique index como caminho primário; use `result_key` ou `(run_id, staging_candidate_id)`.
+- Atualizar contadores do run por agregação dos results após execução, não por incremento cego em loop.
+- Evitar side effects fora do schema `prop4you_leadfinder_group` durante T5.1, exceto timestamps/status do próprio staging se o Worker A definir status como `materialization_in_review`.
+
+## 12. Privacidade e segurança
+
+- Não imprimir `translated_dto` completo em proof/review browser.
+- Não ler `raw_records.raw_payload` na função T5.1 para preencher resultado; o contrato de entrada é T4/T5.0.
+- `blocking_summary` pode conter códigos (`missing_required_field`, `privacy_boundary`, `dictionary_mismatch`), mas não valores pessoais.
+- Sem RLS pública nesta fatia.
+- Sem provider calls, cron, pg_net, secrets, workers obrigatórios ou dependência Django/PostgREST.
+
+## 13. Critérios de aceitação para esta camada
+
+Para a prova do PRD:
+
+- Uma run criada.
+- Dez staging candidates processados.
+- Dez `materialization_results` criados.
+- Contadores do run batem: `input_candidate_count=10`, `result_count=10`, e `passed/blocked/failed` somam 10.
+- Nenhuma tabela operacional é preenchida por T5.1 diretamente.
+- Browser-proof mostra refs/status/contagens/hashes, não payload bruto nem escalares DTO sensíveis.
+
+## 14. Riscos / decisões pendentes
+
+1. O Worker A ainda precisa fechar o contrato exato de `staging_candidates`; este review presume FK `staging_candidate_id` e vínculo com `source_publication_id`.
+2. O nome do schema/pacote proposto pelo PRD é `leadfinder_group`; o schema deve ser algo como `prop4you_leadfinder_group` para manter padrão do repo.
+3. Definir se `run_gate_status=&#x27;passed&#x27;` requer todos results passed ou aceita `completed_with_blocks` com blocks explicitamente revisados.
+4. Definir se `materialized_payload` guarda facetas já no formato T5.2 ou apenas envelope intermediário. Minha recomendação: enve</pre></section><section><h2>10-lfg-operational-facets-review.md</h2><pre># Worker C — LFG operational/facet minimum review
+
+Status: delivered
+Updated: 2026-06-17T20:54:54-04:00
+Scope: T5.2 / futuro `leadfinder_group/0003_operational_minimum.sql`
+
+## Veredito
+
+Recomendo um mínimo operacional de 3 tabelas, no máximo, para provar o caminho T4 -&gt; staging -&gt; materialization gate -&gt; operational sem congelar o produto final Lead Finder Group:
+
+1. `prop4you_leadfinder_group.operational_groups`
+2. `prop4you_leadfinder_group.operational_group_events`
+3. `prop4you_leadfinder_group.operational_group_facets`
+
+Esse desenho satisfaz a aceitação de &quot;minimal operational groups/events/facets&quot; e evita explodir agora em `properties`, `owners`, `addresses`, `phones`, `emails`, `situations`, `valuations`, `relationships`, etc. Essas entidades ainda não devem virar tabelas canônicas nesta fatia.
+
+## Regra de fronteira
+
+- LeadFinder/LFG pode criar o agrupamento operacional mínimo depois de um resultado de materialização revisável.
+- SourceHub continua dono de ingress, raw evidence, lineage e DTO publication.
+- Matrix continua dono dos artefatos de mapeamento/semântica.
+- O mínimo operacional não deve copiar raw payload, não deve chamar provider, não deve expor RLS pública e não deve se tornar o modelo final de property/owner/lead.
+
+## Strong FK vs lineage JSONB
+
+Usar FK forte somente para contratos internos estáveis do próprio pacote `leadfinder_group`:
+
+- `operational_groups.materialization_result_id -&gt; materialization_results(id)` ou equivalente definido em `0002_materialization_runs.sql`.
+- Opcionalmente `materialization_run_id -&gt; materialization_runs(id)` se o Worker B/DDL T5.1 tornar esse contrato explícito e estável.
+- `operational_group_events.group_id -&gt; operational_groups(id)`.
+- `operational_group_facets.group_id -&gt; operational_groups(id)`.
+- `operational_group_facets.created_by_event_id -&gt; operational_group_events(id)` somente se o evento inicial for sempre criado junto; caso contrário manter nullable.
+
+Não recomendo FK direta, nesta fatia, de operational/facets para provider/raw/class/Matrix/SourceHub externos. Preserve esses vínculos como `lineage jsonb`, porque o formato do evidence/provider ainda é instável e as decisões de canonical graph ainda não estão congeladas.
+
+Lineage JSONB mínimo recomendado por row operacional/facet:
+
+```json
+{
+  &quot;sourcehub_publication_id&quot;: &quot;uuid-as-text&quot;,
+  &quot;sourcehub_publication_public_ref&quot;: &quot;p4yshd_...&quot;,
+  &quot;source_payload_sha256&quot;: &quot;sha256-or-null&quot;,
+  &quot;matrix_artifact_id&quot;: &quot;uuid-as-text&quot;,
+  &quot;matrix_artifact_key&quot;: &quot;...&quot;,
+  &quot;leadfinder_dictionary_version_id&quot;: &quot;uuid-as-text&quot;,
+  &quot;materialization_run_id&quot;: &quot;uuid-as-text&quot;,
+  &quot;materialization_result_id&quot;: &quot;uuid-as-text&quot;,
+  &quot;no_provider_calls&quot;: true,
+  &quot;raw_payload_not_copied&quot;: true
+}
+```
+
+Guardar IDs como texto em `lineage` é aceitável aqui porque o contrato forte é o resultado de materialização; a evidência externa fica auditável sem acoplar o operacional a tabelas que podem mudar.
+
+## Tabela 1 — operational_groups
+
+Propósito: um envelope operacional revisável para o grupo candidato LFG produzido por uma materialização aceita.
+
+Campos mínimos sugeridos, sem DDL final:
+
+- `id uuid primary key default uuidv7()`
+- `public_ref text generated ...` com prefixo novo, por exemplo `p4ylfg` ou similar registrado no pacote
+- `materialization_result_id uuid not null` com FK forte para o contrato T5.1
+- `group_key text not null` idempotente, derivada de contrato interno, não de raw address/name
+- `group_status text not null default &#x27;candidate&#x27;`
+- `review_status text not null default &#x27;unreviewed&#x27;`
+- `summary jsonb not null default &#x27;{}&#x27;::jsonb`
+- `lineage jsonb not null default &#x27;{}&#x27;::jsonb`
+- lifecycle padrão: `active`, `deleted`, `created_at`, `updated_at`, `version`, actor fields conforme padrões existentes
+
+Status mínimo:
+
+- `candidate`
+- `active_review`
+- `accepted_operational`
+- `blocked`
+- `rejected`
+- `superseded`
+- `archived`
+
+Checks importantes:
+
+- `summary` e `lineage` precisam ser JSON object.
+- grupo só pode nascer de resultado materializado aprovado/aceito pelo gate T5.1; se isso não couber em FK/check simples, fazer via função de materialização operacional.
+- unique parcial em `group_key where deleted = false` ou unique em `materialization_result_id` para garantir 1 grupo operacional por resultado, dependendo da decisão do Worker B.
+
+## Tabela 2 — operational_group_events
+
+Propósito: log append-only mínimo do que aconteceu com o grupo, sem virar event-sourcing completo.
+
+Campos mínimos sugeridos:
+
+- `id uuid primary key default uuidv7()`
+- `group_id uuid not null references operational_groups(id)`
+- `event_type text not null`
+- `event_status text not null default &#x27;recorded&#x27;`
+- `event_payload jsonb not null default &#x27;{}&#x27;::jsonb`
+- `lineage jsonb not null default &#x27;{}&#x27;::jsonb`
+- `occurred_at timestamptz not null default now()`
+- actor/lifecycle mínimo, sem delete físico
+
+Tipos mínimos:
+
+- `group_materialized`
+- `facet_asserted`
+- `facet_changed`
+- `review_status_changed`
+- `group_superseded`
+- `materialization_blocked`
+
+Recomendação: eventos não precisam referenciar SourceHub/Matrix por FK. O evento herda `materialization_result_id`/SourceHub/Matrix no `lineage`, e a FK forte fica só em `group_id`.
+
+## Tabela 3 — operational_group_facets
+
+Propósito: armazenar fatos/facetas estruturadas suficientes para prova operacional, sem criar as entidades finais.
+
+Campos mínimos sugeridos:
+
+- `id uuid primary key default uuidv7()`
+- `group_id uuid not null references operational_groups(id)`
+- `created_by_event_id uuid references operational_group_events(id)` nullable
+- `facet_type text not null`
+- `facet_key text not null`
+- `facet_value jsonb not null`
+- `confidence numeric(5,4)` nullable, ou score JSONB se preferir evitar semântica prematura
+- `facet_status text not null default &#x27;candidate&#x27;`
+- `review_status text not null default &#x27;unreviewed&#x27;`
+- `lineage jsonb not null default &#x27;{}&#x27;::jsonb`
+- lifecycle padrão
+
+Facet types mínimos para provar o caminho com DTOs traduzidos:
+
+- `property_identity_hint`
+- `owner_identity_hint`
+- `contact_hint`
+- `situation_fact`
+- `valuation_hint`
+- `relationship_hint`
+- `source_quality`
+- `lead_opportunity_signal`
+
+Notas:
+
+- `situation_fact` deve ser tratado como fato estruturado, não tag solta.
+- `contact_hint` não deve virar phone/email table nesta fatia.
+- `property_identity_hint` não deve virar property table nesta fatia.
+- `owner_identity_hint` não deve virar owner table nesta fatia.
+- `facet_value` precisa ser object ou scalar? Recomendo object para preservar `value`, `normalized`, `unit`, `observed_at`, `redaction`, `source_field` sem inventar colunas demais.
+- Unique parcial sugerida: `(group_id, facet_type, facet_key, coalesce(lineage-&gt;&gt;&#x27;sourcehub_publication_id&#x27;,&#x27;&#x27;)) where deleted = false`, ou mais simples `(group_id, facet_type, facet_key) where deleted = false` se só houver uma faceta vigente por chave.
+
+## Função operacional mínima
+
+Para não deixar inserts livres criarem grupos a partir de resultados bloqueados, recomendo uma função gateway-agnostic, não DDL final aqui:
+
+`prop4you_leadfinder_group.materialize_operational_minimum(p_materialization_run_id uuid, p_actor_id text default null, p_metadata jsonb default &#x27;{}&#x27;::jsonb)`
+
+Responsabilidades:
+
+1. Selecionar apenas `materialization_results` com gate/status aceito pelo T5.1.
+2. Criar/upsert `operational_groups` idempotentemente.
+3. Criar um evento `group_materialized`.
+4. Expandir somente um conjunto controlado de facet types a partir do resultado/DTO traduzido.
+5. Copiar para `lineage` os IDs/hashes/resumos, não raw payload.
+6. Retornar contagens: groups, events, facets.
+
+Essa função pode ser a única porta normal de escrita para as três tabelas na prova T5, mantendo o runtime/gateway agnóstico.
+
+## O que evitar explicitamente nesta fatia
+
+Não criar agora:
+
+- `properties`
+- `owners`
+- `owner_property_links`
+- `addresses`
+- `parcels`
+- `phones`
+- `emails`
+- `legal_situations`
+- `valuations`
+- `media`
+- `skiptrace_results`
+- `lead_scores`
+- tabelas públicas/API/RLS
+
+Também evitar:
+
+- FKs para provider evidence instável fora do pacote.
+- Colunas específicas demais extraídas de payload real.
+- Dumps de `translated_dto.fields` em docs/proofs.
+- Status que impliquem verdade canônica final, como `canonical_property_created`.
+
+## Índices mínimos
+
+- `operational_groups(materialization_result_id)` unique ou unique parcial.
+- `operational_groups(group_status, review_status) where deleted = false`.
+- `operational_group_events(group_id, occurred_at desc) where deleted = false`.
+- `operational_group_events(event_type, occurred_at desc) where deleted = false`.
+- `operational_group_facets(group_id, facet_type, facet_key) where deleted = false`.
+- GIN em `operational_group_facets.lineage` ou `facet_value` só se a prova precisar consultar por JSONB; caso contrário pode esperar para não indexar prematuramente.
+
+## Critérios de aceitação para o Worker C
+
+A implementação T5.2 deve ser considerada compatível se:
+
+- criar grupos/eventos/facetas a partir dos 10 resultados de materialização, sem DDL de produto final;
+- manter FK forte apenas em `leadfinder_group`/materialization stable contracts;
+- preservar SourceHub/Matrix/provider/raw como `lineage jsonb` e hashes/resumos;
+- não copiar raw payload para operational;
+- não criar provider calls, cron, workers ou exposição pública;
+- permitir proof com contagens: 10 groups, pelo menos 10 events e facetas derivadas dos 10 resultados.
+
+## Risco principal
+
+O risco maior é deixar `operational_group_facets` virar uma lixeira de tags. A mitigação é exigir `facet_type`, `facet_key`, `facet_value` object, `lineage` object, status/review explícitos e uma lista pequena de facet types autorizados nesta primeira versão.
+</pre></section><section><h2>11-executive-synthesis.md</h2><pre># Executive synthesis — LFG loop
+
+Status: delivered
+Updated: 2026-06-17T22:04:46
+
+The Matrix -&gt; SourceHub -&gt; LFG path now has a complete database-centric minimum:
+
+```text
+97 REIQ raws
+-&gt; 10 SourceHub translated DTO publications
+-&gt; 10 LFG staging candidates
+-&gt; 1 materialization run
+-&gt; 10 materialization results
+-&gt; 10 operational groups
+-&gt; 10 operational events
+-&gt; 30 operational facets
+```
+
+This proves the end-to-end pipeline without prematurely freezing dozens of final LeadFinder Group tables.
+</pre></section><section><h2>lab-proof-report</h2><pre># Prop4You Provider + SourceHub + Matrix + LeadFinder DDL Lab Proof
+
+Status: PASS
+LAB_DB: pg18_prop4you_ddl_lab
+PGHOST: 127.0.0.1
+PGPORT: 54318
+
+## Scope
+
+Applied base DDL and experimental Prop4You provider/sourcehub/matrix/leadfinder DDL into a clean lab DB.
+
+No provider calls were made.
+No raw/fake/redacted fixtures were created.
+
+## Apply order
+
+- `database/ddl/base/0001_install_tracking.sql`
+- `database/ddl/base/0002_extensions.sql`
+- `database/ddl/base/0003_base_schemas_roles_context.sql`
+- `database/ddl/base/0004_public_id.sql`
+- `database/ddl/base/0005_lifecycle_columns_triggers.sql`
+- `database/ddl/base/0006_jsonb_contract_helpers.sql`
+- `database/ddl/base/0007_search_normalization.sql`
+- `database/ddl/base/0008_audit_log.sql`
+- `database/ddl/base/0009_realtime_base.sql`
+- `database/ddl/base/0010_api_base.sql`
+- `database/ddl/projects/prop4you/0001_schemas.sql`
+- `database/ddl/projects/prop4you/providers/0001_provider_registry.sql`
+- `database/ddl/projects/prop4you/sourcehub/0001_sourcehub_corpus.sql`
+- `database/ddl/projects/prop4you/matrix/0001_semantic_dictionary.sql`
+- `database/ddl/projects/prop4you/leadfinder/0001_canonical_dictionary.sql`
+- `database/ddl/projects/prop4you/matrix/0002_mapping_sessions.sql`
+- `database/ddl/projects/prop4you/matrix/0003_raw_path_extractors.sql`
+- `database/ddl/projects/prop4you/leadfinder/0002_raw_evidence_gap_bridge.sql`
+- `database/ddl/projects/prop4you/matrix/0004_quality_report_artifacts.sql`
+- `database/ddl/projects/prop4you/matrix/0005_field_mapping_set_artifacts.sql`
+- `database/ddl/projects/prop4you/leadfinder/0003_prepare_dictionary_promotions.sql`
+- `database/ddl/projects/prop4you/sourcehub/0002_translated_dto_publications.sql`
+- `database/ddl/projects/prop4you/leadfinder_group/0001_staging_candidates.sql`
+- `database/ddl/projects/prop4you/leadfinder_group/0002_materialization_runs.sql`
+- `database/ddl/projects/prop4you/leadfinder_group/0003_operational_minimum.sql`
+
+## Validation JSON
+
+```json
+{&quot;counts&quot;: {&quot;provider_count&quot;: 4, &quot;payload_class_count&quot;: 5, &quot;mapping_version_count&quot;: 4, &quot;leadfinder_field_count&quot;: 36, &quot;leadfinder_family_count&quot;: 15, &quot;matrix_mirror_family_count&quot;: 7, &quot;matrix_raw_path_view_count&quot;: 4, &quot;matrix_artifact_table_count&quot;: 3, &quot;matrix_raw_path_table_count&quot;: 2, &quot;matrix_raw_path_function_count&quot;: 3, &quot;leadfinder_gap_bridge_table_count&quot;: 1, &quot;leadfinder_dictionary_version_count&quot;: 1, &quot;matrix_field_mapping_function_count&quot;: 1, &quot;sourcehub_translated_dto_view_count&quot;: 1, &quot;leadfinder_gap_bridge_function_count&quot;: 2, &quot;matrix_quality_report_function_count&quot;: 1, &quot;sourcehub_translated_dto_table_count&quot;: 1, &quot;sourcehub_translated_dto_function_count&quot;: 2, &quot;leadfinder_promotion_prepare_table_count&quot;: 1, &quot;leadfinder_promotion_prepare_function_count&quot;: 1}, &quot;missing_tables&quot;: [], &quot;missing_schemas&quot;: [], &quot;uncommented_tables&quot;: [], &quot;jsonb_path_type_smoke&quot;: &quot;number&quot;, &quot;jsonb_leaf_paths_smoke_count&quot;: 2}
+```
+
+## Boundary
+
+This proves DDL apply/comment/object smoke for experimental Provider + SourceHub + Matrix mirror/candidate + LeadFinder dictionary gate.
+It does not prove final Prop4You property/owner tables, provider runtime calls, production deployment, real raw ingestion, or LeadFinder materialization.
+
+## Slice 10 LFG T5 proof
+
+Status: PASS
+
+```json
+{
+  &quot;bridge_count&quot;: 10,
+  &quot;field_mapping_set_count&quot;: 1,
+  &quot;gateway_agnostic&quot;: true,
+  &quot;lfg_run_statuses&quot;: [
+    &quot;completed&quot;
+  ],
+  &quot;materialization_result_count&quot;: 10,
+  &quot;materialization_run_count&quot;: 1,
+  &quot;no_provider_calls&quot;: true,
+  &quot;no_raw_values_printed&quot;: true,
+  &quot;operational_event_count&quot;: 10,
+  &quot;operational_facet_count&quot;: 30,
+  &quot;operational_group_count&quot;: 10,
+  &quot;promotion_preparation_count&quot;: 10,
+  &quot;quality_report_count&quot;: 1,
+  &quot;raw_record_count&quot;: 97,
+  &quot;run_distinct_path_count&quot;: 9650,
+  &quot;run_extracted_path_count&quot;: 172700,
+  &quot;run_source_record_count&quot;: 97,
+  &quot;sourcehub_t4_statuses&quot;: [
+    &quot;ready_for_review&quot;
+  ],
+  &quot;staging_candidate_count&quot;: 10,
+  &quot;translated_dto_publication_count&quot;: 10
+}
+```
+
+This proof created LFG staging candidates, materialization runs/results, and minimal operational groups/events/facets from SourceHub translated DTO publications, without provider calls or raw payload dumps.
+
+</pre></section></body></html>

@@ -36,6 +36,9 @@ No raw/fake/redacted fixtures were created.
 - `database/ddl/projects/prop4you/matrix/0005_field_mapping_set_artifacts.sql`
 - `database/ddl/projects/prop4you/leadfinder/0003_prepare_dictionary_promotions.sql`
 - `database/ddl/projects/prop4you/sourcehub/0002_translated_dto_publications.sql`
+- `database/ddl/projects/prop4you/leadfinder_group/0001_staging_candidates.sql`
+- `database/ddl/projects/prop4you/leadfinder_group/0002_materialization_runs.sql`
+- `database/ddl/projects/prop4you/leadfinder_group/0003_operational_minimum.sql`
 
 ## Validation JSON
 
@@ -48,19 +51,25 @@ No raw/fake/redacted fixtures were created.
 This proves DDL apply/comment/object smoke for experimental Provider + SourceHub + Matrix mirror/candidate + LeadFinder dictionary gate.
 It does not prove final Prop4You property/owner tables, provider runtime calls, production deployment, real raw ingestion, or LeadFinder materialization.
 
-## Slice 09 SourceHub translated DTO proof
+## Slice 10 LFG T5 proof
 
 Status: PASS
 
 ```json
 {
   "bridge_count": 10,
-  "dictionary_match_count": 10,
-  "field_mapping_artifact_kind_count": 10,
   "field_mapping_set_count": 1,
   "gateway_agnostic": true,
-  "lfg_materialization_created": 0,
+  "lfg_run_statuses": [
+    "completed"
+  ],
+  "materialization_result_count": 10,
+  "materialization_run_count": 1,
+  "no_provider_calls": true,
   "no_raw_values_printed": true,
+  "operational_event_count": 10,
+  "operational_facet_count": 30,
+  "operational_group_count": 10,
   "promotion_preparation_count": 10,
   "quality_report_count": 1,
   "raw_record_count": 97,
@@ -70,10 +79,9 @@ Status: PASS
   "sourcehub_t4_statuses": [
     "ready_for_review"
   ],
-  "translated_dto_contract": "sourcehub.translated_dto.v0",
-  "translated_dto_hash_count": 10,
+  "staging_candidate_count": 10,
   "translated_dto_publication_count": 10
 }
 ```
 
-This proof created SourceHub T4 translated DTO publications from Matrix field_mapping_set artifacts and verified LFG materialization remained zero.
+This proof created LFG staging candidates, materialization runs/results, and minimal operational groups/events/facets from SourceHub translated DTO publications, without provider calls or raw payload dumps.
