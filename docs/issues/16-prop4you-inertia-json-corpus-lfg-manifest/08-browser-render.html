@@ -1,0 +1,1815 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Prop4You Inertia JSON Corpus LFG Manifest</title><style>body{font-family:Inter,Arial,sans-serif;margin:32px;background:#061320;color:#eef8ff}.badges span{display:inline-block;margin:4px;padding:6px 10px;background:#163b58;border:1px solid #7bd8ff;border-radius:999px}section{background:#0d2034;border:1px solid #295579;margin:18px 0;padding:18px;border-radius:12px}pre{white-space:pre-wrap;line-height:1.35}h1{color:#7bd8ff}</style></head><body><h1>Prop4You Inertia JSON Corpus LFG Manifest</h1><div class="badges"><span>13,160 JSONs listed</span><span>5 top-level root JSONs</span><span>3,545 LFG candidates</span><span>3,448 used for LFG base</span><span>DirectSkip 261 candidates reviewed</span><span>Realtor 27 candidates reviewed</span><span>REIQ 2,812 property signals</span><span>Matrix registry reviewed</span><span>SourceHub handoffs reviewed</span><span>No raw values</span><span>No PII</span><span>No provider calls</span><span>Projection gates next</span><span>Browser proof</span></div><section><h2>01-prd.md</h2><pre># PRD — Prop4You Inertia JSON corpus manifest for LFG
+
+Status: active
+
+## Problem
+
+The LFG JSONB-first registry exists, but the actual JSON corpus inside `prop4you-inertia` has not been fully enumerated from the repo root. DirectSkip real skiptrace responses and Realtor/Matrix artifacts may exist in JSON files and should be available as evidence before deciding projections.
+
+## Goal
+
+Create a complete, redacted, machine-readable inventory of all `.json` files under `prop4you-inertia`, classify which are relevant to Prop4You/LFG, and create a corpus manifest usable by future LFG projection-candidate slices.
+
+## Deliverables
+
+1. Top-level JSON list from `prop4you-inertia` root.
+2. Recursive JSON manifest for every `.json` under `prop4you-inertia`.
+3. Classification: `lfg_corpus_candidate`, `project_support`, `dependency_or_tooling`, `unknown_or_out_of_scope`, `parse_error`.
+4. Provider/context tags: DirectSkip, Realtor, REIQ, Matrix, SourceHub, LeadFinder, legacy/system, test/fixture, config/tooling.
+5. Path/type summary for relevant corpus candidates.
+6. Machine-readable manifest under `docs/corpus/prop4you/lfg/`.
+7. Persisted reviews, browser-proof, final report.
+
+## Acceptance criteria
+
+- All recursive `.json` files are represented in the machine-readable manifest.
+- Top-level root `.json` files are explicitly listed.
+- No raw JSON values or PII are emitted.
+- Relevant LFG corpus candidates are classified and counted.
+- DirectSkip/skiptrace and Realtor JSONs are specifically analyzed.
+- Static validation proves counts and parse coverage.
+- Browser-proof and vision QA pass.
+</pre></section><section><h2>02-tasks.md</h2><pre># Tasks — Prop4You Inertia JSON corpus manifest for LFG
+
+| ID | Task | Owner | Status |
+| --- | --- | --- | --- |
+| T1 | Persist PRD/tasks/ledger | Thor | done |
+| T2 | Generate full recursive manifest and top-level root list | Thor | done |
+| T3 | Worker A: DirectSkip/skiptrace corpus review | Subagent A | done |
+| T4 | Worker B: Realtor/property/market corpus review | Subagent B | done |
+| T5 | Worker C: Matrix/SourceHub/LeadFinder/config/support review | Subagent C | done |
+| T6 | Consolidate LFG corpus base and next projection gate | Thor | done |
+| T7 | Static validation + browser-proof + vision | Thor | pending_browser |
+| T8 | Update docs/skill, commit/push, final report | Thor | pending |
+</pre></section><section><h2>05-task-review.md</h2><pre># 05 — Task Review
+
+Status: PASS before commit
+Generated: 2026-06-18T18:49:00
+
+| Task | Requested | Delivered | Evidence | Status |
+| --- | --- | --- | --- | --- |
+| T1 | Persist PRD/tasks/ledger | Slice stack created before execution | 00/01/02/03/04 | PASS |
+| T2 | List all JSONs in prop4you-inertia root and recursively | 5 top-level + 13,160 recursive represented | 11-top-level-json-list.md; manifest JSONL | PASS |
+| T3 | Analyze all and determine project/LFG context | Full classification + enriched decisions | prop4you-inertia-json-summary.v1.json; corpus-base summary | PASS |
+| T4 | Use all relevant JSONs for LFG base | 3,448 used as corpus/support/restricted/ephemeral base | prop4you-inertia-lfg-corpus-base.v1.jsonl | PASS |
+| T5 | DirectSkip real skiptrace focus | DirectSkip/skiptrace corpus reviewed; 261 LFG candidates parseable | 08-directskip-skiptrace-corpus-review.md | PASS |
+| T6 | Realtor/property/market + REIQ review | Realtor 27 candidates; REIQ 2,812 property/geography/valuation recut | 09-realtor-property-corpus-review.md | PASS |
+| T7 | Matrix/SourceHub/LeadFinder support review | Matrix registry, LeadFinder baseline, SourceHub roles classified | 10-matrix-sourcehub-support-corpus-review.md | PASS |
+| T8 | Static validation | Counts/manifests/docs assertions passed | 15-static-validation-proof.md | PASS |
+| T9 | Browser-proof + vision | Pending at this generation point; executed later | 06-browser-proof.md | PENDING_BROWSER |
+| T10 | Commit/push + skill update | Pending after browser/final checks | git + skill | PENDING_COMMIT |
+
+## Corrections without HITL
+
+No mutation correction was required for data generation. Classification was refined from broad `lfg_corpus_candidate` to deterministic `ingestion_decision`, `source_family`, `evidence_role`, `privacy_tier`, `canonical_envelope_hint`, and `projection_gate_hint`.
+
+## Orchestrator verdict
+
+PASS for repo-only corpus-manifest scope. This does not claim database ingestion of raw JSON values; it establishes a governed LFG corpus base from file evidence.
+</pre></section><section><h2>07-final-report.md</h2><pre># 07 — Final Report: prop4you-inertia JSON corpus manifest for LFG
+
+Status: completed before browser/commit finalization
+Generated: 2026-06-18T18:49:00
+
+## Direct answer
+
+```text
+All `.json` files under prop4you-inertia were listed recursively and represented in the full manifest.
+Top-level JSON files in the repo root were listed separately.
+The project/LFG-relevant subset was classified and converted into a governed LFG corpus base.
+```
+
+## Source root
+
+```text
+/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia
+```
+
+## Top-level JSON files in root
+
+```text
+.auto-claude-security.json
+.claude_settings.json
+.mcp.json
+package-lock.json
+package.json
+```
+
+## Counts
+
+```json
+{
+  &quot;lfg_candidates&quot;: 3545,
+  &quot;parse_errors&quot;: 64,
+  &quot;recursive_json_total&quot;: 13160,
+  &quot;top_level_json_total&quot;: 5,
+  &quot;used_for_lfg_base&quot;: 3448
+}
+```
+
+## Classification counts
+
+```json
+{
+  &quot;dependency_or_tooling&quot;: 853,
+  &quot;lfg_corpus_candidate&quot;: 3545,
+  &quot;parse_error&quot;: 64,
+  &quot;project_support&quot;: 2730,
+  &quot;unknown_or_out_of_scope&quot;: 5968
+}
+```
+
+## LFG base decision counts
+
+```json
+{
+  &quot;exclude_from_domain_corpus&quot;: 9571,
+  &quot;include_as_project_metadata_not_lfg_domain&quot;: 77,
+  &quot;include_canonical_support&quot;: 149,
+  &quot;include_lfg_corpus&quot;: 383,
+  &quot;include_shape_only_restricted&quot;: 2896,
+  &quot;include_with_ephemeral_marker&quot;: 20,
+  &quot;review_or_exclude_until_parseable&quot;: 64
+}
+```
+
+## Machine-readable artifacts
+
+```text
+docs/corpus/prop4you/lfg/prop4you-inertia-json-manifest.v1.jsonl
+docs/corpus/prop4you/lfg/prop4you-inertia-lfg-corpus-candidates.v1.jsonl
+docs/corpus/prop4you/lfg/prop4you-inertia-json-summary.v1.json
+docs/corpus/prop4you/lfg/prop4you-inertia-lfg-corpus-base.v1.jsonl
+docs/corpus/prop4you/lfg/prop4you-inertia-lfg-corpus-base-summary.v1.json
+```
+
+## How the JSONs are used for LFG
+
+```text
+include_lfg_corpus:
+  direct domain evidence after envelope/gate review.
+include_canonical_support:
+  LeadFinder/Matrix contracts and baselines used to validate meaning.
+include_shape_only_restricted:
+  useful raw/sensitive evidence represented by hash/key/path/type only.
+include_with_ephemeral_marker:
+  runtime proof evidence, not durable truth by itself.
+exclude_from_domain_corpus:
+  dependency/tooling/generated/unrelated JSON represented in manifest but not used as domain source.
+```
+
+## Key conclusions
+
+### DirectSkip / skiptrace
+
+DirectSkip real/sample/handoff JSONs exist and are now part of the governed corpus base. DirectSkip should feed `contact_satellites`, especially via SourceHub handoffs. Raw responses stay restricted JSONB/parser evidence and do not define owner/property truth.
+
+### Realtor / property / market
+
+Realtor JSONs are enrichment evidence. They support `realtor_evidence`, property physical details, valuation, market/geography, and potential PostGIS/boundary projections after gates. Advertiser/contact/media/history arrays stay restricted JSONB.
+
+### REIQ
+
+REIQ dominates property/legal/situation evidence and is high-value for property/situation envelopes. Because it includes names/addresses/legal text, it remains lineage-bound and restricted until projection gates and privacy controls pass.
+
+### Matrix / SourceHub / LeadFinder
+
+Matrix registry and LeadFinder baselines are canonical support and semantic evidence. SourceHub handoffs are the safest bridge from raw/provider evidence into LFG. Generated caches and tooling are excluded from domain corpus.
+
+## Residual risks
+
+- 64 JSON files did not parse; most are tooling invalid-json test cases or temporary partial artifacts and are marked for review/exclusion.
+- Archived/current duplicates need dedupe before any ingestion beyond manifest.
+- Raw values and PII were not copied; future DB ingestion needs RLS/masking/retention before storing or exposing values.
+- This slice does not create final property/owner/contact tables.
+
+## Correct next slice
+
+```text
+Slice 17 — LFG projection candidate review board from prop4you-inertia corpus base
+```
+
+Goal: transform corpus base + JSONSchema registry into per-path candidate decisions using the seven gates.
+</pre></section><section><h2>11-top-level-json-list.md</h2><pre># 11 — Top-level JSON files in prop4you-inertia root
+
+Source root: `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia`
+
+Count: 5
+
+| Path | Size bytes | sha256 prefix | Classification | Tags |
+| --- | ---: | --- | --- | --- |
+| .auto-claude-security.json | 3414 | deb6c146ac4c1d6d | unknown_or_out_of_scope | structured_json |
+| .claude_settings.json | 1512 | 28e216fba53e5f75 | unknown_or_out_of_scope | structured_json |
+| .mcp.json | 352 | c4340de8210cab80 | unknown_or_out_of_scope | structured_json |
+| package-lock.json | 687935 | e2eea473274024ff | project_support | config_or_tooling,structured_json |
+| package.json | 401 | cd50a2eaa8fd5ff1 | project_support | config_or_tooling,structured_json |
+</pre></section><section><h2>12-recursive-json-inventory-summary.md</h2><pre># 12 — Recursive JSON inventory summary
+
+Source root: `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia`
+
+## Counts
+
+```json
+{
+  &quot;candidate_manifest_path&quot;: &quot;docs/corpus/prop4you/lfg/prop4you-inertia-lfg-corpus-candidates.v1.jsonl&quot;,
+  &quot;classification_counts&quot;: {
+    &quot;dependency_or_tooling&quot;: 853,
+    &quot;lfg_corpus_candidate&quot;: 3545,
+    &quot;parse_error&quot;: 64,
+    &quot;project_support&quot;: 2730,
+    &quot;unknown_or_out_of_scope&quot;: 5968
+  },
+  &quot;context_tag_counts&quot;: {
+    &quot;config_or_tooling&quot;: 3520,
+    &quot;directskip&quot;: 235,
+    &quot;leadfinder&quot;: 38,
+    &quot;legacy_system&quot;: 325,
+    &quot;matrix&quot;: 3320,
+    &quot;realtor&quot;: 28,
+    &quot;registry&quot;: 3241,
+    &quot;reiq&quot;: 3094,
+    &quot;sourcehub&quot;: 58,
+    &quot;structured_json&quot;: 13096,
+    &quot;system_app&quot;: 325,
+    &quot;test_or_fixture&quot;: 893
+  },
+  &quot;generated_at&quot;: &quot;2026-06-18T18:39:58&quot;,
+  &quot;lfg_candidate_count&quot;: 3545,
+  &quot;manifest_path&quot;: &quot;docs/corpus/prop4you/lfg/prop4you-inertia-json-manifest.v1.jsonl&quot;,
+  &quot;no_raw_values_policy&quot;: true,
+  &quot;parse_error_count&quot;: 64,
+  &quot;parse_error_paths_sample&quot;: [
+    &quot;.agent/mcp_config.json&quot;,
+    &quot;.auto-claude/specs/001-use-o-10x-para-melhorar-toda-a-l-gica-e-entendimen/research.json&quot;,
+    &quot;.tmp/realtor_enrichment_seed_result.json&quot;,
+    &quot;_projeto-antigo/botrei_lists_pgsql/.vscode/launch.json&quot;,
+    &quot;_projeto-antigo/frontend-react/schema_introspection.json&quot;,
+    &quot;_projeto-antigo/frontend-react/tsconfig.app.json&quot;,
+    &quot;_projeto-antigo/frontend-react/tsconfig.node.json&quot;,
+    &quot;_projeto-antigo/mamix-nextjs/Documentation/assets/libs/intl-tel-input/.vscode/settings.json&quot;,
+    &quot;_projeto-antigo/mamix-nextjs/Starterkit/.eslintrc.json&quot;,
+    &quot;frontends/.tmp/my-property-rich-testbase-enrichment/materialization-result.json&quot;,
+    &quot;frontends/docusaurus/tsconfig.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/10.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/11.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/12.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/13.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/14.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/15.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/16.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/17.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/19.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/2.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/20.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/21.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/22.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/23.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/24.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/25.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/26.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/27.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/28.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/29.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/3.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/30.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/31.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/32.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/33.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/34.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/4.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/5.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/6.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/7.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/8.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/9.json&quot;,
+    &quot;frontends/front-react/node_modules/call-bind-apply-helpers/tsconfig.json&quot;,
+    &quot;frontends/front-react/node_modules/call-bound/tsconfig.json&quot;,
+    &quot;frontends/front-react/node_modules/dunder-proto/tsconfig.json&quot;,
+    &quot;frontends/front-react/node_modules/es-define-property/tsconfig.json&quot;,
+    &quot;frontends/front-react/node_modules/es-errors/tsconfig.json&quot;,
+    &quot;frontends/front-react/node_modules/es-object-atoms/tsconfig.json&quot;,
+    &quot;frontends/front-react/node_modules/es-set-tostringtag/tsconfig.json&quot;
+  ],
+  &quot;provider_tag_counts&quot;: {
+    &quot;directskip&quot;: 235,
+    &quot;leadfinder&quot;: 38,
+    &quot;legacy_system&quot;: 325,
+    &quot;matrix&quot;: 3320,
+    &quot;realtor&quot;: 28,
+    &quot;reiq&quot;: 3094,
+    &quot;sourcehub&quot;: 58
+  },
+  &quot;root_type_counts&quot;: {
+    &quot;array&quot;: 127,
+    &quot;object&quot;: 12969,
+    &quot;parse_error&quot;: 64
+  },
+  &quot;source_root&quot;: &quot;/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia&quot;,
+  &quot;top_level_json_files&quot;: [
+    &quot;.auto-claude-security.json&quot;,
+    &quot;.claude_settings.json&quot;,
+    &quot;.mcp.json&quot;,
+    &quot;package-lock.json&quot;,
+    &quot;package.json&quot;
+  ],
+  &quot;total_json_files_recursive&quot;: 13160,
+  &quot;total_size_bytes&quot;: 980621145
+}
+```
+
+## Policy
+
+No raw JSON values were copied. Only paths, key names, hashes, root types, counts and classifications were persisted.
+
+## Candidate samples by tag
+
+## Tag: config_or_tooling
+
+- `.auto-claude/specs/037-performance-fix-vite-import-conflicts-preventing-c/implementation_plan.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/manifests/cases.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/manifests/prepared_cases.json`
+- `.tmp/playwright-results/.last-run.json`
+- `.venv/lib/python3.12/site-packages/setuptools/config/distutils.schema.json`
+- `.venv/lib/python3.12/site-packages/setuptools/config/setuptools.schema.json`
+- `_projeto-antigo/backend/_archived/matrix/config/heuristics_config.json`
+- `_projeto-antigo/backend/_archived/matrix/config/ignore_fields.json`
+- `_projeto-antigo/backend/src/lib/matrix_engine/config/heuristics_config.json`
+- `_projeto-antigo/backend/src/lib/matrix_engine/config/ignore_fields.json`
+- `_projeto-antigo/prop4you-lead-finder/package.json`
+- `_projeto-antigo/prop4you-lead-finder/tsconfig.json`
+- `backend/src/apps/system/matrix/registry/contracts/source_manifest.contract.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/data/session_mxsess_1c8TRplqMFISkLb4iVm702PV_source_manifest.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/data/session_mxsess_3dxdUjDJzsdYUboCZkvWlaTQ_source_manifest.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/data/session_mxsess_6AkAple7OtLYztFA6xjAjDbj_source_manifest.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/data/session_mxsess_8AtH7ZN1skwZdjPdsw3uLCJo_source_manifest.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/data/session_mxsess_98FPpFMNr11P2Swiy8EePjNL_source_manifest.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/data/session_mxsess_9DUAj0znsVyBDVnsziNsQ6MT_source_manifest.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/data/session_mxsess_DbG7uQVjBK56N9BUBI96p0co_source_manifest.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/data/session_mxsess_Dm8ycm7VVkRFtIYHvpeecfg3_source_manifest.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/data/session_mxsess_MEKjVZdfFmmXP2FAI0jQ5wj3_source_manifest.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/data/session_mxsess_OgRrfv8vPLS1b9aMhzmjZ7c3_source_manifest.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/data/session_mxsess_QFixjb2zYQOLI1c8DtKKHJ6J_source_manifest.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/data/session_mxsess_SJ7ZKWr3S9udCfqbnJjzWcuL_source_manifest.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/data/session_mxsess_V6RBmk61JuTlIYlOFSeMJeth_source_manifest.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/data/session_mxsess_V8hhTzPKSsxIhRKuUzlhUiXP_source_manifest.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/data/session_mxsess_XuhHpM4qlOKc8H9imtQGFYnw_source_manifest.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/data/session_mxsess_YCMmMjAi6b3SQW1hFgbM5Nt4_source_manifest.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/data/session_mxsess_Ztg90IraPguhbudcdGbijMG8_source_manifest.json`
+## Tag: directskip
+
+- `.tmp/lead-finder-group-acceptance-probe-2026-04-05/outputs/directskip-sourcehub-handoffs.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/analysis/directskip_current_whitley-comparison.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/inputs/directskip/directskip_current_whitley.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/inputs/directskip/directskip_legacy_charlotte_basham.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/logs/claude-directskip_current_whitley.wrapper.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/outputs/claude/directskip_current_whitley.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/outputs/codex/directskip_current_whitley.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/outputs/codex/directskip_legacy_charlotte_basham.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/outputs/matrix/directskip_current_whitley.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/outputs/matrix/directskip_legacy_charlotte_basham.json`
+- `.tmp/matrix-sourcehub-real-outputs-2026-04-03/directskip-matrix-output.json`
+- `.tmp/matrix-sourcehub-real-outputs-2026-04-03/directskip-sourcehub-output.json`
+- `.tmp/p4y-1032-normalization-proof-2026-04-06/outputs/directskip-sourcehub-handoffs.json`
+- `.tmp/p4y-1036-structural-proof-2026-04-06/outputs/directskip-sourcehub-handoffs.json`
+- `.tmp/p4y-1047-baseline-proof-2026-04-06/outputs/directskip-sourcehub-handoffs.json`
+- `.tmp/p4y-1054-universal-street-line-and-duplicate-intelligence-2026-04-06/outputs/directskip-sourcehub-handoffs.json`
+- `.tmp/p4y-1079-baseline-analytics-proof-2026-04-06/outputs/directskip-sourcehub-handoffs.json`
+- `_projeto-antigo/backend/.reports/skip_trace_tests/2025-11-08_workflow_test/execution_report.json`
+- `_projeto-antigo/backend/src/data/directskip_charlotte_basham_response.json`
+- `_projeto-antigo/backend/src/data/directskip_sample_response.json`
+- `_projeto-antigo/backend/src/lib/clients/directskip/audits/audit_20251120_175044.json`
+- `_projeto-antigo/backend/src/lib/clients/directskip/tests/snapshots/test_01_connection_minimal.json`
+- `_projeto-antigo/backend/src/lib/clients/directskip/tests/snapshots/test_02_full_search_scott_ayer.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_1c8TRplqMFISkLb4iVm702PV.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_3dxdUjDJzsdYUboCZkvWlaTQ.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_6AkAple7OtLYztFA6xjAjDbj.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_8AtH7ZN1skwZdjPdsw3uLCJo.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_98FPpFMNr11P2Swiy8EePjNL.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_9DUAj0znsVyBDVnsziNsQ6MT.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_DbG7uQVjBK56N9BUBI96p0co.json`
+## Tag: leadfinder
+
+- `.auto-claude/specs/006-feature-lead-finder-visual-polish-ui-components-ca/implementation_plan.json`
+- `.auto-claude/specs/006-feature-lead-finder-visual-polish-ui-components-ca/requirements.json`
+- `.auto-claude/specs/006-feature-lead-finder-visual-polish-ui-components-ca/task_metadata.json`
+- `.auto-claude/specs/020-bug-lead-finder-6-critical-ui-ux-bugs-requiring-sp/implementation_plan.json`
+- `.auto-claude/specs/020-bug-lead-finder-6-critical-ui-ux-bugs-requiring-sp/requirements.json`
+- `.auto-claude/specs/020-bug-lead-finder-6-critical-ui-ux-bugs-requiring-sp/task_metadata.json`
+- `.tmp/lead-finder-group-acceptance-probe-2026-04-05/analysis/acceptance-summary.json`
+- `.tmp/lead-finder-group-acceptance-probe-2026-04-05/outputs/directskip-sourcehub-handoffs.json`
+- `.tmp/lead-finder-group-acceptance-probe-2026-04-05/outputs/reiq-sourcehub-handoff.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/baseline/lead_finder_field_catalog.json`
+- `.tmp/no-glow-runtime-proof/lead-finder-square-list-radius.json`
+- `.tmp/pro-48/lead-finder-dom-summary.json`
+- `_projeto-antigo/backend/src/system/lead_finder/mocks/data/index.json`
+- `_projeto-antigo/backend/src/system/lead_finder/mocks/data/properties/properties_batch_001.json`
+- `_projeto-antigo/backend/src/system/lead_finder/mocks/data/properties/properties_batch_002.json`
+- `_projeto-antigo/backend/src/system/lead_finder/mocks/data/properties/properties_batch_003.json`
+- `_projeto-antigo/backend/src/system/lead_finder/mocks/data/properties/properties_batch_004.json`
+- `_projeto-antigo/backend/src/system/lead_finder/mocks/data/properties/properties_batch_005.json`
+- `_projeto-antigo/backend/src/system/lead_finder/mocks/data/properties/properties_batch_006.json`
+- `_projeto-antigo/backend/src/system/lead_finder/mocks/data/properties/properties_batch_007.json`
+- `_projeto-antigo/backend/src/system/lead_finder/mocks/data/properties/properties_batch_008.json`
+- `_projeto-antigo/backend/src/system/lead_finder/mocks/data/properties/properties_batch_009.json`
+- `_projeto-antigo/backend/src/system/lead_finder/mocks/data/properties/properties_batch_010.json`
+- `_projeto-antigo/backend/src/system/lead_finder/mocks/data/schema_version.json`
+- `_projeto-antigo/prop4you-lead-finder/components.json`
+- `_projeto-antigo/prop4you-lead-finder/metadata.json`
+- `_projeto-antigo/prop4you-lead-finder/package.json`
+- `_projeto-antigo/prop4you-lead-finder/tsconfig.json`
+- `backend/src/apps/system/lead_finder/artifacts/lead_finder_default_genome.lf_default.v1.json`
+- `backend/src/apps/system/lead_finder/baselines/owner/model_inventory/owner_entity.groups.v1.json`
+## Tag: legacy_system
+
+- `backend/src/apps/system/lead_finder/artifacts/lead_finder_default_genome.lf_default.v1.json`
+- `backend/src/apps/system/lead_finder/baselines/owner/model_inventory/owner_entity.groups.v1.json`
+- `backend/src/apps/system/lead_finder/baselines/owner/model_inventory/owner_entity.v1.json`
+- `backend/src/apps/system/lead_finder/baselines/owner/owner_contact_address.v1.json`
+- `backend/src/apps/system/lead_finder/baselines/owner/owner_email.v1.json`
+- `backend/src/apps/system/lead_finder/baselines/owner/owner_identity.v1.json`
+- `backend/src/apps/system/lead_finder/baselines/owner/owner_phone.v1.json`
+- `backend/src/apps/system/lead_finder/baselines/owner/owner_relationship_evidence.v1.json`
+- `backend/src/apps/system/lead_finder/baselines/owner/owner_structural_position.v1.json`
+- `backend/src/apps/system/matrix/registry/contracts/baseline_only_analysis.contract.json`
+- `backend/src/apps/system/matrix/registry/contracts/compiled_schema_artifact.contract.json`
+- `backend/src/apps/system/matrix/registry/contracts/context.contract.json`
+- `backend/src/apps/system/matrix/registry/contracts/contextual_analysis.contract.json`
+- `backend/src/apps/system/matrix/registry/contracts/dataset_discrepancy_report.contract.json`
+- `backend/src/apps/system/matrix/registry/contracts/provider_semantics_pack.contract.json`
+- `backend/src/apps/system/matrix/registry/contracts/source_manifest.contract.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_1c8TRplqMFISkLb4iVm702PV.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_3dxdUjDJzsdYUboCZkvWlaTQ.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_6AkAple7OtLYztFA6xjAjDbj.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_8AtH7ZN1skwZdjPdsw3uLCJo.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_98FPpFMNr11P2Swiy8EePjNL.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_9DUAj0znsVyBDVnsziNsQ6MT.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_DbG7uQVjBK56N9BUBI96p0co.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_Dm8ycm7VVkRFtIYHvpeecfg3.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_MEKjVZdfFmmXP2FAI0jQ5wj3.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_OgRrfv8vPLS1b9aMhzmjZ7c3.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_QFixjb2zYQOLI1c8DtKKHJ6J.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_SJ7ZKWr3S9udCfqbnJjzWcuL.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_V6RBmk61JuTlIYlOFSeMJeth.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_V8hhTzPKSsxIhRKuUzlhUiXP.json`
+## Tag: matrix
+
+- `.auto-claude/file-timelines/frontend_node_modules_caniuse-lite_data_features_dommatrix.js.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/analysis/directskip_current_whitley-comparison.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/analysis/run-status.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/baseline/lead_finder_field_catalog.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/inputs/directskip/directskip_current_whitley.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/inputs/directskip/directskip_legacy_charlotte_basham.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/inputs/reiq/reiq_appt_of_sub_trustee_tx_00fa13bd.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/inputs/reiq/reiq_divorce_fl_01a7e1b2.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/inputs/reiq/reiq_eviction_fl_041698f6.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/inputs/reiq/reiq_heirship_tx_152de6ee.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/inputs/reiq/reiq_loan_modification_fl_c45a1057.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/inputs/reiq/reiq_pre_foreclosure_fl_0b17ec0b.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/inputs/reiq/reiq_probates_fl_03f6b20e.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/inputs/reiq/reiq_tax_sale_fl_08923dd0.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/logs/claude-directskip_current_whitley.wrapper.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/manifests/cases.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/manifests/prepared_cases.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/outputs/claude/directskip_current_whitley.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/outputs/codex/directskip_current_whitley.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/outputs/codex/directskip_legacy_charlotte_basham.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/outputs/codex/reiq_appt_of_sub_trustee_tx_00fa13bd.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/outputs/codex/reiq_divorce_fl_01a7e1b2.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/outputs/codex/reiq_eviction_fl_041698f6.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/outputs/codex/reiq_heirship_tx_152de6ee.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/outputs/codex/reiq_loan_modification_fl_c45a1057.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/outputs/codex/reiq_pre_foreclosure_fl_0b17ec0b.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/outputs/codex/reiq_probates_fl_03f6b20e.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/outputs/codex/reiq_tax_sale_fl_08923dd0.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/outputs/matrix/directskip_current_whitley.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/outputs/matrix/directskip_legacy_charlotte_basham.json`
+## Tag: realtor
+
+- `_projeto-antigo/backend/.reports/realtor_api_endpoints_test/autocomplete_address.json`
+- `_projeto-antigo/backend/.reports/realtor_api_endpoints_test/autocomplete_city.json`
+- `_projeto-antigo/backend/.reports/realtor_api_endpoints_test/autocomplete_postal_code.json`
+- `_projeto-antigo/backend/.reports/realtor_api_endpoints_test/execute_graphql_query_persisted.json`
+- `_projeto-antigo/backend/.reports/realtor_api_endpoints_test/fetch_area_boundary_city.json`
+- `_projeto-antigo/backend/.reports/realtor_api_endpoints_test/fetch_area_boundary_postal.json`
+- `_projeto-antigo/backend/.reports/realtor_api_endpoints_test/fetch_market_details.json`
+- `_projeto-antigo/backend/.reports/realtor_api_endpoints_test/fetch_nearby_homes.json`
+- `_projeto-antigo/backend/.reports/realtor_api_endpoints_test/fetch_nearby_homes_by_coordinates.json`
+- `_projeto-antigo/backend/.reports/realtor_api_endpoints_test/fetch_nearby_homes_for_map.json`
+- `_projeto-antigo/backend/.reports/realtor_api_endpoints_test/fetch_property_details.json`
+- `_projeto-antigo/backend/.reports/realtor_api_endpoints_test/fetch_property_estimates.json`
+- `_projeto-antigo/backend/.reports/realtor_api_endpoints_test/fetch_property_history.json`
+- `_projeto-antigo/backend/.reports/realtor_api_endpoints_test/fetch_recently_sold.json`
+- `_projeto-antigo/backend/.reports/realtor_api_endpoints_test/fetch_similar_homes.json`
+- `_projeto-antigo/backend/.reports/realtor_api_endpoints_test/fetch_spot_offer_evaluation.json`
+- `_projeto-antigo/backend/.reports/realtor_api_endpoints_test/test_connection.json`
+- `_projeto-antigo/backend/src/lib/clients/realtor/tests/snapshots/autocomplete_search.json`
+- `_projeto-antigo/backend/src/lib/clients/realtor/tests/snapshots/connection_test.json`
+- `_projeto-antigo/backend/src/lib/clients/realtor/tests/snapshots/fetch_area_boundary.json`
+- `_projeto-antigo/backend/src/lib/clients/realtor/tests/snapshots/fetch_market_details.json`
+- `_projeto-antigo/backend/src/lib/clients/realtor/tests/snapshots/fetch_property_details.json`
+- `_projeto-antigo/backend/src/lib/clients/realtor/tests/snapshots/fetch_property_estimates.json`
+- `_projeto-antigo/backend/src/lib/clients/realtor/tests/snapshots/fetch_property_history.json`
+- `_projeto-antigo/backend/src/lib/clients/realtor/tests/snapshots/nearby_homes_by_coordinates.json`
+- `_projeto-antigo/backend/src/lib/clients/realtor/tests/snapshots/nearby_homes_for_map.json`
+- `_projeto-antigo/backend/src/lib/clients/realtor/tests/snapshots/recently_sold.json`
+## Tag: registry
+
+- `.auto-claude/specs/005-architecture-extract-registry-as-independent-app-f/implementation_plan.json`
+- `.auto-claude/specs/013-bug-url-routing-conflict-my-property-registry-vs-p/implementation_plan.json`
+- `.auto-claude/specs/015-feature-status-lists-tags-registry-system-real-est/implementation_plan.json`
+- `_projeto-antigo/backend/_archived/matrix/registry/reiq/appt_of_sub_trustee/context.json`
+- `_projeto-antigo/backend/_archived/matrix/registry/reiq/appt_of_sub_trustee/tx/analysis/fingerprint.json`
+- `_projeto-antigo/backend/_archived/matrix/registry/reiq/appt_of_sub_trustee/tx/analysis/step_zero.json`
+- `_projeto-antigo/backend/_archived/matrix/registry/reiq/appt_of_sub_trustee/tx/data/2025-11-27/TX_appt-of-sub-trustee_00fa13bd-c01a-11ee-9e90-42010a800019.json`
+- `_projeto-antigo/backend/_archived/matrix/registry/reiq/appt_of_sub_trustee/tx/data/2025-11-27/TX_appt-of-sub-trustee_00fa74b5-c01a-11ee-9e90-42010a800019.json`
+- `_projeto-antigo/backend/_archived/matrix/registry/reiq/appt_of_sub_trustee/tx/data/2025-11-27/TX_appt-of-sub-trustee_03d29d25-a635-11ee-9e90-42010a800019.json`
+- `_projeto-antigo/backend/_archived/matrix/registry/reiq/appt_of_sub_trustee/tx/data/2025-11-27/TX_appt-of-sub-trustee_03d36099-a635-11ee-9e90-42010a800019.json`
+- `_projeto-antigo/backend/_archived/matrix/registry/reiq/appt_of_sub_trustee/tx/data/2025-11-27/TX_appt-of-sub-trustee_06643b7f-bc5a-11ef-b0f1-42010a800021.json`
+- `_projeto-antigo/backend/_archived/matrix/registry/reiq/appt_of_sub_trustee/tx/data/2025-11-27/TX_appt-of-sub-trustee_0664c1f8-bc5a-11ef-b0f1-42010a800021.json`
+- `_projeto-antigo/backend/_archived/matrix/registry/reiq/appt_of_sub_trustee/tx/data/2025-11-27/TX_appt-of-sub-trustee_06fc72db-846f-11ee-9e90-42010a800019.json`
+- `_projeto-antigo/backend/_archived/matrix/registry/reiq/appt_of_sub_trustee/tx/data/2025-11-27/TX_appt-of-sub-trustee_06febf66-846f-11ee-9e90-42010a800019.json`
+- `_projeto-antigo/backend/_archived/matrix/registry/reiq/appt_of_sub_trustee/tx/data/2025-11-27/TX_appt-of-sub-trustee_07003d71-846f-11ee-9e90-42010a800019.json`
+- `_projeto-antigo/backend/_archived/matrix/registry/reiq/appt_of_sub_trustee/tx/data/2025-11-27/TX_appt-of-sub-trustee_0700bfd6-846f-11ee-9e90-42010a800019.json`
+- `_projeto-antigo/backend/_archived/matrix/registry/reiq/appt_of_sub_trustee/tx/data/2025-11-27/TX_appt-of-sub-trustee_1392f402-8210-11ee-94e0-42010a800016.json`
+- `_projeto-antigo/backend/_archived/matrix/registry/reiq/appt_of_sub_trustee/tx/data/2025-11-27/TX_appt-of-sub-trustee_13934fa0-8210-11ee-94e0-42010a800016.json`
+- `_projeto-antigo/backend/_archived/matrix/registry/reiq/appt_of_sub_trustee/tx/data/2025-11-27/TX_appt-of-sub-trustee_1393a55a-8210-11ee-94e0-42010a800016.json`
+- `_projeto-antigo/backend/_archived/matrix/registry/reiq/appt_of_sub_trustee/tx/data/2025-11-27/TX_appt-of-sub-trustee_1d76b476-295c-11ef-8ff3-42010a80001f.json`
+- `_projeto-antigo/backend/_archived/matrix/registry/reiq/appt_of_sub_trustee/tx/data/2025-11-27/TX_appt-of-sub-trustee_200192c1-295c-11ef-8ff3-42010a80001f.json`
+- `_projeto-antigo/backend/_archived/matrix/registry/reiq/appt_of_sub_trustee/tx/data/2025-11-27/TX_appt-of-sub-trustee_29ccfd26-eaab-11ee-a98f-42010a80001d.json`
+- `_projeto-antigo/backend/_archived/matrix/registry/reiq/appt_of_sub_trustee/tx/data/2025-11-27/TX_appt-of-sub-trustee_2b15e7ff-37b3-11ef-8ff3-42010a80001f.json`
+- `_projeto-antigo/backend/_archived/matrix/registry/reiq/appt_of_sub_trustee/tx/data/2025-11-27/TX_appt-of-sub-trustee_2fc0979e-c594-11ee-9e90-42010a800019.json`
+- `_projeto-antigo/backend/_archived/matrix/registry/reiq/appt_of_sub_trustee/tx/data/2025-11-27/TX_appt-of-sub-trustee_2ff91e42-f366-11ef-9005-42010a800023.json`
+- `_projeto-antigo/backend/_archived/matrix/registry/reiq/appt_of_sub_trustee/tx/data/2025-11-27/TX_appt-of-sub-trustee_2ffa80c4-f366-11ef-9005-42010a800023.json`
+- `_projeto-antigo/backend/_archived/matrix/registry/reiq/appt_of_sub_trustee/tx/data/2025-11-27/TX_appt-of-sub-trustee_2ffb1342-f366-11ef-9005-42010a800023.json`
+- `_projeto-antigo/backend/_archived/matrix/registry/reiq/appt_of_sub_trustee/tx/data/2025-11-27/TX_appt-of-sub-trustee_2ffc2857-f366-11ef-9005-42010a800023.json`
+- `_projeto-antigo/backend/_archived/matrix/registry/reiq/appt_of_sub_trustee/tx/data/2025-11-27/TX_appt-of-sub-trustee_2ffd3d80-f366-11ef-9005-42010a800023.json`
+- `_projeto-antigo/backend/_archived/matrix/registry/reiq/appt_of_sub_trustee/tx/data/2025-11-27/TX_appt-of-sub-trustee_2fff5419-f366-11ef-9005-42010a800023.json`
+## Tag: reiq
+
+- `.tmp/direct-codex-baseline-probe/reiq/loan_modification/high/00_FL_loan-modification_c45a1057-8de0-11ee-9e90-42010a800019.json`
+- `.tmp/direct-codex-baseline-probe/reiq/loan_modification/high/01_summary.json`
+- `.tmp/direct-codex-baseline-probe/reiq/loan_modification/high/02_chunk_plan.json`
+- `.tmp/direct-codex-baseline-probe/reiq/loan_modification/high/03_judgments.json`
+- `.tmp/direct-codex-baseline-probe/reiq/loan_modification/high/04_flagged_judgments.json`
+- `.tmp/direct-codex-baseline-probe/reiq/loan_modification/low/00_FL_loan-modification_c45a1057-8de0-11ee-9e90-42010a800019.json`
+- `.tmp/direct-codex-baseline-probe/reiq/loan_modification/low/01_summary.json`
+- `.tmp/direct-codex-baseline-probe/reiq/loan_modification/low/02_chunk_plan.json`
+- `.tmp/direct-codex-baseline-probe/reiq/loan_modification/low/03_judgments.json`
+- `.tmp/direct-codex-baseline-probe/reiq/loan_modification/low/04_flagged_judgments.json`
+- `.tmp/direct-codex-baseline-probe/reiq/loan_modification/medium/00_FL_loan-modification_c45a1057-8de0-11ee-9e90-42010a800019.json`
+- `.tmp/direct-codex-baseline-probe/reiq/loan_modification/medium/01_summary.json`
+- `.tmp/direct-codex-baseline-probe/reiq/loan_modification/medium/02_chunk_plan.json`
+- `.tmp/direct-codex-baseline-probe/reiq/loan_modification/medium/03_judgments.json`
+- `.tmp/direct-codex-baseline-probe/reiq/loan_modification/medium/04_flagged_judgments.json`
+- `.tmp/lead-finder-group-acceptance-probe-2026-04-05/outputs/reiq-sourcehub-handoff.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/inputs/reiq/reiq_appt_of_sub_trustee_tx_00fa13bd.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/inputs/reiq/reiq_divorce_fl_01a7e1b2.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/inputs/reiq/reiq_eviction_fl_041698f6.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/inputs/reiq/reiq_heirship_tx_152de6ee.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/inputs/reiq/reiq_loan_modification_fl_c45a1057.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/inputs/reiq/reiq_pre_foreclosure_fl_0b17ec0b.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/inputs/reiq/reiq_probates_fl_03f6b20e.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/inputs/reiq/reiq_tax_sale_fl_08923dd0.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/outputs/codex/reiq_appt_of_sub_trustee_tx_00fa13bd.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/outputs/codex/reiq_divorce_fl_01a7e1b2.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/outputs/codex/reiq_eviction_fl_041698f6.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/outputs/codex/reiq_heirship_tx_152de6ee.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/outputs/codex/reiq_loan_modification_fl_c45a1057.json`
+- `.tmp/matrix-ai-first-cli-prototype-2026-04-05/outputs/codex/reiq_pre_foreclosure_fl_0b17ec0b.json`
+## Tag: sourcehub
+
+- `.tmp/lead-finder-group-acceptance-probe-2026-04-05/outputs/directskip-sourcehub-handoffs.json`
+- `.tmp/lead-finder-group-acceptance-probe-2026-04-05/outputs/reiq-sourcehub-handoff.json`
+- `.tmp/matrix-sourcehub-real-outputs-2026-04-03/directskip-matrix-output.json`
+- `.tmp/matrix-sourcehub-real-outputs-2026-04-03/directskip-sourcehub-output.json`
+- `.tmp/matrix-sourcehub-real-outputs-2026-04-03/reiq-matrix-output.json`
+- `.tmp/matrix-sourcehub-real-outputs-2026-04-03/reiq-sourcehub-output.json`
+- `.tmp/p4y-1032-normalization-proof-2026-04-06/outputs/directskip-sourcehub-handoffs.json`
+- `.tmp/p4y-1032-normalization-proof-2026-04-06/outputs/reiq-sourcehub-handoff.json`
+- `.tmp/p4y-1036-structural-proof-2026-04-06/outputs/directskip-sourcehub-handoffs.json`
+- `.tmp/p4y-1036-structural-proof-2026-04-06/outputs/reiq-sourcehub-handoff.json`
+- `.tmp/p4y-1047-baseline-proof-2026-04-06/outputs/directskip-sourcehub-handoffs.json`
+- `.tmp/p4y-1047-baseline-proof-2026-04-06/outputs/reiq-sourcehub-handoff.json`
+- `.tmp/p4y-1054-universal-street-line-and-duplicate-intelligence-2026-04-06/outputs/directskip-sourcehub-handoffs.json`
+- `.tmp/p4y-1054-universal-street-line-and-duplicate-intelligence-2026-04-06/outputs/reiq-sourcehub-handoff.json`
+- `.tmp/p4y-1079-baseline-analytics-proof-2026-04-06/outputs/directskip-sourcehub-handoffs.json`
+- `.tmp/p4y-1079-baseline-analytics-proof-2026-04-06/outputs/reiq-sourcehub-handoff.json`
+- `.tmp/p4y-1183/pre_sourcehub_dto_composed.json`
+- `.tmp/p4y-1183/pre_sourcehub_dto_runtime.json`
+- `.tmp/p4y-1183/pre_sourcehub_final_dto_probe_runtime.json`
+- `.tmp/p4y-1183/sourcehub_reference_handoffs.json`
+- `_projeto-antigo/backend/docs/sourcehub/audit_2025-11-14/raw_samples/reiq_appt-of-sub-trustee_detail_054fb142-b4c0-11f0-be91-42010a800029.json`
+- `_projeto-antigo/backend/docs/sourcehub/audit_2025-11-14/raw_samples/reiq_appt-of-sub-trustee_detail_ed4b8679-adbb-11f0-9808-42010a800027.json`
+- `_projeto-antigo/backend/docs/sourcehub/audit_2025-11-14/raw_samples/reiq_appt-of-sub-trustee_list_page1.json`
+- `_projeto-antigo/backend/docs/sourcehub/audit_2025-11-14/raw_samples/reiq_divorce_detail_043a9b1e-adbc-11f0-9808-42010a800027.json`
+- `_projeto-antigo/backend/docs/sourcehub/audit_2025-11-14/raw_samples/reiq_divorce_detail_eab64f26-bd61-11f0-be91-42010a800029.json`
+- `_projeto-antigo/backend/docs/sourcehub/audit_2025-11-14/raw_samples/reiq_divorce_list_page1.json`
+- `_projeto-antigo/backend/docs/sourcehub/audit_2025-11-14/raw_samples/reiq_eviction_detail_67e0afe2-bd67-11f0-be91-42010a800029.json`
+- `_projeto-antigo/backend/docs/sourcehub/audit_2025-11-14/raw_samples/reiq_eviction_detail_67ecdd81-bd67-11f0-be91-42010a800029.json`
+- `_projeto-antigo/backend/docs/sourcehub/audit_2025-11-14/raw_samples/reiq_eviction_list_page1.json`
+- `_projeto-antigo/backend/docs/sourcehub/audit_2025-11-14/raw_samples/reiq_heirship_detail_b0f8b0e4-b0b2-11f0-9808-42010a800027.json`
+## Tag: structured_json
+
+- `.auto-claude/file-timelines/frontend_node_modules_caniuse-lite_data_features_dommatrix.js.json`
+- `.auto-claude/specs/001-use-o-10x-para-melhorar-toda-a-l-gica-e-entendimen/implementation_plan.json`
+- `.auto-claude/specs/002-preciso-que-vc-analise-a-discuss-o-abaixo-para-que/implementation_plan.json`
+- `.auto-claude/specs/003-me-fale-do-que-se-trata-esse-projeto-de-forma-deta/implementation_plan.json`
+- `.auto-claude/specs/004-feature-enhanced-input-components-moneyinput-addre/implementation_plan.json`
+- `.auto-claude/specs/005-architecture-extract-registry-as-independent-app-f/implementation_plan.json`
+- `.auto-claude/specs/006-feature-lead-finder-visual-polish-ui-components-ca/implementation_plan.json`
+- `.auto-claude/specs/006-feature-lead-finder-visual-polish-ui-components-ca/requirements.json`
+- `.auto-claude/specs/006-feature-lead-finder-visual-polish-ui-components-ca/task_metadata.json`
+- `.auto-claude/specs/007-ui-branded-scrollbar-with-brand-orange-color-front/implementation_plan.json`
+- `.auto-claude/specs/008-feature-autocompleteinput-integration-in-addproper/implementation_plan.json`
+- `.auto-claude/specs/009-bug-addpropertymodal-input-ux-corrections-real-est/implementation_plan.json`
+- `.auto-claude/specs/010-feature-modalheader-colorscheme-variant-system-bra/implementation_plan.json`
+- `.auto-claude/specs/011-bug-modalcontent-overflow-pushes-footer-off-screen/implementation_plan.json`
+- `.auto-claude/specs/012-refactor-migrate-addpropertymodal-to-modular-modal/implementation_plan.json`
+- `.auto-claude/specs/013-bug-url-routing-conflict-my-property-registry-vs-p/implementation_plan.json`
+- `.auto-claude/specs/014-bug-property-model-inconsistency-causing-test-fail/implementation_plan.json`
+- `.auto-claude/specs/015-feature-status-lists-tags-registry-system-real-est/implementation_plan.json`
+- `.auto-claude/specs/016-feature-implement-4th-step-in-addpropertymodal-bas/implementation_plan.json`
+- `.auto-claude/specs/017-bug-fix-addpropertymodal-never-mounts-when-propert/implementation_plan.json`
+- `.auto-claude/specs/018-bug-fix-react-jsx-errors-add-property-modal-in-my-/implementation_plan.json`
+- `.auto-claude/specs/019-bug-crmfilterdrawer-import-error-breaking-my-prope/implementation_plan.json`
+- `.auto-claude/specs/020-bug-lead-finder-6-critical-ui-ux-bugs-requiring-sp/implementation_plan.json`
+- `.auto-claude/specs/020-bug-lead-finder-6-critical-ui-ux-bugs-requiring-sp/requirements.json`
+- `.auto-claude/specs/020-bug-lead-finder-6-critical-ui-ux-bugs-requiring-sp/task_metadata.json`
+- `.auto-claude/specs/021-bug-fix-propertyservice-critical-runtime-errors-le/implementation_plan.json`
+- `.auto-claude/specs/022-bug-propertyservice-critical-runtime-fixes-real-es/implementation_plan.json`
+- `.auto-claude/specs/023-feature-implement-my-property-page-with-ai-studio-/implementation_plan.json`
+- `.auto-claude/specs/024-bug-javascript-typescript-errors-and-backend-impor/implementation_plan.json`
+- `.auto-claude/specs/025-refactor-billing-views-security-hardening-sprint-8/implementation_plan.json`
+## Tag: system_app
+
+- `backend/src/apps/system/lead_finder/artifacts/lead_finder_default_genome.lf_default.v1.json`
+- `backend/src/apps/system/lead_finder/baselines/owner/model_inventory/owner_entity.groups.v1.json`
+- `backend/src/apps/system/lead_finder/baselines/owner/model_inventory/owner_entity.v1.json`
+- `backend/src/apps/system/lead_finder/baselines/owner/owner_contact_address.v1.json`
+- `backend/src/apps/system/lead_finder/baselines/owner/owner_email.v1.json`
+- `backend/src/apps/system/lead_finder/baselines/owner/owner_identity.v1.json`
+- `backend/src/apps/system/lead_finder/baselines/owner/owner_phone.v1.json`
+- `backend/src/apps/system/lead_finder/baselines/owner/owner_relationship_evidence.v1.json`
+- `backend/src/apps/system/lead_finder/baselines/owner/owner_structural_position.v1.json`
+- `backend/src/apps/system/matrix/registry/contracts/baseline_only_analysis.contract.json`
+- `backend/src/apps/system/matrix/registry/contracts/compiled_schema_artifact.contract.json`
+- `backend/src/apps/system/matrix/registry/contracts/context.contract.json`
+- `backend/src/apps/system/matrix/registry/contracts/contextual_analysis.contract.json`
+- `backend/src/apps/system/matrix/registry/contracts/dataset_discrepancy_report.contract.json`
+- `backend/src/apps/system/matrix/registry/contracts/provider_semantics_pack.contract.json`
+- `backend/src/apps/system/matrix/registry/contracts/source_manifest.contract.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_1c8TRplqMFISkLb4iVm702PV.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_3dxdUjDJzsdYUboCZkvWlaTQ.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_6AkAple7OtLYztFA6xjAjDbj.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_8AtH7ZN1skwZdjPdsw3uLCJo.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_98FPpFMNr11P2Swiy8EePjNL.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_9DUAj0znsVyBDVnsziNsQ6MT.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_DbG7uQVjBK56N9BUBI96p0co.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_Dm8ycm7VVkRFtIYHvpeecfg3.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_MEKjVZdfFmmXP2FAI0jQ5wj3.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_OgRrfv8vPLS1b9aMhzmjZ7c3.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_QFixjb2zYQOLI1c8DtKKHJ6J.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_SJ7ZKWr3S9udCfqbnJjzWcuL.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_V6RBmk61JuTlIYlOFSeMJeth.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/baseline-only/session_mxsess_V8hhTzPKSsxIhRKuUzlhUiXP.json`
+## Tag: test_or_fixture
+
+- `.auto-claude/specs/001-use-o-10x-para-melhorar-toda-a-l-gica-e-entendimen/implementation_plan.json`
+- `.auto-claude/specs/002-preciso-que-vc-analise-a-discuss-o-abaixo-para-que/implementation_plan.json`
+- `.auto-claude/specs/003-me-fale-do-que-se-trata-esse-projeto-de-forma-deta/implementation_plan.json`
+- `.auto-claude/specs/004-feature-enhanced-input-components-moneyinput-addre/implementation_plan.json`
+- `.auto-claude/specs/005-architecture-extract-registry-as-independent-app-f/implementation_plan.json`
+- `.auto-claude/specs/006-feature-lead-finder-visual-polish-ui-components-ca/implementation_plan.json`
+- `.auto-claude/specs/006-feature-lead-finder-visual-polish-ui-components-ca/requirements.json`
+- `.auto-claude/specs/006-feature-lead-finder-visual-polish-ui-components-ca/task_metadata.json`
+- `.auto-claude/specs/007-ui-branded-scrollbar-with-brand-orange-color-front/implementation_plan.json`
+- `.auto-claude/specs/008-feature-autocompleteinput-integration-in-addproper/implementation_plan.json`
+- `.auto-claude/specs/009-bug-addpropertymodal-input-ux-corrections-real-est/implementation_plan.json`
+- `.auto-claude/specs/010-feature-modalheader-colorscheme-variant-system-bra/implementation_plan.json`
+- `.auto-claude/specs/011-bug-modalcontent-overflow-pushes-footer-off-screen/implementation_plan.json`
+- `.auto-claude/specs/012-refactor-migrate-addpropertymodal-to-modular-modal/implementation_plan.json`
+- `.auto-claude/specs/013-bug-url-routing-conflict-my-property-registry-vs-p/implementation_plan.json`
+- `.auto-claude/specs/014-bug-property-model-inconsistency-causing-test-fail/implementation_plan.json`
+- `.auto-claude/specs/015-feature-status-lists-tags-registry-system-real-est/implementation_plan.json`
+- `.auto-claude/specs/016-feature-implement-4th-step-in-addpropertymodal-bas/implementation_plan.json`
+- `.auto-claude/specs/017-bug-fix-addpropertymodal-never-mounts-when-propert/implementation_plan.json`
+- `.auto-claude/specs/018-bug-fix-react-jsx-errors-add-property-modal-in-my-/implementation_plan.json`
+- `.auto-claude/specs/019-bug-crmfilterdrawer-import-error-breaking-my-prope/implementation_plan.json`
+- `.auto-claude/specs/020-bug-lead-finder-6-critical-ui-ux-bugs-requiring-sp/implementation_plan.json`
+- `.auto-claude/specs/020-bug-lead-finder-6-critical-ui-ux-bugs-requiring-sp/requirements.json`
+- `.auto-claude/specs/020-bug-lead-finder-6-critical-ui-ux-bugs-requiring-sp/task_metadata.json`
+- `.auto-claude/specs/021-bug-fix-propertyservice-critical-runtime-errors-le/implementation_plan.json`
+- `.auto-claude/specs/022-bug-propertyservice-critical-runtime-fixes-real-es/implementation_plan.json`
+- `.auto-claude/specs/023-feature-implement-my-property-page-with-ai-studio-/implementation_plan.json`
+- `.auto-claude/specs/024-bug-javascript-typescript-errors-and-backend-impor/implementation_plan.json`
+- `.auto-claude/specs/025-refactor-billing-views-security-hardening-sprint-8/implementation_plan.json`
+- `.auto-claude/specs/026-refactor-fix-sales-domain-root-route-404-eliminate/implementation_plan.json`
+
+</pre></section><section><h2>13-lfg-corpus-base-consolidation.md</h2><pre># 13 — LFG corpus base consolidation from prop4you-inertia JSONs
+
+Status: PASS
+Generated: 2026-06-18T18:47:02
+
+## Direct answer
+
+All `.json` files under `prop4you-inertia` are represented in the full manifest. The subset that belongs to Prop4You/LFG is now used as governed LFG base by manifest/hash/path-shape, without raw values.
+
+## Source root
+
+```text
+/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia
+```
+
+## Machine-readable artifacts
+
+```text
+docs/corpus/prop4you/lfg/prop4you-inertia-json-manifest.v1.jsonl
+docs/corpus/prop4you/lfg/prop4you-inertia-lfg-corpus-candidates.v1.jsonl
+docs/corpus/prop4you/lfg/prop4you-inertia-json-summary.v1.json
+docs/corpus/prop4you/lfg/prop4you-inertia-lfg-corpus-base.v1.jsonl
+docs/corpus/prop4you/lfg/prop4you-inertia-lfg-corpus-base-summary.v1.json
+```
+
+## Counts
+
+```json
+{
+  &quot;canonical_envelope_hint_counts&quot;: {
+    &quot;contact_satellites&quot;: 235,
+    &quot;none&quot;: 9712,
+    &quot;property&quot;: 3104,
+    &quot;realtor_evidence&quot;: 27,
+    &quot;taxonomy&quot;: 82
+  },
+  &quot;decision_counts&quot;: {
+    &quot;exclude_from_domain_corpus&quot;: 9571,
+    &quot;include_as_project_metadata_not_lfg_domain&quot;: 77,
+    &quot;include_canonical_support&quot;: 149,
+    &quot;include_lfg_corpus&quot;: 383,
+    &quot;include_shape_only_restricted&quot;: 2896,
+    &quot;include_with_ephemeral_marker&quot;: 20,
+    &quot;review_or_exclude_until_parseable&quot;: 64
+  },
+  &quot;enriched_manifest&quot;: &quot;docs/corpus/prop4you/lfg/prop4you-inertia-lfg-corpus-base.v1.jsonl&quot;,
+  &quot;evidence_role_counts&quot;: {
+    &quot;canonical_baseline_support&quot;: 36,
+    &quot;canonical_support_contract_schema&quot;: 113,
+    &quot;contact_enrichment_evidence&quot;: 7,
+    &quot;generated_docs_cache&quot;: 1,
+    &quot;handoff_or_lineage_evidence&quot;: 1,
+    &quot;parse_error&quot;: 64,
+    &quot;project_config_or_support&quot;: 77,
+    &quot;property_legal_signal_evidence&quot;: 19,
+    &quot;property_market_enrichment_evidence&quot;: 27,
+    &quot;restricted_legacy_raw_sample&quot;: 36,
+    &quot;restricted_raw_or_source_manifest&quot;: 2860,
+    &quot;runtime_proof_ephemeral&quot;: 20,
+    &quot;semantic_analysis_evidence&quot;: 236,
+    &quot;semantic_registry_evidence&quot;: 93,
+    &quot;tooling_dependency&quot;: 7939,
+    &quot;unknown_or_out_of_scope&quot;: 1631
+  },
+  &quot;generated_at&quot;: &quot;2026-06-18T18:47:02&quot;,
+  &quot;no_raw_values_policy&quot;: true,
+  &quot;priority_counts&quot;: {
+    &quot;blocked&quot;: 64,
+    &quot;high&quot;: 531,
+    &quot;low&quot;: 77,
+    &quot;medium&quot;: 2917,
+    &quot;none&quot;: 9571
+  },
+  &quot;privacy_tier_counts&quot;: {
+    &quot;internal&quot;: 1708,
+    &quot;pii_sensitive&quot;: 3335,
+    &quot;provider_sensitive&quot;: 27,
+    &quot;restricted&quot;: 86,
+    &quot;tooling&quot;: 7940,
+    &quot;unknown&quot;: 64
+  },
+  &quot;source_family_counts&quot;: {
+    &quot;dependency_or_tooling&quot;: 7939,
+    &quot;directskip_skiptrace&quot;: 235,
+    &quot;leadfinder_baseline&quot;: 36,
+    &quot;matrix_registry_or_artifact&quot;: 46,
+    &quot;parse_error&quot;: 64,
+    &quot;project_support&quot;: 77,
+    &quot;realtor_property_market&quot;: 27,
+    &quot;reiq_property_legal_signal&quot;: 3094,
+    &quot;sourcehub&quot;: 11,
+    &quot;unknown&quot;: 1631
+  },
+  &quot;source_manifest&quot;: &quot;docs/corpus/prop4you/lfg/prop4you-inertia-json-manifest.v1.jsonl&quot;,
+  &quot;total_json_files&quot;: 13160,
+  &quot;used_for_lfg_base_count&quot;: 3448
+}
+```
+
+## Interpretation
+
+- `include_lfg_corpus`: domain evidence usable by LFG after envelope/gate checks.
+- `include_canonical_support`: LeadFinder/Matrix contracts/baselines used as support for validation and projection gates.
+- `include_shape_only_restricted`: useful but sensitive/raw; use hashes, keys, path/type shapes and redacted processing only.
+- `include_with_ephemeral_marker`: useful proof output, but `.tmp`/runtime evidence must not become durable truth without issue/proof provenance.
+- `exclude_from_domain_corpus`: dependency/tooling/generated/unrelated JSON; represented in manifest but not a domain evidence source.
+
+## Provider/source conclusions
+
+### DirectSkip / skiptrace
+
+Use DirectSkip primarily through SourceHub handoff shapes for `contact_satellites`. Raw DirectSkip responses stay as restricted JSONB lineage/parser regression evidence. Do not let DirectSkip define owner/property truth.
+
+### Realtor
+
+Use Realtor as `realtor_evidence` and property/market/geography enrichment. Project only sanctioned physical/valuation/market/geography fields after gates. Keep advertisers/contact/media/history arrays in restricted JSONB.
+
+### REIQ
+
+Use REIQ as property/legal/situation signal evidence. Strong candidate for property/situation envelope validation, but PII/legal text remains restricted and lineage-bound.
+
+### Matrix / SourceHub / LeadFinder
+
+Matrix registry and LeadFinder baselines are canonical support and semantic evidence. SourceHub handoffs are the preferred bridge into LFG. Caches/generated docs/tooling must not contaminate domain corpus.
+
+## Residual warnings
+
+- 64 JSON files failed parsing; most are tooling/test invalid-json cases or temporary partial artifacts. They remain represented and marked `review_or_exclude_until_parseable`.
+- Some source families are duplicated across archived and active paths; future ingestion must dedupe by hash/provider/list/state/internal_id.
+- Sensitive payloads must stay shape-only or restricted until RLS/retention/masking exists.
+</pre></section><section><h2>14-next-slice-projection-candidate-gate.md</h2><pre># 14 — Next slice gate: projection candidate review from corpus base
+
+Status: recommended next slice
+
+## Next correct slice
+
+Slice 17 — LFG projection candidate review board from prop4you-inertia corpus base.
+
+## Goal
+
+Use the enriched corpus base to create a review table/artifact of candidate JSON paths and decide, per the seven registry gates, whether each path remains JSONB or becomes a generated column, expression index, narrow table, PostGIS projection, or deferred review.
+
+## Inputs
+
+```text
+docs/corpus/prop4you/lfg/prop4you-inertia-lfg-corpus-base.v1.jsonl
+docs/corpus/prop4you/lfg/prop4you-inertia-lfg-corpus-base-summary.v1.json
+docs/schemas/prop4you/lfg/projection-policy.v1.json
+prop4you_leadfinder_group.v_active_projection_policy_gates
+```
+
+## Candidate groups
+
+1. DirectSkip contact_satellites:
+   - handoff envelope refs/stages/queue/versioning;
+   - phone/email seed fields;
+   - mailing address seed fields;
+   - relationship evidence flags.
+
+2. Realtor evidence:
+   - provider refs/listing refs;
+   - property physical facts;
+   - valuation snapshots;
+   - market/geography snapshots;
+   - boundary geometry candidate.
+
+3. REIQ property/legal signal:
+   - provider record refs;
+   - list/situation type;
+   - state/county/property id;
+   - filing/auction/legal dates;
+   - normalized financial values.
+
+4. Matrix/LeadFinder support:
+   - baseline version;
+   - contract/schema refs;
+   - artifact role;
+   - discrepancy/growth suggestions.
+
+## Hard rule
+
+Do not create broad property/owner/contact final tables yet. First persist candidate decisions and prove the seven gates for each selected path.
+</pre></section><section><h2>15-static-validation-proof.md</h2><pre># 15 — Static validation proof
+
+Status: PASS
+Generated: 2026-06-18T18:49:00
+
+```json
+{&quot;candidate_count&quot;: 3545, &quot;find_count&quot;: 13160, &quot;manifest_count&quot;: 13160, &quot;top_count&quot;: 5, &quot;used_for_lfg_base_count&quot;: 3448}
+```
+
+Assertions passed:
+
+- recursive `find` count equals full manifest line count;
+- top-level root JSON count equals 5;
+- candidate manifest count equals summary candidate count;
+- enriched manifest count equals full manifest count;
+- used-for-LFG-base count equals base summary;
+- no raw values policy is true;
+- required review/consolidation docs exist and are non-empty.
+</pre></section><section><h2>08-directskip-skiptrace-corpus-review.md</h2><pre># Revisão do corpus JSON DirectSkip / skip trace para LFG
+
+Escopo: apenas JSONs relacionados a DirectSkip/skip trace nos manifests LFG e na árvore fonte de `prop4you-inertia`.
+
+Política de privacidade aplicada: os arquivos foram parseados para chaves, tipos, contagens e famílias de caminho. Nenhum valor bruto de JSON, telefone, e-mail, nome, endereço ou outro PII foi reproduzido neste relatório.
+
+## Fontes verificadas
+
+Manifests em `postgres/docs/corpus/prop4you/lfg/`:
+
+- `prop4you-inertia-json-manifest.v1.jsonl`: 13.160 registros totais; 284 registros com indício DirectSkip/skip trace; 284 parseáveis.
+- `prop4you-inertia-lfg-corpus-candidates.v1.jsonl`: 3.545 candidatos totais; 261 candidatos DirectSkip/skip trace; 261 parseáveis.
+
+Árvore fonte em `prop4you-inertia`:
+
+- 236 JSONs com DirectSkip/skip trace no nome/caminho.
+- 261 JSONs DirectSkip/skip trace nos candidatos LFG por path/tags/top-level keys/sample paths.
+- Todos os 261 candidatos resolvem para arquivo existente e parseável na árvore fonte.
+
+## Contagens dos 261 candidatos LFG DirectSkip/skip trace
+
+Por família de caminho sanitizada:
+
+| Família | Qtde | Leitura |
+| --- | ---: | --- |
+| `matrix_registry_directskip.analysis` | 117 | sessões/análises de Matrix para provider/list type |
+| `matrix_registry_directskip.other` | 86 | contratos, schemas, data manifests e artefatos auxiliares de registry |
+| `i18n_feature_flags` | 12 | traduções/feature flags de UI, não payload de domínio |
+| `legacy.lfg_property_mocks` | 10 | mocks legados de propriedades com contagens/slots de contato |
+| `tmp.matrix_ai_first` | 9 | protótipos Matrix AI-first com input/output DirectSkip |
+| `matrix_registry_directskip.tx` | 7 | dados transacionais/raw de registry DirectSkip |
+| `tmp.sourcehub_handoffs` | 6 | handoffs SourceHub já no envelope de promoção para Lead Finder |
+| `tmp.proofs` | 3 | sumários/provas operacionais envolvendo DirectSkip |
+| `legacy.directskip_client` | 3 | auditorias/snapshots do cliente legado DirectSkip |
+| `_projeto-antigo/backend/.reports` | 2 | relatórios agregados legados |
+| `legacy.directskip_data` | 2 | respostas raw legadas de DirectSkip |
+| demais famílias unitárias | 4 | ignores/config, fixture, prova browser |
+
+Outras métricas dos 261 candidatos:
+
+- `root_type`: 251 objetos, 10 arrays.
+- Tags dominantes: `structured_json` 261, `directskip` 235, `matrix` 224, `legacy_system` 211, `system_app` 211, `registry` 210.
+- Tamanho total aproximado dos arquivos candidatos: 373.299.006 bytes; maior arquivo aproximado: 35.788.758 bytes.
+- Pares path/type acumulados declarados no manifest para esses candidatos: 144.957.
+
+## Forma de evidência observada
+
+### 1. Payload provider/raw DirectSkip
+
+Arquivos representativos (sem valores expostos):
+
+- `_projeto-antigo/backend/src/data/directskip_sample_response.json`
+- `_projeto-antigo/backend/src/data/directskip_charlotte_basham_response.json`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/tx/data/undated/directskip_real_response.json`
+- `backend/src/apps/system/matrix/tests/fixtures/directskip_real_response.json`
+
+Forma estrutural recorrente:
+
+- raiz objeto com blocos `input`, `status`, `result_code`, `contacts`.
+- `contacts[]` contém arrays/objetos para:
+  - `names[]`
+  - `phones[]`
+  - `emails[]`
+  - `confirmed_address[]`
+  - `relatives[]`
+- contagens sanitizadas nos arquivos raw nomeados:
+  - arquivos legados de data: 1 contato, 7 phones, 2 emails, 5 relatives, 1 confirmed_address por payload observado.
+  - fixture/tx atual: 1 contato, 3 phones, 2 emails, 2 relatives, 1 confirmed_address por payload observado.
+
+Leitura para LFG: esses arquivos são bons para validar shape/provider parser e casos de cardinalidade, mas devem permanecer como raw lineage/fixture, não como contrato canônico direto.
+
+### 2. Matrix registry para `directskip/skip_trace_contact_discovery`
+
+Famílias principais:
+
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/analysis/...`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/contracts/...`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/schema/...`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/data/...`
+- `backend/src/apps/system/matrix/registry/directskip/skip_trace_contact_discovery/tx/...`
+
+Top-level keys frequentes:
+
+- `provider_slug`, `list_type_slug`, `state_slug`
+- `artifact_kind`, `session_public_id`, `session_key`
+- `published_contract_ref`, `baseline_version`, `contract_refs`
+- `alias_evidence_snapshot`, `canonical_dictionary_snapshot`, `coverage_snapshot`
+- `multi_provider_snapshot`, `provider_drift_snapshot`, `dataset_discrepancy_snapshot`
+- `field_analysis`, `matrix_context_snapshot`, `workspace_snapshot`, `corpus_stats`, `source_manifest`, `source_surface`
+
+Leitura para LFG: esses artefatos são evidência de mapeamento e governança semântica. Devem alimentar versionamento, aprovação, drift e lineage, mas não devem ser achatados como registros operacionais de contato.
+
+### 3. SourceHub handoffs já próximos do envelope LFG
+
+Arquivos `directskip-sourcehub-handoffs.json` encontrados: 6.
+
+Presença por arquivo:
+
+- `raw_record_public_id`: 6/6.
+- `mailing_contact_handoff`: 6/6.
+- `contact_satellites_handoff`: 6/6.
+- `relationship_evidence_handoff`: 6/6.
+- `co_owner_contact_satellites_handoff`: 0/6 na amostra revisada.
+
+Forma de `contact_satellites_handoff` nos 6 arquivos:
+
+- campos envelope escalares/identificadores: `provider_slug`, `list_type_slug`, `canonical_schema_version`, `mapping_version`, `raw_record_public_id`, `seed_public_id`, `ingested_at`, `producer_stage`, `consumer_stage`, `queue`, `canonical_property_public_id`, `state_slug`.
+- arrays canônicos: `phone_seeds`, `email_seeds`.
+- blocos compostos: `match_metrics`, `portable_intelligence`, `transformation_lineage`.
+- cardinalidade observada: `phone_seeds` min/med/max = 3/3/3; `email_seeds` min/med/max = 2/2/2.
+
+Forma de `relationship_evidence_handoff` nos 6 arquivos:
+
+- campos envelope semelhantes ao handoff de contato.
+- blocos adicionais: `owner_returned`, `property_address_comparison`, `relationship_evidence_seeds`.
+- cardinalidade observada: `relationship_evidence_seeds` min/med/max = 2/2/2.
+
+Forma de `mailing_contact_handoff` nos 6 arquivos:
+
+- campos envelope semelhantes.
+- blocos: `mailing_address_seed`, `property_address_seed` quando disponível, `property_address_comparison` quando disponível, `portable_intelligence`, `transformation_lineage`.
+- `property_address_seed` e `property_address_comparison` aparecem em 3/6.
+
+## Como usar no envelope `contact_satellites`
+
+O caminho mais seguro para LFG é consumir o envelope SourceHub já montado, não o payload DirectSkip raw:
+
+1. `provider -&gt; SourceHub`: persistir raw payload e raw record reference.
+2. `Matrix`: validar mapping/versionamento para `provider_slug=directskip` e `list_type_slug=skip_trace_contact_discovery`.
+3. `SourceHub`: publicar seed envelopes por família:
+   - `contact_satellites_handoff` para phones/emails.
+   - `mailing_contact_handoff` para endereço de contato/mailing.
+   - `relationship_evidence_handoff` para relatives/associates.
+   - `co_owner_contact_satellites_handoff` apenas quando houver owner canônico explícito para co-owner.
+4. `Lead Finder`: materializar apenas seeds aprovados e associados a `canonical_property_public_id`/`canonical_owner_public_id` quando exigido.
+
+Contrato de contato recomendado para `contact_satellites`:
+
+- Envelope mínimo projetável: provider/list type/version/raw record/seed/property/stage/queue/ingested/state.
+- `phone_seeds[]`: materializar em tabela/visão de contato telefônico com `owner_ref`, `role_in_record`, `phone_number`, `contact_role`, `phone_type`, `phone_subtype`, `contact_source_confidence`.
+- `email_seeds[]`: materializar em tabela/visão de contato de email com `owner_ref`, `role_in_record`, `email`, `contact_role`, `contact_source_confidence`.
+- `match_metrics`: usar como política de promoção e auditoria, não como fonte absoluta de identidade de owner.
+- `portable_intelligence` e `transformation_lineage`: preservar como JSONB versionado para explicabilidade, reprocessamento e auditoria.
+
+Regra crítica observada no código-fonte: contatos de DirectSkip são evidência para descoberta de contato; eles não definem a verdade canônica de owner/property. Promoção deve respeitar `promotion_policy`, `owner_identity_required_for_promotion`, bloqueio de contatos address-only e cap de confiança quando houver falha/ambiguidade de normalização.
+
+## Candidatos a projeção relacional vs `keep_jsonb`
+
+### Projection candidates
+
+Projetar em colunas/tabelas relacionais quando usados para busca, join, RLS, dedupe, métricas ou promoção:
+
+Envelope de handoff:
+
+- `provider_slug`
+- `list_type_slug`
+- `canonical_schema_version`
+- `mapping_version`
+- `raw_record_public_id`
+- `seed_public_id`
+- `canonical_property_public_id`
+- `canonical_owner_public_id` quando existir
+- `target_owner_role` quando existir
+- `producer_stage`
+- `consumer_stage`
+- `queue`
+- `ingested_at`
+- `state_slug`
+
+Contato telefônico (`phone_seeds[]`):
+
+- `owner_ref`
+- `role_in_record`
+- `phone_number`
+- `contact_role`
+- `phone_type`
+- `phone_subtype`
+- `contact_source_confidence`
+
+Contato email (`email_seeds[]`):
+
+- `owner_ref`
+- `role_in_record`
+- `email`
+- `contact_role`
+- `contact_source_confidence`
+
+Endereço de contato/mailing (`mailing_address_seed`):
+
+- `address_line`, `secondary_address_line`
+- `address_number`, `street_line`, `street_name`, directional/type/occupancy components
+- `city`, `state`, `zip_code`, `county`, `country`
+- `normalized_address`, `address_hash`, `is_po_box`, `contact_address_type`
+
+Evidência de relacionamento (`relationship_evidence_seeds[]`):
+
+- `evidence_ref`
+- `display_name`, `first_name`, `middle_name`, `last_name`
+- `relationship_label`, `relationship_type`
+- `age`
+- `identity_resolution_status`
+- `possible_duplicate_of_owner`
+- `duplicate_resolution_vote_required`
+- `owner_match_confidence`
+- `relationship_evidence_confidence`
+
+Métricas/política de promoção, como colunas derivadas ou view materializada:
+
+- `recommended_result_status`
+- `submitted_owner_status`
+- `submitted_owner_top_level_found`
+- `submitted_owner_relative_found`
+- `co_owner_top_level_found`
+- `best_co_owner_contact_index`
+- `confidence_cap_applied`
+- `confidence_cap`
+- `normalizer_failure_detected`
+- flags de `promotion_policy`.
+
+### keep_jsonb
+
+Manter como JSONB versionado/lineage quando a forma é mutável, explicativa ou de governança:
+
+- raw provider payload completo (`input`, `status`, `result_code`, `contacts`, arrays internos raw).
+- `provider_response_payload` dentro de raw payload SourceHub.
+- `transformation_lineage` completo.
+- `portable_intelligence` completo.
+- `match_metrics` completo, além de colunas derivadas principais.
+- `property_address_comparison` completo, além de flags/enum deriváveis.
+- `owner_returned` completo, além de identidade normalizada/projetada quando promovida.
+- `semantic_primitives`, `field_mappings`, `resolution_evidence_projection` dos DTOs pre-SourceHub.
+- Matrix registry artifacts: `alias_evidence_snapshot`, `canonical_dictionary_snapshot`, `coverage_snapshot`, `multi_provider_snapshot`, `provider_drift_snapshot`, `dataset_discrepancy_snapshot`, `field_analysis`, `workspace_snapshot`, `corpus_stats`, `source_manifest`, `source_surface`.
+- i18n/feature flag JSONs e relatórios/provas browser: fora do core LFG materialization; manter como suporte/documentação.
+
+## Recomendação LFG
+
+1. Tratar `contact_satellites_handoff` como o corpus primário para implementação do envelope LFG de phones/emails.
+2. Usar raw DirectSkip apenas para testes de parser, regressão e lineage (`keep_jsonb`).
+3. Projetar os seeds aprovados por SourceHub em relações de contato (`phone`, `email`) com chaves para property/owner quando disponíveis.
+4. Preservar Matrix registry e `transformation_lineage` como JSONB governado para explicar por que um seed foi aceito, bloqueado ou reprocessável.
+5. Exigir `promotion_policy`/confidence checks antes de publicar contatos em inventário pesquisável, especialmente quando há sinais de address-only, relative-only, co-owner ou normalizer failure.
+
+## Riscos residuais
+
+- Os 6 handoffs revisados não exercitam `co_owner_contact_satellites_handoff`; o shape foi inferido do código-fonte e deve ganhar fixture própria.
+- Alguns candidatos são arquivos grandes de registry/análise; a revisão foi estrutural, não semântica linha-a-linha.
+- Arquivos i18n/feature flags aparecem por termos `skipTracing`, mas não devem entrar no corpus de domínio LFG exceto como suporte de UI.
+- Campos de PII foram identificados por nomes/shape; qualquer migração real precisa de controles de mascaramento, RLS e retention antes de exposição operacional.
+
+## Evidência de validação
+
+Comandos executados sem imprimir valores raw de JSON:
+
+- parse dos dois manifests para contagens, root types, tags, famílias de path e top-level keys.
+- parse dos 261 candidatos LFG DirectSkip/skip trace contra a árvore fonte; resultado: 0 arquivos ausentes, 0 erros de parse.
+- varredura por nome/caminho na árvore fonte; resultado: 236 JSONs com DirectSkip/skip trace no caminho.
+- análise focada dos 6 `directskip-sourcehub-handoffs.json`; resultado: 6/6 com `contact_satellites_handoff`, `mailing_contact_handoff`, `relationship_evidence_handoff`; 0/6 com `co_owner_contact_satellites_handoff`.
+</pre></section><section><h2>09-realtor-property-corpus-review.md</h2><pre># 09 — Revisão Realtor/property/market JSON corpus para LFG
+
+Status: concluído
+Worker: B
+Source root revisado: `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia`
+Manifests usados:
+- `docs/corpus/prop4you/lfg/prop4you-inertia-json-manifest.v1.jsonl`
+- `docs/corpus/prop4you/lfg/prop4you-inertia-lfg-corpus-candidates.v1.jsonl`
+
+Política de privacidade: nenhum valor bruto de JSON foi copiado. Esta revisão usa apenas nomes de chaves, tipos, contagens, famílias de paths e decisões de modelagem.
+
+## 1. Escopo e contagens
+
+Resumo global já presente no inventário:
+- JSON recursivos totais: 13.160
+- candidatos LFG: 3.545
+- tag `realtor`: 28 no manifesto completo; 27 no manifesto de candidatos LFG
+- tag `reiq`: 3.094 no manifesto completo; 3.087 nos candidatos LFG
+- tag `sourcehub`: 58 no manifesto completo; 36 nos candidatos LFG
+
+Recortes deste worker:
+- Realtor explícito: 27 candidatos LFG, todos `object`, todos em fixtures/provas.
+- Realtor endpoint reports: 17 arquivos em `_projeto-antigo/backend/.reports/realtor_api_endpoints_test/`.
+- Realtor client snapshots: 10 arquivos em `_projeto-antigo/backend/src/lib/clients/realtor/tests/snapshots/`.
+- REIQ property/geography/valuation: 2.812 objetos candidatos com chaves de propriedade/geografia/valor.
+- Property enrichment / My Property proofs: 2 artefatos úteis de shape em `frontends/.tmp/my-property-rich-testbase-enrichment*`; mais 3 artefatos de UI/plano relacionados, mas não fonte canônica de corpus.
+
+## 2. Famílias de path relevantes
+
+### Realtor explícito
+
+1. `_projeto-antigo/backend/.reports/realtor_api_endpoints_test/` — 17 objetos.
+   - Shape comum: wrapper de endpoint com chaves `endpoint`, `timestamp`, `parameters`, `status`, `error`, `data`, `data_summary`.
+   - Uso: bom para entender envelopes de ingestão/prova, mas `parameters` e `data` devem entrar como evidência sanitizada/lineage, não como verdade canônica.
+
+2. `_projeto-antigo/backend/src/lib/clients/realtor/tests/snapshots/` — 10 objetos.
+   - Shape comum: snapshot mais direto por operação, sem wrapper uniforme de relatório.
+   - Uso: melhor corpus para normalizadores específicos de Realtor, porque expõe o payload esperado por método (`autocomplete`, boundary, market, details, estimates, history, nearby/sold).
+
+3. Código atual de integração, fora do JSON corpus mas importante para envelopes:
+   - `backend/src/infrastructure/integrations/realtor/property.py`
+   - `backend/src/infrastructure/integrations/realtor/market.py`
+   - `backend/src/infrastructure/integrations/realtor/geo.py`
+   - `backend/src/infrastructure/integrations/realtor/maps.py`
+   - `backend/src/apps/public/address_entry/queries.py`
+
+### REIQ property/geography/valuation
+
+Contagem do recorte por família:
+- 1.400 objetos em `_projeto-antigo/backend/_archived/matrix/registry/reiq/...`
+- 1.400 objetos em `_projeto-antigo/backend/src/lib/matrix_engine/registry/...`
+- 12 objetos em provas/fixtures recentes (`.tmp/...` e `backend/src/apps/system/matrix/registry/...`)
+
+Estados/list types no recorte:
+- `tx`: 1.600 objetos
+- `fl`: 1.201 objetos
+- list types principais, com 200 objetos cada na maioria: `appt_of_sub_trustee/tx`, `divorce/fl`, `divorce/tx`, `eviction/fl`, `eviction/tx`, `heirship/tx`, `loan_modification/tx`, `pre_foreclosure/fl`, `pre_foreclosure/tx`, `probates/fl`, `probates/tx`, `tax_sale/fl`, `tax_sale/tx`; `loan_modification/fl` aparece com 201 por incluir prova extra.
+
+## 3. Shapes de evidência observados
+
+### 3.1 Realtor autocomplete
+
+Shapes observados:
+- Wrapper report: `data[]` com objetos de sugestão.
+- Snapshot direto: `results[]` com objetos de sugestão.
+
+Chaves/tipos recorrentes:
+- identificação/escopo: `_id:string`, `_score:number`, `area_type:string`, `geo_id:string`, `slug_id:string`, `mpr_id:string`
+- endereço/geografia: `line:string`, `city:string`, `state_code:string`, `postal_code:string`, `country:string`, `centroid.object`, `centroid.lat:number`, `centroid.lon:number`
+- cidade/ZIP: `counties[]`, `counties[].fips:string`, `counties[].name:string`, `counties[].state_code:string`, `county_needed_for_uniq:boolean`
+- property hints: `full_address[]:string`, `prop_status[]:string`, `validation_code[]:string`
+
+Uso recomendado:
+- `realtor_evidence.autocomplete`: guardar payload bruto sanitizado em JSONB de evidência.
+- Projetar somente seleção e matching: `provider_ref`, `suggestion_kind`, `full_address_hash`, `city`, `state_code`, `postal_code`, `county_fips`, `lat`, `lng`, `matched_at`.
+- Não usar label/endereço bruto em logs ou docs; no banco, tratar como dado sensível de propriedade/contato.
+
+### 3.2 Realtor property details
+
+Shapes observados:
+- Wrapper report: `data` com detalhes amplos.
+- Snapshot direto: `details` com o mesmo tipo de bloco.
+- Código atual extrai root via `data.home.property`, `data.property` ou payload raiz.
+
+Chaves/tipos de alta utilidade:
+- descrição física: `description.object`, `description.beds:integer`, `description.baths_*`, `description.sqft:integer`, `description.lot_sqft`, `description.year_built`, `description.type:string`, `description.sub_type`
+- preço/status: `list_price:integer`, `price`, `status:string`, `last_sold_date:string`, `last_sold_price`
+- localização: `location.object`, `location.address.object`, `location.county.object`
+- mídia/listing: `photos[]`, `primary_photo.object`, `permalink:string`, `href:string`, `listing_id:string`
+- agentes/anunciantes: `advertisers[]`, `consumer_advertisers[]`, `buyers[]` com e-mail/telefone/nome em subárvores; estas são PII/contato e devem ficar fora de projeções públicas.
+
+Uso recomendado:
+- `property_evidence.provider_payload_cache` ou envelope `realtor_evidence.property_details` para payload bruto sanitizado/lineage.
+- Projetar para `property`/`property_details` apenas atributos físicos e públicos: tipo, quartos, banheiros, sqft, ano, lote, status, listing URL/ref, foto-count/primary-photo-ref se necessário.
+- Não projetar subárvores de advertisers/buyers/office/phones/emails para o grafo canônico LFG; manter em JSONB restrito, ou descartar se não houver caso de uso legal/consentido.
+
+### 3.3 Realtor estimates/valuation
+
+Shapes observados:
+- `estimates.current_values[]` com `date:string`, `estimate:integer`, `estimate_high:integer`, `estimate_low:integer`, `isbest_homevalue:boolean`, `source.object`.
+- `estimates.forecast_values[]` e `estimates.historical_values[]` como séries.
+- `avm` pode ser `null`.
+- Spot offer: `home_estimate.object`, `home_estimate.value:integer`, `home_estimate.source:string`, `last_sold_date:string`, `last_sold_price:null|number`, `status:string`.
+
+Uso recomendado:
+- Criar eventos/snapshots em `property_valuation` por data/fonte quando o valor for estável e útil para busca/sort.
+- Manter séries forecast/historical completas em JSONB de evidência, porque granularidade e fonte variam.
+- Projetar campos: `estimated_value`, `valuation_date`, `data_source`, `confidence_score`, `estimate_low`, `estimate_high` opcionalmente em uma extensão de valuation se a DDL aceitar intervalo.
+
+### 3.4 Realtor property history/tax/building permits
+
+Shapes observados:
+- `property_history[]` com `date`, `event_name`, `price`, `price_change`, `price_sqft`, `source_listing_id`, `source_name`, e `listing.object`.
+- `tax_history[]` com `year`, `tax`, `assessment.object`, `market.object`; dentro de `assessment`/`market`: `building`, `land`, `total`.
+- `building_permits_history[]` com `permit_effective_date`, `permit_project_type_*`, `permit_status`, `permit_type_of_work`, `project_name`.
+
+Uso recomendado:
+- Projetar eventos de alta utilidade: venda/listagem/preço/tax assessment por ano.
+- Manter permit history e listing history completo em JSONB até existir bounded context para histórico imobiliário.
+- Separar `tax_assessment`/`market_assessment` de AVM: são evidências distintas.
+
+### 3.5 Realtor nearby/similar/recently sold
+
+Shapes observados:
+- `properties[]`, `homes[]` ou `related_homes.results[]`.
+- Cada item combina `property_id`, `listing_id`, `status`, `list_price`, `description.object`, `location.address.object`, `location.county.object`, fotos, flags e estimates.
+- Arrays observados em amostras: 3, 10, 19 ou 25 itens conforme endpoint/snapshot.
+
+Uso recomendado:
+- Usar como comparáveis/market context, não como verdade canônica do imóvel-alvo.
+- Envelope sugerido: `realtor_evidence.comparables` com `subject_property_ref`, `search_radius`, `search_center_hash`, `result_count`, `retrieved_at`, `payload_jsonb`.
+- Projetar apenas agregados ou referências: contagem, mediana local calculada, ids de comparáveis, status/preço se for necessário para ranking.
+
+### 3.6 Realtor market/geography/boundary
+
+Market shape:
+- `market` ou `market.housing_market` com chaves `hot_market_badge`, `hot_market_rank`, `local_hotness_score`, `local_temperature`, `median_days_on_market`, `median_listing_price`, `median_price_per_sqft`, `median_rent_price`, `median_sold_price`, `national_hotness_score`, `national_temperature`, e razões de DOM/LD views.
+
+Boundary shape:
+- `boundary.result.areas[]` ou `data.result.areas[]`.
+- `boundary.result.boundary.type:string` e `boundary.result.boundary.coordinates:array`.
+- `areas[].center.object`, `areas[].id:string`, `areas[].name:string`, `areas[].radius:number`, `areas[].breakpoints[]`.
+
+Uso recomendado:
+- Market metrics: bons candidatos para projeção por ZIP/geography/time bucket.
+- Boundary GeoJSON: manter em JSONB + geometria derivada PostGIS se/ quando for usada em busca espacial. O array bruto de coordenadas não deve ser expandido em colunas comuns.
+- Envelope: `geography_evidence.realtor_boundary` com `geo_ref`, `area_type`, `slug_id`, `retrieved_at`, `geometry_jsonb`, `provider_status`.
+
+### 3.7 REIQ property/geography/valuation corpus
+
+Chaves top-level mais frequentes no recorte de 2.812 objetos:
+- 2.812: `date_added`, `internal_id`, `lead_type`, `property_city`, `property_id`, `property_state`, `property_zip_code`
+- 2.411: `assessed_value`, `county`
+- 2.010: `date_filed`
+- 1.809: `owner_address`, `owner_first_name`, `owner_last_name`, `ownership`, `property_address`
+- 1.408: `owner_city`, `owner_state`, `owner_zip_code`
+- 1.404: `case_number`
+- 1.207: `bath`, `bed`, `garage`, `pool`, `sq_ft`, `yr_bt`
+- 1.007: `appraised_value`, `current_month`, `current_year`, `equity`, `estimated_equity`, `estimated_unpaid_balance`, `historical_interest_rate`, `legal_description`, `loan_origination_month`, `loan_origination_year`, `mortgagee_bank_name`, `mortgagor_first_name`, `mortgagor_last_name`, `original_loan_amount`
+- 1.003: `property_street`
+- 802: `city`, `state`, `zip_code`, `auction_date_time`, `instrument_no`
+
+Uso recomendado:
+- REIQ é fonte de sinais/situações e atributos de lead; não deve sobrescrever verdade canônica de proprietário/imóvel sem lineage.
+- Projetar: `provider_record_ref/internal_id`, `lead_type`, `state`, `county`, `property_id`, componentes de endereço da propriedade, datas legais relevantes, valores financeiros normalizados e situação/list type.
+- Manter JSONB: campos legais específicos por list type, nomes/endereços de pessoas, comentários, texto legal, detalhes de instrumento, campos raros e campos com semântica estadual divergente.
+
+### 3.8 Property enrichment / My Property overlays
+
+Shapes observados nos proofs:
+- `workspace-link-proof`: `address`, `details.object`, `history_snapshots:integer`, `known_gaps.object`, `overlay.object`, `public_id`, `valuation.object`, `workspace.object`.
+- `details`: `exists:boolean`, `property_type:string`, `beds:integer`, `baths:string`, `sqft:integer`, `year_built:integer`, `listing_status:string`, `listing_url:string`, `photo_count:integer`.
+- `overlay`: `exists:boolean`, `provider:string`, `providerPropertyRef:string`, `listingStatus:string`.
+- `valuation`: `exists:boolean`, `estimated_value:string`, `source:string`.
+- `workspace`: contadores e `saved_public_ids[]`.
+
+Modelo atual relevante:
+- `PropertyEnrichmentOverlay.latest_dto` é JSONField e o comentário do código marca explicitamente como cache DTO de provedor/manual, não fonte de verdade.
+- `PropertyDetails.photos` e `PropertyDetails.schools` também são JSONField.
+- `PropertyValuation` já cobre valores estimado/assessed/appraised, saldo/loan/equity e fonte/data.
+
+Uso recomendado:
+- `latest_dto` deve virar envelope de cache/evidência, não schema canônico primário.
+- Campos físicos/financeiros estáveis devem sair do DTO para tabelas/projeções canônicas (`property_details`, `property_valuation`, localidade/endereço).
+- `workspace` é contexto de usuário/salvamento, não corpus de evidência imobiliária; manter fora de `realtor_evidence`.
+
+## 4. Como usar nos envelopes `realtor_evidence` e `property`
+
+Envelope mínimo recomendado para Realtor:
+
+- `provider_slug`: constante lógica do provedor
+- `provider_operation`: autocomplete, property_details, property_estimates, property_history, nearby_homes, similar_homes, recently_sold, market_details, area_boundary
+- `provider_ref`: ref externa quando houver, por exemplo property/mpr/geo/listing ref
+- `subject_property_id`: FK/opcional para o imóvel canônico
+- `source_path_family`: família do corpus/manifests usada como prova
+- `retrieved_at` / `captured_at`
+- `request_shape`: chaves de parâmetros, sem valores sensíveis em logs
+- `payload_shape_version`: versão interna da normalização
+- `payload_jsonb`: payload sanitizado/guardado com acesso restrito
+- `shape_summary`: keys/types/counts opcionais para auditoria sem PII
+- `normalization_status`: parsed, partially_parsed, rejected, stale
+- `projection_refs`: IDs das projeções geradas (`property_details`, `property_valuation`, `market_snapshot`, etc.)
+
+Envelope `property`/LFG recomendado:
+
+- Identidade canônica: public_id, provider refs associados, endereço normalizado, geografia normalizada.
+- Detalhes físicos: tipo, quartos, banheiros, sqft, ano, lote, garagem, pool, stories.
+- Valuation: estimado/assessed/appraised, faixa opcional, fonte, data, confiança.
+- Listing enrichment: status, listing_id/provider ref, price, permalink/listing URL, fetched_at/ttl.
+- Situações: eventos/list type/sinais vindos de REIQ ou outros provedores, sempre com lineage.
+- Evidence links: nunca perder ponte para raw/sanitized JSONB, hash, provider operation e captured_at.
+
+## 5. Projection candidates vs keep_jsonb
+
+### Projetar em colunas/tabelas
+
+Alta prioridade:
+- refs: provider_slug, provider_property_ref, listing_id, geo_ref/slug_id
+- endereço normalizado: street/line, city, state_code, postal_code, county, county_fips, lat/lng quando disponível
+- atributos físicos: property_type, bedrooms, bathrooms, total_sqft, year_built, lot_size_sqft, garage_spaces, pool flag
+- listing: status, list_price, listing_url/permalink, days_on_market quando disponível, fetched_at, ttl_expires_at
+- valuation: estimated_value, assessed_value, appraised_value, mortgage_balance/estimated_unpaid_balance, original_loan_amount, equity_amount/equity_percentage, valuation_date, data_source
+- market snapshot por geografia/período: median_listing_price, median_sold_price, median_rent_price, median_price_per_sqft, median_days_on_market, local/national hotness score, local/national temperature
+- legal/situation basics REIQ: lead_type, state, county, case_number/document/instrument refs, date_filed, auction_date_time, situation/list type
+
+Média prioridade:
+- tax history anual: year, tax, assessment_total, market_total
+- price/listing history: event date, event name/status, price, price change, source listing ref
+- comparables summary: result_count, median/min/max preço, subject geo/radius hash, retrieved_at
+
+### Manter em JSONB restrito
+
+- payload bruto de Realtor/REIQ com PII ou contato
+- advertisers, buyers, office, phones, emails, lead_email, names de agentes/contatos
+- fotos completas e URLs de mídia quando não forem necessárias para display público
+- GeoJSON coordinates brutos de boundary; derivar PostGIS geometry separadamente quando necessário
+- forecast/historical AVM detalhado por fonte até haver modelo temporal completo
+- building permits completos
+- comments, legal_description extensivo, textos de instrumento, campos raros por list type/estado
+- `latest_dto` de overlay enquanto cache de provedor/manual
+- `request parameters` completos; se necessário guardar, mascarar ou hashear valores sensíveis
+
+## 6. Riscos e observações
+
+- Realtor reports incluem dados de contato em subárvores de anunciantes/compradores/escritórios; não devem ir para docs, logs nem projeções públicas.
+- REIQ contém nomes/endereços de proprietários e partes legais; para LFG é corpus valioso, mas exige envelope de lineage e política de acesso.
+- As famílias `_archived` e `matrix_engine` duplicam muitos registros REIQ; deduplicar por provider/list/state/internal_id/hash antes de criar seed canônico.
+- `market_details` e `boundary` são geografia/mercado, não propriedade; devem ter envelopes separados ou subtipos de evidence.
+- My Property proof confirma que o overlay atual é cache/apresentação; não promover `latest_dto` inteiro a contrato canônico.
+
+## 7. Evidência de execução
+
+Comandos/scripts locais usados somente para contagens e shapes, sem imprimir valores brutos:
+- leitura dos manifests JSONL para contagens por tag/classificação/família
+- recorte Realtor por `context_tags` e paths contendo `realtor`
+- recorte REIQ por chaves top-level de propriedade/geografia/valuation
+- introspecção de tipos/keys dos JSONs selecionados com depth limitado
+- leitura de código fonte dos normalizadores/modelos para confirmar campos e semântica
+
+Resultado: corpus Realtor/property/market/geography revisado e recomendações de envelope/projeção documentadas.
+</pre></section><section><h2>10-matrix-sourcehub-support-corpus-review.md</h2><pre># 10 — Revisão Matrix / SourceHub / LeadFinder: JSONs de registry, config, testes e suporte para o corpus LFG
+
+Status: concluído
+Worker: C
+Escopo: `prop4you-inertia` JSON corpus LFG, com foco em Matrix, SourceHub e LeadFinder
+Manifests usados:
+- `docs/corpus/prop4you/lfg/prop4you-inertia-json-manifest.v1.jsonl`
+- `docs/corpus/prop4you/lfg/prop4you-inertia-lfg-corpus-candidates.v1.jsonl`
+
+Nota de privacidade: esta revisão não reproduz valores JSON brutos. As conclusões abaixo usam somente caminhos-família, papéis de arquivo, chaves/categorias em nível estrutural, tipos raiz e contagens agregadas.
+
+## 1. Resumo executivo
+
+A revisão confirma que Matrix, SourceHub e LeadFinder formam um subconjunto de alta relevância para o corpus LFG, mas com papéis diferentes:
+
+1. Matrix registry: evidência primária de mapeamento semântico, contratos, análises, source manifests, schemas compilados e sessões históricas. Deve entrar como corpus LFG com política de ingestão controlada por papel.
+2. LeadFinder system JSONs: evidência de suporte canônico. São baseline/artifacts que definem o destino da materialização, não exemplos brutos de provider. Devem ser preservados como referência normativa para envelopes e gates.
+3. SourceHub JSONs: mistura de evidência de handoff/canonical DTO, amostras legadas/test fixtures e saídas temporárias de provas. Devem ser ingeridos por família, com separação entre payload bruto, handoff estruturado, audit/report e cache gerado.
+4. Tooling/cache/documentação gerada: deve ficar fora da ingestão automática ou entrar apenas como metadata operacional, porque não representa evidência de domínio estável.
+
+## 2. Contagens verificadas
+
+Base completa do manifest:
+
+| Conjunto | Arquivos no manifest | Candidatos LFG | Root type | Soma de path/type pairs em candidates |
+|---|---:|---:|---|---:|
+| Manifest JSON geral | 13.160 | n/a | misto | n/a |
+| Candidate JSONL geral | 3.545 | 3.545 | misto | n/a |
+| Matrix system JSON | 316 | 316 | object | 193.284 |
+| Matrix registry JSON | 315 | 315 | object | 193.236 |
+| LeadFinder system JSON | 9 | 9 | object | 4.259 |
+| SourceHub-named JSON | 58 | 58 | object | 11.965 |
+
+Observações:
+- Todos os JSONs de Matrix registry revisados aparecem como `lfg_corpus_candidate`.
+- Todos os JSONs de LeadFinder system revisados aparecem como `lfg_corpus_candidate`.
+- Todos os JSONs SourceHub-named revisados aparecem como `lfg_corpus_candidate`, mas nem todos devem ter a mesma prioridade de ingestão.
+
+## 3. Matrix registry
+
+### 3.1 Famílias de origem
+
+| Família de origem | Arquivos |
+|---|---:|
+| `backend/src/apps/system/matrix/registry/directskip/...` | 210 |
+| `backend/src/apps/system/matrix/registry/reiq/...` | 98 |
+| `backend/src/apps/system/matrix/registry/contracts/...` e contexto de registry | 7 |
+| Total Matrix registry | 315 |
+
+### 3.2 Papéis de registry
+
+| Papel | Arquivos | Soma de path/type pairs | Decisão corpus |
+|---|---:|---:|---|
+| analysis / baseline-only | 58 | 161.583 | Corpus LFG forte; evidencia cobertura, alias, drift e snapshot de baseline. |
+| analysis / contextual | 58 | 5.893 | Corpus LFG forte; evidencia contexto, workspace, discrepância e análise de campo. |
+| analysis / discrepancy | 58 | 733 | Corpus LFG forte; evidencia diferenças entre dataset/provider e expectativas canônicas. |
+| contracts | 72 | 2.918 | Suporte canônico e corpus; define shape esperado para sessões, artifacts e snapshots. |
+| data/source_manifest/raw data | 60 | 3.720 | Evidência de lineage/ingress; ingestão deve ser controlada e redigida. |
+| schema | 7 | 18.354 | Suporte canônico forte; material para validar envelopes/schemas. |
+| outros contextos de registry | 2 | 35 | Suporte de configuração semântica; baixa prioridade isolada, útil como metadata. |
+
+### 3.3 Leitura do papel Matrix
+
+Matrix registry deve ser tratado como evidência LFG porque codifica:
+
+- contratos publicados e snapshots efetivos;
+- relação provider/list/state com baseline version;
+- session identity, artifact kind e public references;
+- análise baseline-only, contextual e discrepancy;
+- schemas/genomes compilados;
+- source manifests e superfícies de origem.
+
+Para o corpus LFG, a distinção essencial é:
+
+- `contracts` e `schema`: suporte canônico/gate de shape.
+- `analysis/*`: evidência semântica e material de treinamento/validação para mapping/projection.
+- `data/*_source_manifest`: lineage admissível como metadata.
+- `data` com payload provider: evidência bruta sensível; não deve ser ingerida sem redaction e sem envelope de provenance.
+- context files: suporte de configuração, não amostra de verdade materializada.
+
+## 4. LeadFinder system JSON
+
+### 4.1 Famílias e papéis
+
+| Família | Arquivos | Soma de path/type pairs | Decisão corpus |
+|---|---:|---:|---|
+| `backend/src/apps/system/lead_finder/baselines/...` | 8 | 2.857 | Suporte canônico obrigatório. |
+| `backend/src/apps/system/lead_finder/artifacts/...` | 1 | 1.402 | Artifact de baseline/genome; suporte canônico obrigatório. |
+| Total LeadFinder system | 9 | 4.259 | Não é payload bruto; é contrato de destino. |
+
+### 4.2 Leitura do papel LeadFinder
+
+LeadFinder é o dono da materialização canônica e do inventário pesquisável. Portanto, seus JSONs não devem ser tratados como exemplos de ingressão provider, mas como:
+
+- baseline do grafo canônico;
+- catálogo de famílias/campos/micro-baselines;
+- referência de versão/contrato publicado;
+- destino das projeções que SourceHub entrega e que Matrix mapeia.
+
+Em termos de ingestão, esses arquivos devem ser carregados antes dos samples Matrix/SourceHub para permitir validação de projection gates: o corpus provider só é promovível se puder ser explicado contra o baseline LeadFinder ou marcado como growth suggestion/HITL.
+
+## 5. SourceHub JSON
+
+### 5.1 Famílias de origem
+
+| Família SourceHub | Arquivos | Decisão corpus |
+|---|---:|---|
+| `.tmp/.../outputs` e provas runtime | 20 | Evidência útil, mas efêmera; ingerir apenas se associada a issue/proof e marcada como runtime proof. |
+| `_projeto-antigo/backend/docs/sourcehub/audit_.../raw_samples` | 26 | Evidência legada/test fixture; alta utilidade para shapes provider, com redaction obrigatória. |
+| `_projeto-antigo/backend/docs/sourcehub/payload_samples` | 10 | Evidência legada/test fixture; útil para comparação de envelopes, com redaction obrigatória. |
+| `_projeto-antigo/backend/src/system/sourcehub/audits` | 1 | Audit/report; suporte de lineage e cobertura, não sample primário. |
+| `frontends/docusaurus/.docusaurus/...` | 1 | Tooling/cache gerado; excluir da ingestão de domínio. |
+| Total SourceHub-named | 58 | Mistura: corpus + suporte + tooling. |
+
+### 5.2 Papéis observados
+
+A estrutura agregada indica três formas principais de SourceHub JSON:
+
+1. Handoff/canonical DTO ou pre-SourceHub DTO:
+   - contém chaves estruturais de DTO, schema/versioning, producer/consumer stage, queue e mapping metadata;
+   - deve ser corpus LFG forte quando ligado a Matrix/LeadFinder;
+   - deve validar envelope canônico antes de materialização.
+
+2. Raw samples / payload samples:
+   - raiz object com seções de resposta, erro/status e dados provider;
+   - evidência importante para mapeamento e regressão;
+   - risco maior de PII/domínio sensível; ingestão automatizada deve armazenar apenas shape, fingerprints e amostras redigidas.
+
+3. Audit/proof/cache:
+   - reports de auditoria ou outputs de execução comprovam pipeline e gates;
+   - caches de docs gerados não devem contaminar o corpus de domínio.
+
+## 6. Evidence vs support vs tooling
+
+| Grupo | Evidência LFG | Suporte de projeto/canônico | Tooling/cache | Recomendação |
+|---|---:|---:|---:|---|
+| Matrix registry | Alta | Alta | Baixa | Ingerir por role; separar contracts/schema/analysis/data. |
+| LeadFinder system JSON | Média | Muito alta | Baixa | Ingerir como baseline normativo, não como sample provider. |
+| SourceHub handoff/proofs | Alta | Média | Média | Ingerir quando houver provenance de proof/issue; marcar runtime/ephemeral. |
+| SourceHub legacy samples | Alta | Média | Baixa | Ingerir shape e redacted sample; nunca promover valores brutos. |
+| Docusaurus generated JSON | Baixa | Baixa | Alta | Excluir da ingestão LFG; manter somente se a pipeline precisar auditar cache gerado. |
+
+## 7. Como estes JSONs suportam envelopes canônicos e projection gates
+
+### 7.1 Envelope canônico
+
+Os conjuntos revisados dão cobertura para um envelope canônico com, no mínimo, estas categorias estruturais:
+
+- origem/provider/list/state;
+- versão de baseline e contrato publicado;
+- artifact kind e session/public identity;
+- lineage/source manifest;
+- mapping/versioning metadata;
+- handoff DTO ou pre-SourceHub DTO;
+- análise semântica e discrepância;
+- status/erros de ingestão sem valores brutos;
+- classificação de dado bruto vs dado canônico vs dado proposto.
+
+Matrix contribui os contratos, schemas e análises; SourceHub contribui ingress/lineage/framing/handoff; LeadFinder contribui baseline de destino e families/campos materializáveis.
+
+### 7.2 Projection gates
+
+Os projection gates futuros devem usar estas regras:
+
+1. Gate de shape: validar root type, top-level key families e path/type pairs contra contracts/schema Matrix e baseline LeadFinder.
+2. Gate de provenance: exigir provider/list/state/session/source manifest ou metadata equivalente antes de aceitar evidence JSON.
+3. Gate de role: classificar arquivo como `contract`, `schema`, `analysis`, `source_manifest`, `raw_sample`, `handoff`, `audit`, `runtime_proof` ou `generated_cache`.
+4. Gate de promoção: SourceHub handoff só vira candidato de materialização LeadFinder quando está ligado a baseline version e mapping version; raw sample isolado fica em staging.
+5. Gate de privacidade: payload bruto e legacy samples devem gerar somente shapes, fingerprints, counts e amostras redigidas para o corpus público/operacional.
+6. Gate de drift/growth: campos que aparecem em Matrix analysis/discrepancy e não cabem no baseline LeadFinder devem ser marcados como growth suggestions, não promovidos automaticamente.
+
+## 8. Recomendações para ingestão automatizada futura
+
+1. Implementar classificação determinística por path role antes de ler conteúdo profundo:
+   - `matrix/registry/contracts` =&gt; canonical support/contract;
+   - `matrix/registry/schema` =&gt; canonical support/schema;
+   - `matrix/registry/analysis/*` =&gt; semantic evidence;
+   - `matrix/registry/**/data/*_source_manifest` =&gt; lineage support;
+   - `matrix/registry/**/data/*` sem source_manifest =&gt; raw evidence, restricted;
+   - `lead_finder/baselines` e `lead_finder/artifacts` =&gt; LF baseline support;
+   - `docs/sourcehub/**/raw_samples` e `payload_samples` =&gt; legacy provider evidence, restricted;
+   - `.tmp/**sourcehub**` =&gt; runtime proof, ephemeral;
+   - `.docusaurus` =&gt; generated cache, exclude.
+
+2. Persistir manifest enriquecido com os seguintes campos derivados:
+   - `source_family`, `registry_role`, `evidence_role`, `privacy_tier`, `ingestion_priority`, `projection_gate_hint`, `canonical_owner`.
+
+3. Não usar `lfg_corpus_candidate` sozinho como sinal de ingestão final. Ele deve ser refinado por papel:
+   - corpus-evidence;
+   - canonical-support;
+   - project-support;
+   - restricted-raw;
+   - generated-tooling-exclude.
+
+4. Para SourceHub legado e Matrix `data`, armazenar primeiro path/type pairs, root type, top-level key families e hashes; valores brutos somente em ambiente restrito.
+
+5. Rodar validação cruzada LF baseline -&gt; Matrix schema/contracts -&gt; SourceHub handoff, produzindo relatório de:
+   - campos cobertos;
+   - campos órfãos;
+   - aliases/discrepâncias;
+   - campos sensíveis;
+   - sugestões de crescimento pendentes de HITL.
+
+6. Excluir caches gerados e package/tooling JSON do corpus de domínio, mesmo quando o manifest os marcar como structured JSON.
+
+## 9. Decisão final por área
+
+- Matrix registry: incluir como corpus LFG e suporte canônico, com ingestão granular por role.
+- LeadFinder baseline/artifacts: incluir como suporte canônico obrigatório para gates e projeção; não contar como provider sample.
+- SourceHub handoffs/proofs: incluir como evidence quando vinculados a runtime proof/issue; marcar como ephemeral quando sob `.tmp`.
+- SourceHub legacy raw/payload samples: incluir como restricted evidence; redaction obrigatória e preferência por shape-only no corpus inicial.
+- Generated documentation/cache: excluir da ingestão automática LFG.
+
+## 10. Comandos de verificação executados
+
+Foram executadas leituras e agregações locais sobre os manifests JSONL existentes. As saídas usadas para esta revisão continham apenas contagens, paths, root types, context tags, classificações, top-level key names e path/type pair counts; nenhum valor JSON bruto foi reproduzido neste relatório.
+</pre></section><section><h2>docs/corpus/prop4you/lfg/prop4you-inertia-json-summary.v1.json</h2><pre>{
+  &quot;candidate_manifest_path&quot;: &quot;docs/corpus/prop4you/lfg/prop4you-inertia-lfg-corpus-candidates.v1.jsonl&quot;,
+  &quot;classification_counts&quot;: {
+    &quot;dependency_or_tooling&quot;: 853,
+    &quot;lfg_corpus_candidate&quot;: 3545,
+    &quot;parse_error&quot;: 64,
+    &quot;project_support&quot;: 2730,
+    &quot;unknown_or_out_of_scope&quot;: 5968
+  },
+  &quot;context_tag_counts&quot;: {
+    &quot;config_or_tooling&quot;: 3520,
+    &quot;directskip&quot;: 235,
+    &quot;leadfinder&quot;: 38,
+    &quot;legacy_system&quot;: 325,
+    &quot;matrix&quot;: 3320,
+    &quot;realtor&quot;: 28,
+    &quot;registry&quot;: 3241,
+    &quot;reiq&quot;: 3094,
+    &quot;sourcehub&quot;: 58,
+    &quot;structured_json&quot;: 13096,
+    &quot;system_app&quot;: 325,
+    &quot;test_or_fixture&quot;: 893
+  },
+  &quot;generated_at&quot;: &quot;2026-06-18T18:39:58&quot;,
+  &quot;lfg_candidate_count&quot;: 3545,
+  &quot;manifest_path&quot;: &quot;docs/corpus/prop4you/lfg/prop4you-inertia-json-manifest.v1.jsonl&quot;,
+  &quot;no_raw_values_policy&quot;: true,
+  &quot;parse_error_count&quot;: 64,
+  &quot;parse_error_paths_sample&quot;: [
+    &quot;.agent/mcp_config.json&quot;,
+    &quot;.auto-claude/specs/001-use-o-10x-para-melhorar-toda-a-l-gica-e-entendimen/research.json&quot;,
+    &quot;.tmp/realtor_enrichment_seed_result.json&quot;,
+    &quot;_projeto-antigo/botrei_lists_pgsql/.vscode/launch.json&quot;,
+    &quot;_projeto-antigo/frontend-react/schema_introspection.json&quot;,
+    &quot;_projeto-antigo/frontend-react/tsconfig.app.json&quot;,
+    &quot;_projeto-antigo/frontend-react/tsconfig.node.json&quot;,
+    &quot;_projeto-antigo/mamix-nextjs/Documentation/assets/libs/intl-tel-input/.vscode/settings.json&quot;,
+    &quot;_projeto-antigo/mamix-nextjs/Starterkit/.eslintrc.json&quot;,
+    &quot;frontends/.tmp/my-property-rich-testbase-enrichment/materialization-result.json&quot;,
+    &quot;frontends/docusaurus/tsconfig.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/10.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/11.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/12.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/13.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/14.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/15.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/16.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/17.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/19.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/2.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/20.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/21.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/22.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/23.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/24.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/25.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/26.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/27.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/28.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/29.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/3.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/30.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/31.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/32.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/33.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/34.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/4.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/5.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/6.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/7.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/8.json&quot;,
+    &quot;frontends/front-react/node_modules/@mapbox/jsonlint-lines-primitives/test/fails/9.json&quot;,
+    &quot;frontends/front-react/node_modules/call-bind-apply-helpers/tsconfig.json&quot;,
+    &quot;frontends/front-react/node_modules/call-bound/tsconfig.json&quot;,
+    &quot;frontends/front-react/node_modules/dunder-proto/tsconfig.json&quot;,
+    &quot;frontends/front-react/node_modules/es-define-property/tsconfig.json&quot;,
+    &quot;frontends/front-react/node_modules/es-errors/tsconfig.json&quot;,
+    &quot;frontends/front-react/node_modules/es-object-atoms/tsconfig.json&quot;,
+    &quot;frontends/front-react/node_modules/es-set-tostringtag/tsconfig.json&quot;
+  ],
+  &quot;provider_tag_counts&quot;: {
+    &quot;directskip&quot;: 235,
+    &quot;leadfinder&quot;: 38,
+    &quot;legacy_system&quot;: 325,
+    &quot;matrix&quot;: 3320,
+    &quot;realtor&quot;: 28,
+    &quot;reiq&quot;: 3094,
+    &quot;sourcehub&quot;: 58
+  },
+  &quot;root_type_counts&quot;: {
+    &quot;array&quot;: 127,
+    &quot;object&quot;: 12969,
+    &quot;parse_error&quot;: 64
+  },
+  &quot;source_root&quot;: &quot;/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia&quot;,
+  &quot;top_level_json_files&quot;: [
+    &quot;.auto-claude-security.json&quot;,
+    &quot;.claude_settings.json&quot;,
+    &quot;.mcp.json&quot;,
+    &quot;package-lock.json&quot;,
+    &quot;package.json&quot;
+  ],
+  &quot;total_json_files_recursive&quot;: 13160,
+  &quot;total_size_bytes&quot;: 980621145
+}
+</pre></section><section><h2>docs/corpus/prop4you/lfg/prop4you-inertia-lfg-corpus-base-summary.v1.json</h2><pre>{
+  &quot;canonical_envelope_hint_counts&quot;: {
+    &quot;contact_satellites&quot;: 235,
+    &quot;none&quot;: 9712,
+    &quot;property&quot;: 3104,
+    &quot;realtor_evidence&quot;: 27,
+    &quot;taxonomy&quot;: 82
+  },
+  &quot;decision_counts&quot;: {
+    &quot;exclude_from_domain_corpus&quot;: 9571,
+    &quot;include_as_project_metadata_not_lfg_domain&quot;: 77,
+    &quot;include_canonical_support&quot;: 149,
+    &quot;include_lfg_corpus&quot;: 383,
+    &quot;include_shape_only_restricted&quot;: 2896,
+    &quot;include_with_ephemeral_marker&quot;: 20,
+    &quot;review_or_exclude_until_parseable&quot;: 64
+  },
+  &quot;enriched_manifest&quot;: &quot;docs/corpus/prop4you/lfg/prop4you-inertia-lfg-corpus-base.v1.jsonl&quot;,
+  &quot;evidence_role_counts&quot;: {
+    &quot;canonical_baseline_support&quot;: 36,
+    &quot;canonical_support_contract_schema&quot;: 113,
+    &quot;contact_enrichment_evidence&quot;: 7,
+    &quot;generated_docs_cache&quot;: 1,
+    &quot;handoff_or_lineage_evidence&quot;: 1,
+    &quot;parse_error&quot;: 64,
+    &quot;project_config_or_support&quot;: 77,
+    &quot;property_legal_signal_evidence&quot;: 19,
+    &quot;property_market_enrichment_evidence&quot;: 27,
+    &quot;restricted_legacy_raw_sample&quot;: 36,
+    &quot;restricted_raw_or_source_manifest&quot;: 2860,
+    &quot;runtime_proof_ephemeral&quot;: 20,
+    &quot;semantic_analysis_evidence&quot;: 236,
+    &quot;semantic_registry_evidence&quot;: 93,
+    &quot;tooling_dependency&quot;: 7939,
+    &quot;unknown_or_out_of_scope&quot;: 1631
+  },
+  &quot;generated_at&quot;: &quot;2026-06-18T18:47:02&quot;,
+  &quot;no_raw_values_policy&quot;: true,
+  &quot;priority_counts&quot;: {
+    &quot;blocked&quot;: 64,
+    &quot;high&quot;: 531,
+    &quot;low&quot;: 77,
+    &quot;medium&quot;: 2917,
+    &quot;none&quot;: 9571
+  },
+  &quot;privacy_tier_counts&quot;: {
+    &quot;internal&quot;: 1708,
+    &quot;pii_sensitive&quot;: 3335,
+    &quot;provider_sensitive&quot;: 27,
+    &quot;restricted&quot;: 86,
+    &quot;tooling&quot;: 7940,
+    &quot;unknown&quot;: 64
+  },
+  &quot;source_family_counts&quot;: {
+    &quot;dependency_or_tooling&quot;: 7939,
+    &quot;directskip_skiptrace&quot;: 235,
+    &quot;leadfinder_baseline&quot;: 36,
+    &quot;matrix_registry_or_artifact&quot;: 46,
+    &quot;parse_error&quot;: 64,
+    &quot;project_support&quot;: 77,
+    &quot;realtor_property_market&quot;: 27,
+    &quot;reiq_property_legal_signal&quot;: 3094,
+    &quot;sourcehub&quot;: 11,
+    &quot;unknown&quot;: 1631
+  },
+  &quot;source_manifest&quot;: &quot;docs/corpus/prop4you/lfg/prop4you-inertia-json-manifest.v1.jsonl&quot;,
+  &quot;total_json_files&quot;: 13160,
+  &quot;used_for_lfg_base_count&quot;: 3448
+}
+</pre></section></body></html>

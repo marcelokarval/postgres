@@ -711,3 +711,14 @@ prop4you_leadfinder_group.v_active_projection_policy_gates
 ```
 
 Before promoting any provider/internal JSON path to generated column, index, table, FK, PostGIS geometry or product-facing projection, query/review the seven gates from the projection policy registry.
+
+## Slice 16 — prop4you-inertia JSON corpus base for LFG
+
+Before selecting LFG projections, use the complete prop4you-inertia JSON corpus manifest:
+
+```text
+docs/corpus/prop4you/lfg/prop4you-inertia-json-manifest.v1.jsonl
+docs/corpus/prop4you/lfg/prop4you-inertia-lfg-corpus-base.v1.jsonl
+```
+
+The manifest represents every `.json` under the legacy/current `prop4you-inertia` root, but only files classified as LFG corpus/support/restricted evidence should drive LFG modeling. Dependency/tooling/generated JSON remains represented but excluded from domain corpus decisions.

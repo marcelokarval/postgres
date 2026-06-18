@@ -197,3 +197,6 @@ Then read the domain-specific doc for the task.
 - `docs/schemas/prop4you/lfg/` — machine-readable LFG canonical JSONSchema envelopes and projection policy.
 - `database/ddl/projects/prop4you/leadfinder_group/0005_canonical_jsonschema_registry.sql` — queryable PG18 registry for LFG JSONSchema envelopes and JSONB-to-relational projection gates.
 - `docs/reports/prop4you-lfg-jsonschema-registry-proof.md` — proof that JSONSchema artifacts and PG18 registry apply/query assertions pass.
+- `docs/corpus/prop4you/lfg/prop4you-inertia-json-manifest.v1.jsonl` — full redacted manifest of every `.json` under `prop4you-inertia` with path/hash/type/classification.
+- `docs/corpus/prop4you/lfg/prop4you-inertia-lfg-corpus-base.v1.jsonl` — enriched LFG corpus base decisions from prop4you-inertia JSONs.
+- `docs/issues/16-prop4you-inertia-json-corpus-lfg-manifest/` — Slice 16 PRD/tasks/reviews/browser/final report for using prop4you-inertia JSONs as governed LFG corpus base.

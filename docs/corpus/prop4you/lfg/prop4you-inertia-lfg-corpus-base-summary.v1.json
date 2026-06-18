@@ -1,0 +1,69 @@
+{
+  "canonical_envelope_hint_counts": {
+    "contact_satellites": 235,
+    "none": 9712,
+    "property": 3104,
+    "realtor_evidence": 27,
+    "taxonomy": 82
+  },
+  "decision_counts": {
+    "exclude_from_domain_corpus": 9571,
+    "include_as_project_metadata_not_lfg_domain": 77,
+    "include_canonical_support": 149,
+    "include_lfg_corpus": 383,
+    "include_shape_only_restricted": 2896,
+    "include_with_ephemeral_marker": 20,
+    "review_or_exclude_until_parseable": 64
+  },
+  "enriched_manifest": "docs/corpus/prop4you/lfg/prop4you-inertia-lfg-corpus-base.v1.jsonl",
+  "evidence_role_counts": {
+    "canonical_baseline_support": 36,
+    "canonical_support_contract_schema": 113,
+    "contact_enrichment_evidence": 7,
+    "generated_docs_cache": 1,
+    "handoff_or_lineage_evidence": 1,
+    "parse_error": 64,
+    "project_config_or_support": 77,
+    "property_legal_signal_evidence": 19,
+    "property_market_enrichment_evidence": 27,
+    "restricted_legacy_raw_sample": 36,
+    "restricted_raw_or_source_manifest": 2860,
+    "runtime_proof_ephemeral": 20,
+    "semantic_analysis_evidence": 236,
+    "semantic_registry_evidence": 93,
+    "tooling_dependency": 7939,
+    "unknown_or_out_of_scope": 1631
+  },
+  "generated_at": "2026-06-18T18:47:02",
+  "no_raw_values_policy": true,
+  "priority_counts": {
+    "blocked": 64,
+    "high": 531,
+    "low": 77,
+    "medium": 2917,
+    "none": 9571
+  },
+  "privacy_tier_counts": {
+    "internal": 1708,
+    "pii_sensitive": 3335,
+    "provider_sensitive": 27,
+    "restricted": 86,
+    "tooling": 7940,
+    "unknown": 64
+  },
+  "source_family_counts": {
+    "dependency_or_tooling": 7939,
+    "directskip_skiptrace": 235,
+    "leadfinder_baseline": 36,
+    "matrix_registry_or_artifact": 46,
+    "parse_error": 64,
+    "project_support": 77,
+    "realtor_property_market": 27,
+    "reiq_property_legal_signal": 3094,
+    "sourcehub": 11,
+    "unknown": 1631
+  },
+  "source_manifest": "docs/corpus/prop4you/lfg/prop4you-inertia-json-manifest.v1.jsonl",
+  "total_json_files": 13160,
+  "used_for_lfg_base_count": 3448
+}
