@@ -190,3 +190,4 @@ Then read the domain-specific doc for the task.
 - `database/ddl/projects/prop4you/sourcehub/0002_translated_dto_publications.sql` — SourceHub T4 translated DTO publication table, validation trigger, review view, and publication function.
 - `docs/issues/10-prop4you-lfg-staging-materialization-operational/` — PRD/tasks/review stack for T5 LFG staging/materialization/operational minimum.
 - `database/ddl/projects/prop4you/leadfinder_group/` — LeadFinder Group T5 staging candidates, materialization runs/results, and minimal operational groups/events/facets.
+- `docs/issues/11-prop4you-system-schema-lfg-topology/` — system/LFG vs user workspace boundary, multi-Postgres/FDW topology, and marker/tag semantic split.

@@ -657,3 +657,7 @@ The LeadFinder Group owns the canonical dictionary, but that dictionary is born/
 ## LeadFinder Group T5 operational minimum
 
 `docs/issues/10-prop4you-lfg-staging-materialization-operational/` records the T5 proof. `database/ddl/projects/prop4you/leadfinder_group/` implements staging candidates from SourceHub translated DTOs, materialization runs/results, and a minimal operational surface of groups/events/facets. This is intentionally not the final property/owner/contact/scoring graph; it proves the database-centric pipeline while avoiding premature table explosion.
+
+## Prop4You system/LFG vs user workspace boundary
+
+`docs/issues/11-prop4you-system-schema-lfg-topology/` defines the operational boundary between legacy Django `system`/LFG and the logged-in user's workspace. LFG is treated as an internal external-like system with its own ingestion/materialization/load profile; the user workspace consumes LFG via refs, snapshots, versions, and hashes. Tags/labels/markers with the same visible names are not duplicates when scope/owner/version/audit differ. FDW is permitted for point lookups, snapshot transactions, and version/hash checks, but not for heavy cross-node joins or live dashboards over foreign tables.
