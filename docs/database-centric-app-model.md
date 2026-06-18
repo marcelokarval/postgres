@@ -672,3 +672,16 @@ prop4you_leadfinder_group = LFG/system global evidence and marker authority
 ```
 
 User feedback is stored in LFG as weak signal, aggregated into review candidates, and applied as global markers only through review/apply gates. LeadFinder dictionary promotions now have explicit review/application records after prepare-only proposals.
+
+## Slice 13 — LFG system x DDL x JSON readiness
+
+Readiness verdict:
+
+```text
+LFG current state = ready-with-gaps
+LFG final/closed = no
+rich prop4you_user_workspace = not ready
+correct next slice = LFG canonical graph/taxonomy minimum
+```
+
+Reason: the PG18 pipeline is proven through SourceHub, Matrix, LeadFinder, LFG staging/materialization/operational minimum and feedback gates, but the legacy system and JSON evidence still require first-class graph/taxonomy closure for property/address/details, owner/ownership, contact addresses, phone/email satellite contracts, reusable tag/label vocabulary, and marker auto-apply policy.

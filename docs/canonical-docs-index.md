@@ -192,3 +192,4 @@ Then read the domain-specific doc for the task.
 - `database/ddl/projects/prop4you/leadfinder_group/` — LeadFinder Group T5 staging candidates, materialization runs/results, and minimal operational groups/events/facets.
 - `docs/issues/11-prop4you-system-schema-lfg-topology/` — system/LFG vs user workspace boundary, multi-Postgres/FDW topology, and marker/tag semantic split.
 - `docs/issues/12-prop4you-lfg-feedback-promotion-policy/11-feedback-promotion-architecture.md` — LFG feedback votes, marker review/apply, and dictionary promotion apply policy.
+- `docs/issues/13-prop4you-lfg-system-ddl-json-readiness/11-system-ddl-json-readiness-matrix.md` — LFG readiness audit comparing legacy system, PG18 DDL, and REIQ JSON path evidence.

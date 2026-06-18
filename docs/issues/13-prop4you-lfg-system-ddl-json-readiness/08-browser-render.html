@@ -1,0 +1,1449 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Prop4You LFG System DDL JSON Readiness</title><style>body{font-family:Inter,Arial,sans-serif;margin:32px;background:#0b1020;color:#edf2ff}.badges span{display:inline-block;margin:4px;padding:6px 10px;background:#173b2f;border:1px solid #38d996;border-radius:999px}section{background:#121a33;border:1px solid #26365f;margin:18px 0;padding:18px;border-radius:12px}pre{white-space:pre-wrap;line-height:1.35}h1{color:#8cc8ff}</style></head><body><h1>Prop4You LFG System DDL JSON Readiness</h1><div class="badges"><span>system x DDL x JSON</span><span>LFG ready-with-gaps</span><span>Workspace not-ready</span><span>Legacy system inventory</span><span>PG18 DDL inventory</span><span>97 JSON files</span><span>3,685 path+type pairs</span><span>No raw values</span><span>No PII</span><span>Tags vocabulary reusable</span><span>Auto-apply threshold future</span><span>Next: LFG graph/taxonomy</span><span>Repo-only audit</span><span>Browser proof</span></div><section><h2>01-prd.md</h2><pre># PRD — LFG readiness audit: system x DDL x JSON
+
+Status: active
+
+## Problem
+
+The LFG database-centric package has SourceHub/Matrix/LeadFinder/LFG staging/materialization/feedback gates, but it is not yet proven complete against the legacy Django `system` model and the available JSON corpus. Moving to `prop4you_user_workspace` before this comparison risks building workspace contracts over an incomplete LFG baseline.
+
+## Goal
+
+Produce a persisted, evidence-based readiness audit that compares:
+
+1. Legacy Django system boundaries/models/contracts.
+2. Current PG18 DDL objects and semantics.
+3. Available REIQ JSON corpus/path evidence.
+
+The output must identify coverage, gaps, decisions, and the correct next slice.
+
+## Required outputs
+
+- legacy system inventory, redacted/no PII;
+- DDL inventory, schema/table/function/view oriented;
+- JSON/path inventory, key/path counts only, no values;
+- system x DDL x JSON matrix;
+- readiness verdict: ready / not ready / ready-with-gaps;
+- next slice recommendation.
+
+## Acceptance criteria
+
+- PRD/tasks/ledger persisted.
+- At most 3 subagents used with file+terminal only.
+- Worker artifacts read and reviewed by Thor.
+- Matrix artifact persisted under this issue stack.
+- Browser-proof + vision QA pass.
+- Final report compares requested vs delivered and lists next steps/questions.
+</pre></section><section><h2>02-tasks.md</h2><pre># Tasks — LFG system x DDL x JSON readiness
+
+| ID | Task | Owner | Status |
+| --- | --- | --- | --- |
+| T1 | Persist PRD/tasks/ledger | Thor | pending |
+| T2 | Worker A: legacy Django system inventory | Subagent A | pending |
+| T3 | Worker B: current PG18 DDL inventory | Subagent B | pending |
+| T4 | Worker C: JSON corpus/path inventory | Subagent C | pending |
+| T5 | Generate consolidated matrix | Thor | pending |
+| T6 | Persist readiness verdict and next-slice plan | Thor | pending |
+| T7 | Browser-proof + vision | Thor | pending |
+| T8 | Commit/push + final report | Thor | pending |
+</pre></section><section><h2>05-task-review.md</h2><pre># 05 — Task Review
+
+Status: pass
+Generated: 2026-06-18T13:17:52
+
+| Task | Requested | Delivered | Evidence | Status |
+| --- | --- | --- | --- | --- |
+| T1 | Persist PRD/tasks/ledger | Created 00/01/02/03/04 | issue stack | pass |
+| T2 | Legacy Django system inventory | Worker A artifact persisted and reviewed | 08-legacy-system-inventory.md | pass |
+| T3 | Current PG18 DDL inventory | Worker B artifact persisted and reviewed | 09-current-ddl-inventory.md | pass |
+| T4 | JSON corpus/path inventory | Worker C artifact persisted and reviewed; no values/PII | 10-json-path-inventory.md | pass |
+| T5 | Consolidated matrix | Created system x DDL x JSON matrix | 11-system-ddl-json-readiness-matrix.md | pass |
+| T6 | Readiness verdict/next slice | Verdict ready-with-gaps, workspace not-ready, next slice LFG graph/taxonomy | 11 matrix + final report | pass |
+| T7 | Browser-proof + vision | Pending before browser pass | 06-browser-proof.md | pending-before-browser |
+| T8 | Commit/push/final report | Pending before commit | final report + git | pending-before-commit |
+
+## Orchestrator review
+
+Subagent self-reports were not accepted blindly. Thor read the three artifacts and consolidated them into a separate matrix artifact.
+
+## Main correction
+
+The route was adjusted away from `prop4you_user_workspace` implementation. The correct next step is an LFG readiness/gap closure slice.
+</pre></section><section><h2>07-final-report.md</h2><pre># 07 — Final Report: LFG system x DDL x JSON readiness
+
+Status: browser pending at generation; final chat report updates after browser QA.
+Generated: 2026-06-18T13:17:52
+
+## Executive verdict
+
+```text
+LFG current state: ready-with-gaps
+LFG closed/final: no
+Proceed to rich prop4you_user_workspace: no
+Correct next slice: LFG canonical graph/taxonomy minimum from system x DDL x JSON gaps
+```
+
+## Why
+
+The existing PG18 work proves a strong database-centric pipeline:
+
+```text
+SourceHub raw/DTO
+  -&gt; Matrix extraction/quality/mapping
+    -&gt; LeadFinder dictionary/gaps/promotions
+      -&gt; LFG staging/materialization/operational minimum
+        -&gt; feedback votes/global marker gate
+```
+
+But the legacy system and JSON audit show that the final LFG domain still needs explicit graph/taxonomy closure before workspace is safe.
+
+## Evidence produced
+
+```text
+08-legacy-system-inventory.md
+09-current-ddl-inventory.md
+10-json-path-inventory.md
+11-system-ddl-json-readiness-matrix.md
+```
+
+## Legacy system findings
+
+Legacy Django `system`/real_estate includes:
+
+```text
+property/location/address/details
+owner/ownership/party roles/representatives/relationships
+owner contact address
+owner phones with DNC/wrong/dead-line/callability
+owner emails with bounce/sendability
+property situations/events/history/valuation
+system property/list/situation taxonomy
+workspace tags/lists/saved property/status registries
+public LF projections with masking/entitlement
+skiptrace/sourcehub raw/results/cache
+```
+
+## DDL findings
+
+Current PG18 DDL has:
+
+```text
+6 schemas
+37 tables
+12 views
+25 functions
+43 triggers
+```
+
+It covers pipeline/gates but not final graph:
+
+```text
+covered: SourceHub, Matrix, LeadFinder dictionary, DTO, LFG staging/materialization/minimum, feedback markers
+missing final: property, owner, contact, taxonomy, tags/labels groups, workspace, API/RLS, retention/load ops
+```
+
+## JSON findings
+
+Corpus path inventory:
+
+```text
+97 JSON files
+97 parsed successfully
+0 parse errors
+3,685 unique path+type pairs
+1 raw source payload file with 51 top-level keys
+```
+
+Key family evidence:
+
+```text
+property address/city/state/zip
+owner/mortgagor names
+owner mailing address
+legal/filing identifiers
+property physical attributes
+financial/loan/equity values
+lead_type/list/source context
+Matrix baseline/contextual/contracts/source_manifest artifacts
+```
+
+No values/PII were printed.
+
+## User decisions incorporated
+
+```text
+snapshot storage question: deferred until graph readiness
+LFG tag/label vocabulary should be reusable by user workspace later
+user-created tags should join groups/contexts in future
+low-risk global markers should auto-apply after threshold of multiple users/workspaces
+```
+
+## Requested vs delivered
+
+| Requested | Delivered |
+| --- | --- |
+| Do not assume LFG closed | Verdict says LFG is not closed/final |
+| Check system x DDL x JSON | Consolidated matrix persisted |
+| Use loop engineering/orchestrator | PRD/tasks/ledger/subagents/review/final persisted |
+| Use max 3 subagents | Used exactly 3 bounded workers |
+| No unnecessary MCP/browser | Workers used file+terminal only |
+| No raw JSON/PII | JSON inventory lists keys/paths/counts only |
+| Browser-proof + vision | Pending in this file; completed in final chat after QA |
+| Mark tasks delivered | Will mark after browser + commit |
+
+## Correct next slice
+
+```text
+Slice 14 — LFG canonical graph/taxonomy minimum
+```
+
+Scope recommendation:
+
+```text
+1. property/address/details minimum
+2. owner/ownership minimum
+3. mailing/contact address minimum
+4. phone/email satellite contract skeleton or DirectSkip-gated deferral
+5. system taxonomy/tag/label vocabulary reusable by users
+6. tag/label group/context model seed, including REISift-style “start” concept as future-compatible vocabulary
+7. auto-apply policy table for low-risk global markers by multi-user/workspace threshold
+```
+
+Non-goals for next slice:
+
+```text
+no full workspace product tables
+no UI
+no provider calls
+no production deploy
+no raw payload dumps
+```
+
+## Questions to answer in/after next slice
+
+1. Which graph tables must become first-class now versus remain facets?
+2. Should phone/email final tables wait for DirectSkip corpus, or be created as contract skeletons?
+3. What threshold/risk classes should auto-apply global markers use?
+4. Should tag groups be global LFG-owned only first, or include user-created group placeholders?
+</pre></section><section><h2>08-legacy-system-inventory.md</h2><pre># 08 — Inventário do legado Django system para LFG readiness
+
+Status: inventário de leitura; sem alteração de DDL.
+Fonte analisada: `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/backend/src`.
+Escopo: `apps/system/lead_finder`, `apps/system/matrix`, `apps/system/sourcehub`, `domains/real_estate`, `domains/data` e fronteiras públicas `apps/public/lead_finder` / `interfaces/web/lead_finder`.
+Nota de privacidade: este inventário não reproduz valores de payload, amostras, nomes, telefones, emails, endereços reais ou respostas de provedores; lista somente estruturas, campos semânticos e contratos.
+
+## 1. Leitura executiva
+
+O legado Django já expressa a arquitetura alvo de LFG como pipeline de sistema:
+
+1. Matrix governa significado, mapeamentos, baselines, aprovação e reentrada semântica.
+2. SourceHub governa ingresso, raw lineage, normalização, DTOs canônicos e envelopes de handoff.
+3. Lead Finder governa materialização do grafo pesquisável de propriedades, owners, situações, contatos, histórico e overlays.
+4. Public Lead Finder expõe apenas projeções/ações de produto, com contratos JSON/Inertia e mascaramento/contagem em pontos sensíveis.
+5. `domains/real_estate` contém o grafo canônico durável hoje mais próximo do LFG atual; `domains/data` contém SourceHub raw, skip trace e cache sistêmico.
+
+Para readiness do DDL/JSON atual, a maior diretriz é preservar a separação: raw payload/lineage em SourceHub, semântica e artefatos em Matrix, verdade materializada em Lead Finder/real_estate, e consumo público por projeções/refs.
+
+## 2. Famílias, tabelas e modelos relevantes
+
+### 2.1 Lead Finder system boundary (`apps/system/lead_finder`)
+
+Não há modelos próprios persistidos no app system Lead Finder; ele orquestra materialização em `domains/real_estate`.
+
+Arquivos/funções principais:
+
+- `contracts.py`
+  - Estágios e use cases: `lead_finder`, `consume_dto`, `hydrate_graph`, `promote_*_seed`, `build_owner_relationships`, `query_canonical_inventory`, `query_operator_inventory`, `build_reconciliation_snapshot`, `publish_workspace_reference`.
+  - Famílias de materialização: `identity_address`, `property_details`, `owner_ownership`, `mailing_address`, `contact_satellites`, `party_roles`, `entity_representatives`, `relationship_evidence`, `legal_timeline`, `valuation_financial`, `systemic_taxonomy`.
+  - Estados/decisões: `already_materialized`, `partially_materialized`, `seed_only`, `missing`; `materialize_now`, `materialize_reduced_slice_now`, `defer_with_proof`.
+  - Taxonomia materializada: `property_type`, `active_situation_types`, `active_situation_statuses`, `source_list_type_slug`, `system_property_tag_slugs`, `system_property_label_slugs`, `owner_tag_slugs`, `phone_tag_slugs`, `email_tag_slugs`.
+- `acquisition.py`
+  - Boundary address-first: `CanonicalPropertyAcquisitionService.ensure_property_for_address_seed`.
+  - Resolve `SystemAddress`, sincroniza `PropertyLocation`, garante `PropertyLeadFinder`, agenda geocode se necessário.
+- `hydration.py`
+  - Consome DTOs/envelopes SourceHub e materializa: `PropertyLocation`, `PropertyLeadFinder`, `OwnerEntity`, `Ownership`, `PropertySituation`, `PropertyHistory`, `PropertyDetails`, `OwnerContactAddress`, `OwnerPhone`, `OwnerEmail`, `PartyRole`, `OwnerEntityRepresentative`, `PersonRelationship`, `PropertyEvent`, `PropertyValuation`, overlays.
+- `operator_search.py`
+  - Projeções de operador/reconciliação: coverage flags, provider chain, source fact namespaces, provider conflicts, latest raw record ref, taxonomy materialization.
+  - Flags conhecidas: `missing_system_address`, `missing_latest_snapshot`, `missing_address_source_facts`, `missing_property_source_facts`, `missing_current_owner`, `stale_property_details`, `provider_conflict:&lt;namespace&gt;`.
+- `baseline.py` / `baseline_authoring.py`
+  - Publicação/normalização de baseline Lead Finder consumido por Matrix.
+
+### 2.2 Matrix (`apps/system/matrix`)
+
+Modelos persistidos:
+
+| Tabela | Modelo | Papel |
+| --- | --- | --- |
+| `matrix_lead_finder_default_baseline` | `MatrixLeadFinderDefaultBaseline` | Baseline LF publicado/ativável; contrato LF consumido por Matrix. |
+| `matrix_schema_genome` | `MatrixSchemaGenome` | Genome/mapeamento aprovado por provider/list/state/version; contém field mappings, transformations, validation rules, compiled schema, summaries e reentry triggers. |
+| `matrix_approval_record` | `MatrixApprovalRecord` | Registro de decisão HITL/auto/reject/defer/activation sobre genome. |
+| `matrix_corpus_session` | `MatrixCorpusSession` | Sessão de corpus/onboarding/revalidation; raw ids, manifest, samples internos, stats e outputs semânticos. |
+| `matrix_field_review` | `MatrixFieldReview` | Revisão por campo detectado; sugestões, target family, confidence, conflicts, evidence. |
+| `matrix_growth_pressure_signal` | `MatrixGrowthPressureSignal` | Pressão de crescimento: campo/canonical family/promotion/sourcehub framing/provider drift. |
+
+Marcadores/status:
+
+- Genome: `draft`, `pending_approval`, `approved`, `active`, `deprecated`, `archived`.
+- Baseline: `draft`, `active`, `deprecated`.
+- Approval status: `pending`, `approved`, `rejected`, `deferred`.
+- Decision type: `auto_approved`, `hitl_approved`, `rejected`, `deferred`, `activation`.
+- Corpus: `onboarding`, `revalidation`; status `pending`, `analyzing`, `awaiting_hitl`, `compiled`, `failed`.
+- Field review: `detected`, `awaiting_hitl`, `approved`, `rejected`, `deferred`, `merged`.
+- Growth pressure kinds: `missing_canonical_field`, `underfed_canonical_family`, `promotion_rule_gap`, `sourcehub_framing_gap`, `provider_drift_observed`.
+
+Contratos/DTOs sem persistência direta:
+
+- Pré-SourceHub por provider/família: REIQ pre foreclosure, loan modification, probate, divorce, heirship, appointment of substitute trustee, tax sale, eviction; Realtor property enrichment, market enrichment, area boundary, comparables.
+- Primitivos semânticos: name, company, phone, email, address, relationship, associations, actions, sourcehub candidates.
+- Owner resolution compiler/projections: owner identity, phone/email/address projection, related phone, relationship evidence bundle.
+
+### 2.3 SourceHub (`apps/system/sourcehub` + `domains/data/models/sourcehub.py`)
+
+Modelo persistido principal:
+
+| Tabela | Modelo | Campos-chave |
+| --- | --- | --- |
+| `data_sourcehub_raw_record` | `SourceHubRawRecord` | `provider_slug`, `list_type_slug`, `state_slug`, `ingestion_mode`, `payload_format`, `processing_status`, `external_reference_id`, `payload_hash`, `raw_payload`, `ingested_at`, `processed_at` |
+
+Regras de lineage:
+
+- Unicidade por `provider_slug`, `list_type_slug`, `state_slug`, `payload_hash`.
+- Status: `pending`, `processed`, `failed`.
+- Ingestion modes: `api`, `csv`, `manual_upload`, `reprocess`, `product_originated`.
+- Payload formats: `json`, `csv`, `xml`, `unknown`, `product_seed`.
+- `raw_payload` existe, mas não deve atravessar fronteiras públicas nem ser reproduzido em inventários.
+
+Contratos e envelopes:
+
+- SourceHub stages/queues: `sourcehub`, queues `sourcehub_ingest`, `sourcehub_process`.
+- Runtime approval mode: `consume_approved_matrix_artifact_only`.
+- Matrix reentry triggers: `new_provider`, `new_list_type`, `new_mapping_version`, `new_canonical_family`, `new_taxonomy_family`, `promotion_rule_change`, `provider_drift_detected`, `semantic_conflict_detected`.
+- Source fact namespaces: `address_identity`, `address_geocode`, `address_parcel`, `mailing_contact`, `party_role`, `company_representation`, `relationship_evidence`, `legal_timeline`, `property_distress`, `property_equity`, `property_valuation`, `provider_reference`.
+- Family targets: `identity`, `building`, `land`, `owner_identity`, `owner_contact`, `mailing_contact`, `owner_representatives`, `party_roles`, `relationship_evidence`, `history`, `legal_timeline`, `valuation_financial`, `taxonomy_bridge`, `operator_lineage_only`.
+- Handoffs principais para Lead Finder:
+  - `SourceHubAddressSeedEnvelope`
+  - `SourceHubProductOriginAddressSeedEnvelope`
+  - `SourceHubPropertyDetailsSeedEnvelope`
+  - `SourceHubMailingContactSeedEnvelope`
+  - `SourceHubPartyRolesSeedEnvelope`
+  - `SourceHubRelationshipEvidenceSeedEnvelope`
+  - `SourceHubEntityRepresentativesSeedEnvelope`
+  - `SourceHubLegalTimelineSeedEnvelope`
+  - `SourceHubValuationFinancialSeedEnvelope`
+  - `SourceHubCanonicalDTOEnvelope`
+
+Normalizadores observados:
+
+- `property_details_normalization.py`
+- `valuation_financial_normalization.py`
+- `legal_timeline_normalization.py`
+- ingestion REIQ por lista/estado, geocode ingestion e backfill skip trace SourceHub.
+
+### 2.4 `domains/real_estate`: grafo LFG canônico/materializado
+
+#### Identidade/endereço/propriedade
+
+| Tabela | Modelo | Papel |
+| --- | --- | --- |
+| `real_estate_property_location` | `PropertyLocation` | Projeção de endereço da propriedade; aponta para `SystemAddress`; campos de endereço, APN, source confidence, discovery source. |
+| `real_estate_property` | `Property` / alias `PropertyLeadFinder` | Propriedade canônica LF; `location`, `system_address`, `is_owner_occupied`. |
+| `real_estate_property_details` | `PropertyDetails` | Building/land/listing/details: tipo, quartos, banhos, sqft, lot, zoning, subdivision, legal, listing, photos/features/schools/HOA e stale/source fields. |
+| `real_estate_property_enrichment_overlay` | `PropertyEnrichmentOverlay` | Overlay calculado: equity, motivated seller score, tags, latest DTO. |
+| `real_estate_properties` | `PropertySimple` | Registro legado simples; resíduo de compatibilidade, não é a fonte canônica LFG. |
+
+#### Owner/party graph
+
+| Tabela | Modelo | Papel |
+| --- | --- | --- |
+| `real_estate_owner_entity` | `OwnerEntity` | Pessoa/empresa canônica; normalização, slug, source confidence, deceased/company metadata. |
+| `real_estate_ownership` | `Ownership` | Ponte owner-property; tipo, percentual, current, datas, investor/cash buyer/portfolio/absentee/in-state/source. |
+| `real_estate_property_party_role` | `PartyRole` | Papéis relacionados à propriedade/owner; relationship, role type, source ref, current, confidence. |
+| `real_estate_owner_entity_representative` | `OwnerEntityRepresentative` | Representante pessoa de empresa; role/title/active/datas/source. |
+| `real_estate_person_relationship` | `PersonRelationship` | Relação pessoa-pessoa; type/confidence/verified/sources. |
+
+#### Contatos e mailing/contact address
+
+| Tabela | Modelo | Papel |
+| --- | --- | --- |
+| `real_estate_owner_contact_address` | `OwnerContactAddress` | Endereço de contato/mailing por owner; linka `SystemAddress`; flags primary/current/PO box/property/deliverable/status. |
+| `real_estate_owner_phone` | `OwnerPhone` | Telefone canônico por owner; normalizado; tipo/subtipo/status/DNC/call counts/quality. |
+| `real_estate_owner_email` | `OwnerEmail` | Email canônico por owner; normalizado; tipo/status/bounce/send counters/quality. |
+
+Detalhe DNC/wrong/bounce/sendability/callability:
+
+- `OwnerPhone.PhoneStatus`: `correct`, `wrong`, `no_answer`, `dnc`, `dead_line`.
+- `OwnerPhone` persiste `is_valid`, `is_dnc`, `dnc_registered_at`, `dnc_reason`, `last_called_at`, `call_count`, `quality_score`.
+- `OwnerPhone.is_callable` é verdadeiro apenas quando válido, não DNC e status não está em `dnc`, `dead_line`, `wrong`.
+- `OwnerEmail.EmailStatus`: `active`, `inactive`, `bounced`, `invalid`.
+- `OwnerEmail.BounceType`: `hard_bounce`, `soft_bounce`, `complaint`, `unknown`.
+- `OwnerEmail` persiste `is_valid`, `is_primary`, `bounce_type`, `bounce_reason`, `bounce_count`, `last_bounce_at`, `last_sent_at`, `sent_count`, `open_count`, `click_count`, `quality_score`.
+- `OwnerEmail.is_sendable` é verdadeiro apenas quando válido e status `active`.
+- `OwnerContactAddress.AddressType`: `residential`, `commercial`, `po_box`, `mailing`.
+- `OwnerContactAddress` persiste `is_primary`, `is_current`, `is_po_box`, `is_property`, `is_deliverable`, `validation_status`; PO box não pode ter property anchor.
+
+#### Situações, eventos, histórico e valuation
+
+| Tabela | Modelo | Papel |
+| --- | --- | --- |
+| `real_estate_property_situation` | `PropertySituation` | Fatos estruturados de situação; tipo/status/datas/document/case/source/confidence. |
+| `real_estate_property_event` | `PropertyEvent` | Eventos/timeline por property; event key/kind/list type/date/source/details. |
+| `real_estate_property_history` | `PropertyHistory` | Snapshot DTO portátil por property. |
+| `real_estate_property_valuation` | `PropertyValuation` | Valores financeiros: estimated/assessed/appraised/mortgage/original loan/equity/date/source/confidence. |
+
+#### Semântica/taxonomia sistêmica
+
+| Tabela | Modelo | Papel |
+| --- | --- | --- |
+| `real_estate_system_property_type` | `SystemPropertyType` | Tipo sistêmico de propriedade. |
+| `real_estate_system_property_list_type` | `SystemPropertyListType` | Tipo sistêmico de lista, com categoria. |
+| `real_estate_system_situation_type` | `SystemSituationType` | Tipo sistêmico de situação. |
+| `real_estate_system_situation_status` | `SystemSituationStatus` | Status sistêmico de situação. |
+
+#### CRM/workspace e overlays não-canônicos
+
+| Tabela | Modelo | Observação |
+| --- | --- | --- |
+| `real_estate_property_list`, `real_estate_saved_property` | `PropertyList`, `SavedProperty` | Workspace/subscriber CRM; não define verdade canônica LFG. |
+| `real_estate_tag_registry`, `real_estate_status_registry`, `real_estate_list_registry` | registries workspace | Registros configuráveis por usuário/workspace. |
+| `real_estate_owner_entity_tag`, `real_estate_owner_phone_tag`, `real_estate_owner_email_tag` | tags workspace | Tags por workspace sobre entidades/contatos; separar de markers sistêmicos. |
+| `real_estate_filter_preset`, `real_estate_filter_preset_folder` | filtros | Presets de produto. |
+| `real_estate_property_activity`, `real_estate_property_notes` | activity/notes | Produto/operacional; não é source-of-truth LFG. |
+| `real_estate_lead_score`, `real_estate_lead_intelligence`, `real_estate_lead_contact_attempt` | scoring/queue/contact ops | Inteligência/CRM em cima do grafo. |
+
+#### Owner resolution
+
+| Tabela | Modelo | Papel |
+| --- | --- | --- |
+| `real_estate_owner_identity_evidence` | `OwnerIdentityEvidence` | Evidências de identidade/contato/relacionamento com provider/list/source refs e campos observados. |
+| `real_estate_owner_resolution_case` | `OwnerResolutionCase` | Caso de resolução. |
+| `real_estate_owner_resolution_case_evidence` | `OwnerResolutionCaseEvidence` | Associação caso-evidência. |
+| `real_estate_owner_resolution_candidate` | `OwnerResolutionCandidate` | Candidato e score/components/signals. |
+| `real_estate_owner_resolution_decision` | `OwnerResolutionDecision` | Decisão, confiança, reasons, materialization action. |
+| `real_estate_owner_resolution_materialization` | `OwnerResolutionMaterialization` | Registro de materialização before/after/skip. |
+
+### 2.5 `domains/data`: SourceHub, skip trace e caches
+
+| Tabela | Modelo | Papel |
+| --- | --- | --- |
+| `data_sourcehub_raw_record` | `SourceHubRawRecord` | Bronze/raw lineage SourceHub. |
+| `data_skip_trace_request` | `SkipTraceRequest` | Solicitação ST; user/batch/property/sourcehub refs, owner/property/mailing input, status, cost, lifecycle. |
+| `data_skip_trace_result` | `SkipTraceResult` | Resultado ST; sucesso/confidence, phones/emails/addresses/owner/related people/match metrics/result metrics/raw response/provider/performance. |
+| `data_skip_trace_batch` | `SkipTraceBatch` | Batch ST; counts, status, file keys, costs. |
+| `data_skip_trace_financial_projection_v` | `SkipTraceFinancialProjection` | View/projeção financeira de billing/refund/usage. |
+| `data_system_skip_trace_providers` | `SystemSkipTraceProvider` | Config/cache sistêmico de provider ST; contém secret API key no legado, não inventariar valores. |
+| `data_system_skip_trace_results` | `SystemSkipTraceResult` | Cache sistêmico ST por owner/mailing/property/sourcehub refs; phones/emails/addresses/related payloads e metrics. |
+| `data_skip_trace_snapshots` | `SkipTraceSnapshot` | Snapshot request/response para auditoria/cobrança; payloads não devem vazar. |
+| `data_system_skip_trace_hits` | `SystemSkipTraceHit` | Hit/cache usage e refresh flags. |
+| `data_lead_sources`, `data_lead_imports` | `LeadSource`, `LeadImport` | Import/lead-source legado/produto. |
+| `data_download_history` | `DownloadHistory` | Histórico de export/download. |
+
+## 3. Tags, labels e system markers
+
+### 3.1 Separação observada
+
+- Situações são fatos estruturados (`PropertySituation`) e não tags livres.
+- Tags workspace (`OwnerEntityTag`, `OwnerPhoneTag`, `OwnerEmailTag`, registries e saved tags) pertencem ao subscriber/CRM; não devem virar taxonomia sistêmica sem promoção explícita.
+- Lead Finder materializa `system_property_tag_slugs` inicialmente a partir de `active_situation_types` no operador; `system_property_label_slugs`, `owner_tag_slugs`, `phone_tag_slugs`, `email_tag_slugs` estão previstos mas vazios/incipientes.
+- SourceHub `SourceHubTaxonomyFramingBlock` transporta `source_list_type_slug`, `system_list_type_slug`, `system_tag_slugs`, `system_label_slugs`, `downstream_family_targets` e notas de framing.
+- Matrix é o local de aprovação para novas famílias/campos/taxonomias; growth pressure e field review são o mecanismo de lacuna.
+
+### 3.2 Markers operacionais úteis para LFG atual
+
+- `stage`: `sourcehub`, `lead_finder`.
+- `producer_stage` / `consumer_stage`: SourceHub para LF, LF acquisition etc.
+- `provider_slug`, `list_type_slug`, `state_slug`, `mapping_version`, `canonical_schema_version`.
+- `raw_record_public_id`, `dto_public_id`, `seed_public_id`, `payload_hash`.
+- `taxonomy_framing`, `transformation_lineage`, `source_facts`.
+- `source_confidence`, `confidence_score`, `quality_score`.
+- `discovery_source`, `data_source` em property location/acquisition.
+- `public_id_prefix` importantes: `shraw`, `ent`, `own`, `caddr`, `phn`, `eml`, `mbase`, `genome`.
+
+## 4. Fronteiras públicas Lead Finder
+
+### 4.1 HTTP/JSON (`interfaces/web/lead_finder/views/api_endpoints.py`)
+
+Endpoints JSON justificados:
+
+- `markers_view` GET: marcadores leves para mapa; chama `load_lead_finder_markers`.
+- `detail_view` GET: detalhe em modal; chama `load_lead_finder_detail`.
+- `summaries_view` GET: summaries por IDs para popovers; chama `load_lead_finder_summaries`.
+- `enrich_view` POST: enriquecimento via skip trace; retorna contagens/custo, não contatos crus.
+- `location_search_view` GET: autocomplete de áreas; chama `search_lead_finder_locations`.
+
+Todos exigem login; workspace owner é derivado de `request.workspace_owner` ou `request.user`.
+
+### 4.2 App público (`apps/public/lead_finder`)
+
+- `contracts.py`: contrato de página e payloads: properties, pagination, query state, selected area viewport, saved IDs, presets, counts, CRM lists/tags/summary.
+- `queries.py`: entrypoint Inertia `load_lead_finder_page`; só busca propriedades se filtros ativos; cria estado `idle_no_query` para evitar vazamento/carregamento amplo.
+- `api_queries.py`: map markers, summaries, detail, location suggestions; location search limitado a `SystemArea` city/state/county/postal code e provider expansion controlado por feed ledger.
+- `presenters.py`: owner preview mascarado (`maskedName`) e CTA “Send to My Property to reveal owner”; lead badges por situações; métricas e score.
+- `actions.py`: enrichment público chama inteligência/skip trace e retorna `phonesAdded`, `emailsAdded`, `cost`; não retorna phone/email/address payload.
+
+Implicação DDL/API: manter fachada pública com refs e projeções; não expor tabelas raw/domain diretamente via PostgREST sem views/RPCs/Policies específicas.
+
+## 5. Lacunas conhecidas / riscos de readiness
+
+1. `apps/system/lead_finder` não persiste modelos próprios; a fronteira canônica depende de `domains/real_estate`. No DDL atual, preferir schemas/tabelas por bounded context sem copiar a estrutura Django literalmente.
+2. `system_property_label_slugs`, `owner_tag_slugs`, `phone_tag_slugs`, `email_tag_slugs` aparecem como campos de contrato, mas a materialização sistêmica ainda está vazia/incipiente.
+3. Tags workspace coexistem com taxonomia sistêmica; risco de misturar CRM subscriber com truth/semantics de sistema.
+4. Raw payloads e snapshots existem em `data_sourcehub_raw_record`, `SkipTraceResult.raw_response`, `SkipTraceSnapshot.request_payload/response_payload`, `SystemSkipTraceResult` JSONs. Precisam de isolamento forte, mascaramento e políticas de não exposição.
+5. Provider API key no modelo `SystemSkipTraceProvider.api_key` é segredo legado; em DDL atual deve estar em vault/secret manager ou tabela protegida, nunca em contrato público.
+6. Owner resolution possui muitos campos observados/snapshots; é rico para decisão, mas precisa de separação entre evidência, decisão e materialização no DDL para não contaminar o grafo canônico automaticamente.
+7. `PropertySimple` (`real_estate_properties`) é resíduo legado e não deve ser promovido como fonte LFG canônica.
+8. `PropertyHistory.dto` armazena snapshot DTO JSON; útil para lineage/replay, mas deve ser distinto de fatos materializados e de raw payload.
+9. `SourceHubRawRecord.processing_status` é simples (`pending/processed/failed`); LFG atual pode precisar de estados mais explícitos para replay, quarantine, skipped, duplicate e superseded.
+10. `OwnerContactAddress.validation_status` é string livre; DDL atual pode precisar enum/lookup para deliverability/wrong/undeliverable/unknown.
+11. `OwnerPhone` tem DNC e wrong/dead-line, mas não há opt-out geral por canal/workspace no trecho inventariado; avaliar consent/Do Not Contact multi-canal.
+12. `OwnerEmail.is_sendable` não considera complaint/bounce_count além do status; DDL/API pode calcular sendability como projeção derivada mais rígida.
+13. Matrix corpus guarda `sample_payloads`; deve ser tratado como potencial PII/raw sample, com retenção e ACL.
+14. Public `detail` pode retornar payload rico via `PropertyQueryService.get_property_detail`; exige revisão de projeção para garantir mascaramento/entitlement equivalente no DDL/API.
+15. Location autocomplete escreve feed terms/results no fluxo público com `allow_system_writes`; em Postgres-centric precisa virar RPC/job com rate limit/idempotência.
+
+## 6. Mapeamento conceitual para LFG atual
+
+| Legado Django | Conceito LFG atual sugerido | Observação |
+| --- | --- | --- |
+| `SourceHubRawRecord` | `sourcehub.raw_records` / bronze ingress | Raw payload + hash + provider/list/state lineage; acesso restrito. |
+| SourceHub envelopes/seeds | `sourcehub.canonical_handoffs` ou JSONB contract tables/outbox | Handoff versionado para LF; publicar DTO/seed sem raw payload. |
+| `MatrixSchemaGenome` | `matrix.schema_genomes` | Artefato aprovado por provider/list/state/version. |
+| `MatrixApprovalRecord` | `matrix.approvals` | Decisões HITL/auto e activation. |
+| `MatrixCorpusSession` / `MatrixFieldReview` | `matrix.corpus_sessions`, `matrix.field_reviews` | Discovery/review; sample payloads protegidos. |
+| `MatrixGrowthPressureSignal` | `matrix.growth_pressure_signals` | Solicitação de evolução semântica e reentrada. |
+| `PropertyLocation` + `SystemAddress` | `lead_finder.property_locations` + shared geography/address identity | Endereço canônico/projeção e geocoding. |
+| `Property` / `PropertyLeadFinder` | `lead_finder.properties` | Nó canônico de propriedade. |
+| `PropertyDetails` | `lead_finder.property_details` | Building/land/listing details materializados. |
+| `OwnerEntity` | `lead_finder.owner_entities` | Pessoa/empresa canônica com normalização/dedup. |
+| `Ownership` | `lead_finder.ownerships` | Relação owner-property atual/histórica. |
+| `OwnerContactAddress` | `lead_finder.owner_contact_addresses` | Mailing/contact address, deliverability e PO box semantics. |
+| `OwnerPhone` | `lead_finder.owner_phones` | DNC/wrong/dead-line/callability. |
+| `OwnerEmail` | `lead_finder.owner_emails` | Bounce/sendability/engagement. |
+| `PartyRole`, `OwnerEntityRepresentative`, `PersonRelationship` | `lead_finder.party_roles`, `entity_representatives`, `relationships` | Relações/roles separados de ownership. |
+| `PropertySituation` | `lead_finder.property_situations` | Situações como fatos estruturados, não tags. |
+| `PropertyEvent` / legal timeline seed | `lead_finder.property_events` / `legal_timeline` | Eventos com source reference e timeline. |
+| `PropertyValuation` | `lead_finder.property_valuations` | Financeiro/valuation/equity. |
+| `PropertyHistory.dto` | `lead_finder.property_snapshots` | Snapshot canônico/replay, separado de raw. |
+| `PropertyEnrichmentOverlay`, `LeadScore`, `LeadIntelligence` | `lead_finder.enrichment_overlays`, `scores`, `ops_queue` | Derivados/calculados; não fonte de verdade. |
+| Workspace registries/tags/lists | `workspace.*` ou `crm.*` | Subscriber-owned overlays; separar de system taxonomy. |
+| Public Lead Finder app contracts | `api` views/RPCs/projections | Expor refs, masked owner preview, counts e detalhes autorizados. |
+
+## 7. Recomendações para o próximo slice DDL/JSON
+
+1. Modelar schemas separados: `matrix`, `sourcehub`, `lead_finder`, `workspace/crm` e `api` facade.
+2. Tratar `situations` como tabela/fatos com enums/lookups e lineage, não como tags.
+3. Criar contracts JSONB versionados para SourceHub handoffs; incluir `provider_slug`, `list_type_slug`, `state_slug`, `mapping_version`, `canonical_schema_version`, refs e lineage.
+4. Manter raw payloads em tabelas restritas; snapshots canônicos podem ser JSONB, mas sem confundir com raw payload.
+5. Formalizar contactability:
+   - phone: status + `is_dnc` + `is_valid` + derived `is_callable`.
+   - email: status + bounce fields + derived `is_sendable`.
+   - address: `is_deliverable` + `validation_status` normalizado.
+6. Formalizar system taxonomy materialization separada de workspace tags; tags/labels sistêmicas só via Matrix/SourceHub/LF sanctioned materializer.
+7. Preservar public boundary: markers/summaries/detail/enrichment/location search por RPC/views com RLS e entitlement; nunca raw tables.
+8. Incluir owner-resolution como evidência/caso/decisão/materialização, para controlar quando evidência vira grafo canônico.
+</pre></section><section><h2>09-current-ddl-inventory.md</h2><pre># Inventário DDL atual — PG18 Prop4You/LFG readiness
+
+Status: worker-b-complete
+Escopo: `database/ddl/projects/prop4you`
+Método: leitura estática local dos arquivos SQL/README; sem browser/web/MCP/provider calls; sem valores de payload/PII.
+
+## 1. Sumário executivo
+
+O DDL atual já cobre uma esteira experimental completa até o mínimo operacional de LFG:
+
+```text
+Provider registry
+  -&gt; SourceHub raw/corpus/lineage/enrichment/translated DTO
+  -&gt; Matrix semantic mirror + mapping/extraction/quality/field_mapping_set artifacts
+  -&gt; LeadFinder canonical dictionary/gaps/promotion review/apply
+  -&gt; LeadFinder Group staging/materialization/operational groups/facets
+  -&gt; LFG feedback marker votes/aggregate/review/global apply gate
+```
+
+Resultado para readiness:
+
+- Pronto para auditoria de pipeline e contratos JSON/DDL: sim.
+- Pronto para ser tratado como baseline LFG final para construir `prop4you_user_workspace` rico: não.
+- Pronto para um workspace mínimo baseado em weak refs/snapshots/version/hash: parcialmente, desde que o workspace não assuma owner/property/contact/scoring canônicos finais.
+
+Principais razões: o pacote ainda é `experimental / non-final`; `prop4you_user_workspace` é apenas schema/comentário; várias pastas de domínio legado existem só com README; não há tabelas finais de property/owner/contact/geography/identity/skiptrace/realtor; LFG operacional é mínimo e facetado, não o grafo legado completo.
+
+## 2. Arquivos DDL inventariados
+
+Arquivos SQL atuais:
+
+```text
+0001_schemas.sql
+providers/0001_provider_registry.sql
+sourcehub/0001_sourcehub_corpus.sql
+sourcehub/0002_translated_dto_publications.sql
+matrix/0001_semantic_dictionary.sql
+matrix/0002_mapping_sessions.sql
+matrix/0003_raw_path_extractors.sql
+matrix/0004_quality_report_artifacts.sql
+matrix/0005_field_mapping_set_artifacts.sql
+leadfinder/0001_canonical_dictionary.sql
+leadfinder/0002_raw_evidence_gap_bridge.sql
+leadfinder/0003_prepare_dictionary_promotions.sql
+leadfinder/0004_dictionary_promotion_review_apply.sql
+leadfinder_group/0001_staging_candidates.sql
+leadfinder_group/0002_materialization_runs.sql
+leadfinder_group/0003_operational_minimum.sql
+leadfinder_group/0004_user_feedback_markers.sql
+```
+
+Pastas sem DDL além de README/skeleton, relevantes para gaps:
+
+```text
+geography/
+identity/
+internal/
+owner/
+property/
+realtor/
+reiq/
+skiptrace/
+user_workspace/
+```
+
+## 3. Contagem de objetos DDL
+
+Leitura estática encontrou:
+
+| Tipo | Total |
+| --- | ---: |
+| schemas | 6 |
+| tables | 37 |
+| views | 12 |
+| functions | 25 |
+| triggers | 43 |
+
+Schemas:
+
+```text
+prop4you_provider
+prop4you_sourcehub
+prop4you_matrix
+prop4you_leadfinder
+prop4you_leadfinder_group
+prop4you_user_workspace
+```
+
+Observação: `prop4you_user_workspace` existe só como boundary/schema comentado. Não possui tabelas, views, funções ou políticas neste pacote atual.
+
+## 4. Inventário por schema
+
+### 4.1 `prop4you_provider`
+
+Papel: registro de provedores/classes de payload e funções JSONB utilitárias.
+
+Tabelas:
+
+```text
+providers
+payload_classes
+provider_payload_classes
+```
+
+Funções:
+
+```text
+jsonb_path_exists(payload jsonb, path text[])
+jsonb_path_type(payload jsonb, path text[])
+jsonb_path_text(payload jsonb, path text[])
+jsonb_leaf_paths(payload jsonb, max_depth integer default 8)
+```
+
+Famílias/provedores cobertos por seed:
+
+```text
+reiq                 -&gt; property_search_result
+realtor_com          -&gt; property_detail
+directskip           -&gt; skip_trace_result
+prop4you_internal    -&gt; leadfinder_candidate_snapshot
+```
+
+Cobertura: boa como registry e utilitário de introspecção JSONB. Não implementa chamadas a providers, credenciais, rate limit, retry, workers ou persistência provider-específica detalhada.
+
+### 4.2 `prop4you_sourcehub`
+
+Papel: ingressão, corpus, lineage, enrichment queue e publicação de DTO traduzido.
+
+Tabelas:
+
+```text
+raw_records
+corpus_samples
+source_lineage_edges
+enrichment_requests
+translated_dto_publications
+```
+
+Views:
+
+```text
+v_translated_dto_publication_review
+```
+
+Funções:
+
+```text
+enqueue_enrichment_request(...)
+mark_enrichment_response(...)
+validate_translated_dto_publication()
+publish_translated_dtos_from_field_mapping_set(...)
+```
+
+Cobertura: cobre raw records, amostras, lineage edge, fila declarativa de enriquecimento e publicação T4 de DTOs a partir de Matrix `field_mapping_set` + LeadFinder dictionary version.
+
+Gaps: não há provider workers; não há política de retenção/particionamento; não há canonical owner/property tables; translated DTO permanece contrato JSONB/gateway-agnostic, não materialização final.
+
+### 4.3 `prop4you_matrix`
+
+Papel: semântica/mapeamento/artifacts; mirror/candidate/review, não dono final do dicionário.
+
+Tabelas:
+
+```text
+canonical_families
+canonical_fields
+mapping_versions
+provider_path_mappings
+mapping_reviews
+mapping_sessions
+transformation_artifacts
+artifact_field_mappings
+raw_path_extraction_runs
+raw_path_summary_evidence
+```
+
+Views:
+
+```text
+v_raw_record_leaf_path_evidence
+v_raw_path_current_summary
+v_quality_report_artifacts
+v_field_mapping_set_artifacts
+```
+
+Funções:
+
+```text
+jsonb_path_label(path text[])
+refresh_raw_path_summary_evidence(...)
+raw_record_path_type_evidence(...)
+create_raw_path_quality_report_artifact(...)
+create_field_mapping_set_from_gap_bridges(...)
+```
+
+Famílias Matrix seedadas:
+
+```text
+property_identity
+owner_identity
+owner_contact
+situation_legal
+valuation_financial
+listing_history_media
+lineage_provenance
+```
+
+Cobertura: boa para path extraction, mapping sessions, quality reports e artifact bridge até `field_mapping_set`. O DDL explicita que `canonical_*` aqui é mirror/candidate/review e que LeadFinder é autoridade do dicionário.
+
+Gaps: não resolve semanticamente todos os paths legados; não congela tabelas finais; ainda depende de auditoria JSON/path para saber se os families/fields são suficientes.
+
+### 4.4 `prop4you_leadfinder`
+
+Papel: dono do dicionário canônico experimental, gaps, pressure signals e promotion gate.
+
+Tabelas:
+
+```text
+canonical_dictionary_versions
+canonical_families
+canonical_fields
+canonical_gaps
+growth_pressure_signals
+raw_evidence_gap_bridges
+dictionary_promotion_preparations
+dictionary_promotion_reviews
+dictionary_promotion_applications
+```
+
+Views:
+
+```text
+v_raw_evidence_gap_bridge_review
+v_dictionary_promotion_preparation_review
+v_dictionary_promotion_apply_review
+```
+
+Funções:
+
+```text
+propose_raw_evidence_gap_bridge(...)
+bridge_raw_evidence_gap_candidates(...)
+prepare_dictionary_promotions_from_field_mapping_set(...)
+review_dictionary_promotion(...)
+apply_dictionary_promotion_review(...)
+```
+
+Famílias LeadFinder seedadas no dicionário `leadfinder.raw_candidate.v0`:
+
+```text
+property_identity
+property_details
+property_media
+property_history
+situation_legal
+valuation_financial
+owner_identity
+ownership_history
+party_roles
+owner_contact_address
+owner_phone
+owner_email
+relationship_evidence
+lead_opportunity
+source_lineage
+```
+
+Campos seedados por família:
+
+```text
+property_identity: property_reference, address_identity, parcel_or_apn
+property_details: property_type, structure_attributes
+property_media: media_presence, media_count
+property_history: event_timeline, last_observed_at
+situation_legal: situation_type, situation_status, situation_event_date
+valuation_financial: estimated_value, equity_indicator, loan_or_lien_indicator
+owner_identity: owner_reference, owner_name_identity, owner_entity_type
+ownership_history: ownership_start_date, transfer_event
+party_roles: party_role_type, role_confidence
+owner_contact_address: mailing_address_identity, address_deliverability
+owner_phone: phone_identity, phone_quality
+owner_email: email_identity, email_quality
+relationship_evidence: relationship_type, relationship_confidence
+lead_opportunity: opportunity_type, lead_score_signal, workflow_stage_candidate
+source_lineage: source_system, raw_record_reference, mapping_review_reference
+```
+
+Cobertura: o dicionário já modela property/owner/contact/situation/valuation/lineage/lead opportunity como famílias semânticas. Também possui fluxo explícito de bridge/gap/pressure e review/apply para promoções.
+
+Gaps: ainda são candidatos semânticos; não há grafo final de leads, owners, ownership, contacts, property facts, scores/listas/workflows. A seed é ampla, mas não prova completude frente ao legado e ao corpus JSON.
+
+### 4.5 `prop4you_leadfinder_group`
+
+Papel: LFG/system global e materialização operacional mínima.
+
+Tabelas:
+
+```text
+staging_candidates
+materialization_runs
+materialization_results
+operational_groups
+operational_group_events
+operational_group_facets
+user_feedback_votes
+feedback_marker_aggregates
+feedback_marker_reviews
+global_item_markers
+```
+
+Views:
+
+```text
+v_staging_candidate_review
+v_materialization_result_review
+v_operational_group_review
+v_feedback_marker_review_queue
+```
+
+Funções:
+
+```text
+stage_candidates_from_translated_dto_publications(...)
+materialize_staging_candidates(...)
+promote_materialization_results_to_operational_minimum(...)
+refresh_feedback_marker_aggregate(...)
+record_user_feedback_vote(...)
+open_feedback_marker_review(...)
+apply_feedback_marker_review(...)
+```
+
+Feedback markers:
+
+```text
+item_kind: phone, email, mailing_address, owner, property, contact, group, facet, unknown
+marker_kind: dnc, wrong, invalid, stale, corrected, verified, unreachable, deliverable, undeliverable, other
+vote_value: assert, dispute, confirm, withdraw
+recommendation: insufficient_signal, human_review_candidate, auto_apply_candidate, reject_candidate, conflict_review
+```
+
+Boundary com workspace: `user_feedback_votes` guarda `workspace_ref`, `workspace_account_ref`, `user_ref`, `snapshot_ref`, `campaign_ref` como weak refs/textual refs e exige `workspace_schema_name = &#x27;prop4you_user_workspace&#x27;`. O agregado e o global marker incluem lineage/metadados indicando relação fraca e ausência de auto-promoção global por voto único.
+
+Cobertura: boa para provar staging -&gt; materialization -&gt; operational groups/facets e feedback global por review/apply.
+
+Gaps: `operational_groups/facets` é mínimo, JSONB/facetado e não substitui um modelo legado final de property/owner/contact/lead. Não há RLS/API workspace, campanhas/listas tenant, snapshots locais ou billing/usage/export.
+
+### 4.6 `prop4you_user_workspace`
+
+Papel declarado: boundary do usuário logado.
+
+Objetos atuais:
+
+```text
+schema only
+```
+
+Comentário do schema indica futuro ownership de selections, snapshots, annotations, lists, actions, local markers, refresh decisions e workflow state. Porém nada disso está implementado ainda.
+
+## 5. Famílias cobertas x superfície legado esperada
+
+Coberto por DDL atual:
+
+| Família/superfície | Cobertura atual |
+| --- | --- |
+| Provider registry | Sim, registry genérico para REIQ/DirectSkip/Realtor/Internal |
+| Raw ingress/corpus | Sim, SourceHub `raw_records` e `corpus_samples` |
+| Lineage | Sim, SourceHub edges + refs em DTO/artifacts/materialização |
+| JSON path evidence | Sim, Matrix extractor/summary |
+| Semantic mirror/review | Sim, Matrix families/fields/reviews/artifacts |
+| LeadFinder dictionary | Sim, candidato v0 com 15 famílias e 36 campos seedados |
+| Gap/pressure loop | Sim, bridge/gaps/growth_pressure_signals |
+| DTO publication | Sim, SourceHub translated DTO publications |
+| LFG staging/materialization | Sim, staging_candidates/materialization_runs/results |
+| LFG operational minimum | Sim, groups/events/facets |
+| Feedback markers | Sim, votes/aggregates/reviews/global markers |
+| Dictionary promotion apply | Sim, preparation/review/application |
+| User workspace | Boundary apenas; sem implementação |
+
+Gaps frente ao modelo legado/system esperado:
+
+| Área legado/system | Gap DDL atual |
+| --- | --- |
+| `system` como boundary separado | Representado conceitualmente por LFG/SourceHub/Matrix, mas não há schema `system` nem inventário legado materializado 1:1. |
+| Property/real estate final | Pasta `property/` só README; nenhuma tabela final de property, parcel/APN, address, facts, valuations. |
+| Owner/party final | Pasta `owner/` só README; sem owner canonical, owner-property link, party resolution final. |
+| Contact final | Contatos aparecem como fields/facets/markers; sem phone/email/address contact graph final. |
+| Geography | Pasta `geography/` só README; sem geocoding/county/state/city/geometry final. |
+| Identity/account/workspace | Pasta `identity/` e `user_workspace/` só README/schema; sem tenant/account/user/workspace tables. |
+| SkipTrace/Realtor/REIQ específicos | Registries/classes existem; pastas específicas só README; sem DDL provider-specific. |
+| Lead lists/searches/scoring | `lead_opportunity` é semântico; sem lead list, search, campaign, scoring final. |
+| Tags/labels workspace | Global LFG markers existem; marcadores/tags/labels locais workspace não existem. |
+| RLS/API facade | Nenhuma policy/API facade inventariada neste pacote. |
+| Jobs/outbox/realtime | Enrichment requests existem como tabela; sem pgmq/outbox/cron/realtime contracts específicos do domínio. |
+| Retenção/particionamento/ops | Sem políticas de retenção, particionamento ou manutenção para raw/staging/materialization. |
+
+## 6. Risco de partir para `prop4you_user_workspace` agora
+
+Risco: alto para workspace completo; médio para workspace mínimo baseado em snapshots/refs.
+
+Riscos concretos:
+
+1. Congelar contratos workspace sobre facetas LFG experimentais pode cristalizar nomes/estruturas antes da comparação system x DDL x JSON.
+2. Workspace pode confundir marcador global LFG com marcador local de tenant se não houver tabelas próprias de escopo/auditoria/RLS.
+3. Snapshots de property/owner/contact podem nascer sobre DTOs incompletos, gerando migração cara quando owner/property/contact final for modelado.
+4. Sem identity/account/workspace tables, qualquer FK real para usuário/workspace seria prematura; por isso o DDL atual usa weak refs textuais.
+5. Sem RLS/API facade, não há superfície segura tenant-visible para expor as tabelas LFG diretamente.
+6. Sem política de refresh/version/hash local, o workspace pode consumir LFG como truth estática quando a arquitetura exige snapshots/versionamento.
+
+Caminho seguro: manter LFG como upstream interno e só iniciar workspace com contratos mínimos de referência/snapshot/version/hash depois da matriz consolidada do issue 13. Evitar property/owner/contact final e evitar tags/markers locais até o inventário legado + JSON confirmar semântica.
+
+## 7. Veredito Worker B
+
+Veredito DDL-only: ready-with-gaps.
+
+O DDL atual é coerente para uma prova pipeline database-centric e já inclui SourceHub, Matrix, LeadFinder, LFG operational minimum, feedback markers e boundary de workspace. Porém ele ainda não está completo contra o modelo legado/system nem contra o corpus JSON. O próximo passo não deve ser construir o workspace completo; deve ser consolidar a matriz system x DDL x JSON e decidir quais gaps viram o próximo slice DDL.
+
+Recomendação para Thor/T5:
+
+```text
+1. Cruzar Worker A legacy system inventory com as famílias LeadFinder/Matrix acima.
+2. Cruzar Worker C JSON/path inventory com SourceHub/Matrix path evidence e fields do dictionary v0.
+3. Classificar cada área como: covered, weak-ref-only, semantic-candidate-only, missing-final-table, or intentionally-out-of-scope.
+4. Só depois escolher entre:
+   a) ampliar LFG/system canonical graph; ou
+   b) iniciar workspace mínimo de snapshot/ref com contrato explicitamente fraco.
+```
+</pre></section><section><h2>10-json-path-inventory.md</h2><pre># Worker C — Inventário JSON/path do corpus LFG
+
+Status: concluído
+Escopo: corpus JSON local de REIQ / loan_modification / FL.
+Raiz analisada: `/home/marcelo-karval/Backup/Projetos/prop4you/prop4you-inertia/backend/src/apps/system/matrix/registry/reiq/loan_modification/fl`
+
+## Política de redação
+
+Este inventário registra somente evidências estruturais: contagens, classes de arquivo, tipos raiz, nomes de chaves e famílias de JSON paths.
+
+Não foram copiados valores de campos, exemplos de payload, nomes de pessoas, endereços, IDs reais, números de processo/instrumento, valores financeiros ou qualquer outro dado potencialmente PII. Exemplos de nomes de arquivos foram redigidos com placeholders como `session_mxsess_&lt;redacted&gt;.json` e `&lt;uuid-redacted&gt;.json`.
+
+## Metodologia
+
+- Varredura recursiva de `*.json` sob a raiz do corpus.
+- Parsing JSON local com Python `json.loads`.
+- Classificação por diretório/função do artefato.
+- Caminhos representados em notação JSONPath-like, usando `[]` para elementos de array e sem índices reais.
+- Tipos registrados como `object`, `array`, `string`, `number`, `boolean` ou `null`.
+- Valores nunca foram emitidos no artefato.
+
+## Resultado geral
+
+| Métrica | Resultado |
+| --- | ---: |
+| Arquivos JSON encontrados | 97 |
+| Arquivos JSON parseados com sucesso | 97 |
+| Erros de parsing | 0 |
+| Tipos raiz observados | todos `object` |
+| Pares únicos path+tipo observados | 3.685 |
+
+Observação: há 1 artefato `analysis/discrepancy` com objeto raiz vazio; por isso essa classe tem 19 arquivos, mas suas chaves top-level aparecem em 18 arquivos.
+
+## Contagem por classe
+
+| Classe | Padrão de caminho redigido | Arquivos | Tipo raiz | Chaves top-level distintas | Pares path+tipo únicos |
+| --- | --- | ---: | --- | ---: | ---: |
+| `analysis/baseline-only` | `analysis/baseline-only/session_mxsess_&lt;redacted&gt;.json` | 19 | object | 13 | 3.359 |
+| `analysis/contextual` | `analysis/contextual/session_mxsess_&lt;redacted&gt;.json` | 19 | object | 13 | 133 |
+| `analysis/discrepancy` | `analysis/discrepancy/session_mxsess_&lt;redacted&gt;.json` | 19 | object | 7 | 28 |
+| `context` | `context.json` | 1 | object | 7 | 23 |
+| `contracts` | `contracts/session_mxsess_&lt;redacted&gt;.json` | 19 | object | 10 | 78 |
+| `data/source_manifest` | `data/session_mxsess_&lt;redacted&gt;_source_manifest.json` | 19 | object | 9 | 51 |
+| `data/source_payload` | `data/YYYY-MM-DD/FL_loan-modification_&lt;uuid-redacted&gt;.json` | 1 | object | 51 | 52 |
+
+## Chaves top-level por classe
+
+### `analysis/baseline-only` — 19/19 arquivos
+
+- `alias_evidence_snapshot`
+- `artifact_kind`
+- `baseline_version`
+- `canonical_dictionary_snapshot`
+- `coverage_snapshot`
+- `list_type_slug`
+- `multi_provider_snapshot`
+- `provider_drift_snapshot`
+- `provider_slug`
+- `published_contract_ref`
+- `session_key`
+- `session_public_id`
+- `state_slug`
+
+### `analysis/contextual` — 19/19 arquivos
+
+- `artifact_kind`
+- `baseline_version`
+- `context_lineage`
+- `dataset_discrepancy_snapshot`
+- `field_analysis`
+- `list_type_slug`
+- `matrix_context_snapshot`
+- `provider_slug`
+- `published_contract_ref`
+- `session_key`
+- `session_public_id`
+- `state_slug`
+- `workspace_snapshot`
+
+### `analysis/discrepancy` — 18/19 arquivos com chaves; 1/19 objeto vazio
+
+- `cross_field_patterns`
+- `dataset_profile`
+- `field_discrepancies`
+- `list_type_slug`
+- `provider_slug`
+- `source_dataset_dir`
+- `state_slug`
+
+### `context` — 1/1 arquivo
+
+- `provider_slug`
+- `list_type_slug`
+- `state_slug`
+- `source_dataset_dir`
+- `provider_semantics_rules`
+- `known_field_notes`
+- `dataset_assumptions`
+
+### `contracts` — 19/19 arquivos, exceto `effective_contract_snapshots` em 13/19
+
+- `artifact_kind`
+- `baseline_version`
+- `context_lineage`
+- `contract_refs`
+- `list_type_slug`
+- `provider_slug`
+- `published_contract_ref`
+- `session_public_id`
+- `state_slug`
+- `effective_contract_snapshots`
+
+### `data/source_manifest` — 19/19 arquivos
+
+- `artifact_kind`
+- `corpus_stats`
+- `list_type_slug`
+- `provider_slug`
+- `session_key`
+- `session_public_id`
+- `source_manifest`
+- `source_surface`
+- `state_slug`
+
+### `data/source_payload` — 1/1 arquivo
+
+Payload fonte tabular achatado com 51 chaves top-level. Nomes de chaves observados, sem valores:
+
+- `internal_id`
+- `date_added`
+- `date_filed`
+- `county`
+- `file_number`
+- `loan_modification_instrument_number`
+- `mortgagor_first_name`
+- `mortgagor_last_name`
+- `property_address`
+- `property_city`
+- `property_state`
+- `property_zip_code`
+- `bed`
+- `bath`
+- `sq_ft`
+- `garage`
+- `pool`
+- `yr_bt`
+- `mortgagee_bank_name`
+- `estimated_equity`
+- `equity`
+- `estimated_unpaid_balance`
+- `original_loan_amount`
+- `historical_interest_rate`
+- `assessed_value`
+- `appraised_value`
+- `current_month`
+- `current_year`
+- `loan_origination_month`
+- `loan_origination_year`
+- `new_principal_balance`
+- `maturity_date`
+- `months_to_pay`
+- `interest_rate`
+- `interest_rate_date_change`
+- `monthly_principal_interest_payment`
+- `monthly_escrow_payment_amount`
+- `total_monthly_payment`
+- `payment_begins_on`
+- `legal_description`
+- `subdivision`
+- `ownership`
+- `owner_first_name`
+- `owner_last_name`
+- `owner_address`
+- `owner_city`
+- `owner_state`
+- `owner_zip_code`
+- `property_id`
+- `comments`
+- `lead_type`
+
+## Famílias de JSON paths observadas
+
+### Corpus bruto / payload fonte
+
+Estrutura: objeto achatado, sem arrays no arquivo fonte observado.
+
+Famílias de campos por nome de path:
+
+- Identificação operacional: `$.internal_id`, `$.property_id`, `$.lead_type`, `$.comments`
+- Datas e prazos: `$.date_added`, `$.date_filed`, `$.maturity_date`, `$.payment_begins_on`, `$.interest_rate_date_change`, `$.current_month`, `$.current_year`, `$.loan_origination_month`, `$.loan_origination_year`, `$.months_to_pay`
+- Documento / filing: `$.county`, `$.file_number`, `$.loan_modification_instrument_number`
+- Partes / nomes: `$.mortgagor_first_name`, `$.mortgagor_last_name`, `$.owner_first_name`, `$.owner_last_name`, `$.mortgagee_bank_name`, `$.ownership`
+- Endereço do imóvel: `$.property_address`, `$.property_city`, `$.property_state`, `$.property_zip_code`
+- Endereço postal/owner: `$.owner_address`, `$.owner_city`, `$.owner_state`, `$.owner_zip_code`
+- Atributos físicos: `$.bed`, `$.bath`, `$.sq_ft`, `$.garage`, `$.pool`, `$.yr_bt`, `$.legal_description`, `$.subdivision`
+- Valores financeiros / loan: `$.estimated_equity`, `$.equity`, `$.estimated_unpaid_balance`, `$.original_loan_amount`, `$.historical_interest_rate`, `$.assessed_value`, `$.appraised_value`, `$.new_principal_balance`, `$.interest_rate`, `$.monthly_principal_interest_payment`, `$.monthly_escrow_payment_amount`, `$.total_monthly_payment`
+
+Campos com alta sensibilidade por nome de chave: nomes de pessoas, endereços, identificadores documentais, legal description e valores financeiros. O DDL deve manter raw lineage separado de projeções canônicas/operacionais.
+
+### Discrepancy analysis
+
+Famílias estruturais:
+
+- `$.dataset_profile`
+- `$.dataset_profile.fingerprint_fields[]`
+- `$.dataset_profile.golden_record_path`
+- `$.dataset_profile.non_null_density`
+- `$.dataset_profile.sample_count`
+- `$.field_discrepancies[]`
+- `$.field_discrepancies[].field_name`
+- `$.field_discrepancies[].presence_rate`
+- `$.field_discrepancies[].meaningful_rate`
+- `$.field_discrepancies[].null_rate`
+- `$.field_discrepancies[].empty_string_rate`
+- `$.field_discrepancies[].observed_types`
+- `$.field_discrepancies[].observed_types.str`
+- `$.field_discrepancies[].observed_types.NoneType`
+- `$.field_discrepancies[].examples[]` — valores não inventariados, apenas path
+- `$.cross_field_patterns[]`
+- `$.cross_field_patterns[].pattern_key`
+- `$.cross_field_patterns[].match_rate`
+- `$.cross_field_patterns[].summary`
+
+### Contextual analysis
+
+Famílias estruturais:
+
+- `$.context_lineage`
+- `$.dataset_discrepancy_snapshot`
+- `$.dataset_discrepancy_snapshot.dataset_profile`
+- `$.dataset_discrepancy_snapshot.dataset_profile.fingerprint_fields[]`
+- `$.dataset_discrepancy_snapshot.field_discrepancies[]`
+- `$.dataset_discrepancy_snapshot.field_discrepancies[].field_name`
+- `$.dataset_discrepancy_snapshot.field_discrepancies[].presence_rate`
+- `$.dataset_discrepancy_snapshot.field_discrepancies[].meaningful_rate`
+- `$.dataset_discrepancy_snapshot.field_discrepancies[].null_rate`
+- `$.dataset_discrepancy_snapshot.field_discrepancies[].empty_string_rate`
+- `$.dataset_discrepancy_snapshot.field_discrepancies[].observed_types`
+- `$.dataset_discrepancy_snapshot.field_discrepancies[].examples[]` — valores não inventariados, apenas path
+- `$.dataset_discrepancy_snapshot.cross_field_patterns[]`
+- `$.field_analysis`
+- `$.matrix_context_snapshot`
+- `$.matrix_context_snapshot.business_context.primary_semantic_focus[]`
+- `$.matrix_context_snapshot.opportunity_signals[]`
+- `$.matrix_context_snapshot.target_roles[]`
+- `$.matrix_context_snapshot.provider_semantics_rules[]`
+- `$.matrix_context_snapshot.provider_semantics_rules[].rule_key`
+- `$.matrix_context_snapshot.provider_semantics_rules[].when`
+- `$.matrix_context_snapshot.provider_semantics_rules[].effect`
+- `$.matrix_context_snapshot.provider_semantics_rules[].reasoning`
+- `$.matrix_context_snapshot.known_field_notes[]`
+- `$.matrix_context_snapshot.dataset_assumptions[]`
+- `$.workspace_snapshot`
+- `$.workspace_snapshot.corpus.provider_drift_snapshot.new_fields[]`
+- `$.workspace_snapshot.review_queue.review_public_ids[]`
+
+### Baseline-only analysis / canonical dictionary snapshot
+
+Famílias estruturais predominantes:
+
+- `$.alias_evidence_snapshot.entries[]`
+- `$.alias_evidence_snapshot.entries[].alias`
+- `$.alias_evidence_snapshot.entries[].normalized_alias`
+- `$.alias_evidence_snapshot.entries[].canonical_field`
+- `$.alias_evidence_snapshot.entries[].semantic_type`
+- `$.alias_evidence_snapshot.entries[].family`
+- `$.alias_evidence_snapshot.entries[].confidence`
+- `$.alias_evidence_snapshot.entries[].match_type`
+- `$.alias_evidence_snapshot.entries[].source_kind`
+- `$.alias_evidence_snapshot.entries[].source_ref`
+- `$.alias_evidence_snapshot.entries[].verified`
+- `$.canonical_dictionary_snapshot.alias_entries[]`
+- `$.canonical_dictionary_snapshot.alias_evidence_snapshot.entries[]`
+- `$.canonical_dictionary_snapshot.canonical_fields.&lt;field_name&gt;.aliases[]`
+- `$.canonical_dictionary_snapshot.canonical_fields.&lt;field_name&gt;.transforms[]`
+- `$.canonical_dictionary_snapshot.canonical_fields.&lt;field_name&gt;.transforms[].type`
+- `$.canonical_dictionary_snapshot.families.identity_address[]`
+- `$.canonical_dictionary_snapshot.families.legal_timeline[]`
+- `$.canonical_dictionary_snapshot.families.valuation_financial[]`
+- `$.canonical_dictionary_snapshot.families.owner_ownership[]`
+- `$.canonical_dictionary_snapshot.families.property_details[]`
+- `$.canonical_dictionary_snapshot.families.relationship_evidence[]`
+- `$.canonical_dictionary_snapshot.families.mailing_address[]`
+- `$.canonical_dictionary_snapshot.families.systemic_taxonomy[]`
+- `$.coverage_snapshot`
+- `$.multi_provider_snapshot`
+- `$.provider_drift_snapshot.new_fields[]`
+
+### Contracts
+
+Famílias estruturais:
+
+- `$.contract_refs`
+- `$.contract_refs.baseline_only_analysis_contract`
+- `$.contract_refs.contextual_analysis_contract`
+- `$.contract_refs.dataset_discrepancy_report_contract`
+- `$.contract_refs.source_manifest_contract`
+- `$.context_lineage`
+- `$.effective_contract_snapshots`
+- `$.effective_contract_snapshots.contracts.source_manifest_contract.required_keys[]`
+- `$.effective_contract_snapshots.contracts.dataset_discrepancy_report_contract.required_keys[]`
+- `$.effective_contract_snapshots.contracts.dataset_discrepancy_report_contract.dataset_profile_required_keys[]`
+- `$.effective_contract_snapshots.contracts.baseline_only_analysis_contract.required_keys[]`
+- `$.effective_contract_snapshots.contracts.contextual_analysis_contract.required_keys[]`
+- `$.effective_contract_snapshots.context.list_context.business_context.primary_semantic_focus[]`
+- `$.effective_contract_snapshots.context.list_context.opportunity_signals[]`
+- `$.effective_contract_snapshots.context.list_context.target_roles[]`
+- `$.effective_contract_snapshots.context.state_context.provider_semantics_rules[]`
+- `$.effective_contract_snapshots.context.state_context.known_field_notes[]`
+- `$.effective_contract_snapshots.context.state_context.dataset_assumptions[]`
+
+### Source manifests
+
+Famílias estruturais:
+
+- `$.corpus_stats`
+- `$.corpus_stats.payload_count`
+- `$.corpus_stats.observed_field_count`
+- `$.corpus_stats.matched_field_count`
+- `$.corpus_stats.alias_match_count`
+- `$.corpus_stats.semantic_match_count`
+- `$.corpus_stats.llm_match_count`
+- `$.corpus_stats.conflict_field_count`
+- `$.corpus_stats.coverage_snapshot`
+- `$.corpus_stats.coverage_snapshot.namespace_coverage.root.field_count`
+- `$.corpus_stats.coverage_snapshot.namespace_coverage.root.observed_count`
+- `$.corpus_stats.coverage_snapshot.namespace_coverage.root.avg_fill_rate`
+- `$.corpus_stats.multi_provider_snapshot`
+- `$.corpus_stats.provider_drift_snapshot`
+- `$.corpus_stats.provider_drift_snapshot.new_fields[]`
+- `$.corpus_stats.provider_drift_snapshot.missing_fields[]`
+- `$.corpus_stats.review_public_ids[]`
+- `$.corpus_stats.source_corpus_refs[]`
+- `$.source_manifest`
+- `$.source_surface`
+
+### Context file
+
+Famílias estruturais:
+
+- `$.provider_semantics_rules[]`
+- `$.provider_semantics_rules[].rule_key`
+- `$.provider_semantics_rules[].when`
+- `$.provider_semantics_rules[].effect`
+- `$.provider_semantics_rules[].reasoning`
+- `$.known_field_notes[]`
+- `$.known_field_notes[].field_name`
+- `$.known_field_notes[].semantic_reading`
+- `$.known_field_notes[].operator_note`
+- `$.dataset_assumptions[]`
+
+## Implicações para readiness LFG/DDL
+
+1. O corpus mistura três camadas que o DDL deve preservar separadas: payload fonte bruto, artefatos de análise/mapeamento e contratos/publicação.
+2. O payload fonte é achatado e PII-heavy por nome de chave; é candidato claro a armazenamento raw JSONB com lineage, acesso restrito e projeções derivadas.
+3. Os artefatos `baseline-only` e `contextual` carregam material semântico/matrix suficiente para alimentar tabelas de dicionário, alias/evidência e análise de cobertura, mas não devem ser confundidos com owner/property truth.
+4. `contracts` e `source_manifest` trazem shape operacional estável para publicação, auditoria e readiness checks.
+5. `analysis/discrepancy` tem um caso vazio; qualquer ingestão/validação deve aceitar ou sinalizar explicitamente artefatos vazios por sessão.
+6. Não há evidência neste inventário que exija edição de DDL nesta etapa; este arquivo é apenas corpus/path evidence para a consolidação posterior.
+</pre></section><section><h2>11-system-ddl-json-readiness-matrix.md</h2><pre># 11 — Matriz consolidada: legacy system x PG18 DDL x JSON corpus
+
+Status: consolidated
+
+## Verdict
+
+```text
+LFG atual: ready-with-gaps
+Workspace completo: not-ready
+Workspace mínimo weak-ref/snapshot: only after next LFG gap slice
+```
+
+O LFG ainda não deve ser tratado como fechado para iniciar `prop4you_user_workspace` rico. O pipeline database-centric está correto e provado, mas o modelo final de property/owner/contact/taxonomy/search/workspace não está completo frente ao legado `system` e aos JSONs disponíveis.
+
+## Executive matrix
+
+| Legacy/system area | JSON evidence | Current DDL coverage | Gap class | Decision |
+| --- | --- | --- | --- | --- |
+| SourceHub raw ingress | raw payload file + manifests + hashes | `sourcehub.raw_records`, `corpus_samples`, lineage | covered | keep raw restricted; no raw in public/API |
+| Matrix semantic artifacts | baseline-only/contextual/discrepancy/contracts/source_manifest | `matrix.*`, path extraction, quality, field mapping set | covered for discovery | improve explicit genome/approval parity later |
+| LeadFinder dictionary | canonical_dictionary_snapshot families/fields/aliases | `leadfinder.canonical_*`, gaps, promotions review/apply | covered as experimental | continue promotion policy; not final graph |
+| SourceHub translated DTO | contracts/source_manifest/source paths | `translated_dto_publications` | covered | DTO remains handoff, not graph truth |
+| LFG staging/materialization | no final property graph in JSON; DTO path evidence | `staging_candidates`, `materialization_runs/results` | covered for gate | keep reviewable |
+| Operational LFG group | JSON has property/owner/financial/contact fields | `operational_groups/events/facets` only | weak-ref/facet-only | not final graph |
+| Property/address | property address/city/state/zip/APN-like/file refs | no final property/address DDL; only facets | missing-final-table | next LFG canonical graph slice |
+| Property details | bed/bath/sqft/garage/pool/year/legal/subdivision | dictionary candidates/facets only | missing-final-table | next LFG canonical graph slice |
+| Owner identity | mortgagor/owner first/last names, ownership | no owner entity final DDL | missing-final-table | next LFG canonical graph slice |
+| Ownership | ownership, owner/property relation hints | no ownership final table | missing-final-table | next LFG canonical graph slice |
+| Mailing/contact address | owner_address/city/state/zip | feedback item_kind supports mailing_address; no contact graph | missing-final-table | next LFG canonical graph slice |
+| Phone/email contact satellites | legacy has rich phone/email, JSON focus sample lacks phone/email payload | feedback markers support item kinds; no phone/email tables | missing-final-table | defer until DirectSkip/contact corpus, but model contract needed |
+| DNC/wrong/bounce/sendability | legacy has DNC/wrong/bounce/sendability | feedback votes/global markers | partially covered | need auto-apply thresholds and marker policy DDL extension |
+| System taxonomy/list/situation | lead_type, list_type, source list, situations | semantic dictionary + facets; no normalized taxonomy tables | semantic-candidate-only | next taxonomy slice or graph slice |
+| Tags/labels vocabulary | legacy fields include system tag slugs/label slugs; user wants reusable vocabulary | no tag vocabulary/group tables | missing | next after graph baseline or combined taxonomy slice |
+| Workspace tags/lists/status | legacy has property list/saved property/tag registries | `prop4you_user_workspace` schema only | not-ready | do not implement rich workspace yet |
+| Public LF API projections | legacy has markers/detail/summaries/location search | no api facade/RLS | missing-api | later after graph baseline |
+| SkipTrace/provider-specific | legacy has skiptrace requests/results/system cache | provider registry only; skiptrace README skeleton | missing-provider-package | later provider-specific slice |
+| Retention/partition/ops | high ingest variable load discussed | no retention/partition policies | missing-ops | before production/deploy |
+
+## Readiness gate
+
+### What is ready
+
+```text
+T0 raw -&gt; T1 Matrix extraction -&gt; T2 gap bridge -&gt; T3 quality -&gt; T4 DTO -&gt; T5 staging/materialization/operational minimum
+feedback votes -&gt; aggregate -&gt; review -&gt; global marker apply
+LeadFinder promotion prepare -&gt; review -&gt; apply
+```
+
+### What is not ready
+
+```text
+final property/address table graph
+final owner/ownership/party graph
+final contact satellite graph
+final system taxonomy/tag/label vocabulary and groups
+workspace local tag/list/snapshot model
+public API/RLS facade
+retention/partition/load policy
+provider-specific skiptrace/realtor/reiq packages
+```
+
+## Answer to the user question
+
+&gt; O LFG já está pronto e fechado para irmos para o prop4you_user_workspace?
+
+```text
+Não para workspace completo.
+Sim apenas para workspace futuro extremamente mínimo baseado em refs/hashes, mas isso ainda seria prematuro antes de completar o próximo LFG graph/taxonomy gap slice.
+```
+
+The correct next implementation slice is not workspace. It is LFG canonical graph/taxonomy gap closure from this matrix.
+
+## Correct next slice
+
+```text
+Slice 14 — LFG canonical graph/taxonomy minimum from system x DDL x JSON gaps
+```
+
+Recommended scope:
+
+1. property/address/details minimum;
+2. owner/ownership minimum;
+3. mailing/contact address minimum;
+4. phone/email satellite contract skeleton or deferred with explicit DirectSkip dependency;
+5. system taxonomy/tag/label vocabulary and reusable tag groups;
+6. auto-apply threshold policy for low-risk global markers;
+7. no workspace product tables yet.
+
+## Updated answers incorporated
+
+### Snapshot question
+
+Deferred. It means whether user snapshots should store only LFG refs/hashes or also a compact redacted copy. This depends on graph readiness and should not be decided before the next LFG gap slice.
+
+### Tags/labels
+
+User decision:
+
+```text
+LFG vocabulary should be reusable by users.
+User-created tags should belong to groups/contexts in the future, similar to REISift/start-tag style.
+```
+
+Implication:
+
+```text
+Need a system vocabulary/group layer before workspace tags are implemented.
+```
+
+### Auto-apply global markers
+
+User decision:
+
+```text
+After a configured number of users/workspaces report the same low-risk situation, apply automatically.
+```
+
+Implication:
+
+```text
+Need policy table/config for thresholds and marker risk class. Current aggregate computes auto_apply_candidate but still applies via explicit review function. Next slice should add policy-governed auto-apply where safe.
+```
+</pre></section></body></html>
