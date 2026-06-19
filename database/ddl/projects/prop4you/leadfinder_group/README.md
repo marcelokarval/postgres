@@ -12,6 +12,7 @@ Implemented DDL:
 - `0004_user_feedback_markers.sql` — user/workspace feedback votes, aggregate marker review, and global marker apply gates.
 - `0005_canonical_jsonschema_registry.sql` — queryable registry for LFG canonical JSONSchema envelopes and JSONB-to-relational projection policy.
 - `0006_projection_candidate_review_board.sql` — queryable review-board for JSON path projection candidates, semantic lanes, seven-gate evaluations, and explicit keep-jsonb/generated-column/index/narrow-table/PostGIS decisions before final projections.
+- `0007_systemarea_autocomplete_geography_projection.sql` — real geography-first SystemArea/autocomplete projection with SystemArea rows, provider identities, aliases, feed term/result ledger, local autocomplete function, and provider-free map contract.
 
 Boundaries:
 

@@ -1,0 +1,802 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Prop4You LFG SystemArea Autocomplete Geography DDL</title>
+<style>body{font-family:Inter,Arial,sans-serif;background:#0b1020;color:#e8eefc;margin:0;padding:32px}.badge{display:inline-block;margin:4px;padding:6px 10px;border-radius:999px;background:#1c2b4a;color:#b7d7ff}section{margin:24px 0;padding:18px;border:1px solid #263a63;border-radius:12px;background:#111a2e}pre{white-space:pre-wrap;line-height:1.35}h1{color:#fff}</style></head><body>
+<h1>Prop4You LFG SystemArea Autocomplete Geography DDL</h1>
+<div>
+<span class="badge">DDL 0007</span><span class="badge">real SystemArea projection</span><span class="badge">5 tables</span><span class="badge">3 views</span><span class="badge">2 functions</span><span class="badge">4 proof SystemAreas</span><span class="badge">4 provider identities</span><span class="badge">4 aliases</span><span class="badge">1 feed term</span><span class="badge">1 feed result</span><span class="badge">center [lng, lat]</span><span class="badge">bbox [west,south,east,north]</span><span class="badge">value == systemAreaId</span><span class="badge">PG18 proof PASS</span><span class="badge">No provider calls</span><span class="badge">No raw provider payload values</span><span class="badge">No property/owner/workspace explosion</span><span class="badge">Browser proof</span>
+</div>
+<section><h2>01-prd.md</h2><pre># PRD — LFG SystemArea autocomplete geography projection DDL
+
+Status: active
+
+## Problem
+
+Slice 17 created a projection candidate review board, but geography/autocomplete is still only a candidate. Karval decided Slice 18 must implement the real DDL and specifically use the legacy SystemArea/autocomplete model as the base.
+
+## Goal
+
+Create the first real database-centric geography projection for LFG/SystemArea autocomplete: canonical system areas, provider identity, local autocomplete/search, viewport/bbox/centroid contracts, provider/feed result lineage, and promotion gate linkage.
+
+## Deliverables
+
+1. Legacy SystemArea/autocomplete inventory.
+2. DDL `0007_systemarea_autocomplete_geography_projection.sql`.
+3. Proof script that applies PG18 lab DDL and proves the SystemArea autocomplete projection objects and sample behavior.
+4. Docs/reviews/final/browser-proof.
+
+## Acceptance criteria
+
+- DDL applies in clean PG18 lab DB.
+- Real projection tables/views/functions exist.
+- SystemArea identity fields are represented: public ref, slug_id, realty_id/provider object, provider_geo_id, area_type, name, state, parent, centroid, boundary/viewport readiness, search terms.
+- Autocomplete contract supports query -&gt; suggestions with label/value/type/systemAreaId/center/bbox/registrationStatus shape.
+- Geography starts before downstream market/valuation/property/legal lanes.
+- No raw provider payload values are stored in docs/proofs.
+- Existing projection candidate board remains compatible.
+</pre></section><section><h2>02-tasks.md</h2><pre># Tasks — LFG SystemArea autocomplete geography DDL
+
+| ID | Task | Owner | Status |
+| --- | --- | --- | --- |
+| T1 | Persist PRD/tasks/ledger | Thor | done |
+| T2 | Worker A: SystemArea legacy model/service audit | Subagent A | done |
+| T3 | Worker B: autocomplete/API/frontend JSON contract audit | Subagent B | done |
+| T4 | Worker C: DDL/proof contract review | Subagent C | done |
+| T5 | Implement DDL 0007 + apply order + README | Thor | done |
+| T6 | Implement and run PG18 proof | Thor | done |
+| T7 | Consolidate review/final/browser render | Thor | done |
+| T8 | Browser-proof + vision QA | Thor | pending |
+| T9 | Commit/push repo and skill | Thor | pending |
+</pre></section><section><h2>05-task-review.md</h2><pre># Task Review — Slice 18
+
+Status: PASS
+
+## Acceptance items
+
+| Item | Evidence | Result |
+| --- | --- | --- |
+| Inspect legacy SystemArea/autocomplete before DDL | `08-systemarea-legacy-audit.md`, `09-autocomplete-contract-audit.md` | PASS |
+| Implement real DDL now | `0007_systemarea_autocomplete_geography_projection.sql` | PASS |
+| Preserve legacy autocomplete contract | `search_system_area_autocomplete(...)`, `v_system_area_autocomplete_suggestions` | PASS |
+| Use SystemArea identity, not provider/property identity | `system_areas.public_ref`, provider identity side table | PASS |
+| Start with geography before downstream lanes | DDL only creates geography/autocomplete objects | PASS |
+| No provider calls | proof guardrail + local-only function | PASS |
+| No raw provider payload values | lineage/metadata refs only; docs/proof synthetic | PASS |
+| No property/owner/workspace table explosion | DDL creates only SystemArea geography/feed objects | PASS |
+| PG18 proof real execution | `docs/reports/prop4you-lfg-systemarea-autocomplete-geography-proof.md` | PASS |
+
+## Implemented objects
+
+```text
+prop4you_leadfinder_group.system_areas
+prop4you_leadfinder_group.system_area_provider_identities
+prop4you_leadfinder_group.system_area_aliases
+prop4you_leadfinder_group.system_area_feed_terms
+prop4you_leadfinder_group.system_area_feed_results
+prop4you_leadfinder_group.v_system_area_autocomplete_suggestions
+prop4you_leadfinder_group.v_system_area_provider_lineage
+prop4you_leadfinder_group.v_system_area_projection_gate_status
+prop4you_leadfinder_group.upsert_system_area_projection(...)
+prop4you_leadfinder_group.search_system_area_autocomplete(...)
+```
+
+## Proof summary
+
+```json
+{
+  &quot;system_area_count&quot;: 4,
+  &quot;provider_identity_count&quot;: 4,
+  &quot;alias_count&quot;: 4,
+  &quot;feed_term_count&quot;: 1,
+  &quot;feed_result_count&quot;: 1,
+  &quot;centroid_count&quot;: 4,
+  &quot;bbox_count&quot;: 4,
+  &quot;autocomplete_orl_count&quot;: 1,
+  &quot;autocomplete_zip_count&quot;: 1,
+  &quot;autocomplete_state_count&quot;: 1,
+  &quot;projected_gate_candidate_count&quot;: 18,
+  &quot;approved_candidate_count&quot;: 0
+}
+```
+
+## Notes
+
+- `value == systemAreaId == system_areas.public_ref` in the autocomplete contract.
+- `center` is serialized as `[lng, lat]`.
+- `bbox` is serialized as `[west, south, east, north]`.
+- Address/street-level autocomplete is intentionally excluded from this surface.
+</pre></section><section><h2>07-final-report.md</h2><pre># Final Report — Slice 18
+
+Status: PASS
+
+## Delivered
+
+Implemented the first real geography projection DDL for Prop4You LFG based on legacy SystemArea/autocomplete.
+
+## Main DDL
+
+```text
+database/ddl/projects/prop4you/leadfinder_group/0007_systemarea_autocomplete_geography_projection.sql
+```
+
+## Why this shape
+
+Legacy evidence showed `SystemArea` is the canonical Lead Finder geography primitive. Autocomplete is area-only and returns `city|state|county|zip` suggestions. The frontend consumes `system_area_ids`, `systemAreaId`, `bbox`, and `center`; provider expansion is ledger/cache-backed and address/street-level results are excluded from this surface.
+
+## Tables
+
+```text
+system_areas
+system_area_provider_identities
+system_area_aliases
+system_area_feed_terms
+system_area_feed_results
+```
+
+## Views/functions
+
+```text
+v_system_area_autocomplete_suggestions
+v_system_area_provider_lineage
+v_system_area_projection_gate_status
+upsert_system_area_projection(...)
+search_system_area_autocomplete(...)
+```
+
+## Proof
+
+```text
+scripts/proof-prop4you-lfg-systemarea-autocomplete-geography.sh
+docs/reports/prop4you-lfg-systemarea-autocomplete-geography-proof.md
+```
+
+Proof result:
+
+```text
+prop4you_lfg_systemarea_autocomplete_geography_proof_ok
+```
+
+## Guardrails
+
+```text
+no provider calls
+no raw provider payload values
+real geography projection DDL
+no property/owner/workspace table explosion
+```
+
+## Next correct slice
+
+Slice 19 should connect the SystemArea projection to the query/filter/materialization path: `system_area_ids` -&gt; LFG staging/materialization/read facade. Do not jump to owner/contact/workspace tables before proving the geography filter path over SystemArea IDs.
+</pre></section><section><h2>08-systemarea-legacy-audit.md</h2><pre># 08 — Auditoria legado SystemArea / autocomplete / geografia
+
+Status: concluído
+Worker: A
+Escopo auditado: `prop4you-inertia/backend/src/domains/geography/` — `models/area_models.py`, `services/system_area_registration_service.py`, `services/geokeo_system_area.py`, `services/area_discovery.py`, migrations `0007`, `0009`, `0010`, e testes relacionados.
+Restrição aplicada: sem chamadas de rede/provider; sem copiar payloads brutos/PII/valores sensíveis. Este documento reporta contratos, campos, constraints, índices, estados e recomendações DDL.
+
+## 1. Fontes lidas
+
+- `models/area_models.py`
+- `models/geokeo_candidate_models.py` para os contratos operacionais criados/consumidos por GeoKeo/Realtor autocomplete.
+- `services/system_area_registration_service.py`
+- `services/geokeo_system_area.py`
+- `services/area_discovery.py`
+- `services/area_db_helpers.py` para o caminho efetivo `get_or_create_area` -&gt; registration service.
+- Migrations:
+  - `0001_initial.py` para a tabela `geography_system_area` original.
+  - `0007_systemaddress_area_refs_json.py`
+  - `0009_geokeo_system_area_feed.py`
+  - `0010_systemarea_geo_area_search_gin_idx_and_more.py`
+- Testes amostrados/relacionados:
+  - `test_system_area_registration_service.py`
+  - `test_geokeo_system_area_pipeline.py`
+  - `test_geokeo_system_area_feed.py`
+  - buscas em `tests/` por registration, candidate, attempt, known_existing, force_refresh, boundary_status, area_refs.
+
+## 2. Modelo canônico legado: `SystemArea`
+
+Tabela Django: `geography_system_area`.
+
+Herança/mixins relevantes:
+
+- `BaseModel`: `id`, `public_id`, `created`, `updated`, `active`, `deleted`, `version`, `search`, `data`, `metadata`, campos de auditoria/cache/soft-delete conforme base legada.
+- `GeoSpatialMixin`: `location` e `boundary_geom` com PostGIS, ambos SRID 4326.
+
+Tipos de área aceitos (`AreaType`, STI em uma única tabela):
+
+- `state`
+- `county`
+- `city`
+- `postal_code`
+- `neighborhood`
+- `street`
+- `school`
+- `school_district`
+- `university`
+- `park`
+- `mlsid`
+- `market_area`
+
+Campos próprios de `SystemArea`:
+
+| Campo | Tipo/contrato legado | DDL recomendado |
+| --- | --- | --- |
+| `slug_id` | texto até 255, obrigatório, único, indexado; identificador estável/canônico vindo do provider ou fallback controlado | `text not null unique`; manter índice/constraint único; considerar normalização apenas por contrato, não por trigger oculta |
+| `realty_id` | texto até 255, opcional, indexado; id/object id do provider | `text null`; índice btree simples; se possível índice parcial `where realty_id is not null` |
+| `area_type` | texto até 30, obrigatório, choices acima, indexado | `text not null` + `check area_type in (...)`; índice com `state` e autocomplete |
+| `parent_id` | FK self nullable, `on_delete set null`, related `children` | FK self `on delete set null`; índice composto com `area_type` |
+| `name` | texto até 255, obrigatório, indexado | `text not null`; índice conforme autocomplete |
+| `state` | texto até 2, obrigatório, indexado; código US de 2 caracteres no uso principal | `text not null` + check sugerido `state ~ &#x27;^[A-Z]{2}$&#x27;` para SystemArea materializada; atenção: candidates usam contextos mais longos |
+| `market_median_dom` | inteiro opcional | `integer null`; não é chave de autocomplete |
+| `market_median_listing_price` | decimal 12,2 opcional | `numeric(12,2) null` |
+| `inventory_count` | inteiro opcional | `integer null` |
+| `flood_risk_level` | texto até 50 opcional | `text null` ou `varchar(50)` |
+| `noise_level_score` | inteiro opcional | `integer null`; check sugerido `0 &lt;= noise_level_score &lt;= 100` quando não nulo |
+| `boundary_fetch_attempted` | boolean default false | `boolean not null default false` |
+| `location` | Point geography/geometry SRID 4326 nullable | `geography(Point,4326)` ou `geometry(Point,4326)` conforme padrão do pacote; índice GiST |
+| `boundary_geom` | MultiPolygon geography/geometry SRID 4326 nullable | `geography(MultiPolygon,4326)` ou `geometry(MultiPolygon,4326)`; índice GiST |
+| `search` | array texto preparado por `SearchProcessor`; inclui self + ancestrais | `text[] not null default &#x27;{}&#x27;` + GIN |
+| `data` | JSON flexível; guarda provider/provenance/boundary_status/raw_payload legado | `jsonb not null default &#x27;{}&#x27;`; evitar expor/copiar `raw_payload` em seed/proof |
+| `metadata` | JSON flexível; guarda registration metadata e timezone em states | `jsonb not null default &#x27;{}&#x27;` |
+
+Constraints/índices já expressos no legado:
+
+- `unique(slug_id)`.
+- `unique(name, area_type, state)` via `unique_together`.
+- `unique(public_id)` herdado de `BaseModel`.
+- Índices:
+  - `idx_area_type_state` em `(area_type, state)`.
+  - `idx_parent_area_type` em `(parent_id, area_type)`.
+  - `idx_state_name` em `(state, name)`.
+  - `idx_area_location_gist` GiST em `location`.
+  - `idx_area_boundary_gist` GiST em `boundary_geom`.
+  - `geo_area_search_gin_idx` GIN em `search` (migration 0010).
+  - `geo_area_autocomplete_st_idx` em `(active, deleted, area_type, state, name)` (migration 0010).
+  - `geo_area_autocomplete_name_idx` em `(active, deleted, area_type, name)` (migration 0010).
+
+Recomendação DDL para Slice 18:
+
+- Manter `SystemArea` como tabela canônica de geografia materializada; não transformar candidates/feed em verdade canônica.
+- Implementar checks explícitos para `area_type`, `state`, score e não-negatividade de contadores de mercado quando aplicável.
+- Manter `deleted`/`active` em índices de autocomplete se o pacote herdar soft-delete; idealmente usar índices parciais equivalentes em PG (`where active and not deleted`) para reduzir custo.
+- O contrato de `search` depende de self + ancestrais. Se o DDL não portar `SearchProcessor`, criar função SQL/RPC ou processo de refresh documentado para popular termos equivalentes.
+
+## 3. Contrato de busca/autocomplete local
+
+`SystemArea.get_search_fields()` compõe termos de busca com:
+
+- `name`
+- `state`
+- `area_type`
+- `slug_id`
+- `realty_id`
+- nome completo do estado a partir de `state`
+- alias de county com sufixo `County` quando necessário
+- mesmos campos dos ancestrais (`parent`, avô etc.)
+
+A migration `0010` reconstrói `search` para todos os SystemAreas e adiciona GIN + índices compostos de autocomplete. Isso indica que autocomplete local não deve depender exclusivamente de chamadas de provider depois que as linhas estão materializadas.
+
+DDL recomendado:
+
+- Coluna `search_terms text[]`/`search text[]` com GIN.
+- Função de refresh de termos que replique: self + ancestrais + nome de estado + alias county.
+- Índices para dois caminhos de consulta:
+  - filtrado por `state`: `(area_type, state, name)` ou parcial `(area_type, state, name) where active and not deleted`.
+  - sem state: `(area_type, name)` ou parcial equivalente.
+
+## 4. Serviço de registro: `register_system_area`
+
+Contrato de entrada (`SystemAreaRegistrationRequest`):
+
+- Identidade/proveniência: `source`, `requester`, `provider`, `provider_object_id` obrigatório.
+- Área: `area_type`, `label`, `state`, `provider_slug_id`, `provider_geo_id`, `centroid`, `parent` opcional.
+- Operacional: `raw_payload`, `metadata`, `source_record_id`, `source_term`.
+- Guards: `allow_system_write`, `allow_boundary_enqueue`, `boundary_fetch_attempted`, `boundary_status`.
+
+Estados de saída (`SystemAreaRegistrationStatus`):
+
+- `created`
+- `already_installed`
+- `dry_run_needs_write`
+- `skipped_unsupported_type`
+- `skipped_invalid_payload`
+
+Regras observadas:
+
+- `area_type = address` é explicitamente não materializável como `SystemArea`.
+- `area_type` precisa estar em `AreaType.values`; outros tipos são skipped.
+- `provider_object_id` e `label` são obrigatórios para criar/vincular.
+- `state` é upper/trim e truncado a 2 caracteres; para `state` pode derivar de payload/label.
+- `slug_id` usa `provider_slug_id` ou fallback derivado do label + state.
+- Busca idempotente de existente nessa ordem:
+  1. `realty_id = provider_object_id`
+  2. `slug_id = provider_slug_id/fallback`
+  3. `data.provider_geo_id = provider_geo_id`
+  4. `(name, area_type, state)`
+- Ao encontrar existente, atualiza campos vazios/seguros e mescla `data`/`metadata`; não sobrescreve nome se já havia identidade provider.
+- Ao criar, grava `slug_id`, `realty_id`, `area_type`, `name`, `state`, `location`, `parent`, `boundary_fetch_attempted`, `data`, `metadata`.
+- Sempre que permitido, agenda enriquecimento de boundary para row criada ou existente.
+
+Contrato JSON em `data` criado/mesclado:
+
+- `provider`
+- `provider_object_id`
+- `provider_slug_id`
+- `provider_geo_id`
+- `source`
+- `requester`
+- `source_term`
+- `source_record_id`
+- `boundary_status` (default usado: `pending`)
+- `registration_provenance` limitado aos últimos 10 itens
+- `raw_payload` existe no legado, mas deve ser tratado como lineage restrita e não exposto/copiado em artefatos públicos
+
+Contrato JSON em `metadata`:
+
+- `system_area_registration` com `source`, `requester`, `provider`, `provider_object_id`.
+- Preserva alguns campos canônicos/release evidence de metadata existente e evita sob</pre></section><section><h2>09-autocomplete-contract-audit.md</h2><pre># Auditoria Worker B — contrato Lead Finder autocomplete/API/frontend
+
+Status: concluído
+Data: 2026-06-19
+Escopo: JSON shape de sugestões de localização, `system_area_ids`, `bbox`/`center`/`selectedAreaViewport`, expansão via provider, exclusão de endereço, `status`/`registrationStatus`.
+
+## Fontes lidas
+
+Legacy source (`prop4you-inertia`):
+
+- `backend/src/apps/public/lead_finder/api_queries.py`
+- `backend/src/apps/public/lead_finder/contracts.py`
+- `backend/src/apps/public/lead_finder/filters.py`
+- `backend/src/apps/public/lead_finder/queries.py`
+- `backend/src/apps/public/lead_finder/presenters.py`
+- `backend/src/apps/public/lead_finder/tests/test_boundary.py`
+- `backend/src/apps/public/lead_finder/tests/test_runtime_queries.py`
+- `backend/src/apps/public/lead_finder/tests/test_map_payload_contract.py`
+- `backend/tests/lead_finder/test_public_queries.py`
+- `backend/tests/lead_finder/test_query_service_contracts.py`
+- `frontends/front-react/src/pages/private/lead-finder/hooks/useLeadMapState.ts`
+- `frontends/front-react/src/pages/private/lead-finder/LeadFinderPageHandlers.ts`
+- `frontends/front-react/src/types/lead-finder/filters.ts`
+- `frontends/front-react/src/components/features/lead-finder/filters/types.ts`
+- `frontends/front-react/src/components/features/lead-finder/filters/advanced/types.ts`
+
+Não foram feitas chamadas de rede/provider. Esta auditoria não copia payload raw nem PII; exemplos abaixo usam somente nomes/campos estruturais ou fixtures sintéticas dos testes.
+
+## Resumo executivo
+
+O contrato legado atual para autocomplete do Lead Finder é area-only e deve ser o contrato-alvo do DDL da Slice 18. A resposta pública é:
+
+```json
+{
+  &quot;suggestions&quot;: [
+    {
+      &quot;label&quot;: &quot;&lt;nome amigável&gt;&quot;,
+      &quot;value&quot;: &quot;&lt;public_id da SystemArea&gt;&quot;,
+      &quot;type&quot;: &quot;city|state|county|zip&quot;,
+      &quot;meta&quot;: &quot;&lt;state opcional&gt;&quot;,
+      &quot;systemAreaId&quot;: &quot;&lt;public_id da SystemArea&gt;&quot;,
+      &quot;center&quot;: [lng, lat],
+      &quot;bbox&quot;: [west, south, east, north],
+      &quot;registrationStatus&quot;: &quot;created|already_installed|... opcional&quot;
+    }
+  ]
+}
+```
+
+Campos obrigatórios na sugestão serializada pelo backend: `label`, `value`, `type`, `meta`, `systemAreaId`. Campos condicionais: `center`, `bbox`, `registrationStatus`.
+
+O frontend consome `center` como `[lng, lat]`, `bbox` como `[west, south, east, north]`, envia seleção como query param `system_area_ids=&lt;public_id[,public_id...]&gt;`, e espera `selectedAreaViewport` na página Inertia para reposicionar o mapa quando um SystemArea já está aplicado na URL.
+
+## Contrato de sugestões de localização
+
+### Tipos suportados
+
+Backend (`contracts.py`) define `LeadFinderLocationSuggestionType = Literal[&quot;city&quot;, &quot;state&quot;, &quot;county&quot;, &quot;zip&quot;]`. O serializer converte `AreaType.POSTAL_CODE` para `zip` e mantém `city`, `state`, `county` como strings diretas.
+
+Frontend (`types/lead-finder/filters.ts`) ainda permite `neighborhood`, mas o endpoint auditado não retorna `neighborhood`; provider results com `area_type=&quot;neighborhood&quot;` são explicitamente ignorados no backend. Para o DDL da Slice 18, o contrato compatível deve expor somente:
+
+- `city`
+- `state`
+- `county`
+- `zip` (derivado de `postal_code` no storage/modelo)
+
+### Campos
+
+`_serialize_system_area_suggestion(area)` em `api_queries.py` produz:
+
+- `label`: rótulo amigável.
+  - state: `state` ou `name`.
+  - county: `&lt;name&gt; County, &lt;state&gt;` se o nome ainda não termina em County.
+  - zip: `&lt;postal_code&gt;, &lt;state&gt;` quando há state.
+  - city: `&lt;name&gt;, &lt;state&gt;` quando há state.
+- `value`: `area.public_id`.
+- `type`: `city|state|county|zip`.
+- `meta`: `area.state`.
+- `systemAreaId`: `area.public_id`.
+- `center`: presente quando `area.location` existe; ordem `[lng, lat]` (`location.x`, `location.y`).
+- `bbox`: presente quando `area.boundary_geom` existe; ordem `[west, south, east, north]` via `boundary_geom.extent`.
+- `registrationStatus`: presente somente para sugestões materializadas/recuperadas via provider/feed; ausente para sugestões canônicas locais normais.
+
+Implicação DDL: função/view de autocomplete precisa retornar shape JSON com `systemAreaId` e `value` ambos apontando para o public ref da área; não deve retornar PK interna. `center` e `bbox` devem ser arrays numéricos na ordem GeoJSON/mapbox-like `[lng, lat]` e `[min_lng, min_lat, max_lng, max_lat]`.
+
+### Limite e ordenação
+
+- Query com menos de 2 caracteres retorna `{&quot;suggestions&quot;: []}`.
+- Resultados locais são ranqueados e limitados a 20.
+- Após expansão provider, merge por `systemAreaId` e limite final de 20.
+- Ranking local favorece:
+  1. state query exata quando query é estado.
+  2. nome exato + estado.
+  3. prefixo do nome.
+  4. match em search terms.
+  5. token match.
+  6. desempate por tipo (`state`, `city`, `county`, `zip`), nome e state.
+
+Implicação DDL: uma função `...autocomplete(q text, limit int default 20)` deve reproduzir, no mínimo, prefix/name/state/token ordering suficiente para preservar UX e testes.
+
+## `system_area_ids` e aplicação de filtro
+
+### Entrada frontend -&gt; backend
+
+`LeadFinderPageHandlers.buildLeadFinderQuery(...)` grava seleção de área como:
+
+```text
+system_area_ids=&lt;id1,id2,...&gt;
+```
+
+`filters.py` parseia para:
+
+```python
+filters[&quot;system_area_ids&quot;] = [value.strip() for value in query_dict[&quot;system_area_ids&quot;].split(&quot;,&quot;) if value.strip()]
+```
+
+Esse mesmo filtro é usado tanto na página Inertia (`load_lead_finder_page`) quanto no endpoint de mapa (`load_lead_finder_markers`). Testes cobrem que markers filtram por `system_area_ids` e ignoram área unsupported (`neighborhood`).
+
+### Estado frontend
+
+`useLeadMapState.ts` mantém `selectedSystemAreaIds: string[]`. Ao selecionar uma sugestão:
+
+- `selectedSystemAreaIds = [suggestion.systemAreaId]` se presente.
+- `locationSearch = suggestion.label`.
+- `locationSuggestions = []`.
+- mapa usa `suggestion.bbox` se presente; senão calcula bbox fallback a partir de `suggestion.center`.
+
+Ao editar o texto após uma seleção, o hook limpa `selectedSystemAreaIds`. Ao limpar filtros, remove `system_area_ids` da URL e volta ao bbox default.
+
+Implicação DDL/API: `systemAreaId` precisa estar presente para seleção útil. Embora o type frontend marque como opcional, a UX de filtro canônico depende dele.
+
+## `bbox`, `center` e `selectedAreaViewport`
+
+### Autocomplete suggestion
+
+`bbox`/`center` na sugestão são hints imediatos de câmera. O frontend usa diretamente:
+
+- `bbox`: aplicado como bounds.
+- `center`: ordem `[lng, lat]`; fallback bounds `[lng±0.15, lat±0.15]`.
+
+### Página Inertia
+
+`contracts.py` define `LeadFinderSelectedAreaViewportContract`:
+
+```json
+{
+  &quot;systemAreaId&quot;: &quot;&lt;public_id&gt;&quot;,
+  &quot;label&quot;: &quot;&lt;label&gt;&quot;,
+  &quot;type&quot;: &quot;city|state|county|zip&quot;,
+  &quot;bbox&quot;: [west, south, east, north],
+  &quot;center&quot;: [lng, lat],
+  &quot;zoom&quot;: 9|11,
+  &quot;source&quot;: &quot;boundary|centroid|property_points&quot;
+}
+```
+
+`queries.py` constrói o viewport do primeiro SystemArea selecionado, com esta precedência:
+
+1. `boundary_geom` presente:
+   - `bbox = extent` arredondado a 6 casas.
+   - `center = centroid_lon/centroid_lat` quando disponíveis, senão centro do bbox.
+   - `zoom = 11`.
+   - `source = &quot;boundary&quot;`.
+2. centroide presente (`centroid_lon`/`centroid_lat`):
+   - `center = [lng, lat]`.
+   - `bbox = center ± 0.15°`.
+   - `zoom = 11`.
+   - `source = &quot;centroid&quot;`.
+3. sem geometria na área, mas propriedades retornadas têm coordenadas:
+   - `bbox` calculado dos property points.
+   - `center` do bbox.
+   - `zoom = 9`.
+   - `source = &quot;property_points&quot;`.
+4. sem área/sem pontos: `selectedAreaViewport = null`.
+
+Multi-select: `_selected_system_area` ordena por `area_type`, `name` e usa `.first()`. Teste legado espera que, entre state e city, o city vença por ordenação lexical de `area_type` (`city` antes de `state`). A Slice 18 deve decidir se preserva exatamente esse comportamento ou documenta uma ordem semântica; para compatibilidade imediata, manter a escolha do primeiro por `area_type, name`.
+
+## Expansão provider e ledger/cache
+
+`search_lead_finder_locations(query, provider_search=None)` faz:
+
+1. Trim e mínimo de 2 chars.
+2. Busca sugestões em `SystemArea` local.
+3. Parse de query em `(name_query, state_query)`.
+4. Decide expansão provider:
+   - se query é somente estado (`state_query` sem `name_query`): não expande.
+   - senão expande quando o texto de discovery tem 3+ chars.
+5. Cria/recupera `SystemAreaFeedTerm` para a query normalizada.
+6. Se o feed term está `COMPLETED`, usa cache/ledger (`SystemAreaFeedResult`) e não chama provider.
+7. Caso contrário, marca `SEARCHING`, chama provider, registra feed results, materializa SystemArea suportado, marca `COMPLETED` ou `FAILED`.
+
+Provider call contract legado:
+
+```python
+provider_search(query, [&quot;city&quot;, &quot;state&quot;, &quot;county&quot;, &quot;postal_code&quot;], 100)
+```
+
+Tipos provider suportados para materialização/autocomplete:
+
+- `city`
+- `state`
+- `county`
+- `postal_code`
+
+Tipos unsupported, como `neighborhood`, são gravados/ignorados conforme ledger, mas não chamam `register_system_area` e não aparecem nas sugestões.
+
+Implicação DDL: precisa haver estrutura equivalente para:
+
+- term/cache ke</pre></section><section><h2>10-ddl-proof-review.md</h2><pre># Worker C — revisão de contrato DDL/proof para SystemArea autocomplete geography projection
+
+Status: done
+Idioma: pt-BR
+Gerado em: 2026-06-19T17:46:21-04:00
+Escopo: revisão estática; sem mutação de banco; sem chamadas a provider; sem dump de payload bruto.
+
+## Arquivos/contextos revisados
+
+- `docs/issues/18-prop4you-lfg-systemarea-autocomplete-geography-ddl/00-detection-and-analysis.md`
+- `docs/issues/18-prop4you-lfg-systemarea-autocomplete-geography-ddl/01-prd.md`
+- `docs/issues/18-prop4you-lfg-systemarea-autocomplete-geography-ddl/02-tasks.md`
+- `database/ddl/base/0002_extensions.sql`
+- `database/ddl/base/0007_search_normalization.sql`
+- `database/ddl/projects/prop4you/leadfinder_group/README.md`
+- `database/ddl/projects/prop4you/leadfinder_group/0005_canonical_jsonschema_registry.sql`
+- `database/ddl/projects/prop4you/leadfinder_group/0006_projection_candidate_review_board.sql`
+- `scripts/proof-prop4you-ddl-lab.sh`
+- `scripts/proof-prop4you-lfg-projection-candidate-board.sh`
+- `docs/issues/17-prop4you-lfg-projection-candidate-review-board-ddl/09-geography-sequential-projection-review.md`
+- `docs/issues/17-prop4you-lfg-projection-candidate-review-board-ddl/10-ddl-proof-contract-review.md`
+- `docs/issues/01-prop4you-provider-payload-corpus/10-realtor-internal-payload-inventory.md`
+- `docs/reports/prop4you-inertia-app-inventory-and-extraction-order.md`
+- `docs/reports/prop4you-sourcehub-matrix-ddl-lab-proof.md`
+
+## Leitura do estado atual
+
+Slice 17 entregou um board de candidatos, não uma projeção final. O DDL `0006_projection_candidate_review_board.sql` seeda `realtor_geography_boundary_evidence`, `realtor_geography_autocomplete_match_evidence` e `reiq_property_geography_signal_evidence` como grupos `geography_first`, mas ainda deixa as paths como candidatos com gates não passados.
+
+Slice 18 tem decisão explícita diferente: implementar DDL real para o primitivo geográfico de Lead Finder baseado em SystemArea/autocomplete. O PRD exige campos de identidade, provider identity, centro/bbox, search terms e função/contrato de autocomplete com `label/value/type/systemAreaId/center/bbox/registrationStatus`.
+
+A base já oferece:
+
+- `uuidv7()` e `base.make_public_ref(...)` para refs públicas.
+- `base.normalize_search_terms(...)` / `base.normalize_search_text(...)` para `search_terms text[]` + GIN.
+- tentativa de `CREATE EXTENSION postgis` no DDL base, registrada em `base.extension_install_results`.
+- review-board com gates e views para provar compatibilidade e não aprovação indevida.
+
+## Recomendação principal
+
+Criar `database/ddl/projects/prop4you/leadfinder_group/0007_systemarea_autocomplete_geography_projection.sql` como DDL real, porém estreito: SystemArea canonical/projection + autocomplete/feed lineage. Não criar property, owner, market, valuation, legal, workspace, CRM ou final product graph neste slice.
+
+O DDL 0007 deve ser posterior ao `0006_projection_candidate_review_board.sql` e anterior a qualquer tabela final de property/market/valuation. Ele deve consumir a decisão arquitetural geography-first sem depender de provider calls.
+
+Cabeçalho recomendado:
+
+```sql
+-- package: prop4you/leadfinder_group
+-- file: 0007_systemarea_autocomplete_geography_projection.sql
+-- status: experimental / geography real projection
+-- purpose: SystemArea canonical geography/autocomplete projection for LFG location filtering.
+-- depends-on: leadfinder_group/0006_projection_candidate_review_board.sql; base/0007_search_normalization.sql; postgis when available
+-- idempotency: idempotent
+-- destructive: false
+-- [GATEWAY_AGNOSTIC]
+-- [NO_PROVIDER_CALLS]
+-- [NO_RAW_PAYLOAD_VALUES]
+-- [GEOGRAPHY_FIRST]
+-- [NO_FINAL_PRODUCT_TABLE_EXPLOSION]
+```
+
+## Shape recomendado de DDL
+
+### 1. `system_areas`
+
+Tabela central e durável. Representa a SystemArea canônica/projetada para busca local e filtros LFG.
+
+Campos recomendados:
+
+- `id uuid primary key default uuidv7()`
+- `public_ref text generated always as (base.make_public_ref(&#x27;p4ylfgsa&#x27;, id)) stored`
+- `slug_id text not null`
+- `area_type text not null`
+- `name text not null`
+- `state_code text`
+- `country_code text not null default &#x27;US&#x27;`
+- `parent_id uuid references prop4you_leadfinder_group.system_areas(id) on delete restrict`
+- `provider_slug text not null default &#x27;realtor&#x27;`
+- `provider_geo_id text`
+- `provider_area_ref text` para `_id`/provider ref quando existir
+- `realty_id text` ou `provider_object_ref text` para conservar o campo legado `realty_id/provider object` sem afirmar propriedade canônica
+- `provider_area_type text`
+- `centroid geometry(Point, 4326)` se PostGIS disponível; se não, ver nota de fallback abaixo
+- `bbox geometry(Polygon, 4326)` para viewport/bounding box derivado
+- `boundary geometry(MultiPolygon, 4326)` opcional/restrito para geometrias validadas
+- `boundary_status text not null default &#x27;unknown&#x27;`
+- `viewport_status text not null default &#x27;unknown&#x27;`
+- `registration_status text not null default &#x27;projected&#x27;`
+- `search_label text generated/stored ou mantido por seed`
+- `search_terms text[] not null default &#x27;{}&#x27;::text[]`
+- `lineage jsonb not null default &#x27;{}&#x27;::jsonb`
+- `metadata jsonb not null default &#x27;{}&#x27;::jsonb`
+- lifecycle: `active`, `created_at`, `updated_at`, `version`
+
+Constraints recomendadas:
+
+- `unique(public_ref)`
+- `unique(provider_slug, provider_geo_id)` where provider_geo_id not null não pode ser partial unique constraint inline; criar unique index parcial.
+- `unique(provider_slug, slug_id, area_type, state_code)` ou `unique(slug_id, area_type, state_code, country_code)` conforme a auditoria A confirmar.
+- `area_type in (&#x27;state&#x27;,&#x27;county&#x27;,&#x27;city&#x27;,&#x27;postal_code&#x27;,&#x27;neighborhood&#x27;,&#x27;school_district&#x27;,&#x27;metro&#x27;,&#x27;market&#x27;,&#x27;unknown&#x27;)` com abertura controlada se legado usar outros tipos.
+- `state_code is null or state_code ~ &#x27;^[A-Z]{2}$&#x27;`
+- `country_code ~ &#x27;^[A-Z]{2}$&#x27;`
+- `boundary_status in (&#x27;unknown&#x27;,&#x27;not_available&#x27;,&#x27;pending&#x27;,&#x27;derived&#x27;,&#x27;validated&#x27;,&#x27;failed&#x27;,&#x27;restricted&#x27;)`
+- `viewport_status in (&#x27;unknown&#x27;,&#x27;not_available&#x27;,&#x27;pending&#x27;,&#x27;derived&#x27;,&#x27;validated&#x27;,&#x27;failed&#x27;)`
+- `registration_status in (&#x27;canonical&#x27;,&#x27;projected&#x27;,&#x27;provider_only&#x27;,&#x27;pending_registration&#x27;,&#x27;blocked&#x27;,&#x27;superseded&#x27;,&#x27;archived&#x27;)`
+- `jsonb_typeof(lineage)=&#x27;object&#x27;`, `jsonb_typeof(metadata)=&#x27;object&#x27;`
+
+Notas:
+
+- `name`, `state_code`, `slug_id`, `provider_geo_id`, centro e bbox são aceitáveis como projeção porque são anchors de geography/autocomplete. Não incluir endereço completo de propriedade nesta tabela.
+- `provider_geo_id`/`slug_id` são identidade de geography, não identidade de property.
+- `realty_id`/`provider_object_ref` deve ser tratado como provider identity/lineage, não FK para property.
+
+### 2. `system_area_provider_identities`
+
+Separar identidades por provider evita encher `system_areas` com colunas específicas de Realtor, Geokeo ou futuros providers.
+
+Campos recomendados:
+
+- `id uuid primary key default uuidv7()`
+- `public_ref generated` com prefixo `p4ylfgsap`
+- `system_area_id uuid not null references system_areas(id) on delete cascade`
+- `provider_slug text not null`
+- `provider_area_ref text`
+- `provider_geo_id text`
+- `provider_slug_id text`
+- `provider_area_type text`
+- `provider_confidence numeric(5,2)` opcional
+- `identity_status text not null default &#x27;active&#x27;`
+- `lineage jsonb not null default &#x27;{}&#x27;::jsonb`
+- lifecycle
+
+Constraints/índices:
+
+- `unique(provider_slug, provider_geo_id)` quando `provider_geo_id is not null`
+- `unique(provider_slug, provider_slug_id, provider_area_type, system_area_id)` ou variante sem `system_area_id` se legado garantir unicidade global
+- `(system_area_id, provider_slug, identity_status)`
+- GIN em `lineage jsonb_path_ops` somente para refs/hashes/contagens; sem valores brutos.
+
+### 3. `system_area_aliases`
+
+Tabela estreita para nomes alternativos e termos de autocomplete sem misturar provider residue.
+
+Campos:
+
+- `id uuid primary key default uuidv7()`
+- `system_area_id uuid not null references system_areas(id) on delete cascade`
+- `alias text not null`
+- `alias_kind text not null default &#x27;search&#x27;`
+- `locale text default &#x27;en-US&#x27;`
+- `search_terms text[] not null default &#x27;{}&#x27;::text[]`
+- `active boolean not null default true`
+- lifecycle
+
+Constraints:
+
+- `unique(system_area_id, alias_kind, alias)`
+- `alias_kind in (&#x27;primary&#x27;,&#x27;search&#x27;,&#x27;provider_label&#x27;,&#x27;display&#x27;,&#x27;legacy&#x27;,&#x27;synonym&#x27;)`
+
+### 4. `system_area_feed_terms`
+
+Representa termos consultados/observados para alimentação/autocomplete, sem chamar provider.
+
+Campos recomendados inspirados no inventário legado `SystemAreaFeedTerm`:
+
+- `id uuid primary key default uuidv7()`
+- `public_ref generated` prefixo `p4ylfgsaft`
+- `term text not null`
+- `normalized_term text not null`
+- `expected_area_type text`
+- `state_code text`
+- `provider_slug text not null default &#x27;realtor&#x27;`
+- `feed_status text not null default &#x27;pending&#x27;`
+- `last_attempted_at timestamptz`
+- `result_count integer not null default 0`
+- `lineage jsonb not null default &#x27;{}&#x27;::jsonb`
+- lifecycle
+
+Constraints:
+
+- `unique(provider_slug, normalized_term, coalesce(expected_area_type,&#x27;&#x27;), coal</pre></section><section><h2>proof report</h2><pre># Prop4You LFG SystemArea autocomplete geography proof
+
+Status: PASS
+
+## Lab DB
+
+~~~text
+pg18_prop4you_systemarea_autocomplete_lab
+~~~
+
+## Validation JSON
+
+~~~json
+{
+    &quot;bbox_count&quot;: 4,
+    &quot;alias_count&quot;: 4,
+    &quot;centroid_count&quot;: 4,
+    &quot;feed_term_count&quot;: 1,
+    &quot;autocomplete_rows&quot;: [
+        {
+            &quot;bbox&quot;: [
+                -81.600000,
+                28.350000,
+                -81.200000,
+                28.700000
+            ],
+            &quot;type&quot;: &quot;city&quot;,
+            &quot;label&quot;: &quot;Orlando, FL&quot;,
+            &quot;value&quot;: &quot;p4ylfgsa_019ee1e2-175f-7d21-ae40-05cb6cc14dd9&quot;,
+            &quot;center&quot;: [
+                -81.379200,
+                28.538300
+            ],
+            &quot;systemAreaId&quot;: &quot;p4ylfgsa_019ee1e2-175f-7d21-ae40-05cb6cc14dd9&quot;,
+            &quot;registrationStatus&quot;: &quot;created&quot;
+        }
+    ],
+    &quot;feed_result_count&quot;: 1,
+    &quot;system_area_count&quot;: 4,
+    &quot;autocomplete_orl_count&quot;: 1,
+    &quot;autocomplete_zip_count&quot;: 1,
+    &quot;provider_identity_count&quot;: 4,
+    &quot;approved_candidate_count&quot;: 0,
+    &quot;autocomplete_state_count&quot;: 1,
+    &quot;autocomplete_rows_json_count&quot;: 1,
+    &quot;projected_gate_candidate_count&quot;: 18
+}
+~~~
+
+## Assertions
+
+~~~text
+system_area_count = 4
+provider_identity_count = 4
+alias_count = 4
+feed_term_count = 1
+feed_result_count = 1
+centroid_count = 4
+bbox_count = 4
+autocomplete_orl_count &gt;= 1
+autocomplete_zip_count &gt;= 1
+autocomplete_state_count &gt;= 1
+projected_gate_candidate_count &gt;= 15
+approved_candidate_count = 0
+autocomplete rows use value == systemAreaId
+autocomplete center is [lng, lat]
+autocomplete bbox is [west, south, east, north]
+~~~
+
+## Guardrails
+
+~~~text
+no provider calls
+no raw provider payload values
+real geography projection DDL
+no property/owner/workspace table explosion
+~~~
+</pre></section>
+</body></html>

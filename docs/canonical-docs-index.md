@@ -203,3 +203,6 @@ Then read the domain-specific doc for the task.
 - `database/ddl/projects/prop4you/leadfinder_group/0006_projection_candidate_review_board.sql` — LFG review-board DDL for JSON path projection candidates, semantic lanes, seven-gate evaluations, and explicit decisions.
 - `docs/issues/17-prop4you-lfg-projection-candidate-review-board-ddl/` — Slice 17 PRD/tasks/reviews/browser/final report for projection candidate review board DDL.
 - `docs/reports/prop4you-lfg-projection-candidate-board-proof.md` — PG18 lab proof for the LFG projection candidate review board.
+
+- `database/ddl/projects/prop4you/leadfinder_group/0007_systemarea_autocomplete_geography_projection.sql` — real SystemArea/autocomplete geography projection for LFG location filtering.
+- `docs/reports/prop4you-lfg-systemarea-autocomplete-geography-proof.md` — PG18 proof for SystemArea autocomplete geography projection.

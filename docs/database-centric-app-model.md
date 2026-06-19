@@ -734,3 +734,28 @@ database/ddl/projects/prop4you/leadfinder_group/0006_projection_candidate_review
 DirectSkip skiptrace is modeled as one unified review group for phone/email seeds, mailing address seed, and relationship evidence because the source JSON/envelope is shared. Realtor/REIQ are separated by semantic lane, starting with geography and then market, valuation, property facts, legal/tax signals, and taxonomy support.
 
 No seeded candidate is approved. Every seeded candidate has seven gate-evaluation rows from the active projection policy. Final projections require explicit review plus all required gates passed.
+
+### Prop4You LFG SystemArea autocomplete geography projection
+
+Slice 18 implemented the first real geography projection for LFG based on the legacy `SystemArea` autocomplete contract.
+
+Canonical DDL/proof:
+
+```text
+database/ddl/projects/prop4you/leadfinder_group/0007_systemarea_autocomplete_geography_projection.sql
+scripts/proof-prop4you-lfg-systemarea-autocomplete-geography.sh
+docs/reports/prop4you-lfg-systemarea-autocomplete-geography-proof.md
+```
+
+The public autocomplete contract is local-only and provider-free:
+
+```text
+label
+value == systemAreaId == system_areas.public_ref
+type: city|state|county|zip
+center: [lng, lat]
+bbox: [west, south, east, north]
+registrationStatus
+```
+
+This slice intentionally does not create property, owner, contact, workspace, valuation, legal, or final market tables.

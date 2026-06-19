@@ -65,6 +65,7 @@ apply_files=(
   "$P4Y_DDL_DIR/leadfinder_group/0004_user_feedback_markers.sql"
   "$P4Y_DDL_DIR/leadfinder_group/0005_canonical_jsonschema_registry.sql"
   "$P4Y_DDL_DIR/leadfinder_group/0006_projection_candidate_review_board.sql"
+  "$P4Y_DDL_DIR/leadfinder_group/0007_systemarea_autocomplete_geography_projection.sql"
   "$P4Y_DDL_DIR/leadfinder/0004_dictionary_promotion_review_apply.sql"
 )
 
