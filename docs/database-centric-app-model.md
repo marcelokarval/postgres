@@ -722,3 +722,15 @@ docs/corpus/prop4you/lfg/prop4you-inertia-lfg-corpus-base.v1.jsonl
 ```
 
 The manifest represents every `.json` under the legacy/current `prop4you-inertia` root, but only files classified as LFG corpus/support/restricted evidence should drive LFG modeling. Dependency/tooling/generated JSON remains represented but excluded from domain corpus decisions.
+
+## Slice 17 — LFG projection candidate review board DDL
+
+Projection decisions are now queryable before final table/index/generated-column/PostGIS implementation:
+
+```text
+database/ddl/projects/prop4you/leadfinder_group/0006_projection_candidate_review_board.sql
+```
+
+DirectSkip skiptrace is modeled as one unified review group for phone/email seeds, mailing address seed, and relationship evidence because the source JSON/envelope is shared. Realtor/REIQ are separated by semantic lane, starting with geography and then market, valuation, property facts, legal/tax signals, and taxonomy support.
+
+No seeded candidate is approved. Every seeded candidate has seven gate-evaluation rows from the active projection policy. Final projections require explicit review plus all required gates passed.

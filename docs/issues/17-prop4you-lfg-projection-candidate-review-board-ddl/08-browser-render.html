@@ -1,0 +1,1527 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Prop4You LFG Projection Candidate Review Board</title><style>body{font-family:Inter,Arial,sans-serif;margin:32px;background:#07121f;color:#eef8ff}.badges span{display:inline-block;margin:4px;padding:6px 10px;background:#183d57;border:1px solid #79d8ff;border-radius:999px}section{background:#0c2033;border:1px solid #2b587a;margin:18px 0;padding:18px;border-radius:12px}pre{white-space:pre-wrap;line-height:1.35}h1{color:#79d8ff}</style></head><body><h1>Prop4You LFG Projection Candidate Review Board</h1><div class="badges"><span>DDL 0006</span><span>9 candidate groups</span><span>53 candidates</span><span>371 gate rows</span><span>DirectSkip unified</span><span>Geography first</span><span>3 geography groups</span><span>3 PostGIS candidates</span><span>5 join-table candidates</span><span>2 edge-table candidates</span><span>0 approved at seed</span><span>7 gates per candidate</span><span>No raw values</span><span>No provider calls</span><span>No final projection tables</span><span>PG18 proof PASS</span><span>Browser proof</span></div><section><h2>01-prd.md</h2><pre># PRD — LFG projection candidate review board DDL
+
+Status: active
+
+## Problem
+
+The LFG corpus base and JSONSchema registry exist, but decisions about which JSON paths become relational projections are still not queryable as durable DDL. Without a review board, projection work can drift back into blind Django table replication or ad-hoc JSON path extraction.
+
+## Goal
+
+Create a database-centric review board that stores projection candidate groups, candidate paths, decisions, semantic sequencing, privacy class, corpus evidence, and seven-gate evaluation state.
+
+## Deliverables
+
+1. `0006_projection_candidate_review_board.sql` under `leadfinder_group`.
+2. Seed candidate groups for:
+   - DirectSkip contact_satellites unified group;
+   - geography first: Realtor boundary/geography, Realtor market geography, REIQ state/county/property geography;
+   - sequential downstream groups: valuation, property physical facts, legal/situation signals, taxonomy/support.
+3. Seed path-level candidate reviews for DirectSkip and geography-first lanes.
+4. Views for active candidates, gate status, approved candidates, and next-action queue.
+5. PG18 proof script with clean lab DB assertions.
+6. PRD/tasks/reviews/final/browser-proof.
+
+## Acceptance criteria
+
+- DDL applies in a clean PG18 lab DB.
+- Candidate groups are seeded.
+- DirectSkip unified group contains phone/email, mailing address, and relationship evidence paths together.
+- Geography-first groups exist and are sequenced before valuation/property/legal downstream groups.
+- Every seeded candidate has seven gate rows.
+- No candidate is auto-approved unless all seven gates pass.
+- The proof returns machine-checkable JSON counts.
+- Browser-proof and vision QA pass.
+</pre></section><section><h2>02-tasks.md</h2><pre># Tasks — LFG projection candidate review board DDL
+
+| ID | Task | Owner | Status |
+| --- | --- | --- | --- |
+| T1 | Persist PRD/tasks/ledger | Thor | done |
+| T2 | Worker A: DirectSkip unified projection group review | Subagent A | done |
+| T3 | Worker B: Geography-first + sequential semantic lanes review | Subagent B | done |
+| T4 | Worker C: DDL/proof contract review | Subagent C | done |
+| T5 | Implement DDL 0006 and update apply order | Thor | done |
+| T6 | Implement and run PG18 proof script | Thor | done |
+| T7 | Consolidate review/final/browser render | Thor | done |
+| T8 | Browser-proof + vision QA | Thor | pending |
+| T9 | Update docs/skill and commit/push | Thor | pending |
+</pre></section><section><h2>05-task-review.md</h2><pre># 05 — Task Review
+
+Status: PASS before browser/commit
+Generated: 2026-06-19T14:58:17
+
+| Task | Requested | Delivered | Evidence | Status |
+| --- | --- | --- | --- | --- |
+| T1 | Persist PRD/tasks/ledger | Slice 17 stack persisted before implementation | 00/01/02/03/04 | PASS |
+| T2 | DirectSkip phone/email + mailing + relationship together | Unified candidate group `directskip_skip_trace_unified_contact_evidence` with 14 candidates | 08-directskip-unified-projection-review.md; DDL 0006 | PASS |
+| T3 | Separate semantic lanes, start with geography and sequentials | Lanes seeded: geography first, market, valuation, property, legal, taxonomy support | 09-geography-sequential-projection-review.md; DDL 0006 | PASS |
+| T4 | Move to DDL now | `0006_projection_candidate_review_board.sql` implemented | database/ddl/.../0006_projection_candidate_review_board.sql | PASS |
+| T5 | Model extremely correct and ready | 4 tables, 4 views, FK to JSONSchema/policy registry, 7 gate rows per candidate, no approval without gates | DDL + proof report | PASS |
+| T6 | PG18 proof | Clean lab proof passed with 9 groups, 53 candidates, 371 gate rows, 0 approved | docs/reports/prop4you-lfg-projection-candidate-board-proof.md | PASS |
+| T7 | No raw values/provider/final projection tables | Guardrails encoded in comments/report and DDL scope | DDL/proof/final report | PASS |
+| T8 | Browser proof | Pending at this generation point, executed after render | 06-browser-proof.md | PENDING_BROWSER |
+
+## Corrections performed without HITL
+
+- Implemented review-board DDL rather than final projection tables to satisfy &quot;DDL now&quot; while preserving correctness gates.
+- Kept DirectSkip as one group instead of splitting contact/address/relationship.
+- Set geography sequence to start at 10 before market/valuation/property/legal/taxonomy downstream.
+- Ensured every candidate receives seven gate-evaluation rows and no candidate starts approved.
+</pre></section><section><h2>07-final-report.md</h2><pre># 07 — Final Report: LFG projection candidate review board DDL
+
+Status: completed before browser/commit finalization
+Generated: 2026-06-19T14:58:17
+
+## User decisions applied
+
+```text
+1. Go to DDL now.
+2. DirectSkip phone/email, mailing address, and relationship evidence stay together.
+3. Realtor/REIQ are separated semantically; geography starts first, then downstream sequences.
+```
+
+## Delivered DDL
+
+```text
+database/ddl/projects/prop4you/leadfinder_group/0006_projection_candidate_review_board.sql
+```
+
+## DDL objects
+
+Tables:
+
+```text
+prop4you_leadfinder_group.projection_candidate_groups
+prop4you_leadfinder_group.projection_candidates
+prop4you_leadfinder_group.projection_candidate_gate_evaluations
+prop4you_leadfinder_group.projection_candidate_reviews
+```
+
+Views:
+
+```text
+prop4you_leadfinder_group.v_projection_candidate_gate_status
+prop4you_leadfinder_group.v_active_projection_candidates
+prop4you_leadfinder_group.v_approved_projection_candidates
+prop4you_leadfinder_group.v_projection_candidate_next_action_queue
+```
+
+## Seeded semantic groups
+
+```text
+directskip_skip_trace_unified_contact_evidence
+realtor_geography_boundary_evidence
+realtor_geography_autocomplete_match_evidence
+reiq_property_geography_signal_evidence
+realtor_market_geography_snapshot_evidence
+property_valuation_evidence_realtor_reiq
+property_physical_listing_evidence_realtor_reiq
+reiq_property_legal_tax_signal_evidence
+lfg_taxonomy_projection_semantic_support
+```
+
+## Proof result
+
+```json
+{
+    &quot;group_count&quot;: 9,
+    &quot;review_count&quot;: 53,
+    &quot;candidate_count&quot;: 53,
+    &quot;gate_eval_count&quot;: 371,
+    &quot;next_action_count&quot;: 53,
+    &quot;passed_gate_count&quot;: 0,
+    &quot;geography_group_count&quot;: 3,
+    &quot;active_candidate_count&quot;: 53,
+    &quot;directskip_group_count&quot;: 1,
+    &quot;postgis_candidate_count&quot;: 3,
+    &quot;approved_candidate_count&quot;: 0,
+    &quot;candidates_without_gates&quot;: 0,
+    &quot;first_geography_sequence&quot;: 10,
+    &quot;directskip_candidate_count&quot;: 14,
+    &quot;edge_table_candidate_count&quot;: 2,
+    &quot;join_table_candidate_count&quot;: 5
+}
+```
+
+## Important semantics
+
+DirectSkip:
+
+```text
+Unified group, 14 candidates.
+Phone/email + mailing address + relationship evidence share provider/list/raw record/schema/mapping/confidence/lineage gates.
+Future physical projections may be separate, but review/gate decision is unified.
+```
+
+Geography-first:
+
+```text
+3 geography groups start first:
+  sequence 10: realtor boundary/geography
+  sequence 20: realtor autocomplete/match geography
+  sequence 30: REIQ property geography
+
+Then downstream:
+  110: market
+  210: valuation
+  310: property facts
+  410: legal/tax situation
+  900: taxonomy/support
+```
+
+## Guardrails
+
+```text
+no provider calls
+no raw payload values
+no final projection tables yet
+review-board only
+0 approved candidates at seed time
+all 53 candidates have 7 gate rows
+```
+
+## Correct next slice
+
+Slice 18 should evaluate and approve/block the first geography candidates through the seven gates, then decide whether to implement the first real projection as PostGIS geometry, expression index, generated column, or keep-jsonb.
+</pre></section><section><h2>08-directskip-unified-projection-review.md</h2><pre># 08 — Revisão DirectSkip unified projection group
+
+Status: concluído
+Worker: A
+Escopo: DirectSkip / skip trace como grupo unificado de projeção LFG para phone/email, mailing address e relationship evidence.
+
+Política de privacidade: este artefato reproduz apenas nomes de campos, caminhos estruturais, contagens e decisões de modelagem. Nenhum valor bruto de JSON, telefone, e-mail, nome, endereço ou outro PII foi impresso.
+
+## Decisão aplicada
+
+DirectSkip deve entrar no review board como um único `candidate_group` unificado, não como três grupos independentes, porque phones/emails, mailing address e relationship evidence são emitidos pelo mesmo JSON/envelope de skip trace e compartilham:
+
+- `provider_slug=directskip`;
+- `list_type_slug=skip_trace_contact_discovery`;
+- o mesmo `raw_record_public_id` / lineage de provider;
+- a mesma versão de schema/mapping;
+- o mesmo contexto de property/owner seed;
+- as mesmas regras de promotion policy, confidence cap, normalizer failure e auditoria.
+
+A separação física futura pode usar tabelas/views específicas por família de seed, mas a decisão de projeção e os gates devem ser avaliados juntos para evitar publicar telefone/e-mail sem o contexto de endereço e relacionamento que explica a origem e a qualidade da evidência.
+
+## Evidência revisada
+
+Fontes lidas:
+
+- `docs/issues/16-prop4you-inertia-json-corpus-lfg-manifest/08-directskip-skiptrace-corpus-review.md`
+- `docs/corpus/prop4you/lfg/prop4you-inertia-lfg-corpus-base-summary.v1.json`
+- `docs/schemas/prop4you/lfg/projection-policy.v1.json`
+
+Achados reutilizados da revisão de corpus:
+
+- 261 candidatos LFG DirectSkip/skip trace parseáveis.
+- 6 handoffs SourceHub `directskip-sourcehub-handoffs.json` observados.
+- 6/6 handoffs têm `contact_satellites_handoff`.
+- 6/6 handoffs têm `mailing_contact_handoff`.
+- 6/6 handoffs têm `relationship_evidence_handoff`.
+- 0/6 handoffs têm `co_owner_contact_satellites_handoff` na amostra revisada.
+- O resumo LFG classifica `directskip_skiptrace` como família relevante e `contact_satellites` como envelope canônico dominante.
+
+## Candidate group recomendado
+
+`candidate_group_key` sugerido:
+
+```text
+directskip_skip_trace_unified_contact_evidence
+```
+
+Campos recomendados para seed do grupo:
+
+| Campo | Valor recomendado |
+| --- | --- |
+| `group_label` | DirectSkip skip trace unified contact evidence |
+| `source_family` | `directskip_skiptrace` |
+| `canonical_envelope_hint` | `contact_satellites` |
+| `semantic_lane` | `contact_enrichment` |
+| `provider_slug` | `directskip` |
+| `list_type_slug` | `skip_trace_contact_discovery` |
+| `projection_policy_key` | `lfg_projection_policy.v1` |
+| `privacy_class` | `pii_sensitive` |
+| `default_decision` | `candidate_review_required` |
+| `grouping_rule` | phone/email, mailing address e relationship evidence permanecem juntos por envelope/lineage comum |
+| `lineage_required` | true |
+| `raw_values_allowed_in_docs` | false |
+
+Relação com política v1:
+
+- JSONB-first para raw payload, provider residue, arrays variáveis, artefatos Matrix e envelopes antes da projeção final.
+- Relational-first apenas para anchors, edges, constraints, auth boundaries, snapshots temporais e projeções indexadas de alto valor.
+
+## Candidate paths recomendados
+
+Os caminhos abaixo são paths estruturais/canônicos. Eles não contêm valores raw.
+
+### 1. Envelope SourceHub compartilhado
+
+Candidate paths:
+
+- `contact_satellites_handoff.provider_slug`
+- `contact_satellites_handoff.list_type_slug`
+- `contact_satellites_handoff.canonical_schema_version`
+- `contact_satellites_handoff.mapping_version`
+- `contact_satellites_handoff.raw_record_public_id`
+- `contact_satellites_handoff.seed_public_id`
+- `contact_satellites_handoff.canonical_property_public_id`
+- `contact_satellites_handoff.canonical_owner_public_id`
+- `contact_satellites_handoff.target_owner_role`
+- `contact_satellites_handoff.producer_stage`
+- `contact_satellites_handoff.consumer_stage`
+- `contact_satellites_handoff.queue`
+- `contact_satellites_handoff.ingested_at`
+- `contact_satellites_handoff.state_slug`
+
+Projection kind recomendado:
+
+- `relational_column` para identificadores, enums/slug, versões e timestamps usados em join, filtro, auditoria e uniqueness.
+- `jsonb_lineage` para envelope completo, caso o DDL tenha coluna de preservação do envelope original.
+
+Justificativa:
+
+- São anchors de lineage e governança. Devem ser consultáveis para dedupe, replay, auditoria e isolamento por provider/list type.
+
+### 2. Phone seeds
+
+Candidate paths:
+
+- `contact_satellites_handoff.phone_seeds[]`
+- `contact_satellites_handoff.phone_seeds[].owner_ref`
+- `contact_satellites_handoff.phone_seeds[].role_in_record`
+- `contact_satellites_handoff.phone_seeds[].phone_number`
+- `contact_satellites_handoff.phone_seeds[].contact_role`
+- `contact_satellites_handoff.phone_seeds[].phone_type`
+- `contact_satellites_handoff.phone_seeds[].phone_subtype`
+- `contact_satellites_handoff.phone_seeds[].contact_source_confidence`
+
+Projection kind recomendado:
+
+- `relational_child_projection` ou `materialized_review_path` para linhas de seed telefônico, com valor sensível mascarado/normalizado somente no runtime protegido.
+- `jsonb_lineage` para seed completo antes de aprovação.
+
+Default de decisão:
+
+- `review_required`; não publicar em inventário pesquisável até gates e promotion policy passarem.
+
+Observação de privacidade:
+
+- `phone_number` é PII. O review board deve guardar o path e classificação; não deve armazenar valor raw no seed documental.
+
+### 3. Email seeds
+
+Candidate paths:
+
+- `contact_satellites_handoff.email_seeds[]`
+- `contact_satellites_handoff.email_seeds[].owner_ref`
+- `contact_satellites_handoff.email_seeds[].role_in_record`
+- `contact_satellites_handoff.email_seeds[].email`
+- `contact_satellites_handoff.email_seeds[].contact_role`
+- `contact_satellites_handoff.email_seeds[].contact_source_confidence`
+
+Projection kind recomendado:
+
+- `relational_child_projection` ou `materialized_review_path` para linhas de seed de e-mail, com valor sensível mascarado/normalizado somente no runtime protegido.
+- `jsonb_lineage` para seed completo antes de aprovação.
+
+Default de decisão:
+
+- `review_required`; não publicar em inventário pesquisável até gates e promotion policy passarem.
+
+Observação de privacidade:
+
+- `email` é PII. Mesma regra de não imprimir raw values e exigir RLS/retention antes de exposição.
+
+### 4. Mailing/contact address seed
+
+Candidate paths:
+
+- `mailing_contact_handoff.provider_slug`
+- `mailing_contact_handoff.list_type_slug`
+- `mailing_contact_handoff.canonical_schema_version`
+- `mailing_contact_handoff.mapping_version`
+- `mailing_contact_handoff.raw_record_public_id`
+- `mailing_contact_handoff.seed_public_id`
+- `mailing_contact_handoff.canonical_property_public_id`
+- `mailing_contact_handoff.state_slug`
+- `mailing_contact_handoff.mailing_address_seed`
+- `mailing_contact_handoff.mailing_address_seed.address_line`
+- `mailing_contact_handoff.mailing_address_seed.secondary_address_line`
+- `mailing_contact_handoff.mailing_address_seed.address_number`
+- `mailing_contact_handoff.mailing_address_seed.street_line`
+- `mailing_contact_handoff.mailing_address_seed.street_name`
+- `mailing_contact_handoff.mailing_address_seed.city`
+- `mailing_contact_handoff.mailing_address_seed.state`
+- `mailing_contact_handoff.mailing_address_seed.zip_code`
+- `mailing_contact_handoff.mailing_address_seed.county`
+- `mailing_contact_handoff.mailing_address_seed.country`
+- `mailing_contact_handoff.mailing_address_seed.normalized_address`
+- `mailing_contact_handoff.mailing_address_seed.address_hash`
+- `mailing_contact_handoff.mailing_address_seed.is_po_box`
+- `mailing_contact_handoff.mailing_address_seed.contact_address_type`
+- `mailing_contact_handoff.property_address_seed`
+- `mailing_contact_handoff.property_address_comparison`
+
+Projection kind recomendado:
+
+- `relational_column` para envelope e flags/hash usados em dedupe, comparação e join.
+- `relational_child_projection` para componente de endereço se houver necessidade de busca/filtro.
+- `jsonb_lineage` para `property_address_comparison` completo e componentes variáveis/explicativos.
+
+Default de decisão:
+
+- `review_required`.
+- Endereço isolado não deve promover owner/property truth; ele é evidência de contato/mailing dentro do envelope DirectSkip.
+
+### 5. Relationship evidence seeds
+
+Candidate paths:
+
+- `relationship_evidence_handoff.provider_slug`
+- `relationship_evidence_handoff.list_type_slug`
+- `relationship_evidence_handoff.canonical_schema_version`
+- `relationship_evidence_handoff.mapping_version`
+- `relationship_evidence_handoff.raw_record_public_id`
+- `relationship_evidence_handoff.seed_public_id`
+- `relationship_evidence_handoff.canonical_property_public_id`
+- `relationship_evidence_handoff.state_slug`
+- `relationship_evidence_handoff.owner_returned`
+- `relationship_evidence_handoff.property_address_comparison`
+- `relationship_evidence_handoff.relationship_evidence_seeds[]`
+- `relationship_evidence_handoff.relationship_evidence_seeds[].evidence_ref`
+- `relationship_evidence_handoff.relationship_evidence_seeds[].display_name`
+- `relationship_evidence_handoff.relationship_evidence_seeds[].first_name`
+- `relationship_evidence_handoff.relationship_evidence_seeds[].middle_name`
+- `relationship_evidence_handoff.relationship_evidence_seeds[].last_name`
+- `relationship_evidence_handoff.relationship_evidence_seeds[].relationship_label`
+- `relationship_evidence_handoff.relationship_evidence_seeds[].relationship_type`
+- `relationship_evidence_handoff.relationship_evidence_seeds[].age`
+- `relationship_evidence_handoff.relationship_evidence_seeds[].identity_resolution_status`
+- `relationship_evidence_handoff.relationship_evidence_seeds[].possible_duplicate_of_owner`
+- `relationship_evidence_handoff.relationship_evidence_seeds[].duplicate_resolution_vote_required`
+- `relationship_evidence_handoff.relationship_evidence_seeds[].owner_match_confidence`
+- `relationship_evidence_handoff.relationship_evidence_seeds[].relationship_evidence_confidence`
+
+Projection kind recomendado:
+
+- `relational_edge_candidate` para evidência de relação owner/relative/associate quando aprovada semanticamente.
+- `relational_column` para status, flags de duplicidade e confidences usados em review queue.
+- `jsonb_lineage` para `owner_returned`, `property_address_comparison` e evidência completa.
+
+Default de decisão:
+
+- `review_required`.
+- Relationship evidence não cria canonical owner nem canonical relative automaticamente.
+
+### 6. Métricas, lineage e policy blocks
+
+Candidate paths:
+
+- `contact_satellites_handoff.match_metrics`
+- `contact_satellites_handoff.portable_intelligence`
+- `contact_satellites_handoff.transformation_lineage`
+- `mailing_contact_handoff.portable_intelligence`
+- `mailing_contact_handoff.transformation_lineage`
+- `relationship_evidence_handoff.transformation_lineage`
+- paths derivados de `promotion_policy`
+- paths derivados de `recommended_result_status`
+- paths derivados de `confidence_cap_applied`
+- paths derivados de `normalizer_failure_detected`
+
+Projection kind recomendado:
+
+- `jsonb_lineage` para blocos completos.
+- `derived_relational_column` para flags/status de alto valor no review board e em filas de promoção.
+
+Default de decisão:
+
+- `keep_jsonb_with_selected_derived_columns`.
+
+## Gate defaults recomendados
+
+A política v1 exige sete gates para qualquer candidato. Defaults para este grupo:
+
+| Gate | Chave | Default DirectSkip | Motivo |
+| ---: | --- | --- | --- |
+| 1 | `representative_corpus_observed` | `pass_candidate` para envelope/paths observados nos 6 handoffs; `needs_fixture` para co-owner | Há corpus observado para três handoffs principais; co-owner não apareceu na amostra. |
+| 2 | `matrix_leadfinder_semantic_approval` | `pending_review` | Matrix governa significado; DirectSkip não define verdade canônica. |
+| 3 | `stable_or_intentionally_provider_specific` | `pass_candidate` para paths SourceHub versionados; `pending_review` para raw/provider residue | SourceHub estabiliza o envelope; raw DirectSkip continua mutável. |
+| 4 | `query_join_filter_sort_unique_fk_rls_postgis_or_constraint_need` | `pass_candidate` para envelope ids, confidences, status e seeds pesquisáveis; `jsonb_default` para blocos explicativos | Há necessidade clara de join/dedupe/review, mas não para todo JSON. |
+| 5 | `safe_cast_or_coercion_exists` | `pending_review` | Requer normalizadores/mascaramento para telefone, e-mail, endereço e confidences. |
+| 6 | `durable_lineage_to_raw_json` | `pass_candidate` | Envelope contém raw/seed ids, versions, stage e transformation lineage. |
+| 7 | `privacy_pii_classified` | `pass_candidate` com classe `pii_sensitive` e exposição bloqueada por padrão | Paths de contato/endereço/nome são PII e precisam classificação explícita. |
+
+Regra de aprovação:
+
+- Nenhum candidate path deve ser `approved_for_projection` enquanto os sete gates não estiverem passados.
+- Default operacional do grupo: `candidate_review_required`.
+- Default de exposição: `not_public`, `no_public_api_rls_until_envelopes_stabilize`.
+
+## Recomendações para DDL seed
+
+1. Seedar um grupo único `directskip_skip_trace_unified_contact_evidence`.
+2. Amarrar todos os candidate paths acima a esse mesmo grupo.
+3. Registrar `candidate_path_family` como uma das famílias:
+   - `shared_envelope`
+   - `phone_seed`
+   - `email_seed`
+   - `mailing_address_seed`
+   - `relationship_evidence_seed`
+   - `policy_metrics_lineage`
+4. Usar `projection_kind` com vocabulário mínimo:
+   - `relational_column`
+   - `relational_child_projection`
+   - `relational_edge_candidate`
+   - `derived_relational_column`
+   - `jsonb_lineage`
+   - `keep_jsonb`
+5. Seedar sete gate rows por candidate path.
+6. Marcar `privacy_class=pii_sensitive` para telefone, e-mail, endereço, nomes, idade e relationship evidence.
+7. Marcar `privacy_class=internal` ou `restricted` para lineage/policy/match metrics conforme escopo de acesso.
+8. Incluir `no_raw_values_in_docs=true` e `raw_lineage_required=true` no metadata JSONB do grupo/candidato.
+
+## Riscos e controles
+
+Riscos principais:
+
+- Publicação prematura de contato PII antes de RLS, mascaramento, retention e política de promoção.
+- Fragmentação incorreta do envelope em grupos independentes, perdendo contexto de qualidade/lineage.
+- Tratar DirectSkip como fonte canônica de owner/property, contrariando a regra LFG de que Skip Trace enriquece, mas não define a verdade.
+- `co_owner_contact_satellites_handoff` não foi observado nos 6 handoffs; modelagem deve exigir fixture/prova antes de aprovação.
+- Campos de relationship evidence podem criar falsos positivos de parentes/co-owners se projetados como edge canônica sem voto/resolução.
+- Raw payload e Matrix registry são úteis para parser/drift/governança, mas não devem virar registros operacionais achatados.
+
+Controles recomendados:
+
+- Review board com sete gates obrigatórios.
+- `candidate_review_required` como default.
+- `keep_jsonb` para raw payload, provider residue, Matrix artifacts, portable intelligence e transformation lineage completo.
+- Colunas derivadas apenas para status/flags/confidences necessários ao review e dedupe.
+- Teste/fixture separado para co-owner antes de qualquer seed aprovado.
+- Auditoria de promotion policy antes de tornar contatos pesquisáveis.
+
+## Conclusão
+
+A recomendação é avançar com um único grupo DirectSkip unificado no review board. O grupo deve conter paths de phone/email, mailing address e relationship evidence juntos, com projeção relacional seletiva apenas para anchors, seeds, status/flags e edges candidatos que sejam necessários para busca, join, dedupe, review ou auditoria. Raw payloads, artefatos Matrix, lineage e blocos explicativos permanecem JSONB-first.
+</pre></section><section><h2>09-geography-sequential-projection-review.md</h2><pre># 09 — Revisão geography-first e semantic lanes sequenciais
+
+Status: concluído
+Worker: B
+Escopo: Realtor/REIQ/property/valuation/legal/taxonomy como lanes semânticas separadas, com geography primeiro e grupos downstream sequenciais.
+
+Política de privacidade: este artefato reproduz apenas nomes de campos, caminhos estruturais, contagens e decisões de modelagem. Nenhum valor bruto de JSON, endereço, nome, telefone, e-mail, coordenada individual ou outro PII foi impresso.
+
+## Decisão aplicada
+
+A decisão do usuário é separar Realtor/REIQ semanticamente e iniciar por geography. A recomendação é seedar o review board com lanes ordenadas, não com uma massa única de property JSON:
+
+1. `geography` — primeira lane, comum a Realtor boundary/geography, Realtor market geography e REIQ state/county/property geography.
+2. `market` — depende de geography resolvida para snapshot por área/período.
+3. `valuation` — depende de property/geography/lineage para AVM, assessed/appraised e saldos/loan/equity.
+4. `property` — fatos físicos e listing enrichment; depende de identidade/endereço/geografia.
+5. `legal` — situações REIQ, datas/document refs e sinais judiciais/tributários; depende de property geography e lineage.
+6. `taxonomy` — suporte Matrix/LeadFinder/list type/state semantics; usada como aprovação semântica transversal, não como payload operacional.
+
+Regra de sequencing para o DDL seed:
+
+```text
+geography -&gt; market -&gt; valuation -&gt; property -&gt; legal -&gt; taxonomy/support checks
+```
+
+Observação: taxonomy também participa como gate/apoio desde o início, mas sua lane própria deve ficar separada para evitar misturar registry/support artifacts com payloads de provider.
+
+## Evidência revisada
+
+Fontes lidas:
+
+- `docs/issues/16-prop4you-inertia-json-corpus-lfg-manifest/09-realtor-property-corpus-review.md`
+- `docs/issues/16-prop4you-inertia-json-corpus-lfg-manifest/13-lfg-corpus-base-consolidation.md`
+- `docs/corpus/prop4you/lfg/prop4you-inertia-lfg-corpus-base-summary.v1.json`
+- `docs/schemas/prop4you/lfg/projection-policy.v1.json`
+- `docs/issues/17-prop4you-lfg-projection-candidate-review-board-ddl/00-detection-and-analysis.md`
+- `docs/issues/17-prop4you-lfg-projection-candidate-review-board-ddl/01-prd.md`
+
+Achados reutilizados da revisão de corpus:
+
+- Base LFG governada: 3.448 arquivos usados para corpus base, sem raw values.
+- Família `realtor_property_market`: 27 candidatos LFG, todos em fixtures/provas.
+- Família `reiq_property_legal_signal`: 3.094 arquivos no corpus base.
+- Envelope hint `realtor_evidence`: 27.
+- Envelope hint `property`: 3.104.
+- Envelope hint `taxonomy`: 82.
+- Realtor explícito revisado: 17 endpoint reports e 10 client snapshots.
+- REIQ property/geography/valuation revisado no worker anterior: 2.812 objetos com chaves de propriedade/geografia/valor.
+- Estados/list types observados no recorte REIQ: `tx`, `fl` e list types legais/tributários variados; a modelagem deve tratar state/list type como semântica, não como tag solta.
+
+## Candidate groups recomendados
+
+### 1. Geography — Realtor boundary/geography
+
+`candidate_group_key` sugerido:
+
+```text
+realtor_geography_boundary_evidence
+```
+
+| Campo | Valor recomendado |
+| --- | --- |
+| `group_label` | Realtor geography boundary evidence |
+| `source_family` | `realtor_property_market` |
+| `canonical_envelope_hint` | `realtor_evidence` |
+| `semantic_lane` | `geography` |
+| `lane_order` | 10 |
+| `provider_slug` | `realtor` |
+| `list_type_slug` | `area_boundary` |
+| `projection_policy_key` | `lfg_projection_policy.v1` |
+| `privacy_class` | `provider_sensitive` |
+| `default_decision` | `candidate_review_required` |
+| `raw_values_allowed_in_docs` | false |
+
+Candidate paths:
+
+| Candidate path | Path family | Projection kind recomendado | Decisão default |
+| --- | --- | --- | --- |
+| `boundary.result.areas[]` | `area_collection` | `relational_child_projection` | `review_required` |
+| `boundary.result.areas[].id` | `geo_identity` | `relational_column` | `review_required` |
+| `boundary.result.areas[].name` | `geo_label` | `relational_column` | `review_required` |
+| `boundary.result.areas[].center` | `geo_point` | `postgis_geometry_candidate` | `review_required` |
+| `boundary.result.areas[].radius` | `geo_area_metric` | `derived_relational_column` | `review_required` |
+| `boundary.result.areas[].breakpoints[]` | `provider_residue` | `keep_jsonb` | `keep_jsonb` |
+| `boundary.result.boundary.type` | `geometry_metadata` | `relational_column` | `review_required` |
+| `boundary.result.boundary.coordinates` | `geometry_payload` | `jsonb_lineage` + `postgis_geometry_candidate` | `review_required` |
+| `data.result.areas[]` | `area_collection_alt_wrapper` | `relational_child_projection` | `review_required` |
+| `data.result.boundary.coordinates` | `geometry_payload_alt_wrapper` | `jsonb_lineage` + `postgis_geometry_candidate` | `review_required` |
+
+Justificativa:
+
+- Geography vem antes porque resolve anchors espaciais usados por market snapshots, comparables, property matching e legal/state routing.
+- Coordenadas brutas devem permanecer JSONB restrito; se houver necessidade de busca espacial, derivar PostGIS geometry de forma governada.
+- Não expandir arrays de coordenadas em colunas comuns.
+
+### 2. Geography — Realtor autocomplete/address selection
+
+`candidate_group_key` sugerido:
+
+```text
+realtor_geography_autocomplete_match_evidence
+```
+
+| Campo | Valor recomendado |
+| --- | --- |
+| `source_family` | `realtor_property_market` |
+| `canonical_envelope_hint` | `realtor_evidence` |
+| `semantic_lane` | `geography` |
+| `lane_order` | 20 |
+| `provider_slug` | `realtor` |
+| `list_type_slug` | `autocomplete` |
+| `privacy_class` | `provider_sensitive` |
+| `default_decision` | `candidate_review_required` |
+
+Candidate paths:
+
+| Candidate path | Path family | Projection kind recomendado | Decisão default |
+| --- | --- | --- | --- |
+| `results[]` | `suggestion_collection` | `relational_child_projection` | `review_required` |
+| `data[]` | `suggestion_collection_report_wrapper` | `relational_child_projection` | `review_required` |
+| `results[]._id` | `provider_ref` | `relational_column` | `review_required` |
+| `results[]._score` | `match_metric` | `derived_relational_column` | `review_required` |
+| `results[].area_type` | `geo_type` | `relational_column` | `review_required` |
+| `results[].geo_id` | `geo_identity` | `relational_column` | `review_required` |
+| `results[].slug_id` | `geo_identity` | `relational_column` | `review_required` |
+| `results[].mpr_id` | `provider_property_ref` | `relational_column` | `review_required` |
+| `results[].line` | `property_address_line` | `relational_column` com masking/acesso restrito | `review_required` |
+| `results[].city` | `geo_component` | `relational_column` | `review_required` |
+| `results[].state_code` | `geo_component` | `relational_column` | `review_required` |
+| `results[].postal_code` | `geo_component` | `relational_column` | `review_required` |
+| `results[].country` | `geo_component` | `relational_column` | `review_required` |
+| `results[].centroid.lat` | `geo_point_component` | `postgis_geometry_candidate` | `review_required` |
+| `results[].centroid.lon` | `geo_point_component` | `postgis_geometry_candidate` | `review_required` |
+| `results[].counties[]` | `county_collection` | `relational_child_projection` | `review_required` |
+| `results[].counties[].fips` | `county_identity` | `relational_column` | `review_required` |
+| `results[].counties[].name` | `county_label` | `relational_column` | `review_required` |
+| `results[].counties[].state_code` | `county_state` | `relational_column` | `review_required` |
+| `results[].county_needed_for_uniq` | `disambiguation_flag` | `derived_relational_column` | `review_required` |
+| `results[].full_address[]` | `address_residue` | `keep_jsonb` ou hash derivado | `keep_jsonb` |
+| `results[].prop_status[]` | `provider_status_residue` | `keep_jsonb` | `keep_jsonb` |
+| `results[].validation_code[]` | `provider_residue` | `keep_jsonb` | `keep_jsonb` |
+
+Justificativa:
+
+- Autocomplete é evidência de matching/seleção e não verdade canônica final.
+- Projetar somente anchors de geography/matching úteis para join/dedupe; labels e linhas de endereço exigem privacidade e lineage.
+
+### 3. Geography — REIQ state/county/property geography
+
+`candidate_group_key` sugerido:
+
+```text
+reiq_property_geography_signal_evidence
+```
+
+| Campo | Valor recomendado |
+| --- | --- |
+| `source_family` | `reiq_property_legal_signal` |
+| `canonical_envelope_hint` | `property` |
+| `semantic_lane` | `geography` |
+| `lane_order` | 30 |
+| `provider_slug` | `reiq` |
+| `list_type_slug` | `state_county_property_geography` |
+| `privacy_class` | `pii_sensitive` |
+| `default_decision` | `candidate_review_required` |
+
+Candidate paths:
+
+| Candidate path | Path family | Projection kind recomendado | Decisão default |
+| --- | --- | --- | --- |
+| `property_id` | `provider_property_ref` | `relational_column` | `review_required` |
+| `property_address` | `property_address_line` | `relational_column` com masking/acesso restrito | `review_required` |
+| `property_street` | `property_address_component` | `relational_column` | `review_required` |
+| `property_city` | `geo_component` | `relational_column` | `review_required` |
+| `property_state` | `geo_component` | `relational_column` | `review_required` |
+| `property_zip_code` | `geo_component` | `relational_column` | `review_required` |
+| `county` | `geo_component` | `relational_column` | `review_required` |
+| `city` | `geo_component_alt` | `relational_column` | `review_required` |
+| `state` | `geo_component_alt` | `relational_column` | `review_required` |
+| `zip_code` | `geo_component_alt` | `relational_column` | `review_required` |
+| `owner_address` | `contact_or_owner_address` | `keep_jsonb` ou lane DirectSkip/contact futura | `keep_jsonb` |
+| `owner_city` | `contact_or_owner_geo` | `keep_jsonb` | `keep_jsonb` |
+| `owner_state` | `contact_or_owner_geo` | `keep_jsonb` | `keep_jsonb` |
+| `owner_zip_code` | `contact_or_owner_geo` | `keep_jsonb` | `keep_jsonb` |
+
+Justificativa:
+
+- Geography REIQ deve resolver property locality e state routing para list type/legal semantics.
+- Owner/mailing geography não deve ser confundida com property geography; manter separada e restrita até uma lane de contato/owner resolver semântica e privacidade.
+
+### 4. Market — Realtor market geography snapshots
+
+`candidate_group_key` sugerido:
+
+```text
+realtor_market_geography_snapshot_evidence
+```
+
+| Campo | Valor recomendado |
+| --- | --- |
+| `source_family` | `realtor_property_market` |
+| `canonical_envelope_hint` | `realtor_evidence` |
+| `semantic_lane` | `market` |
+| `lane_order` | 110 |
+| `provider_slug` | `realtor` |
+| `list_type_slug` | `market_details` |
+| `depends_on_lane` | `geography` |
+| `privacy_class` | `provider_sensitive` |
+| `default_decision` | `candidate_review_required` |
+
+Candidate paths:
+
+| Candidate path | Path family | Projection kind recomendado | Decisão default |
+| --- | --- | --- | --- |
+| `market` | `market_payload` | `jsonb_lineage` | `review_required` |
+| `market.housing_market` | `market_payload_alt` | `jsonb_lineage` | `review_required` |
+| `market.housing_market.hot_market_badge` | `market_classification` | `relational_column` | `review_required` |
+| `market.housing_market.hot_market_rank` | `market_metric` | `derived_relational_column` | `review_required` |
+| `market.housing_market.local_hotness_score` | `market_metric` | `derived_relational_column` | `review_required` |
+| `market.housing_market.local_temperature` | `market_metric` | `derived_relational_column` | `review_required` |
+| `market.housing_market.median_days_on_market` | `market_metric` | `derived_relational_column` | `review_required` |
+| `market.housing_market.median_listing_price` | `market_metric` | `derived_relational_column` | `review_required` |
+| `market.housing_market.median_price_per_sqft` | `market_metric` | `derived_relational_column` | `review_required` |
+| `market.housing_market.median_rent_price` | `market_metric` | `derived_relational_column` | `review_required` |
+| `market.housing_market.median_sold_price` | `market_metric` | `derived_relational_column` | `review_required` |
+| `market.housing_market.national_hotness_score` | `market_metric` | `derived_relational_column` | `review_required` |
+| `market.housing_market.national_temperature` | `market_metric` | `derived_relational_column` | `review_required` |
+
+Justificativa:
+
+- Market é snapshot temporal por geografia/período, não atributo do imóvel.
+- Requer `geo_ref`, `area_type`, período/captured_at e lineage para evitar comparação de mercados heterogêneos.
+
+### 5. Valuation — Realtor estimates e REIQ valores financeiros
+
+`candidate_group_key` sugerido:
+
+```text
+property_valuation_evidence_realtor_reiq
+```
+
+| Campo | Valor recomendado |
+| --- | --- |
+| `source_family` | `realtor_property_market` + `reiq_property_legal_signal` |
+| `canonical_envelope_hint` | `property` |
+| `semantic_lane` | `valuation` |
+| `lane_order` | 210 |
+| `provider_slug` | `mixed_provider_review` |
+| `list_type_slug` | `property_valuation` |
+| `depends_on_lane` | `geography` |
+| `privacy_class` | `pii_sensitive` para REIQ, `provider_sensitive` para Realtor |
+| `default_decision` | `candidate_review_required` |
+
+Candidate paths:
+
+| Candidate path | Path family | Projection kind recomendado | Decisão default |
+| --- | --- | --- | --- |
+| `estimates.current_values[]` | `valuation_series_current` | `relational_child_projection` | `review_required` |
+| `estimates.current_values[].date` | `valuation_date` | `relational_column` | `review_required` |
+| `estimates.current_values[].estimate` | `valuation_amount` | `relational_column` | `review_required` |
+| `estimates.current_values[].estimate_low` | `valuation_range` | `relational_column` | `review_required` |
+| `estimates.current_values[].estimate_high` | `valuation_range` | `relational_column` | `review_required` |
+| `estimates.current_values[].isbest_homevalue` | `valuation_flag` | `derived_relational_column` | `review_required` |
+| `estimates.current_values[].source` | `valuation_source` | `jsonb_lineage` + selected columns | `review_required` |
+| `estimates.forecast_values[]` | `valuation_forecast_series` | `keep_jsonb` | `keep_jsonb` |
+| `estimates.historical_values[]` | `valuation_historical_series` | `keep_jsonb` | `keep_jsonb` |
+| `home_estimate.value` | `valuation_amount_alt` | `relational_column` | `review_required` |
+| `home_estimate.source` | `valuation_source_alt` | `relational_column` | `review_required` |
+| `assessed_value` | `tax_or_assessment_value` | `relational_column` | `review_required` |
+| `appraised_value` | `valuation_amount_reiq` | `relational_column` | `review_required` |
+| `estimated_equity` | `equity_amount` | `relational_column` | `review_required` |
+| `equity` | `equity_amount_or_ratio` | `relational_column` com coerção revisada | `review_required` |
+| `estimated_unpaid_balance` | `loan_balance` | `relational_column` | `review_required` |
+| `original_loan_amount` | `loan_amount` | `relational_column` | `review_required` |
+| `historical_interest_rate` | `loan_metric` | `derived_relational_column` | `review_required` |
+| `loan_origination_month` | `loan_temporal_component` | `derived_relational_column` | `review_required` |
+| `loan_origination_year` | `loan_temporal_component` | `derived_relational_column` | `review_required` |
+
+Justificativa:
+
+- Valuation deve preservar fonte, data e tipo de valor; AVM, assessment e loan/equity não são a mesma verdade.
+- Séries forecast/historical continuam JSONB até existir modelo temporal completo.
+
+### 6. Property — físicos/listing/details
+
+`candidate_group_key` sugerido:
+
+```text
+property_physical_listing_evidence_realtor_reiq
+```
+
+| Campo | Valor recomendado |
+| --- | --- |
+| `source_family` | `realtor_property_market` + `reiq_property_legal_signal` |
+| `canonical_envelope_hint` | `property` |
+| `semantic_lane` | `property` |
+| `lane_order` | 310 |
+| `provider_slug` | `mixed_provider_review` |
+| `list_type_slug` | `property_physical_listing` |
+| `depends_on_lane` | `geography` |
+| `privacy_class` | `provider_sensitive` / `pii_sensitive` conforme fonte |
+| `default_decision` | `candidate_review_required` |
+
+Candidate paths:
+
+| Candidate path | Path family | Projection kind recomendado | Decisão default |
+| --- | --- | --- | --- |
+| `description.type` | `physical_attribute` | `relational_column` | `review_required` |
+| `description.sub_type` | `physical_attribute` | `relational_column` | `review_required` |
+| `description.beds` | `physical_attribute` | `relational_column` | `review_required` |
+| `description.baths` | `physical_attribute` | `relational_column` | `review_required` |
+| `description.baths_full` | `physical_attribute` | `relational_column` | `review_required` |
+| `description.baths_half` | `physical_attribute` | `relational_column` | `review_required` |
+| `description.sqft` | `physical_attribute` | `relational_column` | `review_required` |
+| `description.lot_sqft` | `physical_attribute` | `relational_column` | `review_required` |
+| `description.year_built` | `physical_attribute` | `relational_column` | `review_required` |
+| `list_price` | `listing_attribute` | `relational_column` | `review_required` |
+| `price` | `listing_attribute_alt` | `relational_column` | `review_required` |
+| `status` | `listing_status` | `relational_column` | `review_required` |
+| `listing_id` | `listing_identity` | `relational_column` | `review_required` |
+| `permalink` | `listing_ref` | `relational_column` com política de exposição | `review_required` |
+| `href` | `listing_ref_alt` | `relational_column` com política de exposição | `review_required` |
+| `photos[]` | `media_array` | `keep_jsonb` | `keep_jsonb` |
+| `primary_photo` | `media_summary` | `jsonb_lineage` ou selected ref | `review_required` |
+| `advertisers[]` | `contact_provider_payload` | `keep_jsonb` restrito | `keep_jsonb` |
+| `consumer_advertisers[]` | `contact_provider_payload` | `keep_jsonb` restrito | `keep_jsonb` |
+| `buyers[]` | `contact_provider_payload` | `keep_jsonb` restrito | `keep_jsonb` |
+| `bed` | `physical_attribute_reiq` | `relational_column` | `review_required` |
+| `bath` | `physical_attribute_reiq` | `relational_column` | `review_required` |
+| `garage` | `physical_attribute_reiq` | `relational_column` | `review_required` |
+| `pool` | `physical_attribute_reiq` | `relational_column` | `review_required` |
+| `sq_ft` | `physical_attribute_reiq` | `relational_column` | `review_required` |
+| `yr_bt` | `physical_attribute_reiq` | `relational_column` | `review_required` |
+
+Justificativa:
+
+- Fatos físicos são bons candidatos quando têm coerção segura e lineage.
+- Arrays de mídia e subárvores de contato/anunciante permanecem JSONB restrito; não entram em projeção pública.
+
+### 7. Legal/tax — REIQ situations, dates, document refs e tax history
+
+`candidate_group_key` sugerido:
+
+```text
+reiq_property_legal_tax_signal_evidence
+```
+
+| Campo | Valor recomendado |
+| --- | --- |
+| `source_family` | `reiq_property_legal_signal` |
+| `canonical_envelope_hint` | `property` |
+| `semantic_lane` | `legal` |
+| `lane_order` | 410 |
+| `provider_slug` | `reiq` |
+| `list_type_slug` | `property_legal_tax_signal` |
+| `depends_on_lane` | `geography` |
+| `privacy_class` | `pii_sensitive` |
+| `default_decision` | `candidate_review_required` |
+
+Candidate paths:
+
+| Candidate path | Path family | Projection kind recomendado | Decisão default |
+| --- | --- | --- | --- |
+| `lead_type` | `situation_type` | `relational_column` | `review_required` |
+| `internal_id` | `provider_record_ref` | `relational_column` | `review_required` |
+| `date_added` | `provider_temporal` | `relational_column` | `review_required` |
+| `date_filed` | `legal_temporal` | `relational_column` | `review_required` |
+| `case_number` | `legal_ref` | `relational_column` com acesso restrito | `review_required` |
+| `instrument_no` | `legal_ref` | `relational_column` com acesso restrito | `review_required` |
+| `auction_date_time` | `legal_temporal` | `relational_column` | `review_required` |
+| `current_month` | `legal_temporal_component` | `derived_relational_column` | `review_required` |
+| `current_year` | `legal_temporal_component` | `derived_relational_column` | `review_required` |
+| `tax_history[]` | `tax_history_provider` | `relational_child_projection` se normalizado | `review_required` |
+| `tax_history[].year` | `tax_temporal` | `relational_column` | `review_required` |
+| `tax_history[].tax` | `tax_amount` | `relational_column` | `review_required` |
+| `tax_history[].assessment.total` | `assessment_value` | `relational_column` | `review_required` |
+| `tax_history[].market.total` | `market_assessment_value` | `relational_column` | `review_required` |
+| `legal_description` | `legal_text` | `keep_jsonb` restrito | `keep_jsonb` |
+| `comments` | `legal_text_or_provider_residue` | `keep_jsonb` restrito | `keep_jsonb` |
+| `mortgagee_bank_name` | `institution_name` | `keep_jsonb` ou restricted column após gate | `review_required` |
+| `mortgagor_first_name` | `person_name` | `keep_jsonb` restrito | `keep_jsonb` |
+| `mortgagor_last_name` | `person_name` | `keep_jsonb` restrito | `keep_jsonb` |
+| `owner_first_name` | `person_name` | `keep_jsonb` restrito | `keep_jsonb` |
+| `owner_last_name` | `person_name` | `keep_jsonb` restrito | `keep_jsonb` |
+| `ownership` | `ownership_text_or_status` | `jsonb_lineage` + selected review column | `review_required` |
+
+Justificativa:
+
+- Legal/situation facts são estruturados; não devem virar tags soltas.
+- Nomes, textos legais e comentários permanecem restritos; refs e datas podem virar colunas se gate de privacidade e necessidade de query passar.
+
+### 8. Taxonomy/support — Matrix/LeadFinder semantics
+
+`candidate_group_key` sugerido:
+
+```text
+lfg_taxonomy_projection_semantic_support
+```
+
+| Campo | Valor recomendado |
+| --- | --- |
+| `source_family` | `matrix_registry_or_artifact` + `leadfinder_baseline` |
+| `canonical_envelope_hint` | `taxonomy` |
+| `semantic_lane` | `taxonomy` |
+| `lane_order` | 510 |
+| `provider_slug` | `internal_support` |
+| `list_type_slug` | `projection_semantic_support` |
+| `privacy_class` | `internal` |
+| `default_decision` | `candidate_review_required` |
+
+Candidate paths:
+
+| Candidate path | Path family | Projection kind recomendado | Decisão default |
+| --- | --- | --- | --- |
+| `source_family` | `support_classification` | `relational_column` | `review_required` |
+| `canonical_envelope_hint` | `support_classification` | `relational_column` | `review_required` |
+| `evidence_role` | `support_classification` | `relational_column` | `review_required` |
+| `privacy_tier` | `privacy_classification` | `relational_column` | `review_required` |
+| `decision` | `corpus_decision` | `relational_column` | `review_required` |
+| `priority` | `review_priority` | `relational_column` | `review_required` |
+| `context_tags[]` | `support_tags` | `keep_jsonb` ou `relational_child_projection` se vocabulário estabilizar | `review_required` |
+| `path_shape` | `shape_lineage` | `jsonb_lineage` | `review_required` |
+| `hash` | `evidence_hash` | `relational_column` | `review_required` |
+
+Justificativa:
+
+- Taxonomy governa significado e aprovação semântica, mas não deve contaminar property/realtor/reiq payloads.
+- Deve alimentar gate 2 (`matrix_leadfinder_semantic_approval`) e gate 7 (`privacy_pii_classified`).
+
+## Vocabulário recomendado de lanes
+
+| Lane | Ordem | Papel | Dependências |
+| --- | ---: | --- | --- |
+| `geography` | 10-30 | Normalizar geo refs, city/state/ZIP/county, boundary/centroid e property geography | corpus observado + privacy class |
+| `market` | 110 | Snapshots/agregados de mercado por geo/time bucket | `geography` |
+| `valuation` | 210 | Valores estimados, assessed/appraised, loan/equity | `geography` + property/provider lineage |
+| `property` | 310 | Fatos físicos, listing status/ref e atributos estáveis | `geography` |
+| `legal` | 410 | Situações REIQ, datas, refs legais/tributárias | `geography` + taxonomy/list type |
+| `taxonomy` | 510 | Semântica Matrix/LeadFinder, evidence role, privacy tier e path shape | transversal; não payload operacional |
+
+## Vocabulário recomendado de `projection_kind`
+
+Usar o mesmo vocabulário mínimo do Worker A, acrescido de PostGIS/materialized snapshot quando necessário:
+
+- `relational_column` — campo escalar usado para join, filtro, sort, uniqueness, FK, RLS ou constraint.
+- `derived_relational_column` — campo derivado/coagido de JSON, status, flag ou métrica que não deve substituir lineage.
+- `relational_child_projection` — arrays com itens estáveis que precisam virar linhas filhas de review/snapshot.
+- `relational_edge_candidate` — edges candidatos entre entidades, somente após aprovação semântica.
+- `postgis_geometry_candidate` — ponto/polígono derivado para busca espacial; raw coordinates continuam JSONB.
+- `temporal_snapshot_projection` — snapshot por `geo_ref`/property/provider/período, especialmente market e valuation.
+- `jsonb_lineage` — envelope/payload sanitizado preservado para auditoria e replay.
+- `keep_jsonb` — raw/provider residue, arrays variáveis, textos, contato, mídia completa e campos raros.
+
+## Gate defaults recomendados
+
+A política v1 exige sete gates para qualquer candidato. Defaults por lane:
+
+| Gate | Chave | Geography | Market | Valuation | Property | Legal | Taxonomy |
+| ---: | --- | --- | --- | --- | --- | --- | --- |
+| 1 | `representative_corpus_observed` | `pass_candidate` para paths observados | `pass_candidate` para Realtor market paths | `pass_candidate` para paths observados | `pass_candidate` para detalhes/físicos observados | `pass_candidate` para REIQ frequente | `pass_candidate` para corpus support |
+| 2 | `matrix_leadfinder_semantic_approval` | `pending_review` | `pending_review` | `pending_review` | `pending_review` | `pending_review` obrigatório por list type/state | `pass_candidate` apenas para support validado |
+| 3 | `stable_or_intentionally_provider_specific` | `pass_candidate` para wrappers conhecidos; boundary coords provider-specific | `pending_review` por métrica/provedor | `pending_review` por tipo de valor | `pending_review` por fonte/cast | `pending_review` por divergência estadual | `pass_candidate` se versionado |
+| 4 | `query_join_filter_sort_unique_fk_rls_postgis_or_constraint_need` | `pass_candidate` para geo anchors/PostGIS | `pass_candidate` para snapshots indexados | `pass_candidate` para sort/ranking | `pass_candidate` para filtros físicos/listing | `pass_candidate` para filas legais/datas | `pass_candidate` para review board |
+| 5 | `safe_cast_or_coercion_exists` | `pending_review` para lat/lng/ZIP/coords | `pending_review` para métricas | `pending_review` para currency/ranges | `pending_review` para baths/sqft/years | `pending_review` para datas/refs | `pass_candidate` para enums internos |
+| 6 | `durable_lineage_to_raw_json` | `pass_candidate` se envelope ref/hash existir | `pass_candidate` se captured_at/geo_ref existir | `pass_candidate` se source/date/provider ref existir | `pass_candidate` se provider ref/raw ref existir | `pass_candidate` se internal/raw ref existir | `pass_candidate` |
+| 7 | `privacy_pii_classified` | `pass_candidate` com classes explícitas | `pass_candidate` provider_sensitive | `pending_review` para REIQ financeiro | `pending_review` por endereço/media/contact | `pending_review` por PII/legal text | `pass_candidate` internal |
+
+Regra de aprovação:
+
+- Nenhum candidate path deve ser `approved_for_projection` enquanto os sete gates não estiverem passados.
+- Default operacional de todos os grupos deste artefato: `candidate_review_required`.
+- Geography pode ser priorizada na fila, mas não auto-aprovada.
+
+## Recomendações para DDL seed
+
+1. Seedar grupos de geography primeiro:
+   - `realtor_geography_boundary_evidence`
+   - `realtor_geography_autocomplete_match_evidence`
+   - `reiq_property_geography_signal_evidence`
+2. Seedar grupos downstream com `depends_on_lane=geography`:
+   - `realtor_market_geography_snapshot_evidence`
+   - `property_valuation_evidence_realtor_reiq`
+   - `property_physical_listing_evidence_realtor_reiq`
+   - `reiq_property_legal_tax_signal_evidence`
+3. Seedar `lfg_taxonomy_projection_semantic_support` separadamente, como suporte/gate e não como provider payload.
+4. Registrar `semantic_lane`, `lane_order`, `depends_on_lane`, `provider_slug`, `source_family`, `canonical_envelope_hint`, `privacy_class`, `default_decision` e `raw_values_allowed_in_docs=false` em todos os grupos.
+5. Registrar path-level candidates sem valores raw, usando apenas structural paths.
+6. Seedar sete gate rows por candidate path, com `pending_review` como default conservador onde cast, privacidade ou semântica ainda dependam de normalizador/Matrix.
+7. Marcar explicitamente como `keep_jsonb`:
+   - payload bruto e provider residue;
+   - arrays variáveis sem necessidade de query;
+   - advertisers/buyers/phones/emails/names;
+   - owner/mortgagor names e legal text;
+   - raw boundary coordinate arrays;
+   - forecast/historical AVM detalhado;
+   - mídia/fotos completas;
+   - comments e campos raros por estado/list type.
+8. Marcar como `postgis_geometry_candidate` apenas geometria derivada e validada, não coordenadas raw impressas em docs.
+9. Separar `property_address` de `owner_address`/mailing address para não confundir truth de imóvel com evidência de contato.
+10. Deduplicar REIQ por provider/list/state/internal_id/hash antes de qualquer seed canônico operacional.
+
+## Riscos e controles
+
+Riscos principais:
+
+- Projetar market/valuation/legal antes de geography e criar snapshots sem geo anchor confiável.
+- Misturar Realtor e REIQ em uma única lane ampla, apagando diferenças de privacidade, fonte e semântica.
+- Tratar REIQ como owner/property truth canônica sem lineage e dedupe.
+- Projetar legal text, names, advertiser/buyer contact ou owner/mailing address como colunas públicas.
+- Expandir boundary coordinates brutas em colunas sem PostGIS derivado e sem necessidade de query.
+- Confundir assessed/appraised/AVM/market/loan/equity como um único valor.
+- Criar taxonomy como payload operacional em vez de suporte de gate.
+
+Controles recomendados:
+
+- Sequência obrigatória por `semantic_lane`/`lane_order`.
+- `depends_on_lane=geography` para market, valuation, property e legal.
+- Sete gates obrigatórios por candidate path.
+- `jsonb_lineage` para envelopes e `keep_jsonb` para resíduos/PII/textos/arrays variáveis.
+- `privacy_class` explícito por grupo e por path sensível.
+- PostGIS apenas como derivação validada.
+- Review board como fonte de decisão, não como tabela final de projeção.
+
+## Conclusão
+
+A recomendação é avançar com geography-first no review board. Geography deve ser seedada como três grupos semânticos iniciais: Realtor boundary, Realtor autocomplete/matching e REIQ property geography. Market, valuation, property physical/listing e legal/tax entram como lanes downstream dependentes de geography. Taxonomy/Matrix/LeadFinder permanece separada como suporte semântico e gate transversal. A projeção deve ser seletiva: anchors, refs, métricas, snapshots e geometria derivada podem virar candidatos relacionais; raw payloads, PII, textos legais, mídia, arrays variáveis e provider residue permanecem JSONB-first.
+</pre></section><section><h2>10-ddl-proof-contract-review.md</h2><pre># Worker C — revisão de contrato DDL/proof para review-board de projection candidates
+
+Status: done
+Idioma: pt-BR
+Escopo: revisão estática, sem provider/MCP/web, sem mutação de DDL existente.
+
+## Arquivos revisados
+
+- `database/ddl/projects/prop4you/leadfinder_group/0005_canonical_jsonschema_registry.sql`
+- `scripts/proof-prop4you-lfg-jsonschema-registry.sh`
+- `scripts/proof-prop4you-ddl-lab.sh`
+- Contexto de issue: `01-prd.md`, `02-tasks.md`
+- Contexto DDL adjacente: `0001_staging_candidates.sql`, `0002_materialization_runs.sql`, `0004_user_feedback_markers.sql`
+
+## Leitura do estado atual
+
+O DDL `0005_canonical_jsonschema_registry.sql` já estabelece uma boa base para o board:
+
+- `projection_policies` guarda a política versionada de promoção JSONB -&gt; relacional.
+- `canonical_jsonschema_envelopes` guarda envelopes canônicos e vincula cada envelope à política.
+- `v_active_projection_policy_gates` expõe os 7 gates como linhas consultáveis.
+- `v_active_canonical_jsonschema_envelopes` expõe envelopes ativos sem payload bruto.
+- O contrato é explicitamente gateway-agnostic, registry-only, sem provider calls, sem valores crus de payload e sem explosão de tabelas finais.
+
+Os scripts de proof existentes validam:
+
+- apply order de base + Prop4You experimental até `0005`;
+- existência de registry e envelopes;
+- contagem de 6 envelopes, 1 política e 7 gates;
+- política de `no_raw_payload_values`;
+- schemas top-level fechados (`additionalProperties=false`);
+- defaults de auto-apply para marker low-risk: 3 usuários e 2 workspaces.
+
+Gap principal: ainda não existe uma estrutura persistente e consultável que represente:
+
+- grupos de candidatos de projeção;
+- caminhos JSON candidatos por grupo;
+- avaliação de cada um dos 7 gates por candidato;
+- decisões de board/reviewer;
+- fila de próxima ação;
+- prova que nenhum candidato é aprovado sem 7 gates passados.
+
+## Recomendação de estrutura para `0006_projection_candidate_review_board.sql`
+
+Criar o novo DDL em `database/ddl/projects/prop4you/leadfinder_group/0006_projection_candidate_review_board.sql`, dependente de `leadfinder_group/0005_canonical_jsonschema_registry.sql`.
+
+Cabeçalho recomendado:
+
+```sql
+-- package: prop4you/leadfinder_group
+-- file: 0006_projection_candidate_review_board.sql
+-- status: experimental / non-final
+-- purpose: Review-board queryable para candidatos de projeção JSONB -&gt; relacional, gates e decisões.
+-- depends-on: leadfinder_group/0005_canonical_jsonschema_registry.sql
+-- idempotency: idempotent
+-- destructive: false
+-- [GATEWAY_AGNOSTIC]
+-- [REVIEW_BOARD_ONLY]
+-- [NO_PROVIDER_CALLS]
+-- [NO_RAW_PAYLOAD_VALUES]
+-- [NO_FINAL_PRODUCT_TABLE_EXPLOSION]
+```
+
+### 1. `projection_candidate_groups`
+
+Representa lanes/grupos de decisão, com sequenciamento semântico.
+
+Campos recomendados:
+
+- `id uuid primary key default uuidv7()`
+- `public_ref generated` com prefixo novo, por exemplo `p4ylfgpcg`
+- `group_key text not null unique`
+- `group_status text not null default &#x27;candidate&#x27;`
+- `group_kind text not null`
+- `sequence_number integer not null`
+- `lane_key text not null`
+- `lane_title text not null`
+- `canonical_envelope_key text`
+- `schema_version text not null default &#x27;v1&#x27;`
+- `projection_policy_key text not null default &#x27;lfg_projection_policy.v1&#x27;`
+- `semantic_owner text not null default &#x27;leadfinder_group&#x27;`
+- `privacy_class text not null default &#x27;mixed_review_required&#x27;`
+- `relational_target_kind text not null default &#x27;jsonb_projection_candidate&#x27;`
+- `review_priority integer not null default 100`
+- `decision_status text not null default &#x27;pending&#x27;`
+- `decision_reason text`
+- `lineage jsonb not null default &#x27;{}&#x27;::jsonb`
+- `metadata jsonb not null default &#x27;{}&#x27;::jsonb`
+- lifecycle: `active`, `created_at`, `updated_at`, `version`
+
+Constraints sugeridas:
+
+- `group_key ~ &#x27;^[a-z][a-z0-9_.:-]{1,191}$&#x27;`
+- `group_status in (&#x27;candidate&#x27;,&#x27;in_review&#x27;,&#x27;approved&#x27;,&#x27;blocked&#x27;,&#x27;rejected&#x27;,&#x27;superseded&#x27;,&#x27;archived&#x27;)`
+- `group_kind in (&#x27;directskip_contact_satellites&#x27;,&#x27;geography_boundary&#x27;,&#x27;geography_market&#x27;,&#x27;geography_property&#x27;,&#x27;valuation&#x27;,&#x27;property_physical_facts&#x27;,&#x27;legal_situation_signals&#x27;,&#x27;taxonomy_support&#x27;,&#x27;unknown&#x27;)`
+- `lane_key in (&#x27;directskip_unified&#x27;,&#x27;geography_first&#x27;,&#x27;valuation_downstream&#x27;,&#x27;property_facts_downstream&#x27;,&#x27;legal_situation_downstream&#x27;,&#x27;taxonomy_support_downstream&#x27;)`
+- `privacy_class in (&#x27;public_safe&#x27;,&#x27;restricted&#x27;,&#x27;pii_sensitive&#x27;,&#x27;provider_sensitive&#x27;,&#x27;mixed_review_required&#x27;,&#x27;unknown&#x27;)`
+- `decision_status in (&#x27;pending&#x27;,&#x27;ready_for_review&#x27;,&#x27;approved&#x27;,&#x27;blocked&#x27;,&#x27;rejected&#x27;,&#x27;needs_more_evidence&#x27;,&#x27;superseded&#x27;,&#x27;archived&#x27;)`
+- `sequence_number &gt; 0`, `review_priority &gt; 0`, JSON objects válidos.
+- FK composta opcional para envelope: `(canonical_envelope_key, schema_version)` -&gt; `canonical_jsonschema_envelopes(envelope_key, schema_version)` deferrable.
+- FK composta para policy: `(projection_policy_key, schema_version)` -&gt; `projection_policies(policy_key, policy_version)` deferrable.
+
+Índices:
+
+- `(lane_key, sequence_number, group_status)` where `active=true`
+- `(decision_status, review_priority, updated_at desc)` where `active=true`
+- GIN em `lineage jsonb_path_ops` ou `metadata` se usado nas filas.
+
+### 2. `projection_candidates`
+
+Representa cada path candidato, dentro de um grupo.
+
+Campos recomendados:
+
+- `id uuid primary key default uuidv7()`
+- `public_ref generated` com prefixo novo, por exemplo `p4ylfgpc`
+- `group_id uuid not null references projection_candidate_groups(id) on delete restrict`
+- `candidate_key text not null unique`
+- `candidate_status text not null default &#x27;candidate&#x27;`
+- `candidate_kind text not null default &#x27;json_path_projection&#x27;`
+- `canonical_envelope_key text not null`
+- `schema_version text not null default &#x27;v1&#x27;`
+- `json_path text not null`
+- `path_label text not null`
+- `path_value_kind text not null default &#x27;unknown&#x27;`
+- `candidate_reason text not null`
+- `relational_need text not null`
+- `proposed_table text`
+- `proposed_column text`
+- `proposed_type text`
+- `projection_shape text not null default &#x27;scalar_column&#x27;`
+- `privacy_class text not null default &#x27;mixed_review_required&#x27;`
+- `raw_value_policy text not null default &#x27;no_raw_payload_values&#x27;`
+- `corpus_evidence jsonb not null default &#x27;{}&#x27;::jsonb`
+- `lineage jsonb not null default &#x27;{}&#x27;::jsonb`
+- `review_status text not null default &#x27;pending&#x27;`
+- `approved_at timestamptz`
+- `approved_by_actor_id text`
+- lifecycle: `active`, `created_at`, `updated_at`, `version`
+
+Constraints sugeridas:
+
+- `unique(group_id, json_path)`
+- `candidate_key ~ &#x27;^[a-z][a-z0-9_.:-]{1,191}$&#x27;`
+- `candidate_status in (&#x27;candidate&#x27;,&#x27;in_review&#x27;,&#x27;approved&#x27;,&#x27;blocked&#x27;,&#x27;rejected&#x27;,&#x27;superseded&#x27;,&#x27;archived&#x27;)`
+- `candidate_kind in (&#x27;json_path_projection&#x27;,&#x27;derived_projection&#x27;,&#x27;group_projection&#x27;,&#x27;index_hint&#x27;,&#x27;constraint_hint&#x27;,&#x27;unknown&#x27;)`
+- `json_path` deve ser não vazio e começar com `$` ou com path lógico canônico controlado; preferir `json_path like &#x27;$.%&#x27; or json_path = &#x27;$&#x27;` se todos os seeds usarem JSONPath.
+- `path_value_kind in (&#x27;string&#x27;,&#x27;number&#x27;,&#x27;integer&#x27;,&#x27;boolean&#x27;,&#x27;object&#x27;,&#x27;array&#x27;,&#x27;geo&#x27;,&#x27;temporal&#x27;,&#x27;enum&#x27;,&#x27;mixed&#x27;,&#x27;unknown&#x27;)`
+- `projection_shape in (&#x27;scalar_column&#x27;,&#x27;generated_column&#x27;,&#x27;expression_index&#x27;,&#x27;join_table&#x27;,&#x27;edge_table&#x27;,&#x27;postgis_geometry&#x27;,&#x27;materialized_view&#x27;,&#x27;jsonb_only&#x27;,&#x27;unknown&#x27;)`
+- `raw_value_policy in (&#x27;no_raw_payload_values&#x27;,&#x27;hashes_and_refs_only&#x27;,&#x27;normalized_values_allowed_internal&#x27;,&#x27;unknown&#x27;)`
+- `approved` só se policy permitir: `candidate_status &lt;&gt; &#x27;approved&#x27; or review_status = &#x27;approved&#x27;`.
+- FK composta `(canonical_envelope_key, schema_version)` -&gt; registry de envelopes.
+
+Importante: não armazenar valores observados do corpus; `corpus_evidence` deve conter só contagens, tipos, hashes/refs e flags, por exemplo `observed_count`, `provider_family_refs`, `sourcehub_record_ref_count`, `sample_hash_refs`, `matrix_mapping_refs`.
+
+Índices:
+
+- `(group_id, candidate_status, review_status)` where `active=true`
+- `(canonical_envelope_key, json_path)` where `active=true`
+- `(review_status, updated_at desc)` where `active=true`
+- GIN em `corpus_evidence` e/ou `lineage`.
+
+### 3. `projection_candidate_gate_evaluations`
+
+Uma linha por candidato e gate. O DDL deve garantir 7 linhas por candidato via seed/proof; em SQL puro a obrigatoriedade de “exatamente 7” é melhor provada por view/proof do que por check constraint.
+
+Campos recomendados:
+
+- `id uuid primary key default uuidv7()`
+- `public_ref generated` com prefixo novo, por exemplo `p4ylfgpcg8` ou `p4ylfggt`
+- `candidate_id uuid not null references projection_candidates(id) on delete cascade`
+- `policy_key text not null default &#x27;lfg_projection_policy.v1&#x27;`
+- `policy_version text not null default &#x27;v1&#x27;`
+- `gate_key text not null`
+- `gate_number integer not null`
+- `required boolean not null default true`
+- `gate_status text not null default &#x27;not_evaluated&#x27;`
+- `evaluation_result text not null default &#x27;pending&#x27;`
+- `evidence_summary jsonb not null default &#x27;{}&#x27;::jsonb`
+- `blocking_reason text`
+- `evaluated_at timestamptz`
+- `evaluated_by_actor_id text`
+- `created_at`, `updated_at`, `version`
+
+Constraints sugeridas:
+
+- `unique(candidate_id, gate_key)`
+- `unique(candidate_id, gate_number)`
+- FK `(policy_key, policy_version)` -&gt; `projection_policies(policy_key, policy_version)`
+- `gate_number between 1 and 7`
+- `gate_status in (&#x27;not_evaluated&#x27;,&#x27;passed&#x27;,&#x27;failed&#x27;,&#x27;blocked&#x27;,&#x27;not_applicable&#x27;)`
+- `evaluation_result in (&#x27;pending&#x27;,&#x27;pass&#x27;,&#x27;fail&#x27;,&#x27;blocked&#x27;,&#x27;not_applicable&#x27;)`
+- `required=false or gate_status &lt;&gt; &#x27;not_applicable&#x27;` se gates obrigatórios nunca puderem ser N/A; como a policy atual marca todos required, recomendo bloquear N/A para required.
+- `gate_status=&#x27;passed&#x27;` implica `evaluation_result=&#x27;pass&#x27;`.
+- JSON object em `evidence_summary`.
+
+Índices:
+
+- `(candidate_id, gate_number)`
+- `(gate_key, gate_status)`
+- `(policy_key, policy_version, gate_number)`
+
+Seed recomendado: derivar gate rows via `insert ... select candidate.id, gate.* from projection_candidates cross join v_active_projection_policy_gates`, em vez de hardcodar 7 vezes por candidato. Isso reduz drift se a policy mudar de versão.
+
+### 4. `projection_candidate_reviews`
+
+Registra decisão do board/humano/policy sobre o candidato.
+
+Campos recomendados:
+
+- `id uuid primary key default uuidv7()`
+- `public_ref generated` com prefixo novo, por exemplo `p4ylfgpcr`
+- `candidate_id uuid not null references projection_candidates(id) on delete restrict`
+- `review_key text not null unique`
+- `review_status text not null default &#x27;in_review&#x27;`
+- `review_decision text not null default &#x27;pending&#x27;`
+- `decision_reason text`
+- `reviewer_actor_id text`
+- `reviewed_at timestamptz`
+- `all_required_gates_passed boolean not null default false`
+- `review_payload jsonb not null default &#x27;{}&#x27;::jsonb`
+- `metadata jsonb not null default &#x27;{}&#x27;::jsonb`
+- `created_at`, `updated_at`
+
+Constraints sugeridas:
+
+- `review_key` format check.
+- `review_status in (&#x27;in_review&#x27;,&#x27;approved&#x27;,&#x27;rejected&#x27;,&#x27;blocked&#x27;,&#x27;deferred&#x27;,&#x27;superseded&#x27;,&#x27;archived&#x27;)`
+- `review_decision in (&#x27;pending&#x27;,&#x27;approve_projection&#x27;,&#x27;reject_projection&#x27;,&#x27;block_projection&#x27;,&#x27;request_more_evidence&#x27;,&#x27;defer&#x27;,&#x27;supersede&#x27;)`
+- `review_decision &lt;&gt; &#x27;approve_projection&#x27; or all_required_gates_passed = true`
+- JSON object checks.
+
+Recomendação forte: não permitir aprovação via insert manual cega. Criar função gateway-agnostic `open_projection_candidate_review(...)` ou `record_projection_candidate_review(...)` que calcula `all_required_gates_passed` por query e atualiza `projection_candidates.review_status/candidate_status`. Mesmo com função, manter constraint como defesa.
+
+## Views recomendadas
+
+### `v_projection_candidate_gate_status`
+
+Uma linha por candidato com rollup:
+
+- `candidate_id`, `candidate_key`, `group_key`, `lane_key`, `sequence_number`
+- `required_gate_count`
+- `passed_required_gate_count`
+- `failed_required_gate_count`
+- `blocked_required_gate_count`
+- `not_evaluated_required_gate_count`
+- `all_required_gates_passed`
+- `gate_status_summary jsonb`
+
+Essa view é o coração do proof “não aprova sem 7 gates”.
+
+### `v_active_projection_candidates`
+
+Board operacional:
+
+- dados de grupo, envelope, path, status, privacy, proposed shape;
+- contagens de gates via join em `v_projection_candidate_gate_status`;
+- sem valores brutos de payload.
+
+### `v_approved_projection_candidates`
+
+Somente candidatos aprovados e seguros:
+
+Filtro obrigatório:
+
+```sql
+where candidate_status = &#x27;approved&#x27;
+  and review_status = &#x27;approved&#x27;
+  and all_required_gates_passed = true
+```
+
+### `v_projection_candidate_next_action_queue`
+
+Fila ordenada por lane/sequence/priority:
+
+- `needs_gate_evaluation`: gate faltando/falhou/bloqueou;
+- `ready_for_board_review`: 7 gates passed mas sem review aprovado;
+- `approved_ready_for_implementation`: aprovado e 7 gates passed;
+- `blocked_or_rejected`: bloqueado/rejeitado.
+
+Ordenação recomendada: `sequence_number`, `review_priority`, `updated_at`.
+
+## Seeds mínimos recomendados
+
+### Grupos
+
+Seeds devem cobrir os critérios do PRD:
+
+1. `directskip.contact_satellites.unified`
+   - lane: `directskip_unified`
+   - sequence: 10
+   - envelope: `contact-satellites-envelope`
+   - inclui phone/email, mailing address e relationship evidence no mesmo grupo.
+
+2. `geography.realtor.boundary`
+   - lane: `geography_first`
+   - sequence: 20
+   - envelope: `realtor-evidence-envelope`
+
+3. `geography.realtor.market`
+   - lane: `geography_first`
+   - sequence: 30
+   - envelope: `realtor-evidence-envelope`
+
+4. `geography.reiq.property`
+   - lane: `geography_first`
+   - sequence: 40
+   - envelope: `property-envelope` ou envelope provider-specific se existir; se ainda não existir, use metadata/lineage para indicar provider family sem FK a provider raw.
+
+5. `valuation.downstream`
+   - lane: `valuation_downstream`
+   - sequence: 100
+
+6. `property_physical_facts.downstream`
+   - lane: `property_facts_downstream`
+   - sequence: 110
+
+7. `legal_situation_signals.downstream`
+   - lane: `legal_situation_downstream`
+   - sequence: 120
+
+8. `taxonomy_support.downstream`
+   - lane: `taxonomy_support_downstream`
+   - sequence: 130
+
+### Path-level candidates
+
+Para DirectSkip unified, manter juntos no mesmo `group_id`:
+
+- phone evidence path(s);
+- email evidence path(s);
+- mailing address path(s);
+- owner/contact relationship evidence path(s).
+
+Para geography-first lanes:
+
+- boundary/geography evidence do Realtor;
+- market geography do Realtor;
+- REIQ state/county/property geography.
+
+Os seeds devem usar paths canônicos do envelope quando possível e metadata para `provider_family`, `source_doc`, `review_reason`, sem payload scalar.
+
+## Funções recomendadas
+
+### `refresh_projection_candidate_gate_rows(p_candidate_id uuid)`
+
+Cria/atualiza as 7 rows de gate a partir de `v_active_projection_policy_gates`.
+
+Uso: após seed de candidatos e em proof.
+
+### `record_projection_candidate_gate_evaluation(...)`
+
+Permite atualizar um gate específico, validando `gate_key/gate_number` contra a policy ativa.
+
+### `record_projection_candidate_review(...)`
+
+Calcula `all_required_gates_passed` e só permite `approve_projection` quando todos os gates obrigatórios passam. Atualiza `projection_candidates` para `approved` apenas quando seguro.
+
+## Contrato de proof recomendado
+
+Criar script novo, por exemplo:
+
+- `scripts/proof-prop4you-lfg-projection-candidate-review-board.sh`
+
+O script deve seguir o estilo dos proofs atuais:
+
+- usar clean lab DB via `scripts/proof-prop4you-ddl-lab.sh` ou apply order próprio;
+- adicionar `0006_projection_candidate_review_board.sql` ao apply order;
+- não chamar providers;
+- não imprimir valores crus de payload/PII;
+- gerar JSON machine-checkable;
+- escrever report em `docs/reports/prop4you-lfg-projection-candidate-review-board-proof.md` somente no proof final.
+
+Assertions mínimas:
+
+```sql
+select jsonb_build_object(
+  &#x27;group_count&#x27;, count_groups,
+  &#x27;candidate_count&#x27;, count_candidates,
+  &#x27;directskip_group_count&#x27;, count_directskip,
+  &#x27;directskip_unified_path_kinds&#x27;, directskip_kinds_json,
+  &#x27;geography_first_group_count&#x27;, count_geography,
+  &#x27;downstream_group_count&#x27;, count_downstream,
+  &#x27;gate_row_count&#x27;, count_gate_rows,
+  &#x27;candidate_count_with_7_gates&#x27;, count_candidates_with_7,
+  &#x27;required_gate_count_per_candidate_ok&#x27;, boolean,
+  &#x27;approved_without_all_required_gates_count&#x27;, count_bad_approvals,
+  &#x27;approved_candidate_view_violation_count&#x27;, count_bad_view_rows,
+  &#x27;raw_value_policy_violation_count&#x27;, count_raw_policy_bad,
+  &#x27;top_next_action_queue_count&#x27;, count_queue
+)
+```
+
+Critérios de PASS:
+
+- `group_count &gt;= 8`.
+- Existe exatamente um grupo DirectSkip unified ativo.
+- DirectSkip unified contém ao menos path kinds de `phone`, `email`, `mailing_address`, `relationship_evidence` ou equivalentes normalizados.
+- Geography-first tem grupos antes das lanes downstream: `max(geography sequence) &lt; min(downstream sequence)`.
+- Todo candidato seedado possui 7 gate rows.
+- `approved_without_all_required_gates_count = 0`.
+- `raw_value_policy_violation_count = 0`.
+- Views existem: active, gate status, approved, queue.
+
+## Recomendações sobre apply order
+
+Atualizar `scripts/proof-prop4you-ddl-lab.sh` depois que o DDL existir:
+
+- inserir `leadfinder_group/0006_projection_candidate_review_board.sql` imediatamente após `0005_canonical_jsonschema_registry.sql`;
+- ampliar validation SQL para contar as novas tabelas/views;
+- se o proof genérico continuar sem seeds ricos, manter as assertions completas no proof específico do review-board.
+
+## Riscos e cuidados
+
+1. Não modelar candidatos como tabelas finais de produto.
+   - O board deve decidir projeção, não criar `properties`, `owners`, `contacts`, workspace tables ou graph final.
+
+2. Não armazenar payload bruto em `corpus_evidence`, `review_payload` ou `metadata`.
+   - Apenas contagens, refs, hashes, tipos e flags.
+
+3. Não aprovar por status manual isolado.
+   - Aprovação precisa ser derivada de gates + review.
+
+4. Evitar duplicar gates hardcoded nos seeds.
+   - Derivar de `v_active_projection_policy_gates`.
+
+5. Manter a separação temporal:
+   - Registry/policy (`0005`) -&gt; review-board de projeção (`0006`) -&gt; implementação futura de projeções aprovadas.
+
+## Conclusão
+
+A base atual (`0005` + proof registry) é suficiente para ancorar um review-board robusto. O próximo DDL deve introduzir quatro objetos duráveis principais: grupos, candidatos, gate evaluations e reviews, além de quatro views de operação/proof. O contrato essencial é: todo candidato seedado recebe 7 gate rows da policy ativa; nenhuma view ou função considera um candidato aprovado sem todos os gates obrigatórios passados e uma decisão explícita do review-board.
+</pre></section><section><h2>docs/reports/prop4you-lfg-projection-candidate-board-proof.md</h2><pre># Prop4You LFG projection candidate board proof
+
+Status: PASS
+
+## Lab DB
+
+~~~text
+pg18_prop4you_projection_candidate_board_lab
+~~~
+
+## Validation JSON
+
+~~~json
+{
+    &quot;group_count&quot;: 9,
+    &quot;review_count&quot;: 53,
+    &quot;candidate_count&quot;: 53,
+    &quot;gate_eval_count&quot;: 371,
+    &quot;next_action_count&quot;: 53,
+    &quot;passed_gate_count&quot;: 0,
+    &quot;geography_group_count&quot;: 3,
+    &quot;active_candidate_count&quot;: 53,
+    &quot;directskip_group_count&quot;: 1,
+    &quot;postgis_candidate_count&quot;: 3,
+    &quot;approved_candidate_count&quot;: 0,
+    &quot;candidates_without_gates&quot;: 0,
+    &quot;first_geography_sequence&quot;: 10,
+    &quot;directskip_candidate_count&quot;: 14,
+    &quot;edge_table_candidate_count&quot;: 2,
+    &quot;join_table_candidate_count&quot;: 5
+}
+~~~
+
+## Assertions
+
+~~~text
+group_count = 9
+candidate_count = 53
+gate_eval_count = 371
+review_count = 53
+approved_candidate_count = 0
+next_action_count = 53
+directskip_group_count = 1
+directskip_candidate_count &gt;= 14
+geography_group_count = 3
+first_geography_sequence = 10
+postgis_candidate_count &gt;= 3
+join_table_candidate_count &gt;= 3
+edge_table_candidate_count &gt;= 2
+passed_gate_count = 0
+candidates_without_gates = 0
+~~~
+
+## Guardrails
+
+~~~text
+no provider calls
+no raw payload values
+no final projection tables
+review-board only
+~~~
+</pre></section></body></html>

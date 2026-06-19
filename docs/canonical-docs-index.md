@@ -200,3 +200,6 @@ Then read the domain-specific doc for the task.
 - `docs/corpus/prop4you/lfg/prop4you-inertia-json-manifest.v1.jsonl` — full redacted manifest of every `.json` under `prop4you-inertia` with path/hash/type/classification.
 - `docs/corpus/prop4you/lfg/prop4you-inertia-lfg-corpus-base.v1.jsonl` — enriched LFG corpus base decisions from prop4you-inertia JSONs.
 - `docs/issues/16-prop4you-inertia-json-corpus-lfg-manifest/` — Slice 16 PRD/tasks/reviews/browser/final report for using prop4you-inertia JSONs as governed LFG corpus base.
+- `database/ddl/projects/prop4you/leadfinder_group/0006_projection_candidate_review_board.sql` — LFG review-board DDL for JSON path projection candidates, semantic lanes, seven-gate evaluations, and explicit decisions.
+- `docs/issues/17-prop4you-lfg-projection-candidate-review-board-ddl/` — Slice 17 PRD/tasks/reviews/browser/final report for projection candidate review board DDL.
+- `docs/reports/prop4you-lfg-projection-candidate-board-proof.md` — PG18 lab proof for the LFG projection candidate review board.

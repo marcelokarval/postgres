@@ -1,7 +1,7 @@
 # Prop4You Provider + SourceHub + Matrix + LeadFinder DDL Lab Proof
 
 Status: PASS
-LAB_DB: pg18_prop4you_jsonschema_registry_lab
+LAB_DB: pg18_prop4you_projection_candidate_board_lab
 PGHOST: 127.0.0.1
 PGPORT: 54318
 
@@ -41,6 +41,7 @@ No raw/fake/redacted fixtures were created.
 - `database/ddl/projects/prop4you/leadfinder_group/0003_operational_minimum.sql`
 - `database/ddl/projects/prop4you/leadfinder_group/0004_user_feedback_markers.sql`
 - `database/ddl/projects/prop4you/leadfinder_group/0005_canonical_jsonschema_registry.sql`
+- `database/ddl/projects/prop4you/leadfinder_group/0006_projection_candidate_review_board.sql`
 - `database/ddl/projects/prop4you/leadfinder/0004_dictionary_promotion_review_apply.sql`
 
 ## Validation JSON

@@ -10,7 +10,8 @@ Implemented DDL:
 - `0002_materialization_runs.sql` — T5.1 materialization runs/results review gate.
 - `0003_operational_minimum.sql` — T5.2 minimal operational groups/events/facets from accepted materialization results.
 - `0004_user_feedback_markers.sql` — user/workspace feedback votes, aggregate marker review, and global marker apply gates.
-- `0005_canonical_jsonschema_registry.sql` — queryable registry for LFG canonical JSONSchema envelopes and JSONB-to-relational projection policy; registry-only, no final graph/workspace table explosion.
+- `0005_canonical_jsonschema_registry.sql` — queryable registry for LFG canonical JSONSchema envelopes and JSONB-to-relational projection policy.
+- `0006_projection_candidate_review_board.sql` — queryable review-board for JSON path projection candidates, semantic lanes, seven-gate evaluations, and explicit keep-jsonb/generated-column/index/narrow-table/PostGIS decisions before final projections.
 
 Boundaries:
 
